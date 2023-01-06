@@ -1,7 +1,8 @@
 import { JsonRpcSigner } from '@ethersproject/providers'
+import { isAddress } from 'ethers/lib/utils'
 import nullthrows from 'nullthrows'
 
-import { ContractsKeys, contracts } from '@/src/contracts/contracts'
+import { ContractsKeys, contracts, isKnownContract } from '@/src/contracts/contracts'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import * as typechainImports from '@/types/generated/typechain'
 import { ObjectValues } from '@/types/utils'
@@ -15,8 +16,16 @@ export const useContractInstance = <F extends AppFactories, RT extends ReturnTyp
   contractKey: ContractsKeys | string,
 ) => {
   const { appChainId, readOnlyAppProvider, web3Provider } = useWeb3Connection()
-  const address = contracts[contractKey]['address'][appChainId]
   const signer = web3Provider?.getSigner() || readOnlyAppProvider
+  let address: string
+  if (isKnownContract(contractKey)) {
+    address = contracts[contractKey].address[appChainId]
+  } else if (isAddress(contractKey)) {
+    address = contractKey
+  } else {
+    throw new Error(`Expected a valid address or contractKey, current value: ${contractKey}`)
+  }
+
   nullthrows(signer, 'There is not signer to execute a tx.')
 
   return contractFactory.connect(address, signer as JsonRpcSigner) as RT
