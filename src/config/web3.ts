@@ -4,18 +4,20 @@ import { ChainConfig, ChainsValues } from '@/types/chains'
 import { ObjectValues, ProviderChains, RPCProviders, RPCProvidersENV } from '@/types/utils'
 
 export const Chains = {
-  //mainnet: 1,
-  goerli: 5,
+  // goerli: 5,
+  gnosis: 100,
 } as const
 
 export const providerChains: ProviderChains = {
   [RPCProviders.infura]: {
     //[Chains.mainnet]: 'mainnet',
-    [Chains.goerli]: 'goerli',
+    // [Chains.goerli]: 'goerli',
+    [Chains.gnosis]: '',
   },
   [RPCProviders.alchemy]: {
     //[Chains.mainnet]: 'eth-mainnet',
-    [Chains.goerli]: 'eth-goerli',
+    // [Chains.goerli]: 'eth-goerli',
+    [Chains.gnosis]: '',
   },
 }
 
@@ -53,30 +55,20 @@ export const getProviderUrl = (
 
 // Default chain id from env var
 export const INITIAL_APP_CHAIN_ID = Number(
-  process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID || '42',
+  process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID || '100',
 ) as ChainsValues
 
 export const chainsConfig: Record<ChainsValues, ChainConfig> = {
-  [Chains.goerli]: {
-    id: Chains.goerli,
-    name: 'Görli Testnet',
-    shortName: 'Goerli',
-    chainId: Chains.goerli,
-    chainIdHex: '0x5',
-    rpcUrl: getProviderUrl(Chains.goerli),
-    blockExplorerUrls: ['https://goerli.etherscan.io/'],
-    token: 'ETH',
+  [Chains.gnosis]: {
+    id: Chains.gnosis,
+    name: 'GnosisChain',
+    shortName: 'Gnosis',
+    chainId: Chains.gnosis,
+    chainIdHex: '0x64',
+    rpcUrl: 'https://rpc.ankr.com/gnosis',
+    blockExplorerUrls: ['https://gnosisscan.io/'],
+    token: 'xDAI',
   },
-  // [Chains.mainnet]: {
-  //   id: Chains.mainnet,
-  //   name: 'Mainnet',
-  //   shortName: 'Mainnet',
-  //   chainId: Chains.mainnet,
-  //   chainIdHex: '0x1',
-  //   rpcUrl: getProviderUrl(Chains.mainnet),
-  //   blockExplorerUrls: ['https://etherscan.io/'],
-  //   token: 'ETH',
-  // },
 }
 
 export function getNetworkConfig(chainId: ChainsValues): ChainConfig {
@@ -89,7 +81,8 @@ export function getNetworkConfig(chainId: ChainsValues): ChainConfig {
  * The list follow the standard from: https://tokenlists.org/
  */
 export const TokensLists = {
-  '1INCH': 'https://gateway.ipfs.io/ipns/tokens.1inch.eth',
-  COINGECKO: 'https://tokens.coingecko.com/uniswap/all.json',
-  OPTIMISM: 'https://static.optimism.io/optimism.tokenlist.json',
+  // '1INCH': 'https://gateway.ipfs.io/ipns/tokens.1inch.eth',
+  // COINGECKO: 'https://tokens.coingecko.com/uniswap/all.json',
+  // OPTIMISM: 'https://static.optimism.io/optimism.tokenlist.json',
+  gnosis: './gnosis.json',
 } as const

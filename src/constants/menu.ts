@@ -4,8 +4,8 @@ export const sections = [
     section: 'home',
   },
   {
-    href: '/examples',
-    section: 'examples',
+    href: '/markets',
+    section: 'markets',
   },
   {
     href: '/about',

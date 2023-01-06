@@ -1,5 +1,8 @@
 {
   "5": {
     "rentals": "https://api.thegraph.com/subgraphs/name/sandboxthegraph/sandbox-assets-attributes-goerli"
+  },
+  "100": {
+    "rentals": "https://api.thegraph.com/subgraphs/name/sandboxthegraph/sandbox-assets-attributes-goerli"
   }
 }
