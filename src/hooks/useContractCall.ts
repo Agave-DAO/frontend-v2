@@ -11,7 +11,7 @@ export function useContractCall<
 >(
   calls: Readonly<Calls>,
   params: TupleParametersType<MyContract, Writeable<Calls>>,
-  key: string,
+  key: string | null,
   options?: SWRConfiguration,
 ): MySWRResponse<TupleReturnType<MyContract, Writeable<Calls>>> {
   const { appChainId } = useWeb3Connection()
@@ -20,7 +20,7 @@ export function useContractCall<
     error,
     mutate: refetch,
   } = useSWR(
-    [getCacheKey([...params, key, appChainId || 0])],
+    key ? [getCacheKey([...params, key, appChainId || 0])] : null,
     async () => {
       try {
         // eslint-disable-next-line prefer-spread

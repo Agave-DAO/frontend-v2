@@ -12,7 +12,7 @@ type AppFactories = GetFactories<ObjectValues<typeof typechainImports>>
 
 export const useContractInstance = <F extends AppFactories, RT extends ReturnType<F['connect']>>(
   contractFactory: F,
-  contractKey: ContractsKeys,
+  contractKey: ContractsKeys | string,
 ) => {
   const { appChainId, readOnlyAppProvider, web3Provider } = useWeb3Connection()
   const address = contracts[contractKey]['address'][appChainId]

@@ -18,8 +18,13 @@ import { BaseParagraph } from '@/src/components/text/BaseParagraph'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
 import { TokenModal } from '@/src/components/token/TokenModal'
+import TokenSpend from '@/src/components/token/TokenSpend'
+import { contracts } from '@/src/contracts/contracts'
 import { RequiredConnection } from '@/src/hooks/requiredConnection'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
 import SendUSDCForm from '@/src/pagePartials/examples/SendUSDCForm'
+import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
+import { ERC20__factory } from '@/types/generated/typechain'
 import { Token } from '@/types/token'
 
 const Card = styled(BaseCard)`
@@ -35,9 +40,12 @@ const TokenIconsContextProvider = dynamic(() => import('@/src/providers/tokenIco
 })
 
 const LeftSidebarLayout: NextPageWithLayout = () => {
+  const { address, appChainId } = useWeb3Connection()
   const [showModal, setShowModal] = useState(false)
   const [tokenDropdown, setTokenDropdown] = useState<Token | null>(null)
   const [tokenModal, setTokenModal] = useState<Token | null>(null)
+
+  const usdcAddress = contracts['USDC'].address[appChainId]
 
   return (
     <>
@@ -80,6 +88,28 @@ const LeftSidebarLayout: NextPageWithLayout = () => {
         <RequiredConnection>
           <SendUSDCForm />
         </RequiredConnection>
+        <hr />
+        <BaseParagraph>Spend token (Deposit, Withdraw, Borrow, etc)</BaseParagraph>
+        <RequiredConnection>
+          <TokenSpend
+            erc20Address={usdcAddress}
+            label="Deposit"
+            spendAction={(): any =>
+              alert(`
+              contract call that does something with the approval, 
+              like a deposit, borrow, withdraw or just a transferFrom
+              
+              erc20.transferFrom(
+                address, 
+                '0xFdAf1D88B800308Ead39F34D5eB24eB219d68ad9', 
+                '1000000'
+              )
+            `)
+            }
+            spender="0xFdAf1D88B800308Ead39F34D5eB24eB219d68ad9"
+          />
+        </RequiredConnection>
+
         <hr />
         <BaseParagraph>Modal:</BaseParagraph>
         <SimpleGrid>
