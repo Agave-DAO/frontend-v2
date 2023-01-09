@@ -4,12 +4,15 @@
 
 Starting a new project implies new and exciting challenges that are inherent to every new project, but it also means that a lot of repetitive work has to be done, subtracting valuable time from tackling those more project-specific issues. Leveraging our experience in dApp development, we have identified those repetitive tasks and developed tools that we considered relevant and gather all of them in our web3 Development Starter Kit. We want to contribute to this industry by offering this valuable tool as an open-source project.
 
-This Starter Kit is thought for web3 developers who want to fast-track the early stages of dApp development. It takes an opinionated approach on several libraries, and includes features that are common to several web3 dApps, such as wallet connection, network changes, transaction status handling, Smart Contracts types creation, supporting multiple subgraphs on multiple networks, typed consumption of data from smart contracts, and making contract calls. In addition to web3 helpers, we also provide front-end features such as dynamic loading spinners, token selectors, a basic layout with support for dark and white mode, and some UI components that we hope saves valuable developers' time. BootNode's web3 Starter Kit is an open-source project and welcomes all kinds of contributions.
+This Starter Kit is thought for web3 developers who want to fast-track the early stages of dApp development. It takes an opinionated approach on several libraries, and includes features that are common to several web3 dApps, such as wallet connection, network changes, transaction status handling, Smart Contracts types creation, supporting multiple subgraphs on multiple networks, typed consumption of data from smart contracts, and making contract calls. In addition to web3 helpers, we also provide front-end features such as dynamic loading spinners, token selectors, a basic layout with support for dark and white mode, and some UI components that we hope save valuable developers' time. BootNode's web3 Starter Kit is an open-source project and welcomes all kinds of contributions.
 
 ## Features
 
 - Wallet connectivity using [Onboard](https://onboard.blocknative.com/).
 - Supported networks and UI indicators when the network is not supported.
+- TokenInput with validations [src/components/token/TokenInput.tsx](src/components/token/TokenInput.tsx)
+- Spend token [src/components/token/TokenSpend.tsx](src/components/token/TokenSpend.tsx)
+- Configurable Token list modal [src/components/token/TokenModal.tsx](src/components/token/TokenModal.tsx)
 - Auto-generated types for smart contracts.
 - Transactions Life cycle. With homemade toasts.
 - Support for connecting with subgraphs.
@@ -216,7 +219,7 @@ You can use the theme's properties just like with any other components from the 
 
 ```tsx
 export const Paragraph = styled.p`
-  color: ${({ theme: { colors } }) => colors.textColor};  // from light.ts or dark.ts
+  color: ${({ theme: { colors } }) => colors.textColor}; // from light.ts or dark.ts
   font-family: ${({ theme: { fonts } }) => fonts.family}; // from common.ts
   font-size: 1.5rem;
   font-weight: 400;
@@ -238,17 +241,12 @@ export const TokensLists = {
 To properly support the token images source, you need to whitelist the domains in [`next.config.js`](./next.config.js), at `images.domains`:
 
 ```ts
-  images: {
-    domains: [
-      "tokens.1inch.io",
-      "ethereum-optimism.github.io",
-      "assets.coingecko.com"
-    ]
-  }
+images: {
+  domains: ['tokens.1inch.io', 'ethereum-optimism.github.io', 'assets.coingecko.com']
+}
 ```
 
 To consume them, we implemented the hook [`useTokensLists`](./src/hooks/useTokensLists.tsx). You can find a usage example in [`src/components/token/TokenDropdown.tsx`](./src/components/token/TokenDropdown.tsx). And see it in action in our example page.
-
 
 ## Contributing
 

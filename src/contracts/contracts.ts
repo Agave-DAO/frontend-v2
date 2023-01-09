@@ -1,4 +1,5 @@
 import { Chains } from '@/src/config/web3'
+import AaveProtocolDataProvider_abi from '@/src/contracts/abis/AaveProtocolDataProvider.json'
 import ERC_20_abi from '@/src/contracts/abis/ERC20.json'
 
 export const contracts = {
@@ -18,7 +19,14 @@ export const contracts = {
     address: {
       [Chains.gnosis]: '0x24dCbd376Db23e4771375092344f5CbEA3541FC0',
     },
+    abi: AaveProtocolDataProvider_abi,
   },
 } as const
 
 export type ContractsKeys = keyof typeof contracts
+
+export const isKnownContract = (
+  contractName: ContractsKeys | string,
+): contractName is ContractsKeys => {
+  return contracts[contractName as ContractsKeys] !== undefined
+}
