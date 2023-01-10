@@ -17,7 +17,7 @@
       "logoURI": "/coins/eth.svg"
     },
     {
-      "symbol": "WXDAI",
+      "symbol": "XDAI",
       "name": "Wrapped XDAI",
       "address": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d",
       "decimals": 18,
@@ -28,7 +28,7 @@
       "symbol": "USDC",
       "name": "USD Coin",
       "address": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
-      "decimals": 18,
+      "decimals": 6,
       "chainId": 100,
       "logoURI": "/coins/usdc.svg"
     },
@@ -55,6 +55,14 @@
       "decimals": 18,
       "chainId": 100,
       "logoURI": "/coins/fox.svg"
+    },
+    {
+      "symbol": "USDT",
+      "name": "Tether USD on xDai",
+      "address": "0x4ecaba5870353805a9f068101a40e0f32ed605c6",
+      "decimals": 6,
+      "chainId": 100,
+      "logoURI": "/coins/usdt.svg"
     }
   ]
 }
