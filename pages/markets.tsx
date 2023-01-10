@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { MarketList } from '../src/pagePartials/markets/MarketList'
 import { BaseCard } from '@/src/components/common/BaseCard'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
+import { agaveTokens } from '@/src/config/agaveTokens'
 import { useAllReservesTokens } from '@/src/hooks/agave/useAllReservesTokens'
 import { AgaveTokensDataProvider } from '@/src/providers/agaveTokensDataProvider'
 import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
@@ -18,16 +19,9 @@ const Card = styled(BaseCard)`
 `
 
 const Markets: NextPage = () => {
-  // TODO allTokensQuery (hardcoded value?)
-  const tokens = useAllReservesTokens()?.map(([symbol, address]: [string, string]) => ({
-    symbol,
-    address,
-    decimals: 0,
-  })) as Token[]
-
   return (
     <TokenIconsProvider>
-      <AgaveTokensDataProvider tokens={tokens}>
+      <AgaveTokensDataProvider tokens={agaveTokens.underlyingTokens}>
         <BaseTitle>Markets</BaseTitle>
         <Card>
           <MarketList />
