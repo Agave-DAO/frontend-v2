@@ -1,18 +1,20 @@
+import { useMemo } from 'react'
+
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
 import useSWR from 'swr'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { contracts } from '@/src/contracts/contracts'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
+import { getMarketSize } from '@/src/utils/markets'
 import { ChainsValues } from '@/types/chains'
-import {
-  AaveOracle__factory,
-  AaveProtocolDataProvider,
-  ERC20__factory,
-} from '@/types/generated/typechain'
+import { AaveOracle__factory, ERC20__factory } from '@/types/generated/typechain'
 import { Token } from '@/types/token'
 import { isFulfilled } from '@/types/utils'
+
+const REFRESH_INTERVAL = 5_000
 
 /**
  * TYPES
@@ -20,57 +22,11 @@ import { isFulfilled } from '@/types/utils'
 export type agaveTokenData = {
   price: BigNumber
   agTokenTotalSupply: BigNumber
-  // reserveData: TokenReserveData
-  tokenInfo: Token
+  tokenAddress: string
 }
 export type AgaveTokensData = {
-  [k: string]: agaveTokenData
+  [underlyingTokenAddress: string]: agaveTokenData
 }
-
-// TODO Should come from typeChain
-export type TokenReserveData = {
-  availableLiquidity: BigNumber
-  totalStableDebt: BigNumber
-  totalVariableDebt: BigNumber
-  liquidityRate: BigNumber
-  variableBorrowRate: BigNumber
-  stableBorrowRate: BigNumber
-  averageStableBorrowRate: BigNumber
-  liquidityIndex: BigNumber
-  variableBorrowIndex: BigNumber
-  lastUpdateTimestamp: number
-}
-
-/**
- * TRANSFORMS & CALCULATIONS
- */
-const transformReserveData = ({
-  availableLiquidity,
-  averageStableBorrowRate,
-  lastUpdateTimestamp,
-  liquidityIndex,
-  liquidityRate,
-  stableBorrowRate,
-  totalStableDebt,
-  totalVariableDebt,
-  variableBorrowIndex,
-  variableBorrowRate,
-}: TokenReserveData) => ({
-  availableLiquidity,
-  averageStableBorrowRate,
-  lastUpdateTimestamp,
-  liquidityIndex,
-  liquidityRate,
-  stableBorrowRate,
-  totalStableDebt,
-  totalVariableDebt,
-  variableBorrowIndex,
-  variableBorrowRate,
-})
-
-/**
- * UTILS
- */
 
 /**
  * FETCHERS
@@ -84,9 +40,6 @@ const fetchTokenPrice = (
   return contract.getAssetPrice(tokenAddress)
 }
 
-const fetchTokenReserveData = async (tokenAddress: string, contract: AaveProtocolDataProvider) =>
-  transformReserveData(await contract.getReserveData(tokenAddress)) // TODO Can we get better type here?
-
 const fetchAgTokenTotalSupply = async (tokenAddress: string, provider: JsonRpcBatchProvider) => {
   const { address: agTokenAddress } = agaveTokens.getProtocolTokenInfo(tokenAddress, 'ag')
   return ERC20__factory.connect(agTokenAddress, provider).totalSupply()
@@ -95,18 +48,17 @@ const fetchAgTokenTotalSupply = async (tokenAddress: string, provider: JsonRpcBa
 const fetchAgaveTokensData = async ({
   chainId,
   provider,
-  tokens,
+  underlyingTokenAddresses,
 }: {
   chainId: ChainsValues
   provider: JsonRpcBatchProvider
-  tokens: Token[]
+  underlyingTokenAddresses: string[]
 }) => {
-  const promisesBuilder = tokens.map(async (token) => {
+  const promisesBuilder = underlyingTokenAddresses.map(async (tokenAddress) => {
     return {
-      tokenInfo: token,
-      price: await fetchTokenPrice(token.address, provider, chainId),
-      agTokenTotalSupply: await fetchAgTokenTotalSupply(token.address, provider),
-      // reserveData: await fetchTokenReserveData(token.address, agaveProtocolDataProvider),
+      tokenAddress,
+      price: await fetchTokenPrice(tokenAddress, provider, chainId),
+      agTokenTotalSupply: await fetchAgTokenTotalSupply(tokenAddress, provider),
     }
   })
 
@@ -114,36 +66,80 @@ const fetchAgaveTokensData = async ({
 
   const result = rawResult.filter(isFulfilled).map(({ value }) => value)
 
-  return result.reduce((result, current) => {
-    return {
-      ...result,
-      [`${current.tokenInfo.address}`]: current,
+  let results: AgaveTokensData = {}
+  for (let index = 0; index < result.length; index++) {
+    results = {
+      ...results,
+      [`${result[index].tokenAddress}`]: result[index],
     }
-  }, {} as AgaveTokensData)
+  }
+
+  return results
 }
 
 export const useAgaveTokensData = (tokens?: Token[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
+  const underlyingTokenAddresses = tokens?.map(({ address }) => address)
 
   const {
     data,
     isLoading,
     mutate: refetchAgaveTokensData,
   } = useSWR(
-    tokens?.length ? `agave-tokens-data-${tokens.join('-')}` : null,
+    underlyingTokenAddresses?.length
+      ? `agave-tokens-data-${underlyingTokenAddresses.join('-')}`
+      : null,
     () => {
-      if (!tokens?.length) {
+      if (!underlyingTokenAddresses?.length) {
         return
       }
       const fetcherParams = {
-        tokens,
+        underlyingTokenAddresses,
         provider: batchProvider,
         chainId: appChainId,
       }
       return fetchAgaveTokensData(fetcherParams)
     },
-    { refreshInterval: 5_000, revalidateOnFocus: true },
+    { refreshInterval: REFRESH_INTERVAL },
   )
 
-  return { agaveTokensData: data, refetchAgaveTokensData, isAgaveTokenDataLoading: isLoading }
+  /* Calculating the total market size. */
+  const market = useMemo(() => {
+    let marketSizes: { [tokenAddress: string]: BigNumber } = {}
+    let totalMarketSize = ZERO_BN
+
+    if (!data) {
+      return {
+        marketSizes,
+        totalMarketSize,
+      }
+    }
+
+    Object.values(data).forEach(({ agTokenTotalSupply, price, tokenAddress }) => {
+      const currentMarketSize = getMarketSize({
+        tokenAddress,
+        agTokenTotalSupply,
+        price,
+      })
+
+      marketSizes = {
+        ...marketSizes,
+        [tokenAddress]: currentMarketSize,
+      }
+
+      totalMarketSize = totalMarketSize.add(currentMarketSize)
+    })
+
+    return {
+      marketSizes,
+      totalMarketSize,
+    }
+  }, [data])
+
+  return {
+    agaveTokensData: data,
+    refetchAgaveTokensData,
+    isAgaveTokenDataLoading: isLoading,
+    market,
+  }
 }
