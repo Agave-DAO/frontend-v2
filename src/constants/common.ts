@@ -2,3 +2,5 @@ export const appName = process.env.NEXT_PUBLIC_APP_NAME || 'letsHopeWeCanAvoidNa
 export const cookiesWarningEnabled =
   process.env.NEXT_PUBLIC_COOKIES_WARNING_ENABLED === 'true' || ''
 export const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''
+
+export const DAI_DECIMALS = 18
