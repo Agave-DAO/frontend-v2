@@ -1,0 +1,60 @@
+{
+  "tokens": [
+    {
+      "symbol": "GNO",
+      "name": "Gnosis",
+      "address": "0x9c58bacc331c9aa871afd802db6379a98e80cedb",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/gno.png"
+    },
+    {
+      "symbol": "WETH",
+      "name": "WETH",
+      "address": "0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/eth.svg"
+    },
+    {
+      "symbol": "WXDAI",
+      "name": "Wrapped XDAI",
+      "address": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/wxdai.svg"
+    },
+    {
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "address": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/usdc.svg"
+    },
+    {
+      "symbol": "WBTC",
+      "name": "Wrapped Bitcoin",
+      "address": "0x8e5bbbb09ed1ebde8674cda39a0c169401db4252",
+      "decimals": 8,
+      "chainId": 100,
+      "logoURI": "/coins/wbtc.svg"
+    },
+    {
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "address": "0xe2e73a1c69ecf83f464efce6a5be353a37ca09b2",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/link.webp"
+    },
+    {
+      "symbol": "FOX",
+      "name": "ShapeShift FOX",
+      "address": "0x21a42669643f45bc0e086b8fc2ed70c23d67509d",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/fox.svg"
+    }
+  ]
+}
