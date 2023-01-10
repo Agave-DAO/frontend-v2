@@ -7,12 +7,8 @@ import { contracts } from '@/src/contracts/contracts'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { ChainsValues } from '@/types/chains'
 import {
-  AaveOracle,
   AaveOracle__factory,
   AaveProtocolDataProvider,
-  AaveProtocolDataProvider__factory,
-  AgaveLendingABI__factory,
-  ERC20,
   ERC20__factory,
 } from '@/types/generated/typechain'
 import { Token } from '@/types/token'
