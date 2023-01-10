@@ -2,6 +2,7 @@ import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
 import useSWR from 'swr'
 
+import { agaveTokens } from '@/src/config/agaveTokens'
 import { contracts } from '@/src/contracts/contracts'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { ChainsValues } from '@/types/chains'
@@ -11,6 +12,7 @@ import {
   AaveProtocolDataProvider,
   AaveProtocolDataProvider__factory,
   AgaveLendingABI__factory,
+  ERC20,
   ERC20__factory,
 } from '@/types/generated/typechain'
 import { Token } from '@/types/token'
@@ -20,8 +22,9 @@ import { isFulfilled } from '@/types/utils'
  * TYPES
  */
 export type agaveTokenData = {
-  priceInDai: BigNumber
-  reserveData: TokenReserveData
+  price: BigNumber
+  agTokenTotalSupply: BigNumber
+  // reserveData: TokenReserveData
   tokenInfo: Token
 }
 export type AgaveTokensData = {
@@ -72,34 +75,26 @@ const transformReserveData = ({
 /**
  * UTILS
  */
-const contractsForTokensData = (
-  chainId: ChainsValues,
-  provider: JsonRpcBatchProvider,
-  tokenAddress: string,
-) => ({
-  agaveOracleContract: AaveOracle__factory.connect(
-    contracts.AgaveOracle.address[chainId],
-    provider,
-  ),
-  agaveLendingPoolContract: AgaveLendingABI__factory.connect(
-    contracts.AgaveLendingPool.address[chainId],
-    provider,
-  ),
-  agaveProtocolDataProvider: AaveProtocolDataProvider__factory.connect(
-    contracts.AaveProtocolDataProvider.address[chainId],
-    provider,
-  ),
-  AgaveTokenContract: ERC20__factory.connect(tokenAddress, provider),
-})
 
 /**
  * FETCHERS
  */
-const fetchTokenPrice = (tokenAddress: string, contract: AaveOracle) =>
-  contract.getAssetPrice(tokenAddress)
+const fetchTokenPrice = (
+  tokenAddress: string,
+  provider: JsonRpcBatchProvider,
+  chainId: ChainsValues,
+) => {
+  const contract = AaveOracle__factory.connect(contracts.AgaveOracle.address[chainId], provider)
+  return contract.getAssetPrice(tokenAddress)
+}
 
 const fetchTokenReserveData = async (tokenAddress: string, contract: AaveProtocolDataProvider) =>
   transformReserveData(await contract.getReserveData(tokenAddress)) // TODO Can we get better type here?
+
+const fetchAgTokenTotalSupply = async (tokenAddress: string, provider: JsonRpcBatchProvider) => {
+  const { address: agTokenAddress } = agaveTokens.getProtocolTokenInfo(tokenAddress, 'ag')
+  return ERC20__factory.connect(agTokenAddress, provider).totalSupply()
+}
 
 const fetchAgaveTokensData = async ({
   chainId,
@@ -111,16 +106,11 @@ const fetchAgaveTokensData = async ({
   tokens: Token[]
 }) => {
   const promisesBuilder = tokens.map(async (token) => {
-    const { agaveOracleContract, agaveProtocolDataProvider } = contractsForTokensData(
-      chainId,
-      provider,
-      token.address,
-    )
-
     return {
       tokenInfo: token,
-      priceInDai: await fetchTokenPrice(token.address, agaveOracleContract),
-      reserveData: await fetchTokenReserveData(token.address, agaveProtocolDataProvider),
+      price: await fetchTokenPrice(token.address, provider, chainId),
+      agTokenTotalSupply: await fetchAgTokenTotalSupply(token.address, provider),
+      // reserveData: await fetchTokenReserveData(token.address, agaveProtocolDataProvider),
     }
   })
 

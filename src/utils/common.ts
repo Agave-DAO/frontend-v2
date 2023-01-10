@@ -1,37 +1,22 @@
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { formatUnits } from '@ethersproject/units'
+import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 
-const DISPLAY_DECIMALS_PRICE = 2
-const DISPLAY_DECIMALS_AMOUNT = 4
+import { DAI_DECIMALS } from '../constants/common'
+
+const DISPLAY_DECIMALS = 2
+
+export const formatNumber = (value: number, displayDecimals = DISPLAY_DECIMALS): string =>
+  value !== undefined
+    ? Intl.NumberFormat('en', {
+        maximumFractionDigits: displayDecimals,
+      }).format(value)
+    : ''
 
 export const formatAmount = (
-  value: BigNumberish,
-  symbol: string,
-  decimals: number,
-  symbolPosition: 'before' | 'after',
+  value: BigNumber,
+  decimals: number = DAI_DECIMALS,
+  symbol = '$',
+  symbolPosition: 'before' | 'after' = 'before',
 ): string =>
-  `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatUnits(value, decimals)}${
-    symbolPosition === 'after' ? ` ${symbol} ` : ''
-  }`
-
-/**
- * Returns an object with the raw value and a formatted
- * value
- * @param {decimals}  - `decimals` - the number of decimals the token has
- * @param {value}  - `value` - BigNumber instance
- */
-type FormatValueParams = { decimals: number; value: BigNumber; symbol?: string }
-export const rawAndFormatted = ({ decimals, value }: FormatValueParams) => ({
-  raw: value,
-  formatted: formatUnits(value, decimals),
-})
-
-/**
- * Render as a price format
- * @param {FormatValueParams}  - FormatValueParams
- */
-export const renderAsPrice = ({ decimals, symbol = '$', value }: FormatValueParams) =>
-  formatAmount(value, symbol, decimals, 'before')
-
-export const renderAsAmount = ({ decimals, symbol = '', value }: FormatValueParams) =>
-  formatAmount(value, symbol, decimals, 'after')
+  `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(
+    FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
+  )}${symbolPosition === 'after' ? ` ${symbol} ` : ''}`
