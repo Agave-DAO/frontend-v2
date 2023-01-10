@@ -34,7 +34,7 @@ export const MarketList = withGenericSuspense(
           <strong>Stable borrow APR</strong>
         </Grid>
         <hr />
-        {Object.values(agaveTokensData!).map(({ priceInDai, reserveData, tokenInfo }) => (
+        {Object.values(agaveTokensData).map(({ priceInDai, tokenInfo }) => (
           <Fragment key={tokenInfo.address}>
             <Grid>
               <strong>
@@ -53,5 +53,5 @@ export const MarketList = withGenericSuspense(
       </>
     )
   },
-  () => <Loading text="Fetching markets" />,
+  () => <Loading text="Fetching markets..." />,
 )

@@ -11,7 +11,6 @@ import {
   AaveProtocolDataProvider,
   AaveProtocolDataProvider__factory,
   AgaveLendingABI__factory,
-  ERC20,
   ERC20__factory,
 } from '@/types/generated/typechain'
 import { Token } from '@/types/token'
@@ -23,7 +22,7 @@ import { isFulfilled } from '@/types/utils'
 export type agaveTokenData = {
   priceInDai: BigNumber
   reserveData: TokenReserveData
-  tokenInfo: Pick<Token, 'address' | 'symbol' | 'decimals'>
+  tokenInfo: Token
 }
 export type AgaveTokensData = {
   [k: string]: agaveTokenData
