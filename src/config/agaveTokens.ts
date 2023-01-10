@@ -33,6 +33,11 @@ class AgaveTokens implements IDAgaveTokens {
   private _protocolTokens: AgaveProtocolTokens = TOKENS_BY_UNDERLYING
   private _protocolName = 'Agave'
 
+  constructor() {
+    // runtime check to prevent consuming invalid token info
+    this.allTokensInfo.every(this.isValidTokenInfo)
+  }
+
   get underlyingTokens() {
     return this._underlyingTokens
   }
@@ -112,6 +117,34 @@ class AgaveTokens implements IDAgaveTokens {
         }
       }),
     ]
+  }
+
+  private isValidTokenInfo(tokenInfo: Token) {
+    if (tokenInfo.address === undefined) {
+      throw new Error('Token address is required')
+    }
+
+    if (tokenInfo.symbol === undefined) {
+      throw new Error('Token symbol is required')
+    }
+
+    if (tokenInfo.decimals === undefined) {
+      throw new Error('Token decimals is required')
+    }
+
+    if (tokenInfo.name === undefined) {
+      throw new Error('Token name is required')
+    }
+
+    if (tokenInfo.logoURI === undefined) {
+      throw new Error('Token logoURI is required')
+    }
+
+    if (tokenInfo.chainId === undefined) {
+      throw new Error('Token chainId is required')
+    }
+
+    return true
   }
 }
 
