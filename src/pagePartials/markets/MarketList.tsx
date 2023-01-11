@@ -23,15 +23,19 @@ const Grid = styled.a`
 export const MarketList = withGenericSuspense(
   ({ tokens }: { tokens: Token[] }) => {
     const {
-      agaveTokensData,
       getBorrowRate,
       getDepositAPY,
       getTokenMarketSize,
       getTokenTotalBorrowed,
+      getTokensWithData,
       getTotalMarketSize,
     } = useAgaveTokensData(tokens)
 
-    if (!agaveTokensData) return <Loading />
+    const tokensWithData = getTokensWithData(false)
+
+    if (!tokensWithData) {
+      return <p>Unable to get markets</p>
+    }
 
     return (
       <>
@@ -46,7 +50,7 @@ export const MarketList = withGenericSuspense(
           <strong>Stable borrow APR</strong>
         </Grid>
         <hr />
-        {Object.values(agaveTokensData).map(({ price, tokenAddress }) => {
+        {Object.values(tokensWithData).map(({ price, tokenAddress }) => {
           const { decimals, symbol } = agaveTokens.getUnderlyingTokenInfoByAddress(tokenAddress)
 
           return (

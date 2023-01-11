@@ -1,12 +1,12 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
-import { sumBy, unionBy } from 'lodash'
 import useSWR from 'swr'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { MAX_UINT_256, ZERO_BN } from '@/src/constants/bigNumber'
+import { ZERO_BN } from '@/src/constants/bigNumber'
+import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { contracts } from '@/src/contracts/contracts'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { getMarketSize } from '@/src/utils/markets'
@@ -18,9 +18,6 @@ import {
 } from '@/types/generated/typechain'
 import { Token } from '@/types/token'
 import { isFulfilled } from '@/types/utils'
-
-// Each 5 seg the data will be updated
-const REFRESH_INTERVAL = 5_000
 
 /**
  * TYPES
@@ -36,6 +33,7 @@ export type AgaveTokenData = {
     variableBorrowRate: BigNumber
     stableBorrowRate: BigNumber
   }
+  assetData: { isActive: boolean; isFrozen: boolean }
 }
 
 export type AgaveTokensData = {
@@ -79,6 +77,20 @@ const fetchReserveData = async (
   }
 }
 
+const fetchAssetConfigurationData = async (
+  tokenAddress: string,
+  provider: JsonRpcBatchProvider,
+  chainId: ChainsValues,
+) => {
+  return {
+    assetData: await AaveProtocolDataProvider__factory.connect(
+      contracts.AaveProtocolDataProvider.address[chainId],
+      provider,
+    ).getReserveConfigurationData(tokenAddress),
+    tokenAddress,
+  }
+}
+
 const fetchAgaveTokensData = async ({
   chainId,
   provider,
@@ -91,17 +103,20 @@ const fetchAgaveTokensData = async ({
   const pricesPromises: ReturnType<typeof fetchTokenPrice>[] = []
   const agTokenTotalSupplyPromises: ReturnType<typeof fetchAgTokenTotalSupply>[] = []
   const reserveDataPromise: ReturnType<typeof fetchReserveData>[] = []
+  const assetDataPromise: ReturnType<typeof fetchAssetConfigurationData>[] = []
 
   underlyingTokenAddresses.forEach(async (tokenAddress) => {
     pricesPromises.push(fetchTokenPrice(tokenAddress, provider, chainId))
     agTokenTotalSupplyPromises.push(fetchAgTokenTotalSupply(tokenAddress, provider))
     reserveDataPromise.push(fetchReserveData(tokenAddress, provider, chainId))
+    assetDataPromise.push(fetchAssetConfigurationData(tokenAddress, provider, chainId))
   })
 
   const combinedPromisesResolved = await Promise.allSettled([
     ...pricesPromises,
     ...agTokenTotalSupplyPromises,
     ...reserveDataPromise,
+    ...assetDataPromise,
   ])
 
   // TODO catch errors here
@@ -132,7 +147,7 @@ const useTokensDataQuery = (underlyingTokenAddresses: string[]) => {
       }
       return fetchAgaveTokensData(fetcherParams)
     },
-    { refreshInterval: REFRESH_INTERVAL },
+    { refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL },
   )
 
   return {
@@ -144,6 +159,24 @@ const useTokensDataQuery = (underlyingTokenAddresses: string[]) => {
 export const useAgaveTokensData = (tokens: Token[]) => {
   const underlyingTokenAddresses = tokens.map(({ address }) => address)
   const { agaveTokensData, refetchAgaveTokensData } = useTokensDataQuery(underlyingTokenAddresses)
+
+  const getTokensWithData = useCallback(
+    (showDisabledTokens: boolean) => {
+      if (!agaveTokensData) {
+        return
+      }
+      if (showDisabledTokens) {
+        return agaveTokensData
+      }
+      console.log(agaveTokensData)
+      const filteredDisabledTokens = Object.entries(agaveTokensData).filter(
+        ([, { assetData }]) => !assetData.isFrozen,
+      )
+
+      return Object.fromEntries(filteredDisabledTokens)
+    },
+    [agaveTokensData],
+  )
 
   /* Returns the market size of a token. */
   const getTokenMarketSize = useCallback(
@@ -219,7 +252,7 @@ export const useAgaveTokensData = (tokens: Token[]) => {
   )
 
   return {
-    agaveTokensData: agaveTokensData,
+    getTokensWithData,
     refetchAgaveTokensData,
     getTokenMarketSize,
     getTotalMarketSize,
