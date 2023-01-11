@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { agaveTokens } from '../config/agaveTokens'
+import { agaveTokens } from '@/src/config/agaveTokens'
 
 type Params = { agTokenTotalSupply: BigNumber; price: BigNumber; tokenAddress: string }
 

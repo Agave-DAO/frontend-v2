@@ -20,11 +20,6 @@ const Grid = styled.a`
   }
 `
 
-const DISABLED_MARKETS = [
-  '0xe2e73a1c69ecf83f464efce6a5be353a37ca09b2',
-  '0x21a42669643f45bc0e086b8fc2ed70c23d67509d',
-]
-
 export const MarketList = withGenericSuspense(
   ({ tokens }: { tokens: Token[] }) => {
     const {
@@ -40,7 +35,7 @@ export const MarketList = withGenericSuspense(
 
     return (
       <>
-        TOTAL MARKET SIZE: {formatAmount(getTotalMarketSize())}
+        <h3>TOTAL MARKET SIZE: {formatAmount(getTotalMarketSize())}</h3>
         <Grid>
           <strong>Asset</strong>
           <strong>Price</strong>
@@ -73,7 +68,8 @@ export const MarketList = withGenericSuspense(
                     )}
                   </p>
                 </div>
-                {/* TODO: missing include incentive rate here */}
+                {/* TODO: missing include incentive rates here */}
+                {/* TODO: Move 25/27 to a constant */}
                 <p>{formatPercentage(getDepositAPY(tokenAddress), 25)}</p>
                 <p>{formatPercentage(getBorrowRate(tokenAddress).variable, 27)}</p>
                 <p>{formatPercentage(getBorrowRate(tokenAddress).stable, 27)}</p>

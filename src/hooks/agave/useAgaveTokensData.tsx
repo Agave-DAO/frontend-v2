@@ -115,7 +115,7 @@ const fetchAgaveTokensData = async ({
   return results
 }
 
-const useTokensDataQuery = (underlyingTokenAddresses?: string[]) => {
+const useTokensDataQuery = (underlyingTokenAddresses: string[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
   const { data, mutate: refetchAgaveTokensData } = useSWR(
     underlyingTokenAddresses?.length
@@ -141,8 +141,8 @@ const useTokensDataQuery = (underlyingTokenAddresses?: string[]) => {
   }
 }
 
-export const useAgaveTokensData = (tokens?: Token[]) => {
-  const underlyingTokenAddresses = tokens?.map(({ address }) => address)
+export const useAgaveTokensData = (tokens: Token[]) => {
+  const underlyingTokenAddresses = tokens.map(({ address }) => address)
   const { agaveTokensData, refetchAgaveTokensData } = useTokensDataQuery(underlyingTokenAddresses)
 
   /* Returns the market size of a token. */

@@ -1,8 +1,6 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 
-import { DAI_DECIMALS } from '../constants/common'
-
-const DISPLAY_DECIMALS = 3
+import { DISPLAY_DECIMALS, NATIVE_DECIMALS } from '@/src/constants/common'
 
 export const formatNumber = (value: number, displayDecimals = DISPLAY_DECIMALS): string =>
   value !== undefined
@@ -20,7 +18,7 @@ export const formatNumber = (value: number, displayDecimals = DISPLAY_DECIMALS):
  */
 export const formatAmount = (
   value: BigNumber,
-  decimals: number = DAI_DECIMALS,
+  decimals: number = NATIVE_DECIMALS,
   symbol = '$',
   symbolPosition: 'before' | 'after' = 'before',
 ): string =>
