@@ -66,11 +66,15 @@ class AgaveTokens implements IDAgaveTokens {
   }
 
   getProtocolTokensByUnderlying(underlying: string): AgaveProtocolTokens['underlying'] {
-    const protocolTokens = this._protocolTokens[underlying]
+    const foundToken = Object.entries(this._protocolTokens).find(([address]) =>
+      isSameAddress(address, underlying),
+    )
 
-    if (!protocolTokens) {
+    if (!foundToken) {
       throw Error('Unsupported underlying token')
     }
+
+    const [, protocolTokens] = foundToken
 
     return protocolTokens
   }
