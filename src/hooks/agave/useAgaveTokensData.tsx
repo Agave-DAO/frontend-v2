@@ -6,7 +6,7 @@ import { sumBy, unionBy } from 'lodash'
 import useSWR from 'swr'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { ZERO_BN } from '@/src/constants/bigNumber'
+import { MAX_UINT_256, ZERO_BN } from '@/src/constants/bigNumber'
 import { contracts } from '@/src/contracts/contracts'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { getMarketSize } from '@/src/utils/markets'
@@ -32,6 +32,9 @@ export type AgaveTokenData = {
   reserveData: {
     totalStableDebt: BigNumber
     totalVariableDebt: BigNumber
+    liquidityRate: BigNumber
+    variableBorrowRate: BigNumber
+    stableBorrowRate: BigNumber
   }
 }
 
@@ -187,11 +190,41 @@ export const useAgaveTokensData = (tokens?: Token[]) => {
     [agaveTokensData],
   )
 
+  const getDepositAPY = useCallback(
+    (tokenAddress: string) => {
+      const tokenData = agaveTokensData?.[tokenAddress]
+      if (!tokenData) {
+        return ZERO_BN
+      }
+      return tokenData.reserveData.liquidityRate
+    },
+    [agaveTokensData],
+  )
+
+  const getBorrowRate = useCallback(
+    (tokenAddress: string) => {
+      const tokenData = agaveTokensData?.[tokenAddress]
+      if (!tokenData) {
+        return {
+          stable: ZERO_BN,
+          variable: ZERO_BN,
+        }
+      }
+      return {
+        stable: tokenData.reserveData.variableBorrowRate,
+        variable: tokenData.reserveData.stableBorrowRate,
+      }
+    },
+    [agaveTokensData],
+  )
+
   return {
     agaveTokensData: agaveTokensData,
     refetchAgaveTokensData,
     getTokenMarketSize,
     getTotalMarketSize,
     getTokenTotalBorrowed,
+    getDepositAPY,
+    getBorrowRate,
   }
 }

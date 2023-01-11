@@ -6,7 +6,7 @@ import { Loading } from '@/src/components/loading/Loading'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useAgaveTokensData } from '@/src/hooks/agave/useAgaveTokensData'
-import { formatAmount } from '@/src/utils/common'
+import { formatAmount, formatPercentage } from '@/src/utils/common'
 import { Token } from '@/types/token'
 
 const Grid = styled.a`
@@ -27,8 +27,14 @@ const DISABLED_MARKETS = [
 
 export const MarketList = withGenericSuspense(
   ({ tokens }: { tokens: Token[] }) => {
-    const { agaveTokensData, getTokenMarketSize, getTokenTotalBorrowed, getTotalMarketSize } =
-      useAgaveTokensData(tokens)
+    const {
+      agaveTokensData,
+      getBorrowRate,
+      getDepositAPY,
+      getTokenMarketSize,
+      getTokenTotalBorrowed,
+      getTotalMarketSize,
+    } = useAgaveTokensData(tokens)
 
     if (!agaveTokensData) return <Loading />
 
@@ -47,6 +53,7 @@ export const MarketList = withGenericSuspense(
         <hr />
         {Object.values(agaveTokensData).map(({ price, tokenAddress }) => {
           const { decimals, symbol } = agaveTokens.getUnderlyingTokenInfoByAddress(tokenAddress)
+
           return (
             <Fragment key={tokenAddress}>
               <Grid>
@@ -66,9 +73,10 @@ export const MarketList = withGenericSuspense(
                     )}
                   </p>
                 </div>
-                <p></p>
-                <p></p>
-                <p></p>
+                {/* TODO: missing include incentive rate here */}
+                <p>{formatPercentage(getDepositAPY(tokenAddress), 25)}</p>
+                <p>{formatPercentage(getBorrowRate(tokenAddress).variable, 27)}</p>
+                <p>{formatPercentage(getBorrowRate(tokenAddress).stable, 27)}</p>
               </Grid>
               <hr />
             </Fragment>

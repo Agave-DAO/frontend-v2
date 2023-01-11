@@ -27,3 +27,8 @@ export const formatAmount = (
   `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(
     FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
   )}${symbolPosition === 'after' ? ` ${symbol} ` : ''}`
+
+export const formatPercentage = (value: BigNumber, decimals: number) =>
+  `${FixedNumber.fromValue(value, decimals, 'fixed128x27')
+    .toUnsafeFloat()
+    .toFixed(DISPLAY_DECIMALS)} %`
