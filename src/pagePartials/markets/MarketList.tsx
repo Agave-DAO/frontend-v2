@@ -27,7 +27,8 @@ const DISABLED_MARKETS = [
 
 export const MarketList = withGenericSuspense(
   ({ tokens }: { tokens: Token[] }) => {
-    const { agaveTokensData, getTokenMarketSize, getTotalMarketSize } = useAgaveTokensData(tokens)
+    const { agaveTokensData, getTokenMarketSize, getTokenTotalBorrowed, getTotalMarketSize } =
+      useAgaveTokensData(tokens)
 
     if (!agaveTokensData) return <Loading />
 
@@ -45,7 +46,7 @@ export const MarketList = withGenericSuspense(
         </Grid>
         <hr />
         {Object.values(agaveTokensData).map(({ price, tokenAddress }) => {
-          const { symbol } = agaveTokens.getUnderlyingTokenInfoByAddress(tokenAddress)
+          const { decimals, symbol } = agaveTokens.getUnderlyingTokenInfoByAddress(tokenAddress)
           return (
             <Fragment key={tokenAddress}>
               <Grid>
@@ -54,7 +55,17 @@ export const MarketList = withGenericSuspense(
                 </strong>
                 <p>{formatAmount(price)}</p>
                 <p>{formatAmount(getTokenMarketSize(tokenAddress))}</p>
-                <p></p>
+                <div>
+                  <p>{formatAmount(getTokenTotalBorrowed(tokenAddress, decimals).dai)}</p>
+                  <p>
+                    {formatAmount(
+                      getTokenTotalBorrowed(tokenAddress, decimals).wei,
+                      decimals,
+                      '',
+                      'after',
+                    )}
+                  </p>
+                </div>
                 <p></p>
                 <p></p>
                 <p></p>

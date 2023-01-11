@@ -29,6 +29,10 @@ export type AgaveTokenData = {
   tokenAddress: string
   price: BigNumber
   agTokenTotalSupply: BigNumber
+  reserveData: {
+    totalStableDebt: BigNumber
+    totalVariableDebt: BigNumber
+  }
 }
 
 export type AgaveTokensData = {
@@ -141,14 +145,14 @@ export const useAgaveTokensData = (tokens?: Token[]) => {
   /* Returns the market size of a token. */
   const getTokenMarketSize = useCallback(
     (tokenAddress: string) => {
-      const tokenIsInData = agaveTokensData?.[tokenAddress]
-      if (!tokenIsInData) {
+      const tokenData = agaveTokensData?.[tokenAddress]
+      if (!tokenData) {
         return ZERO_BN
       }
       return getMarketSize({
         tokenAddress,
-        agTokenTotalSupply: tokenIsInData.agTokenTotalSupply,
-        price: tokenIsInData.price,
+        agTokenTotalSupply: tokenData.agTokenTotalSupply,
+        price: tokenData.price,
       })
     },
     [agaveTokensData],
@@ -165,10 +169,29 @@ export const useAgaveTokensData = (tokens?: Token[]) => {
     )
   }, [agaveTokensData, getTokenMarketSize])
 
+  const getTokenTotalBorrowed = useCallback(
+    (tokenAddress: string, decimals: number) => {
+      const tokenData = agaveTokensData?.[tokenAddress]
+      if (!tokenData) {
+        return { wei: ZERO_BN, dai: ZERO_BN }
+      }
+      const { totalStableDebt, totalVariableDebt } = tokenData.reserveData
+      return {
+        wei: totalStableDebt.add(totalVariableDebt),
+        dai: totalStableDebt
+          .add(totalVariableDebt)
+          .mul(tokenData.price)
+          .div(BigNumber.from(10).pow(decimals)),
+      }
+    },
+    [agaveTokensData],
+  )
+
   return {
     agaveTokensData: agaveTokensData,
     refetchAgaveTokensData,
     getTokenMarketSize,
     getTotalMarketSize,
+    getTokenTotalBorrowed,
   }
 }
