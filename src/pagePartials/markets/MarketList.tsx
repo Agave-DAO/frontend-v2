@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
+import { agaveTokens } from '@/src/config/agaveTokens'
 import { useAgaveTokensData } from '@/src/hooks/agave/useAgaveTokensData'
 import { formatAmount } from '@/src/utils/common'
 import { Token } from '@/types/token'
@@ -26,19 +27,13 @@ const DISABLED_MARKETS = [
 
 export const MarketList = withGenericSuspense(
   ({ tokens }: { tokens: Token[] }) => {
-    const { agaveTokensData, market } = useAgaveTokensData(tokens)
+    const { agaveTokensData, getTokenMarketSize, getTotalMarketSize } = useAgaveTokensData(tokens)
 
     if (!agaveTokensData) return <Loading />
 
-    const dataWithoutDisabledMarket = Object.fromEntries(
-      Object.entries(agaveTokensData).filter(
-        ([tokenAddress]) => !DISABLED_MARKETS.includes(tokenAddress),
-      ),
-    )
-
     return (
       <>
-        TOTAL MARKET SIZE: {formatAmount(market.totalMarketSize)}
+        TOTAL MARKET SIZE: {formatAmount(getTotalMarketSize())}
         <Grid>
           <strong>Asset</strong>
           <strong>Price</strong>
@@ -49,20 +44,16 @@ export const MarketList = withGenericSuspense(
           <strong>Stable borrow APR</strong>
         </Grid>
         <hr />
-        {tokens.map(({ address, symbol }) => {
-          const { price: marketPrice } = agaveTokensData[address]
-          const marketSize = market.marketSizes[address]
-
-          // if (DISABLED_MARKETS.includes(address)) return null
-
+        {Object.values(agaveTokensData).map(({ price, tokenAddress }) => {
+          const { symbol } = agaveTokens.getUnderlyingTokenInfoByAddress(tokenAddress)
           return (
-            <Fragment key={address}>
+            <Fragment key={tokenAddress}>
               <Grid>
                 <strong>
                   <TokenIcon symbol={symbol} /> {symbol}
                 </strong>
-                <p>{formatAmount(marketPrice)}</p>
-                <p>{formatAmount(marketSize)}</p>
+                <p>{formatAmount(price)}</p>
+                <p>{formatAmount(getTokenMarketSize(tokenAddress))}</p>
                 <p></p>
                 <p></p>
                 <p></p>
