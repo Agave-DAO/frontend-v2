@@ -159,26 +159,23 @@ const useTokensDataQuery = (underlyingTokenAddresses: string[]) => {
   }
 }
 
-export const useAgaveTokensData = (tokens: Token[]) => {
+export const useAgaveTokensData = (tokens: Token[], showDisabledTokens?: boolean) => {
   const underlyingTokenAddresses = tokens.map(({ address }) => address)
   const { agaveTokensData, refetchAgaveTokensData } = useTokensDataQuery(underlyingTokenAddresses)
 
-  const getTokensWithData = useCallback(
-    (showDisabledTokens: boolean) => {
-      if (!agaveTokensData) {
-        return
-      }
-      if (showDisabledTokens) {
-        return agaveTokensData
-      }
-      const filteredDisabledTokens = Object.entries(agaveTokensData).filter(
-        ([, { assetData }]) => !assetData.isFrozen,
-      )
+  const getTokensWithData = useCallback(() => {
+    if (!agaveTokensData) {
+      return
+    }
+    if (showDisabledTokens) {
+      return agaveTokensData
+    }
+    const filteredDisabledTokens = Object.entries(agaveTokensData).filter(
+      ([, { assetData }]) => !assetData.isFrozen,
+    )
 
-      return Object.fromEntries(filteredDisabledTokens)
-    },
-    [agaveTokensData],
-  )
+    return Object.fromEntries(filteredDisabledTokens)
+  }, [agaveTokensData, showDisabledTokens])
 
   /* Returns the market size of a token. */
   const getTokenMarketSize = useCallback(
@@ -197,15 +194,17 @@ export const useAgaveTokensData = (tokens: Token[]) => {
   )
 
   /* Returns the total market size of all the tokens. */
+  /* If showDisabledTokens is true, we need to filter those tokens, to do that we have to use getTokenWithData. */
   const getTotalMarketSize = useCallback(() => {
-    if (!agaveTokensData) {
+    const tokens = getTokensWithData()
+    if (!tokens) {
       return ZERO_BN
     }
-    return Object.values(agaveTokensData).reduce(
+    return Object.values(tokens).reduce(
       (total, current) => total.add(getTokenMarketSize(current.tokenAddress)),
       ZERO_BN,
     )
-  }, [agaveTokensData, getTokenMarketSize])
+  }, [getTokenMarketSize, getTokensWithData])
 
   const getTokenTotalBorrowed = useCallback(
     (tokenAddress: string, decimals: number) => {

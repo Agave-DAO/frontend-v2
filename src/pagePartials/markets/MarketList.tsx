@@ -29,9 +29,9 @@ export const MarketList = withGenericSuspense(
       getTokenTotalBorrowed,
       getTokensWithData,
       getTotalMarketSize,
-    } = useAgaveTokensData(tokens)
+    } = useAgaveTokensData(tokens, false)
 
-    const tokensWithData = getTokensWithData(false)
+    const tokensWithData = getTokensWithData()
 
     if (!tokensWithData) {
       return <p>Unable to get markets</p>
