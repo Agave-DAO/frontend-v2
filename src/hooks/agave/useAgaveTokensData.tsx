@@ -130,6 +130,9 @@ const fetchAgaveTokensData = async ({
   return results
 }
 
+// WARNING: batch provider accepts a maximum of 100 calls. Each token has 4 queries to get data.
+// 1 token = 4 queries, 2 tokens = 8 queries, 8 tokens = 32 queries
+// We must be careful if there are more than ~25 tokens in the array
 const useTokensDataQuery = (underlyingTokenAddresses: string[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
   const { data, mutate: refetchAgaveTokensData } = useSWR(
@@ -168,7 +171,6 @@ export const useAgaveTokensData = (tokens: Token[]) => {
       if (showDisabledTokens) {
         return agaveTokensData
       }
-      console.log(agaveTokensData)
       const filteredDisabledTokens = Object.entries(agaveTokensData).filter(
         ([, { assetData }]) => !assetData.isFrozen,
       )
