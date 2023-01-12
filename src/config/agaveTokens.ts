@@ -2,6 +2,7 @@ import { protocolTokens } from '@/public/protocolTokens.json'
 import { tokens } from '@/public/underlyingTokens.json'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 import { Token } from '@/types/token'
+import { RequiredFieldsOnly } from '@/types/utils'
 
 export type AgaveProtocolTokens = {
   [underlying: string]: {
@@ -108,6 +109,24 @@ class AgaveTokens implements IDAgaveTokens {
       default:
         throw new Error('Unsupported token type')
     }
+  }
+
+  getTokenBy(fieldAndValue: Partial<RequiredFieldsOnly<Token>>): Token | undefined {
+    const [field, value] = Object.entries(fieldAndValue)[0]
+
+    if (!field || !value) {
+      throw new Error('Invalid field and value')
+    }
+
+    if (typeof value === 'number') {
+      return this.allTokensInfo.find((token) => token[field] === value)
+    }
+
+    if (field === 'address') {
+      return this.allTokensInfo.find((token) => isSameAddress(token[field], value))
+    }
+
+    return this.allTokensInfo.find((token) => token[field].toLowerCase() === value.toLowerCase())
   }
 
   get allTokensInfo(): Token[] {

@@ -1,6 +1,8 @@
 import type { TokenInfo, TokenList } from '@uniswap/token-lists'
 
-export type Token = TokenInfo
+import { IStringIndex } from '@/types/utils'
+
+export type Token = IStringIndex & TokenInfo
 export type TokenListResponse = TokenList
 
 export type TokensByAddress = { [address: string]: Token }

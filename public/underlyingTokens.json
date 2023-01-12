@@ -17,7 +17,7 @@
       "logoURI": "/coins/eth.svg"
     },
     {
-      "symbol": "XDAI",
+      "symbol": "WXDAI",
       "name": "Wrapped XDAI",
       "address": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d",
       "decimals": 18,

@@ -74,3 +74,9 @@ export type IntrinsicElements<H extends HTMLElement = HTMLElement> = DetailedHTM
 export const isFulfilled = <T>(
   input: PromiseSettledResult<T>,
 ): input is PromiseFulfilledResult<T> => input.status === 'fulfilled'
+
+export type RequiredFieldsOnly<T> = {
+  [K in keyof T as T[K] extends Required<T>[K] ? K : never]: T[K]
+}
+
+export type IStringIndex = Record<string, any>
