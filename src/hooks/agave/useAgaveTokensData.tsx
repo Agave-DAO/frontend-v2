@@ -10,7 +10,6 @@ import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { contracts } from '@/src/contracts/contracts'
 import { useRewardTokenData } from '@/src/hooks/symmetrics/useRewardTokenData'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
-import { weiPerToken } from '@/src/utils/common'
 import {
   getIncentiveRate as calculateIncentiveRate,
   getMarketSize,
@@ -42,7 +41,6 @@ export type AgaveTokenData = {
     liquidityRate: BigNumber
     variableBorrowRate: BigNumber
     stableBorrowRate: BigNumber
-    emissionPerSecond: BigNumber
     availableLiquidity: BigNumber
   }
   assetData: { isActive: boolean; isFrozen: boolean }
