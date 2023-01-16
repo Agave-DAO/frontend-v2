@@ -16,17 +16,20 @@ export const formatNumber = (value: number, displayDecimals = DISPLAY_DECIMALS):
  * @param [symbol=$] - The symbol to use for the currency.
  * @param {'before' | 'after'} [symbolPosition=before] - 'before' | 'after' = 'before'
  */
+export type SymbolPosition = 'before' | 'after'
 export const formatAmount = (
   value: BigNumber,
   decimals: number = NATIVE_DECIMALS,
   symbol = '$',
-  symbolPosition: 'before' | 'after' = 'before',
+  symbolPosition: SymbolPosition = 'before',
 ): string =>
   `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(
     FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
   )}${symbolPosition === 'after' ? ` ${symbol} ` : ''}`
 
 export const formatPercentage = (value: BigNumber, decimals: number) =>
-  `${FixedNumber.fromValue(value, decimals, 'fixed128x27')
+  `${FixedNumber.fromValue(value, decimals, 'fixed256x27')
     .toUnsafeFloat()
     .toFixed(DISPLAY_DECIMALS)} %`
+
+export const weiPerToken = (decimals: number) => BigNumber.from(10).pow(decimals)

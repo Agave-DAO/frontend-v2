@@ -1,10 +1,52 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { weiPerToken } from '@/src/utils/common'
 
-type Params = { agTokenTotalSupply: BigNumber; price: BigNumber; tokenAddress: string }
+type Params = { totalSupply: BigNumber; price: BigNumber; tokenAddress: string }
 
-export const getMarketSize = ({ agTokenTotalSupply, price, tokenAddress }: Params) => {
+/**
+ * Calculates MarketSize of a token (totalSupply * tokenPrice / 10 ** tokenDecimals) and convert it to a BigNumber value.
+ */
+export const getMarketSize = ({ price, tokenAddress, totalSupply }: Params) => {
   const agToken = agaveTokens.getProtocolTokenInfo(tokenAddress, 'ag')
-  return agTokenTotalSupply.mul(price).div(BigNumber.from(10).pow(agToken.decimals))
+  return totalSupply.mul(price).div(weiPerToken(agToken.decimals))
+}
+
+/**
+ * Calculates priceShare (liquidity / totalShares) and convert it to a BigNumber value.
+ */
+export const getPriceShares = (rewardData: { liquidity: string; totalShares: string }) => {
+  const { liquidity, totalShares } = rewardData
+  return BigNumber.from(((parseFloat(liquidity) / parseFloat(totalShares)) * 1e16).toFixed())
+}
+
+export const getIncentiveRate = ({
+  emissionPerSeconds,
+  priceShares,
+  tokenAddress,
+  tokenPrice,
+  tokenSupply,
+}: {
+  tokenSupply: BigNumber
+  emissionPerSeconds: BigNumber
+  priceShares: BigNumber
+  tokenPrice: BigNumber
+  tokenAddress: string
+}) => {
+  // get tokenDecimals by tokenAddress
+  const { decimals } = agaveTokens.getUnderlyingTokenInfoByAddress(tokenAddress)
+
+  const SECONDS_PER_YEAR = 31536000
+
+  /* Converting the emission per second to emission per year. */
+  const emissionPerYear = emissionPerSeconds.mul(SECONDS_PER_YEAR)
+
+  /* Converting the token supply to DAI. */
+  const totalSupplyInDaiWei = tokenSupply.mul(tokenPrice).div(weiPerToken(decimals))
+
+  const APYPerYear = priceShares.mul(emissionPerYear).div(totalSupplyInDaiWei)
+
+  // TODO mul the result to convert percentValue ??
+  return APYPerYear.mul(10 ** 11)
 }

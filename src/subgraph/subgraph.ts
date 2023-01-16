@@ -8,7 +8,7 @@ import { SdkWithHooks, getSdkWithHooks } from '@/types/generated/subgraph'
 export type AllSDK = Record<ChainsValues, SdkWithHooks>
 
 export enum SubgraphName {
-  Rentals = 'rentals',
+  SymmetricV1 = 'symmetric-v1',
 }
 
 export function getSubgraphSdkByNetwork(

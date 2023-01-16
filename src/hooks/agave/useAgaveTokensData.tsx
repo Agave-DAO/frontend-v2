@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
@@ -8,13 +8,19 @@ import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { contracts } from '@/src/contracts/contracts'
+import { useRewardTokenData } from '@/src/hooks/symmetrics/useRewardTokenData'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
-import { getMarketSize } from '@/src/utils/markets'
+import { weiPerToken } from '@/src/utils/common'
+import {
+  getIncentiveRate as calculateIncentiveRate,
+  getMarketSize,
+  getPriceShares,
+} from '@/src/utils/markets'
 import { ChainsValues } from '@/types/chains'
 import {
   AaveOracle__factory,
   AaveProtocolDataProvider__factory,
-  ERC20__factory,
+  BaseIncentivesController__factory,
 } from '@/types/generated/typechain'
 import { Token } from '@/types/token'
 import { isFulfilled } from '@/types/utils'
@@ -22,26 +28,30 @@ import { isFulfilled } from '@/types/utils'
 /**
  * TYPES
  */
+export type IncentiveData = {
+  agToken: [BigNumber, BigNumber, BigNumber]
+  variableDebt: [BigNumber, BigNumber, BigNumber]
+}
+
 export type AgaveTokenData = {
   tokenAddress: string
-  price: BigNumber
-  agTokenTotalSupply: BigNumber
+  priceData: BigNumber
   reserveData: {
     totalStableDebt: BigNumber
     totalVariableDebt: BigNumber
     liquidityRate: BigNumber
     variableBorrowRate: BigNumber
     stableBorrowRate: BigNumber
+    emissionPerSecond: BigNumber
+    availableLiquidity: BigNumber
   }
   assetData: { isActive: boolean; isFrozen: boolean }
+  incentiveData: IncentiveData
 }
 
 export type AgaveTokensData = {
   [underlyingTokenAddress: string]: AgaveTokenData
 }
-
-export type TokenPriceResult = { price: BigNumber; tokenAddress: string }
-export type AgTokenTotalSupplyResult = { agTokenTotalSupply: BigNumber; tokenAddress: string }
 
 /**
  * FETCHERS
@@ -52,15 +62,7 @@ const fetchTokenPrice = async (
   chainId: ChainsValues,
 ) => {
   const contract = AaveOracle__factory.connect(contracts.AgaveOracle.address[chainId], provider)
-  return { price: await contract.getAssetPrice(tokenAddress), tokenAddress }
-}
-
-const fetchAgTokenTotalSupply = async (tokenAddress: string, provider: JsonRpcBatchProvider) => {
-  const { address: agTokenAddress } = agaveTokens.getProtocolTokenInfo(tokenAddress, 'ag')
-  return {
-    agTokenTotalSupply: await ERC20__factory.connect(agTokenAddress, provider).totalSupply(),
-    tokenAddress,
-  }
+  return { priceData: await contract.getAssetPrice(tokenAddress), tokenAddress }
 }
 
 const fetchReserveData = async (
@@ -91,6 +93,33 @@ const fetchAssetConfigurationData = async (
   }
 }
 
+const fetchAssetIncentiveData = async (
+  tokenAddress: string,
+  provider: JsonRpcBatchProvider,
+  chainId: ChainsValues,
+) => {
+  const { ag: agTokenAddress, variableDebt: variableDebtTokenAddress } =
+    agaveTokens.getProtocolTokensByUnderlying(tokenAddress)
+  const contract = BaseIncentivesController__factory.connect(
+    contracts.IncentiveBaseController.address[chainId],
+    provider,
+  )
+  return {
+    incentiveData: {
+      // TODO should stableDebtToken has incentiveData?
+      agToken: await contract.getAssetData(agTokenAddress),
+      variableDebt: await contract.getAssetData(variableDebtTokenAddress),
+    },
+    tokenAddress,
+  }
+}
+
+/**
+ * Takes an array of token addresses, and returns an object with the token addresses as keys, and
+ * the token data as values
+ * @returns An object with the token address as the key and the value is an object with the token
+ * address, priceData, reserveData, incentiveData and assetData.
+ */
 const fetchAgaveTokensData = async ({
   chainId,
   provider,
@@ -100,45 +129,49 @@ const fetchAgaveTokensData = async ({
   provider: JsonRpcBatchProvider
   underlyingTokenAddresses: string[]
 }) => {
-  const pricesPromises: ReturnType<typeof fetchTokenPrice>[] = []
-  const agTokenTotalSupplyPromises: ReturnType<typeof fetchAgTokenTotalSupply>[] = []
-  const reserveDataPromise: ReturnType<typeof fetchReserveData>[] = []
-  const assetDataPromise: ReturnType<typeof fetchAssetConfigurationData>[] = []
+  const pricesDataPromises: ReturnType<typeof fetchTokenPrice>[] = []
+  const reserveDataPromises: ReturnType<typeof fetchReserveData>[] = []
+  const assetDataPromises: ReturnType<typeof fetchAssetConfigurationData>[] = []
+  const incentiveDataPromises: ReturnType<typeof fetchAssetIncentiveData>[] = []
 
   underlyingTokenAddresses.forEach(async (tokenAddress) => {
-    pricesPromises.push(fetchTokenPrice(tokenAddress, provider, chainId))
-    agTokenTotalSupplyPromises.push(fetchAgTokenTotalSupply(tokenAddress, provider))
-    reserveDataPromise.push(fetchReserveData(tokenAddress, provider, chainId))
-    assetDataPromise.push(fetchAssetConfigurationData(tokenAddress, provider, chainId))
+    pricesDataPromises.push(fetchTokenPrice(tokenAddress, provider, chainId))
+    reserveDataPromises.push(fetchReserveData(tokenAddress, provider, chainId))
+    assetDataPromises.push(fetchAssetConfigurationData(tokenAddress, provider, chainId))
+    incentiveDataPromises.push(fetchAssetIncentiveData(tokenAddress, provider, chainId))
   })
 
   const combinedPromisesResolved = await Promise.allSettled([
-    ...pricesPromises,
-    ...agTokenTotalSupplyPromises,
-    ...reserveDataPromise,
-    ...assetDataPromise,
+    ...pricesDataPromises,
+    ...reserveDataPromises,
+    ...assetDataPromises,
+    ...incentiveDataPromises,
   ])
 
   // TODO catch errors here
   const rawResults = combinedPromisesResolved.filter(isFulfilled).map(({ value }) => value)
 
-  const results: AgaveTokensData = rawResults.reduce((result, current) => {
-    const isInResult = result?.[current.tokenAddress] || ''
-    return { ...result, [current.tokenAddress]: { ...current, ...isInResult } }
-  }, {} as AgaveTokensData)
+  /* Merge the results of the promises. */
+  let results: AgaveTokensData = {}
+  for (let index = 0; index < rawResults.length; index++) {
+    const current = rawResults[index]
+    const isInResult = results?.[current.tokenAddress]
+    results = { ...results, [current.tokenAddress]: { ...current, ...isInResult } }
+  }
 
   return results
 }
 
-// WARNING: batch provider accepts a maximum of 100 calls. Each token has 4 queries to get data.
+// WARNING: batch provider accepts a maximum of 100 calls. Each token has 6 queries to get data.
 // 1 token = 4 queries, 2 tokens = 8 queries, 8 tokens = 32 queries
 // We must be careful if there are more than ~25 tokens in the array
+// In that case, we can split the tokens array into small arrays of tokens (such as pagination)
+
 const useTokensDataQuery = (underlyingTokenAddresses: string[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
-  const { data, mutate: refetchAgaveTokensData } = useSWR(
-    underlyingTokenAddresses?.length
-      ? `agave-tokens-data-${underlyingTokenAddresses.join('-')}`
-      : null,
+  // Simple cacheKey to get the cache data in other uses.
+  const { data } = useSWR(
+    underlyingTokenAddresses?.length ? `agave-tokens-data` : null,
     () => {
       if (!underlyingTokenAddresses?.length) {
         return
@@ -150,32 +183,40 @@ const useTokensDataQuery = (underlyingTokenAddresses: string[]) => {
       }
       return fetchAgaveTokensData(fetcherParams)
     },
-    { refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL },
+    {
+      refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
+    },
   )
 
-  return {
-    agaveTokensData: data,
-    refetchAgaveTokensData,
-  }
+  return data
 }
 
+/**
+ * Returns tokensData query result and a bunch of functions that are used to get data about the tokens
+ * @param {Token[]} tokens - Token[]
+ * @param {boolean} [showDisabledTokens] - boolean
+ */
 export const useAgaveTokensData = (tokens: Token[], showDisabledTokens?: boolean) => {
   const underlyingTokenAddresses = tokens.map(({ address }) => address)
-  const { agaveTokensData, refetchAgaveTokensData } = useTokensDataQuery(underlyingTokenAddresses)
+  const data = useTokensDataQuery(underlyingTokenAddresses)
+  const rewardTokenData = useRewardTokenData()?.pools[0]
 
-  const getTokensWithData = useCallback(() => {
-    if (!agaveTokensData) {
+  const agaveTokensData = useMemo(() => {
+    if (!data) {
       return
     }
+
     if (showDisabledTokens) {
-      return agaveTokensData
+      return data
     }
-    const filteredDisabledTokens = Object.entries(agaveTokensData).filter(
+
+    /* Filtering out the tokens that are frozen. */
+    const filteredDisabledTokens = Object.entries(data).filter(
       ([, { assetData }]) => !assetData.isFrozen,
     )
 
     return Object.fromEntries(filteredDisabledTokens)
-  }, [agaveTokensData, showDisabledTokens])
+  }, [data, showDisabledTokens])
 
   /* Returns the market size of a token. */
   const getTokenMarketSize = useCallback(
@@ -184,42 +225,36 @@ export const useAgaveTokensData = (tokens: Token[], showDisabledTokens?: boolean
       if (!tokenData) {
         return ZERO_BN
       }
+      const { availableLiquidity, totalVariableDebt } = tokenData.reserveData
+
       return getMarketSize({
         tokenAddress,
-        agTokenTotalSupply: tokenData.agTokenTotalSupply,
-        price: tokenData.price,
+        totalSupply: totalVariableDebt.add(availableLiquidity),
+        price: tokenData.priceData,
       })
     },
     [agaveTokensData],
   )
 
   /* Returns the total market size of all the tokens. */
-  /* If showDisabledTokens is true, we need to filter those tokens, to do that we have to use getTokenWithData. */
   const getTotalMarketSize = useCallback(() => {
-    const tokens = getTokensWithData()
-    if (!tokens) {
+    if (!agaveTokensData) {
       return ZERO_BN
     }
-    return Object.values(tokens).reduce(
+    return Object.values(agaveTokensData).reduce(
       (total, current) => total.add(getTokenMarketSize(current.tokenAddress)),
       ZERO_BN,
     )
-  }, [getTokenMarketSize, getTokensWithData])
+  }, [agaveTokensData, getTokenMarketSize])
 
   const getTokenTotalBorrowed = useCallback(
-    (tokenAddress: string, decimals: number) => {
+    (tokenAddress: string) => {
       const tokenData = agaveTokensData?.[tokenAddress]
       if (!tokenData) {
-        return { wei: ZERO_BN, dai: ZERO_BN }
+        return ZERO_BN
       }
       const { totalStableDebt, totalVariableDebt } = tokenData.reserveData
-      return {
-        wei: totalStableDebt.add(totalVariableDebt),
-        dai: totalStableDebt
-          .add(totalVariableDebt)
-          .mul(tokenData.price)
-          .div(BigNumber.from(10).pow(decimals)),
-      }
+      return totalStableDebt.add(totalVariableDebt)
     },
     [agaveTokensData],
   )
@@ -245,16 +280,40 @@ export const useAgaveTokensData = (tokens: Token[], showDisabledTokens?: boolean
         }
       }
       return {
-        stable: tokenData.reserveData.variableBorrowRate,
-        variable: tokenData.reserveData.stableBorrowRate,
+        stable: tokenData.reserveData.stableBorrowRate,
+        variable: tokenData.reserveData.variableBorrowRate,
       }
     },
     [agaveTokensData],
   )
 
+  const getIncentiveRate = useCallback(
+    (tokenAddress: string, deposit: boolean) => {
+      const tokenData = agaveTokensData?.[tokenAddress]
+      if (!tokenData || !rewardTokenData) {
+        return ZERO_BN
+      }
+
+      const {
+        incentiveData,
+        priceData: tokenPrice,
+        reserveData: { availableLiquidity, totalVariableDebt },
+      } = tokenData
+
+      return calculateIncentiveRate({
+        emissionPerSeconds: deposit ? incentiveData.agToken[1] : incentiveData.variableDebt[1],
+        tokenSupply: deposit ? totalVariableDebt.add(availableLiquidity) : totalVariableDebt,
+        priceShares: getPriceShares(rewardTokenData),
+        tokenAddress,
+        tokenPrice,
+      })
+    },
+    [agaveTokensData, rewardTokenData],
+  )
+
   return {
-    getTokensWithData,
-    refetchAgaveTokensData,
+    agaveTokensData,
+    getIncentiveRate,
     getTokenMarketSize,
     getTotalMarketSize,
     getTokenTotalBorrowed,
