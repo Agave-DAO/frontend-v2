@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import Link from 'next/link'
 import styled from 'styled-components'
 
 import { BaseCard } from '@/src/components/common/BaseCard'
@@ -32,6 +33,8 @@ const Home: NextPage = () => {
             Your wallet address: <Address />
           </BaseParagraph>
         )}
+
+        <Link href={'/markets'}>Markets</Link>
       </Card>
     </>
   )

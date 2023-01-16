@@ -18,6 +18,7 @@ import { TransactionNotificationProvider } from '@/src/providers/TransactionNoti
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
 import 'sanitize.css'
+import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
 
 const Container = styled(InnerContainer)`
   flex-grow: 1;
@@ -57,7 +58,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               <TransactionNotificationProvider>
                 <CookiesWarningProvider>
                   <Header />
-                  <Container>{getLayout(<Component {...pageProps} />)}</Container>
+                  <TokenIconsProvider>
+                    <Container>{getLayout(<Component {...pageProps} />)}</Container>
+                  </TokenIconsProvider>
                   <Footer />
                 </CookiesWarningProvider>
               </TransactionNotificationProvider>

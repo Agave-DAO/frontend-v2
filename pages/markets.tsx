@@ -1,4 +1,5 @@
 import { NextPage } from 'next'
+import Link from 'next/link'
 import styled from 'styled-components'
 
 import { BaseCard } from '@/src/components/common/BaseCard'
@@ -6,7 +7,6 @@ import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
-import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
 import {
   AaveProtocolDataProvider,
   AaveProtocolDataProvider__factory,
@@ -65,7 +65,7 @@ const Markets: NextPage = () => {
   if (!data) return <div>Markets</div>
 
   return (
-    <TokenIconsProvider>
+    <>
       <BaseTitle>Markets</BaseTitle>
       <Card>
         {data[0].map(({ symbol, tokenAddress }) => (
@@ -75,10 +75,11 @@ const Markets: NextPage = () => {
             </strong>{' '}
             - <TokenIcon symbol={symbol} />
             <ReserveData tokenAddress={tokenAddress} />
+            <Link href={`markets/${tokenAddress}`}>Go to market</Link>
           </div>
         ))}
       </Card>
-    </TokenIconsProvider>
+    </>
   )
 }
 
