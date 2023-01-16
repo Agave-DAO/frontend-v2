@@ -2,9 +2,9 @@
   "protocolTokens": {
     "0x9c58bacc331c9aa871afd802db6379a98e80cedb": {
       "name": "GNO",
-      "ag": "0xa26783ead6c1f4744685c14079950622674ae8a8",
-      "variableDebt": "0x6e2ead844b785a5f44290066ea0ee44338511464",
-      "stableDebt": "0xf3779f51b26910a75150999d3517b5360232bb6c",
+      "ag": "0xA26783eAd6C1f4744685c14079950622674ae8A8",
+      "variableDebt": "0x99272C6E2Baa601cEA8212b8fBAA7920A9f916F0",
+      "stableDebt": "0x0DfD401903bA960B2EED32A10f8aeB601Cd9A7A5",
       "strategy": "0xf785cc3324186df3b00d5ab1b895a345d15e8c2a",
       "oracle": "0x22441d81416430a54336ab28765abd31a792ad37"
     },
@@ -59,8 +59,8 @@
     "0x4ecaba5870353805a9f068101a40e0f32ed605c6": {
       "name": "USDT",
       "ag": "0x5b4ef67c63d091083ec4d30cfc4ac685ef051046",
-      "variableDebt": "0xb067fad853d099edd9c86483682e7d947b7983e5",
-      "stableDebt": "0x474f83d77150bddc6a6f34eee4f5574eafd05938",
+      "variableDebt": "0x474f83d77150bddc6a6f34eee4f5574eafd05938",
+      "stableDebt": "0xb067fad853d099edd9c86483682e7d947b7983e5",
       "strategy": "",
       "oracle": ""
     }
