@@ -4,30 +4,30 @@ The dApp supports a fixed list of tokens and their derived ones.
 
 ## ERC20 Tokens
 The list of supported tokens can be found in [Agave Docs](https://agavedev.notion.site/Tokens-b8967cb6e8ca43d5b13c7fbabe39fcf7)
-These tokens receive the name of _underlying tokens_ in the dApp.
+These tokens receive the name of _reserve tokens_ in the dApp.
 
 ## Token Icons
 Are stored in [`public/coins`](/public/coins)
 
-## Underlying Tokens Info
-We use a JSON following the token standard specified by TokenLists.org. The file is located in [`public/underlyingTokens.json`](/public/underlyingTokens.json)
+## Reserve Tokens Info
+We use a JSON following the token standard specified by TokenLists.org. The file is located in [`public/reserveTokens.json`](/public/reserveTokens.json)
 
 ## Protocol Tokens
-Each one of the underlying tokens has a series of related tokens (the ones that can be found in [Agave Docs](https://agavedev.notion.site/Tokens-b8967cb6e8ca43d5b13c7fbabe39fcf7))
+Each one of the reserve tokens has a series of related tokens (the ones that can be found in [Agave Docs](https://agavedev.notion.site/Tokens-b8967cb6e8ca43d5b13c7fbabe39fcf7))
 These tokens receive the name of _protocol tokens_ in the dApp.
 The app keeps an updated mapping with that information at [`public/protocolTokens.json`](/public/protocolTokens.json)
 
 ## Consume tokens
-The dApp exposes a class instance ([agaveTokens](/src/config/agaveTokens.ts)) which understands `Underlying` and `Protocol` tokens, and provides all the required information for them.
+The dApp exposes a class instance ([agaveTokens](/src/config/agaveTokens.ts)) which understands `Reserve` and `Protocol` tokens, and provides all the required information for them.
 
 In regard to the `Protocol` tokens, the dApp supports: `Interest bearing`, `Variable Debt`, and `Stable Debt` tokens.
 
 ## How to Update tokens info
 ### Delete a token
-By just removing the entry of the token from the [`public/underlyingTokens.json`](/public/underlyingTokens.json) is enough. But we recommend that you also remove the associated icon ([`public/coins`](/public/coins)) and the protocol Tokens info found at [`public/protocolTokens.json`](/public/protocolTokens.json)
+By just removing the entry of the token from the [`public/reserveTokens.json`](/public/reserveTokens.json) is enough. But we recommend that you also remove the associated icon ([`public/coins`](/public/coins)) and the protocol Tokens info found at [`public/protocolTokens.json`](/public/protocolTokens.json)
 
 ### Add a Token
-1. You need to add an entry to the [`public/underlyingTokens.json`](/public/underlyingTokens.json) file, by respecting the following structure.
+1. You need to add an entry to the [`public/reserveTokens.json`](/public/reserveTokens.json) file, by respecting the following structure.
 
 ```json
     {

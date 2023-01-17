@@ -1,7 +1,7 @@
 import { AgaveProtocolTokens, agaveTokens } from './agaveTokens'
 import { TokenListResponse } from '@/types/token'
 
-jest.mock('@/public/underlyingTokens.json', (): Pick<TokenListResponse, 'tokens'> => {
+jest.mock('@/public/reserveTokens.json', (): Pick<TokenListResponse, 'tokens'> => {
   return {
     tokens: [
       {
@@ -54,13 +54,13 @@ describe('AgaveTokens', () => {
     expect(allTokens.length).toEqual(8)
   })
 
-  it('returns all underlying tokens', () => {
-    const underlyingTokens = agaveTokens.underlyingTokens
+  it('returns all reserve tokens', () => {
+    const reserveTokens = agaveTokens.reserveTokens
 
-    expect(underlyingTokens.length).toEqual(2)
+    expect(reserveTokens.length).toEqual(2)
   })
 
-  it('returns all protocol tokens grouped by underlying', () => {
+  it('returns all protocol tokens grouped by reserve', () => {
     const protocolTokens = agaveTokens.protocolTokens
 
     expect(protocolTokens).toEqual({
@@ -83,7 +83,7 @@ describe('AgaveTokens', () => {
     })
   })
 
-  it('returns related tokens info by underlying address', () => {
+  it('returns related tokens info by reserve address', () => {
     const relatedTokens = agaveTokens.getRelatedTokensByAddress(
       '0x0000000000000000000000000000000000000010',
     )
@@ -92,7 +92,7 @@ describe('AgaveTokens', () => {
       {
         address: '0x0000000000000000000000000000000000000010',
         symbol: 'TT1',
-        type: 'underlying',
+        type: 'reserve',
       },
       {
         address: '0x0000000000000000000000000000000000000011',
@@ -121,7 +121,7 @@ describe('AgaveTokens', () => {
       {
         address: '0x0000000000000000000000000000000000000010',
         symbol: 'TT1',
-        type: 'underlying',
+        type: 'reserve',
       },
       {
         address: '0x0000000000000000000000000000000000000011',
@@ -157,7 +157,7 @@ describe('AgaveTokens', () => {
       decimals: 18,
       chainId: 100,
       logoURI: `/coins/tt1.png`,
-      type: `underlying`,
+      type: `reserve`,
     })
   })
 
@@ -171,7 +171,7 @@ describe('AgaveTokens', () => {
       decimals: 18,
       chainId: 100,
       logoURI: `/coins/tt1.png`,
-      type: `underlying`,
+      type: `reserve`,
     })
 
     const agTokenInfo = agaveTokens.getTokenByFieldAndValue({ symbol: 'agTT1' })
@@ -197,24 +197,24 @@ describe('AgaveTokens', () => {
     expect(() => agaveTokens.getTokenByFieldAndValue({ decimal: 1 })).toThrowError()
   })
 
-  it('finds underlying token info by searching by a protocol token address', () => {
+  it('finds reserve token info by searching by a protocol token address', () => {
     const agTokenAddress = '0x0000000000000000000000000000000000000011'
 
-    const underlyingToken = agaveTokens
+    const reserveToken = agaveTokens
       .getRelatedTokensByAddress(agTokenAddress)
-      .find(({ type }) => type === 'underlying')
+      .find(({ type }) => type === 'reserve')
 
-    if (underlyingToken) {
-      const underlyingTokenInfo = agaveTokens.getTokenByAddress(underlyingToken.address)
+    if (reserveToken) {
+      const reserveTokenInfo = agaveTokens.getTokenByAddress(reserveToken.address)
 
-      expect(underlyingTokenInfo).toEqual({
+      expect(reserveTokenInfo).toEqual({
         address: `0x0000000000000000000000000000000000000010`,
         name: `Test Token 1`,
         symbol: `TT1`,
         decimals: 18,
         chainId: 100,
         logoURI: `/coins/tt1.png`,
-        type: `underlying`,
+        type: `reserve`,
       })
     }
   })
