@@ -11,7 +11,7 @@ export type AgaveProtocolTokens = {
     stableDebt: string
     strategy: string
     oracle: string
-    name: string // added to ease traceability
+    symbol: string // added to ease traceability
   }
 }
 
@@ -32,11 +32,9 @@ export interface IDAgaveTokens {
   getTokenByFieldAndValue: (fieldAndValue: ValidLookupFields) => TokenWithType | undefined
 }
 
-const TOKENS_BY_UNDERLYING: AgaveProtocolTokens = protocolTokens
-
 class AgaveTokens implements IDAgaveTokens {
   private _underlyingTokens: Token[] = tokens
-  private _protocolTokens: AgaveProtocolTokens = TOKENS_BY_UNDERLYING
+  private _protocolTokens: AgaveProtocolTokens = protocolTokens
   private _protocolName = 'Agave'
   private _validLookupFields: (keyof ValidLookupFields)[] = ['address', 'symbol', 'name']
 
@@ -78,13 +76,9 @@ class AgaveTokens implements IDAgaveTokens {
   getRelatedTokensByAddress(tokenAddress: string): TokenInfo[] {
     const tokenInfo = this.getTokenByAddress(tokenAddress)
 
-    if (!tokenInfo) {
-      throw Error('Unsupported token')
-    }
-
     if (tokenInfo.type === 'underlying') {
-      // discard `oracle` and `strategy` from protocol tokens
-      const { oracle, strategy, ...protocolTokens } = this.getProtocolTokensByUnderlying(
+      // discard `oracle`, `strategy`, and `symbol` from protocol tokens
+      const { oracle, strategy, symbol, ...protocolTokens } = this.getProtocolTokensByUnderlying(
         tokenInfo.address,
       )
 
@@ -143,32 +137,31 @@ class AgaveTokens implements IDAgaveTokens {
     return this.allTokens.find((token) => token[field].toLowerCase() === value.toLowerCase())
   }
 
-  private getUnderlyingTokenByAddress(underlyingAddress: string): Token {
+  private getUnderlyingTokenByAddress(tokenAddress: string): Token {
     // lookup underlying token by underlying address
     const tokenInfo = this._underlyingTokens.find((token) =>
-      isSameAddress(token.address, underlyingAddress),
+      isSameAddress(token.address, tokenAddress),
     )
 
     // if not found, lookup underlying token by protocol token address
     if (!tokenInfo) {
       const foundToken = Object.entries(this._protocolTokens).find(
-        ([address, { ag, stableDebt, variableDebt }]) => {
+        ([, { ag, stableDebt, variableDebt }]) => {
           return (
-            isSameAddress(address, underlyingAddress) ||
-            isSameAddress(ag, underlyingAddress) ||
-            isSameAddress(stableDebt, underlyingAddress) ||
-            isSameAddress(variableDebt, underlyingAddress)
+            isSameAddress(ag, tokenAddress) ||
+            isSameAddress(stableDebt, tokenAddress) ||
+            isSameAddress(variableDebt, tokenAddress)
           )
         },
       )
 
       if (!foundToken) {
-        throw Error('Unsupported underlying token')
+        throw Error('Unsupported token')
       }
 
-      const [address] = foundToken
+      const [underlyingAddress] = foundToken
 
-      return this.getUnderlyingTokenByAddress(address)
+      return this.getUnderlyingTokenByAddress(underlyingAddress)
     }
 
     return tokenInfo

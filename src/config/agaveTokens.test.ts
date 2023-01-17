@@ -1,6 +1,7 @@
-import { agaveTokens } from './agaveTokens'
+import { AgaveProtocolTokens, agaveTokens } from './agaveTokens'
+import { TokenListResponse } from '@/types/token'
 
-jest.mock('@/public/underlyingTokens.json', () => {
+jest.mock('@/public/underlyingTokens.json', (): Pick<TokenListResponse, 'tokens'> => {
   return {
     tokens: [
       {
@@ -11,19 +12,36 @@ jest.mock('@/public/underlyingTokens.json', () => {
         chainId: 100,
         logoURI: `/coins/tt1.png`,
       },
+      {
+        address: `0x0000000000000000000000000000000000000020`,
+        name: `Test Token 2`,
+        symbol: `TT2`,
+        decimals: 18,
+        chainId: 100,
+        logoURI: `/coins/tt2.png`,
+      },
     ],
   }
 })
 
-jest.mock('@/public/protocolTokens.json', () => {
+jest.mock('@/public/protocolTokens.json', (): { protocolTokens: AgaveProtocolTokens } => {
   return {
     protocolTokens: {
       '0x0000000000000000000000000000000000000010': {
+        symbol: 'TT1',
         ag: '0x0000000000000000000000000000000000000011',
         variableDebt: '0x0000000000000000000000000000000000000012',
         stableDebt: '0x0000000000000000000000000000000000000013',
         strategy: '0x0000000000000000000000000000000000000014',
         oracle: '0x0000000000000000000000000000000000000015',
+      },
+      '0x0000000000000000000000000000000000000020': {
+        symbol: 'TT2',
+        ag: '0x0000000000000000000000000000000000000021',
+        variableDebt: '0x0000000000000000000000000000000000000022',
+        stableDebt: '0x0000000000000000000000000000000000000023',
+        strategy: '0x0000000000000000000000000000000000000024',
+        oracle: '0x0000000000000000000000000000000000000025',
       },
     },
   }
@@ -33,13 +51,13 @@ describe('AgaveTokens', () => {
   it('returns all protocol tokens', () => {
     const allTokens = agaveTokens.allTokens
 
-    expect(allTokens.length).toEqual(4)
+    expect(allTokens.length).toEqual(8)
   })
 
   it('returns all underlying tokens', () => {
     const underlyingTokens = agaveTokens.underlyingTokens
 
-    expect(underlyingTokens.length).toEqual(1)
+    expect(underlyingTokens.length).toEqual(2)
   })
 
   it('returns all protocol tokens grouped by underlying', () => {
@@ -47,11 +65,20 @@ describe('AgaveTokens', () => {
 
     expect(protocolTokens).toEqual({
       '0x0000000000000000000000000000000000000010': {
+        symbol: 'TT1',
         ag: '0x0000000000000000000000000000000000000011',
         variableDebt: '0x0000000000000000000000000000000000000012',
         stableDebt: '0x0000000000000000000000000000000000000013',
         strategy: '0x0000000000000000000000000000000000000014',
         oracle: '0x0000000000000000000000000000000000000015',
+      },
+      '0x0000000000000000000000000000000000000020': {
+        symbol: 'TT2',
+        ag: '0x0000000000000000000000000000000000000021',
+        variableDebt: '0x0000000000000000000000000000000000000022',
+        stableDebt: '0x0000000000000000000000000000000000000023',
+        strategy: '0x0000000000000000000000000000000000000024',
+        oracle: '0x0000000000000000000000000000000000000025',
       },
     })
   })
@@ -161,7 +188,7 @@ describe('AgaveTokens', () => {
   })
 
   it('returns `undefined` if token by field is not found', () => {
-    const tokenInfo = agaveTokens.getTokenByFieldAndValue({ symbol: 'TT2' })
+    const tokenInfo = agaveTokens.getTokenByFieldAndValue({ symbol: 'TT3' })
 
     expect(tokenInfo).toBeUndefined()
   })
@@ -170,7 +197,7 @@ describe('AgaveTokens', () => {
     expect(() => agaveTokens.getTokenByFieldAndValue({ decimal: 1 })).toThrowError()
   })
 
-  it('returns underlying token info by searching by a protocol token address', () => {
+  it('finds underlying token info by searching by a protocol token address', () => {
     const agTokenAddress = '0x0000000000000000000000000000000000000011'
 
     const underlyingToken = agaveTokens
