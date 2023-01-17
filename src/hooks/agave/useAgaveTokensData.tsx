@@ -96,8 +96,12 @@ const fetchAssetIncentiveData = async (
   provider: JsonRpcBatchProvider,
   chainId: ChainsValues,
 ) => {
-  const { ag: agTokenAddress, variableDebt: variableDebtTokenAddress } =
-    agaveTokens.getProtocolTokensByUnderlying(tokenAddress)
+  const relatedTokens = agaveTokens.getRelatedTokensByAddress(tokenAddress)
+  const agToken = relatedTokens.find(({ type }) => type === 'ag')
+  const variableDebtToken = relatedTokens.find(({ type }) => type === 'variableDebt')
+  if (!agToken || !variableDebtToken) {
+    throw Error('Error on getting agToken/variableDebtToken')
+  }
   const contract = BaseIncentivesController__factory.connect(
     contracts.IncentiveBaseController.address[chainId],
     provider,
@@ -105,8 +109,8 @@ const fetchAssetIncentiveData = async (
   return {
     incentiveData: {
       // TODO should stableDebtToken has incentiveData?
-      agToken: await contract.getAssetData(agTokenAddress),
-      variableDebt: await contract.getAssetData(variableDebtTokenAddress),
+      agToken: await contract.getAssetData(agToken.address),
+      variableDebt: await contract.getAssetData(variableDebtToken.address),
     },
     tokenAddress,
   }

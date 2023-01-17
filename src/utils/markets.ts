@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { weiPerToken } from '@/src/utils/common'
 
 type Params = { totalSupply: BigNumber; price: BigNumber; tokenAddress: string }
@@ -9,8 +10,9 @@ type Params = { totalSupply: BigNumber; price: BigNumber; tokenAddress: string }
  * Calculates MarketSize of a token (totalSupply * tokenPrice / 10 ** tokenDecimals) and convert it to a BigNumber value.
  */
 export const getMarketSize = ({ price, tokenAddress, totalSupply }: Params) => {
-  const agToken = agaveTokens.getProtocolTokenInfo(tokenAddress, 'ag')
-  return totalSupply.mul(price).div(weiPerToken(agToken.decimals))
+  const { decimals } = agaveTokens.getTokenByAddress(tokenAddress)
+
+  return totalSupply.mul(price).div(weiPerToken(decimals))
 }
 
 /**
@@ -35,7 +37,7 @@ export const getIncentiveRate = ({
   tokenAddress: string
 }) => {
   // get tokenDecimals by tokenAddress
-  const { decimals } = agaveTokens.getUnderlyingTokenInfoByAddress(tokenAddress)
+  const { decimals } = agaveTokens.getTokenByAddress(tokenAddress)
 
   const SECONDS_PER_YEAR = 31536000
 

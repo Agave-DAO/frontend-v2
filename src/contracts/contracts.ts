@@ -1,6 +1,6 @@
 import { Chains } from '@/src/config/web3'
-import AgaveOracle from '@/src/contracts/abis/AaveOracle.json'
-import AgaveProtocolDataProvider from '@/src/contracts/abis/AaveProtocolDataProvider.json'
+import AaveOracle from '@/src/contracts/abis/AaveOracle.json'
+import AaveProtocolDataProvider from '@/src/contracts/abis/AaveProtocolDataProvider.json'
 import AgaveLendingPool from '@/src/contracts/abis/AgaveLending.json'
 import IncentiveBaseController from '@/src/contracts/abis/BaseIncentivesController.json'
 import ERC20 from '@/src/contracts/abis/ERC20.json'
@@ -22,13 +22,13 @@ export const contracts = {
     address: {
       [Chains.gnosis]: '0x24dCbd376Db23e4771375092344f5CbEA3541FC0',
     },
-    abi: AgaveProtocolDataProvider,
+    abi: AaveProtocolDataProvider,
   },
   AgaveOracle: {
     address: {
       [Chains.gnosis]: '0x64cE22B5bA4175002AC5B6CCE3570432cA363c29',
     },
-    abi: AgaveOracle,
+    abi: AaveOracle,
   },
   AgaveLendingPool: {
     address: {

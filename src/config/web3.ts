@@ -66,6 +66,7 @@ export const chainsConfig: Record<ChainsValues, ChainConfig> = {
     chainId: Chains.gnosis,
     chainIdHex: '0x64',
     rpcUrl: 'https://rpc.ankr.com/gnosis',
+
     blockExplorerUrls: ['https://gnosisscan.io/'],
     token: 'xDAI',
   },
@@ -84,5 +85,5 @@ export const TokensLists = {
   // '1INCH': 'https://gateway.ipfs.io/ipns/tokens.1inch.eth',
   // COINGECKO: 'https://tokens.coingecko.com/uniswap/all.json',
   // OPTIMISM: 'https://static.optimism.io/optimism.tokenlist.json',
-  gnosis: '/underlyingTokens.json',
+  gnosis: '/reserveTokens.json',
 } as const

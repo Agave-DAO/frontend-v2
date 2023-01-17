@@ -1,83 +1,191 @@
 import { protocolTokens } from '@/public/protocolTokens.json'
-import { tokens } from '@/public/underlyingTokens.json'
+import { tokens } from '@/public/reserveTokens.json'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 import { Token } from '@/types/token'
+import { RequiredFieldsOnly } from '@/types/utils'
 
 export type AgaveProtocolTokens = {
-  [underlying: string]: {
+  [reserve: string]: {
     ag: string
     variableDebt: string
     stableDebt: string
     strategy: string
     oracle: string
-    name: string // added to ease traceability
+    symbol: string // added to ease traceability
   }
 }
 
-export type AgaveProtocolTokenType = 'ag' | 'variableDebt' | 'stableDebt'
+export type AgaveProtocolTokenType = 'ag' | 'variableDebt' | 'stableDebt' | 'reserve'
+
+export type TokenWithType = Token & { type: AgaveProtocolTokenType }
+
+export type TokenInfo = Pick<TokenWithType, 'address' | 'symbol' | 'type'>
+
+type ValidLookupFields = Pick<Token, 'address' | 'symbol' | 'name'>
 
 export interface IDAgaveTokens {
-  underlyingTokens: Token[]
+  reserveTokens: Token[]
   protocolTokens: AgaveProtocolTokens
-  getUnderlyingTokenInfoByAddress: (address: string) => Token
-  getTokenByAddress: (address: string) => Token
-  getProtocolTokensByUnderlying: (address: string) => AgaveProtocolTokens['underlying']
-  getProtocolTokenInfo: (underlying: string, tokenType: AgaveProtocolTokenType) => Token
-  allTokensInfo: Token[]
+  allTokens: TokenWithType[]
+  getRelatedTokensByAddress: (tokenAddress: string) => TokenInfo[]
+  getTokenByAddress: (tokenAddress: string) => TokenWithType
+  getTokenByFieldAndValue: (fieldAndValue: ValidLookupFields) => TokenWithType | undefined
 }
 
-const TOKENS_BY_UNDERLYING: AgaveProtocolTokens = protocolTokens
-
 class AgaveTokens implements IDAgaveTokens {
-  private _underlyingTokens: Token[] = tokens
-  private _protocolTokens: AgaveProtocolTokens = TOKENS_BY_UNDERLYING
+  private _reserveTokens: Token[] = tokens
+  private _protocolTokens: AgaveProtocolTokens = protocolTokens
   private _protocolName = 'Agave'
+  private _validLookupFields: (keyof ValidLookupFields)[] = ['address', 'symbol', 'name']
 
   constructor() {
     // runtime check to prevent consuming invalid token info
-    this.allTokensInfo.every(this.isValidTokenInfo)
+    this.allTokens.every(this.isValidTokenInfo)
   }
 
-  get underlyingTokens() {
-    return this._underlyingTokens
+  get reserveTokens() {
+    return this._reserveTokens
   }
 
   get protocolTokens() {
     return this._protocolTokens
   }
 
-  getUnderlyingTokenInfoByAddress(address: string): Token {
-    const tokenInfo = this._underlyingTokens.find((token) => isSameAddress(token.address, address))
-
-    if (!tokenInfo) {
-      throw Error('Unsupported underlying token')
-    }
-
-    return tokenInfo
+  get allTokens(): TokenWithType[] {
+    return [
+      ...this.reserveTokens.map((tokenInfo) => ({
+        ...tokenInfo,
+        type: 'reserve' as AgaveProtocolTokenType,
+      })),
+      ...Object.values(this.reserveTokens).flatMap(({ address }) => {
+        return [
+          { ...this.getProtocolTokenInfo(address, 'ag'), type: 'ag' as AgaveProtocolTokenType },
+          {
+            ...this.getProtocolTokenInfo(address, 'variableDebt'),
+            type: 'variableDebt' as AgaveProtocolTokenType,
+          },
+          {
+            ...this.getProtocolTokenInfo(address, 'stableDebt'),
+            type: 'stableDebt' as AgaveProtocolTokenType,
+          },
+        ]
+      }),
+    ]
   }
 
-  getTokenByAddress(address: string): Token {
-    const tokenInfo = this.allTokensInfo.find((token) => isSameAddress(token.address, address))
+  getRelatedTokensByAddress(tokenAddress: string): TokenInfo[] {
+    const tokenInfo = this.getTokenByAddress(tokenAddress)
+
+    if (tokenInfo.type === 'reserve') {
+      // discard `oracle`, `strategy`, and `symbol` from protocol tokens
+      const { oracle, strategy, symbol, ...protocolTokens } = this.getProtocolTokensByReserve(
+        tokenInfo.address,
+      )
+
+      return [
+        {
+          address: tokenInfo.address,
+          symbol: tokenInfo.symbol,
+          type: tokenInfo.type as AgaveProtocolTokenType,
+        },
+        ...Object.values(protocolTokens)
+          .map(this.getTokenByAddress.bind(this))
+          .map(({ address, symbol, type }) => ({
+            address,
+            symbol,
+            type: type as AgaveProtocolTokenType,
+          })),
+      ]
+    } else {
+      const reserveToken = this.getReserveTokenByAddress(tokenAddress)
+
+      if (!reserveToken) {
+        throw Error('Unsupported token')
+      }
+
+      return this.getRelatedTokensByAddress(reserveToken.address)
+    }
+  }
+
+  getTokenByAddress(tokenAddress: string): TokenWithType {
+    const tokenInfo = this.getTokenByFieldAndValue({ address: tokenAddress })
 
     if (!tokenInfo) {
       throw Error('Unsupported token')
     }
+
     return tokenInfo
   }
 
-  getProtocolTokensByUnderlying(underlying: string): AgaveProtocolTokens['underlying'] {
-    const protocolTokens = this._protocolTokens[underlying]
+  getTokenByFieldAndValue(
+    fieldAndValue: Partial<RequiredFieldsOnly<Token>>,
+  ): TokenWithType | undefined {
+    const [field, value] = Object.entries(fieldAndValue)[0]
 
-    if (!protocolTokens) {
-      throw Error('Unsupported underlying token')
+    if (!field || !value) {
+      throw new Error('field and value are required')
     }
+
+    if (!this._validLookupFields.some((validField) => validField === field)) {
+      throw new Error('Invalid field')
+    }
+
+    if (field === 'address') {
+      return this.allTokens.find((token) => isSameAddress(token[field], value))
+    }
+
+    return this.allTokens.find((token) => token[field].toLowerCase() === value.toLowerCase())
+  }
+
+  private getReserveTokenByAddress(tokenAddress: string): Token {
+    // lookup reserve token by reserve address
+    const tokenInfo = this._reserveTokens.find((token) =>
+      isSameAddress(token.address, tokenAddress),
+    )
+
+    // if not found, lookup reserve token by protocol token address
+    if (!tokenInfo) {
+      const foundToken = Object.entries(this._protocolTokens).find(
+        ([, { ag, stableDebt, variableDebt }]) => {
+          return (
+            isSameAddress(ag, tokenAddress) ||
+            isSameAddress(stableDebt, tokenAddress) ||
+            isSameAddress(variableDebt, tokenAddress)
+          )
+        },
+      )
+
+      if (!foundToken) {
+        throw Error('Unsupported token')
+      }
+
+      const [reserveAddress] = foundToken
+
+      return this.getReserveTokenByAddress(reserveAddress)
+    }
+
+    return tokenInfo
+  }
+
+  private getProtocolTokensByReserve(
+    reserveAddress: string,
+  ): AgaveProtocolTokens['reserveAddress'] {
+    const foundToken = Object.entries(this._protocolTokens).find(([address]) =>
+      isSameAddress(address, reserveAddress),
+    )
+
+    if (!foundToken) {
+      throw Error('Unsupported reserveAddress token')
+    }
+
+    const [, protocolTokens] = foundToken
 
     return protocolTokens
   }
 
-  getProtocolTokenInfo(underlying: string, tokenType: AgaveProtocolTokenType): Token {
-    const tokenInfo = this.getUnderlyingTokenInfoByAddress(underlying)
-    const protocolTokens = this.getProtocolTokensByUnderlying(underlying)
+  private getProtocolTokenInfo(reserveAddress: string, tokenType: AgaveProtocolTokenType): Token {
+    const tokenInfo = this.getReserveTokenByAddress(reserveAddress)
+    const protocolTokens = this.getProtocolTokensByReserve(reserveAddress)
 
     switch (tokenType) {
       case 'ag':
@@ -104,19 +212,6 @@ class AgaveTokens implements IDAgaveTokens {
       default:
         throw new Error('Unsupported token type')
     }
-  }
-
-  get allTokensInfo(): Token[] {
-    return [
-      ...this.underlyingTokens,
-      ...Object.values(this.underlyingTokens).map(({ address }) => {
-        return {
-          ...this.getProtocolTokenInfo(address, 'ag'),
-          ...this.getProtocolTokenInfo(address, 'variableDebt'),
-          ...this.getProtocolTokenInfo(address, 'stableDebt'),
-        }
-      }),
-    ]
   }
 
   private isValidTokenInfo(tokenInfo: Token) {

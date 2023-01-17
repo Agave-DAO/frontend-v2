@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { ContractTransaction } from 'ethers'
+import { ContractReceipt, ContractTransaction } from 'ethers'
 
 import TxButton from '@/src/components/buttons/txButton'
 import { Formfield } from '@/src/components/form/Formfield'
@@ -10,6 +10,7 @@ import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
 import { TokenInput as BaseTokenInput } from '@/src/components/token/TokenInput'
+import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
@@ -30,42 +31,42 @@ const Button = styled(TxButton)`
 `
 
 type Props = {
-  label: string
-  erc20Address: string // ERC20 address
-  spender: string // Spender address
-  spendAction: () => Promise<ContractTransaction> // action like deposit, withdraw, borrow, etc
-  erc20Info?: {
-    symbol: string
-    decimals: number
-  }
+  label?: string
+  tokenAddress: string
+  spenderAddress: string
+  action: (value: string) => Promise<ContractTransaction>
+  onMined?: (r: ContractReceipt) => void
+  onSend?: (t: ContractTransaction) => void
+  onFail?: (error: unknown) => void
 }
 
-const TokenSpend = ({ erc20Address, erc20Info, label, spendAction, spender }: Props) => {
-  const { address } = useWeb3ConnectedApp()
+const DepositToken = ({
+  action,
+  label = 'Deposit',
+  onFail,
+  onMined,
+  onSend,
+  spenderAddress,
+  tokenAddress,
+}: Props) => {
+  const { address: connectedAddress } = useWeb3ConnectedApp()
   const [value, setValue] = useState('0')
+  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
 
   const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
   const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
 
-  const erc20 = useContractInstance(ERC20__factory, erc20Address)
-
-  const calls = [erc20.decimals, erc20.symbol, erc20.balanceOf, erc20.allowance] as const
+  const erc20 = useContractInstance(ERC20__factory, tokenAddress)
+  const calls = [erc20.balanceOf, erc20.allowance] as const
   const [{ data }, refetch] = useContractCall(
     calls,
-    [[], [], [address], [address, spender]],
-    erc20Info ? null : `erc20Spend-token-data-${address}`,
+    [[connectedAddress], [connectedAddress, spenderAddress]],
+    `TokenDeposit-${tokenAddress}-${connectedAddress}`,
   )
 
-  if (!data?.length && !erc20Info) {
-    throw Error('Impossible to get token data')
+  if (!data) {
+    throw Error('There was not possible to fetch token info')
   }
-
-  const [decimals, symbol, balance, allowance] = data || [
-    erc20Info!.decimals,
-    erc20Info!.symbol,
-    ZERO_BN,
-    ZERO_BN,
-  ]
 
   const disableSubmit =
     tokenInputStatus === TextfieldStatus.error || BigNumber.from(value || ZERO_BN).eq(ZERO_BN)
@@ -76,12 +77,12 @@ const TokenSpend = ({ erc20Address, erc20Info, label, spendAction, spender }: Pr
         formControl={
           <TokenInput
             balancePosition="topRight"
-            decimals={decimals}
-            maxValue={balance.toString()}
+            decimals={tokenInfo?.decimals}
+            maxValue={data[0].toString()}
             setStatus={setTokenInputStatus}
             setStatusText={setTokenInputStatusText}
             setValue={setValue}
-            symbol={symbol}
+            symbol={tokenInfo?.symbol}
             value={value}
           />
         }
@@ -89,20 +90,31 @@ const TokenSpend = ({ erc20Address, erc20Info, label, spendAction, spender }: Pr
         status={tokenInputStatus}
         statusText={tokenInputStatusText}
       />
-      {allowance.lt(value || ZERO_BN) ? (
+      {data[1].lt(value || ZERO_BN) ? (
         <Button
           disabled={disableSubmit}
           onMined={() => refetch()}
-          tx={() => erc20.approve(spender, value)}
+          tx={() => erc20.approve(spenderAddress, value)}
         >
           Approve
         </Button>
       ) : (
         <Button
           disabled={disableSubmit}
-          onMined={() => refetch()}
-          onSend={(tx) => tx && setValue('0')}
-          tx={() => spendAction()}
+          onFail={(e) => onFail && onFail(e)}
+          onMined={(r) => {
+            refetch()
+            if (onMined) {
+              onMined(r)
+            }
+          }}
+          onSend={(tx) => {
+            setValue('0')
+            if (tx && onSend) {
+              onSend(tx)
+            }
+          }}
+          tx={() => action(value)}
         >
           {label}
         </Button>
@@ -111,4 +123,4 @@ const TokenSpend = ({ erc20Address, erc20Info, label, spendAction, spender }: Pr
   )
 }
 
-export default withGenericSuspense(TokenSpend)
+export default withGenericSuspense(DepositToken)

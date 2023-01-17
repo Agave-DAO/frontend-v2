@@ -107,7 +107,7 @@ export const MarketList = withGenericSuspense(
         <CustomHR />
         {Object.values(agaveTokensData).map((tokenData) => {
           const { priceData, tokenAddress } = tokenData
-          const { decimals, symbol } = agaveTokens.getUnderlyingTokenInfoByAddress(tokenAddress)
+          const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
 
           return (
             <Fragment key={tokenAddress}>
