@@ -12,7 +12,7 @@ import { useRewardTokenData } from '@/src/hooks/symmetrics/useRewardTokenData'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import {
   getIncentiveRate as calculateIncentiveRate,
-  getMarketSize,
+  getMarketSize as calculateMarketSize,
   getPriceShares,
 } from '@/src/utils/markets'
 import { ChainsValues } from '@/types/chains'
@@ -32,7 +32,7 @@ export type IncentiveData = {
   variableDebtEmissionPerSeconds: BigNumber
 }
 
-export type AgaveTokenData = {
+export type AgaveMarketData = {
   tokenAddress: string
   priceData: BigNumber
   reserveData: {
@@ -119,9 +119,9 @@ const fetchAssetIncentiveData = async (
 }
 
 /**
- * Takes an array of token addresses, and returns an object with AgaveTokenData for each token
+ * Takes an array of token addresses, and returns an object with AgaveMarketData for each token
  */
-const fetchAgaveTokensData = async ({
+const fetchAgaveMarketsData = async ({
   chainId,
   provider,
   reserveTokensAddresses,
@@ -158,7 +158,7 @@ const fetchAgaveTokensData = async ({
       ({ tokenAddress }) => reserveAddress === tokenAddress,
     )
 
-    let tokenData: AgaveTokenData = {} as AgaveTokenData
+    let tokenData: AgaveMarketData = {} as AgaveMarketData
 
     rawDataByReserveToken.forEach((item) => {
       tokenData = { ...tokenData, ...item }
@@ -174,7 +174,7 @@ const fetchAgaveTokensData = async ({
 // 1 token = 4 queries, 2 tokens = 8 queries, 8 tokens = 32 queries
 // We must be careful if there are more than ~25 tokens in the array
 // In that case, we can split the tokens array into small arrays of tokens (such as pagination)
-const useTokensDataQuery = (reserveTokensAddresses: string[]) => {
+const useMarketsDataQuery = (reserveTokensAddresses: string[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
   // Simple cacheKey to get the cache data in other uses.
   const { data } = useSWR(
@@ -188,7 +188,7 @@ const useTokensDataQuery = (reserveTokensAddresses: string[]) => {
         provider: batchProvider,
         chainId: appChainId,
       }
-      return fetchAgaveTokensData(fetcherParams)
+      return fetchAgaveMarketsData(fetcherParams)
     },
     {
       refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
@@ -202,80 +202,81 @@ const useTokensDataQuery = (reserveTokensAddresses: string[]) => {
  * Returns marketsData query result and a bunch of functions that are used to get data about the tokens
  * @param {string[]} string - string[]
  */
-export const useAgaveTokensData = (reserveTokensAddresses: string[]) => {
-  const agaveTokensData = useTokensDataQuery(reserveTokensAddresses)
+export const useAgaveMarketsData = (reserveTokensAddresses: string[]) => {
+  const agaveMarketsData = useMarketsDataQuery(reserveTokensAddresses)
   const rewardTokenData = useRewardTokenData()?.pools[0]
 
-  const findToken = useCallback(
+  /* Get the market data for a given token address. */
+  const getMarket = useCallback(
     (address: string) => {
-      return agaveTokensData?.find((tokenData) => tokenData.tokenAddress === address)
+      return agaveMarketsData?.find(({ tokenAddress }) => tokenAddress === address)
     },
-    [agaveTokensData],
+    [agaveMarketsData],
   )
 
   /* Returns the market size of a token. */
-  const getTokenMarketSize = useCallback(
+  const getMarketSize = useCallback(
     (tokenAddress: string) => {
-      const tokenData = findToken(tokenAddress)
-      if (!tokenData) {
+      const marketData = getMarket(tokenAddress)
+      if (!marketData) {
         return ZERO_BN
       }
-      const { availableLiquidity, totalVariableDebt } = tokenData.reserveData
+      const { availableLiquidity, totalVariableDebt } = marketData.reserveData
 
-      return getMarketSize({
+      return calculateMarketSize({
         tokenAddress,
         totalSupply: totalVariableDebt.add(availableLiquidity),
-        price: tokenData.priceData,
+        price: marketData.priceData,
       })
     },
-    [findToken],
+    [getMarket],
   )
 
-  const getTokenTotalBorrowed = useCallback(
+  const getTotalBorrowed = useCallback(
     (tokenAddress: string) => {
-      const tokenData = findToken(tokenAddress)
-      if (!tokenData) {
+      const marketData = getMarket(tokenAddress)
+      if (!marketData) {
         return ZERO_BN
       }
-      const { totalStableDebt, totalVariableDebt } = tokenData.reserveData
+      const { totalStableDebt, totalVariableDebt } = marketData.reserveData
       return totalStableDebt.add(totalVariableDebt)
     },
-    [findToken],
+    [getMarket],
   )
 
   const getDepositAPY = useCallback(
     (tokenAddress: string) => {
-      const tokenData = findToken(tokenAddress)
-      if (!tokenData) {
+      const marketData = getMarket(tokenAddress)
+      if (!marketData) {
         return ZERO_BN
       }
-      return tokenData.reserveData.liquidityRate
+      return marketData.reserveData.liquidityRate
     },
-    [findToken],
+    [getMarket],
   )
 
   const getBorrowRate = useCallback(
     (tokenAddress: string) => {
-      const tokenData = findToken(tokenAddress)
-      if (!tokenData) {
+      const marketData = getMarket(tokenAddress)
+      if (!marketData) {
         return {
           stable: ZERO_BN,
           variable: ZERO_BN,
         }
       }
-      const { stableBorrowRate, variableBorrowRate } = tokenData.reserveData
+      const { stableBorrowRate, variableBorrowRate } = marketData.reserveData
       return {
         stable: stableBorrowRate,
         variable: variableBorrowRate,
       }
     },
-    [findToken],
+    [getMarket],
   )
 
   const getIncentiveRate = useCallback(
     (tokenAddress: string, tokenType: AgaveProtocolTokenType) => {
-      const tokenData = findToken(tokenAddress)
-      if (!tokenData || !rewardTokenData) {
+      const marketData = getMarket(tokenAddress)
+      if (!marketData || !rewardTokenData) {
         return ZERO_BN
       }
 
@@ -283,7 +284,7 @@ export const useAgaveTokensData = (reserveTokensAddresses: string[]) => {
         incentiveData,
         priceData: tokenPrice,
         reserveData: { availableLiquidity, totalVariableDebt },
-      } = tokenData
+      } = marketData
 
       const emissionPerSeconds =
         tokenType === 'ag'
@@ -307,14 +308,14 @@ export const useAgaveTokensData = (reserveTokensAddresses: string[]) => {
         tokenPrice,
       })
     },
-    [findToken, rewardTokenData],
+    [getMarket, rewardTokenData],
   )
 
   return {
-    agaveTokensData,
+    agaveMarketsData,
     getIncentiveRate,
-    getTokenMarketSize,
-    getTokenTotalBorrowed,
+    getMarketSize,
+    getTotalBorrowed,
     getDepositAPY,
     getBorrowRate,
   }

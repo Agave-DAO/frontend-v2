@@ -8,10 +8,8 @@ import { Loading } from '@/src/components/loading/Loading'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
-import { useAgaveTokensData } from '@/src/hooks/agave/useAgaveTokensData'
+import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
 import { SymbolPosition, formatAmount, formatPercentage, weiPerToken } from '@/src/utils/common'
-import { getMarketSize } from '@/src/utils/markets'
-import { Token } from '@/types/token'
 
 const Grid = styled.div`
   align-items: center;
@@ -81,28 +79,28 @@ const Rates = ({
 export const MarketList = withGenericSuspense(
   ({ reserveTokensAddresses }: { reserveTokensAddresses: string[] }) => {
     const {
-      agaveTokensData,
+      agaveMarketsData,
       getBorrowRate,
       getDepositAPY,
       getIncentiveRate,
-      getTokenMarketSize,
-      getTokenTotalBorrowed,
-    } = useAgaveTokensData(reserveTokensAddresses)
+      getMarketSize,
+      getTotalBorrowed,
+    } = useAgaveMarketsData(reserveTokensAddresses)
 
-    if (!agaveTokensData) {
+    if (!agaveMarketsData) {
       return <CustomP>Unable to get markets</CustomP>
     }
 
     /* Calculating the total market size. */
     const totalMarketSize = useMemo(
       () =>
-        agaveTokensData.reduce((currentTotal, { assetData: { isFrozen }, tokenAddress }) => {
+        agaveMarketsData.reduce((currentTotal, { assetData: { isFrozen }, tokenAddress }) => {
           if (isFrozen) {
             return currentTotal
           }
-          return currentTotal.add(getTokenMarketSize(tokenAddress))
+          return currentTotal.add(getMarketSize(tokenAddress))
         }, ZERO_BN),
-      [agaveTokensData, getTokenMarketSize],
+      [agaveMarketsData, getMarketSize],
     )
 
     return (
@@ -118,7 +116,7 @@ export const MarketList = withGenericSuspense(
           <strong>Stable borrow APR</strong>
         </Grid>
         <CustomHR />
-        {agaveTokensData.map(({ assetData: { isFrozen }, priceData, tokenAddress }) => {
+        {agaveMarketsData.map(({ assetData: { isFrozen }, priceData, tokenAddress }) => {
           /* Skipping the frozen tokens. */
           if (isFrozen) {
             return
@@ -131,18 +129,16 @@ export const MarketList = withGenericSuspense(
               <Grid>
                 <Asset symbol={symbol} />
                 <Amount value={priceData} />
-                <Amount value={getTokenMarketSize(tokenAddress)} />
+                <Amount value={getMarketSize(tokenAddress)} />
                 <div>
                   <Amount
-                    value={getTokenTotalBorrowed(tokenAddress)
-                      .mul(priceData)
-                      .div(weiPerToken(decimals))}
+                    value={getTotalBorrowed(tokenAddress).mul(priceData).div(weiPerToken(decimals))}
                   />
                   <Amount
                     decimals={decimals}
                     symbol={symbol}
                     symbolPosition="after"
-                    value={getTokenTotalBorrowed(tokenAddress)}
+                    value={getTotalBorrowed(tokenAddress)}
                   />
                 </div>
                 {/* TODO: Move 25 to a constant ? */}

@@ -250,7 +250,7 @@ To consume them, we implemented the hook [`useTokensLists`](./src/hooks/useToken
 
 ## Protocol Data
 
-### useAgaveTokensData
+### useAgaveMarketsData
 
 React hook that can be used to get Agave reserve tokens information from an array of tokens addresses. The hook accepts an array of tokens addresses and returns data for each token, such as `priceData`, `reserveData`, `assetData`, and `incentiveData`. Additionally, the hook provides a number of functions that can be used to get data about a single token from the result, such as `getTokenMarketSize`, `getTokenTotalBorrowed`, `getDepositAPY`, `getBorrowRate`, and `getIncentiveRate`.
 
