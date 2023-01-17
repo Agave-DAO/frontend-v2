@@ -19,7 +19,7 @@ export type AgaveProtocolTokenType = 'ag' | 'variableDebt' | 'stableDebt' | 'und
 
 export type TokenWithType = Token & { type: AgaveProtocolTokenType }
 
-export type TokenInfo = Pick<Token, 'address' | 'symbol' | 'type'>
+export type TokenInfo = Pick<TokenWithType, 'address' | 'symbol' | 'type'>
 
 type ValidLookupFields = Pick<Token, 'address' | 'symbol' | 'name'>
 

@@ -47,7 +47,7 @@ By just removing the entry of the token from the [`public/underlyingTokens.json`
 ```json
 {
   "0x9c58bacc331c9aa871afd802db6379a98e80cedb": {
-    "name": "GNO",
+    "symbol": "GNO",
     "ag": "0xa26783ead6c1f4744685c14079950622674ae8a8",
     "variableDebt": "0x6e2ead844b785a5f44290066ea0ee44338511464",
     "stableDebt": "0xf3779f51b26910a75150999d3517b5360232bb6c",
@@ -58,4 +58,4 @@ By just removing the entry of the token from the [`public/underlyingTokens.json`
 ```
 
 Note 1: `strategy` and `oracle` were added to match the [Agave Docs](https://agavedev.notion.site/Tokens-b8967cb6e8ca43d5b13c7fbabe39fcf7) and are not currently used in the dApp.
-Note 2: `name` is set to facilitate the cross-reference to the user, but it's not being used in the dApp.
+Note 2: `symbol` is set to facilitate the cross-reference to the user, but it's not being used in the dApp.
