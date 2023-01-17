@@ -10,7 +10,7 @@ export const formatNumber = (value: number, displayDecimals = DISPLAY_DECIMALS):
     : ''
 
 /**
- * It takes a BigNumber, converts it to a FixedNumber, and then formats it as a string
+ * It takes a BigNumber and formats it as a string
  * @param {BigNumber} value - The amount to format
  * @param {number} decimals - The number of decimals to display.
  * @param [symbol=$] - The symbol to use for the currency.

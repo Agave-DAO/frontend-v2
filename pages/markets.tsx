@@ -15,11 +15,12 @@ const Card = styled(BaseCard)`
 `
 
 const Markets: NextPage = () => {
+  const reserveTokensAddresses = agaveTokens.reserveTokens.map(({ address }) => address)
   return (
     <>
       <BaseTitle>Markets</BaseTitle>
       <Card>
-        <MarketList tokens={agaveTokens.reserveTokens} />
+        <MarketList reserveTokensAddresses={reserveTokensAddresses} />
       </Card>
     </>
   )
