@@ -10,6 +10,7 @@ import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { contracts } from '@/src/contracts/contracts'
 import { useRewardTokenData } from '@/src/hooks/symmetrics/useRewardTokenData'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
+import { isSameAddress } from '@/src/utils/isSameAddress'
 import {
   getIncentiveRate as calculateIncentiveRate,
   getMarketSize as calculateMarketSize,
@@ -154,8 +155,8 @@ const fetchAgaveMarketsData = async ({
   /* Merge the results of the promises by reserve token address. */
   const tokensData = reserveTokensAddresses.map((reserveAddress) => {
     // Find all occurrences by reserveAddress
-    const rawDataByReserveToken = rawResults.filter(
-      ({ tokenAddress }) => reserveAddress === tokenAddress,
+    const rawDataByReserveToken = rawResults.filter(({ tokenAddress }) =>
+      isSameAddress(reserveAddress, tokenAddress),
     )
 
     let tokenData: AgaveMarketData = {} as AgaveMarketData
@@ -170,10 +171,8 @@ const fetchAgaveMarketsData = async ({
   return tokensData
 }
 
-// WARNING: batch provider accepts a maximum of 100 calls. Each token has 4 queries to get data.
-// 1 token = 4 queries, 2 tokens = 8 queries, 8 tokens = 32 queries
-// We must be careful if there are more than ~25 tokens in the array
-// In that case, we can split the tokens array into small arrays of tokens (such as pagination)
+// TODO warning with the number of batch calls.
+// If the array of token is to big, we can split the tokens array into small arrays of tokens (such as pagination)
 const useMarketsDataQuery = (reserveTokensAddresses: string[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
   // Simple cacheKey to get the cache data in other uses.

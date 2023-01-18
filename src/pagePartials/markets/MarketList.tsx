@@ -3,13 +3,15 @@ import styled from 'styled-components'
 
 import { BigNumber } from 'ethers'
 
+import { Amount } from '@/src/components/helpers/Amount'
+import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
-import { SymbolPosition, formatAmount, formatPercentage, weiPerToken } from '@/src/utils/common'
+import { formatAmount, weiPerToken } from '@/src/utils/common'
 
 const Grid = styled.div`
   align-items: center;
@@ -22,7 +24,7 @@ const Grid = styled.div`
   }
 `
 
-const CustomP = styled.p`
+export const CustomP = styled.p`
   margin: 0;
   line-height: 1.8;
 `
@@ -35,22 +37,6 @@ const Asset = ({ symbol }: { symbol: string }) => (
   <strong>
     <TokenIcon symbol={symbol} /> {symbol}
   </strong>
-)
-
-const Amount = ({
-  decimals,
-  symbol,
-  symbolPosition,
-  value,
-}: {
-  value: BigNumber
-  decimals?: number
-  symbol?: string
-  symbolPosition?: SymbolPosition
-}) => <CustomP>{formatAmount(value, decimals, symbol, symbolPosition)}</CustomP>
-
-const Percentage = ({ decimals, value }: { value: BigNumber; decimals: number }) => (
-  <CustomP>{formatPercentage(value, decimals)}</CustomP>
 )
 
 const Rates = ({
@@ -91,16 +77,17 @@ export const MarketList = withGenericSuspense(
       return <CustomP>Unable to get markets</CustomP>
     }
 
-    /* Calculating the total market size. */
+    /* Filtering out the frozen markets. */
+    const noFrozenMarkets = agaveMarketsData.filter(({ assetData: { isFrozen } }) => !isFrozen)
+
+    /* Calculating the total market size of all markets. */
     const totalMarketSize = useMemo(
       () =>
-        agaveMarketsData.reduce((currentTotal, { assetData: { isFrozen }, tokenAddress }) => {
-          if (isFrozen) {
-            return currentTotal
-          }
-          return currentTotal.add(getMarketSize(tokenAddress))
-        }, ZERO_BN),
-      [agaveMarketsData, getMarketSize],
+        noFrozenMarkets.reduce(
+          (currentTotal, { tokenAddress }) => currentTotal.add(getMarketSize(tokenAddress)),
+          ZERO_BN,
+        ),
+      [getMarketSize, noFrozenMarkets],
     )
 
     return (
@@ -116,12 +103,7 @@ export const MarketList = withGenericSuspense(
           <strong>Stable borrow APR</strong>
         </Grid>
         <CustomHR />
-        {agaveMarketsData.map(({ assetData: { isFrozen }, priceData, tokenAddress }) => {
-          /* Skipping the frozen tokens. */
-          if (isFrozen) {
-            return
-          }
-
+        {noFrozenMarkets.map(({ priceData, tokenAddress }) => {
           const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
 
           return (
@@ -134,6 +116,7 @@ export const MarketList = withGenericSuspense(
                   <Amount
                     value={getTotalBorrowed(tokenAddress).mul(priceData).div(weiPerToken(decimals))}
                   />
+                  <br />
                   <Amount
                     decimals={decimals}
                     symbol={symbol}
