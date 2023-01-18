@@ -23,13 +23,15 @@ export const formatAmount = (
   symbol = '$',
   symbolPosition: SymbolPosition = 'before',
 ): string =>
-  `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(
-    FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
-  )}${symbolPosition === 'after' ? ` ${symbol} ` : ''}`
+  symbol
+    ? `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(
+        FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
+      )}${symbolPosition === 'after' ? ` ${symbol}` : ''}`
+    : `${formatNumber(FixedNumber.fromValue(value, decimals).toUnsafeFloat())}`
 
 export const formatPercentage = (value: BigNumber, decimals: number) =>
-  `${FixedNumber.fromValue(value, decimals, 'fixed256x27')
-    .toUnsafeFloat()
-    .toFixed(DISPLAY_DECIMALS)} %`
+  `${parseFloat(
+    FixedNumber.fromValue(value, decimals, 'fixed256x27').toUnsafeFloat().toFixed(DISPLAY_DECIMALS),
+  )} %`
 
 export const weiPerToken = (decimals: number) => BigNumber.from(10).pow(decimals)
