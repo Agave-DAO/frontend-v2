@@ -22,7 +22,6 @@ import {
   AaveProtocolDataProvider__factory,
   BaseIncentivesController__factory,
 } from '@/types/generated/typechain'
-import { Token } from '@/types/token'
 import { isFulfilled } from '@/types/utils'
 
 /**
