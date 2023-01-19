@@ -1,8 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { ZERO_BN } from '@/src/constants/bigNumber'
-import { weiPerToken } from '@/src/utils/common'
+import { fromWei } from '@/src/utils/common'
 
 type Params = { totalSupply: BigNumber; price: BigNumber; tokenAddress: string }
 
@@ -12,7 +11,7 @@ type Params = { totalSupply: BigNumber; price: BigNumber; tokenAddress: string }
 export const getMarketSize = ({ price, tokenAddress, totalSupply }: Params) => {
   const { decimals } = agaveTokens.getTokenByAddress(tokenAddress)
 
-  return totalSupply.mul(price).div(weiPerToken(decimals))
+  return fromWei(totalSupply.mul(price), decimals)
 }
 
 /**
@@ -45,7 +44,7 @@ export const getIncentiveRate = ({
   const emissionPerYear = emissionPerSeconds.mul(SECONDS_PER_YEAR)
 
   /* Converting the token supply to DAI. */
-  const totalSupplyInDaiWei = tokenSupply.mul(tokenPrice).div(weiPerToken(decimals))
+  const totalSupplyInDaiWei = fromWei(tokenSupply.mul(tokenPrice), decimals)
 
   const APYPerYear = priceShares.mul(emissionPerYear).div(totalSupplyInDaiWei)
 

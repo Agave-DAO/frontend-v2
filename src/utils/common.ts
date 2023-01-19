@@ -1,5 +1,7 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
+import { parseUnits } from 'ethers/lib/utils'
 
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { DISPLAY_DECIMALS, NATIVE_DECIMALS } from '@/src/constants/common'
 
 export const formatNumber = (value: number, displayDecimals = DISPLAY_DECIMALS): string =>
@@ -34,4 +36,36 @@ export const formatPercentage = (value: BigNumber, decimals: number) =>
     FixedNumber.fromValue(value, decimals, 'fixed256x27').toUnsafeFloat().toFixed(DISPLAY_DECIMALS),
   )} %`
 
-export const weiPerToken = (decimals: number) => BigNumber.from(10).pow(decimals)
+/**
+ * Convert all wei values to a BigNumber as human readable form
+ * @param {string | BigNumber} value - The value in wei you want to convert.
+ * @param [decimals=18] - The number of decimals the token has.
+ * @returns A BigNumber object
+ */
+export function fromWei(value: string | BigNumber, decimals = 18) {
+  const hasDecimals =
+    value instanceof BigNumber ? false : value.split('.')[1]?.length ? true : false
+
+  if (hasDecimals) {
+    throw new Error("Wei value mustn't have decimal places")
+  }
+
+  if (typeof value === 'string') {
+    return BigNumber.from(value).div(parseUnits('1', decimals))
+  }
+
+  return value.div(parseUnits('1', decimals))
+}
+
+/**
+ * Convert non wei values to wei
+ * @param {string | BigNumber } value - The number you want to convert to wei.
+ * @param [decimals=18] - The number of decimals the token has.
+ * @returns A BigNumber object
+ */
+export function toWei(value: string | BigNumber, decimals = 18) {
+  if (typeof value === 'string') {
+    return parseUnits(value, decimals)
+  }
+  return parseUnits(value.toString(), decimals)
+}

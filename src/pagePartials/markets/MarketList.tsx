@@ -11,7 +11,7 @@ import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
-import { formatAmount, weiPerToken } from '@/src/utils/common'
+import { formatAmount, fromWei } from '@/src/utils/common'
 
 const Grid = styled.div`
   align-items: center;
@@ -114,7 +114,7 @@ export const MarketList = withGenericSuspense(
                 <Amount value={getMarketSize(tokenAddress)} />
                 <div>
                   <Amount
-                    value={getTotalBorrowed(tokenAddress).mul(priceData).div(weiPerToken(decimals))}
+                    value={fromWei(getTotalBorrowed(tokenAddress).mul(priceData), decimals)}
                   />
                   <br />
                   <Amount
