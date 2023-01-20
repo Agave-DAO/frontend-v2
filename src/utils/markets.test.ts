@@ -39,15 +39,6 @@ const { address: tokenAddress, decimals } = agaveTokens.reserveTokens[0] // get 
 const mockPriceShare = BigNumber.from(((1.5 / 12.5) * 1e16).toFixed())
 
 describe('getMarketSize', () => {
-  it('should expose a mock token', () => {
-    expect(tokenAddress).toBe('0x0000000000000000000000000000000000000010')
-    expect(decimals).toBe(18)
-  })
-
-  it('should expose a function', () => {
-    expect(getMarketSize).toBeDefined()
-  })
-
   it('getMarketSize should return expected output', () => {
     const mockParams = {
       totalSupply: BigNumber.from('15000000000000000000'),
@@ -60,25 +51,22 @@ describe('getMarketSize', () => {
 })
 
 describe('getPriceShares', () => {
-  it('should expose a function', () => {
-    expect(getPriceShares).toBeDefined()
-  })
-
   it('getPriceShares should return expected output', () => {
     const mockParams = {
       liquidity: '1.5',
       totalShares: '12.5',
     }
+    const mockParamsWithDenominatorZero = {
+      liquidity: '1.5',
+      totalShares: '0',
+    }
 
-    expect(getPriceShares(mockParams)).toStrictEqual(mockPriceShare)
+    expect(getPriceShares(mockParams).toString()).toBe('1200000000000000')
+    expect(getPriceShares(mockParamsWithDenominatorZero).toString()).toBe('0')
   })
 })
 
 describe('getIncentiveRate', () => {
-  it('should expose a function', () => {
-    expect(getIncentiveRate).toBeDefined()
-  })
-
   it('getIncentiveRate should return expected output', () => {
     const mockParams = {
       tokenSupply: BigNumber.from('15000000000000000000'),

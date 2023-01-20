@@ -1,12 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { formatAmount, formatNumber, formatPercentage, weiPerToken } from './common'
+import { formatAmount, formatNumber, formatPercentage, fromWei, toWei } from './common'
 
 describe('formatNumber', () => {
-  it('should expose a function', () => {
-    expect(formatNumber).toBeDefined()
-  })
-
   it('formatNumber should return expected output', () => {
     const retValue = formatNumber(150000.356, 2)
 
@@ -15,10 +11,6 @@ describe('formatNumber', () => {
 })
 
 describe('formatAmount', () => {
-  it('should expose a function', () => {
-    expect(formatAmount).toBeDefined()
-  })
-
   it('formatAmount should return expected outputs', () => {
     const mockValue = BigNumber.from('22500000000000000000') // 22.5 ETH
     const mockDecimals = 18
@@ -35,27 +27,40 @@ describe('formatAmount', () => {
     expect(retValueWithoutSymbol).toBe('22.5')
   })
 })
-describe('formatPercentage', () => {
-  it('should expose a function', () => {
-    expect(formatPercentage).toBeDefined()
-  })
 
+describe('formatPercentage', () => {
   it('formatPercentage should return expected output', () => {
     const mockValue = BigNumber.from('22500000000000000000') // 22.5 ETH
     const mockDecimals = 18
 
     const retValue = formatPercentage(mockValue, mockDecimals)
-    expect(retValue).toBe('22.5 %')
+    expect(retValue).toBe('22.5%')
   })
 })
 
-describe('weiPerToken', () => {
-  it('should expose a function', () => {
-    expect(weiPerToken).toBeDefined()
-  })
+describe('toWei', () => {
+  it('fromWie should return expected output', () => {
+    const mockValue = '22'
+    const mockValueBN = BigNumber.from('22')
+    const mockDecimals = 18
 
-  it('weiPerToken should return expected output', () => {
-    const retValue = weiPerToken(6)
-    expect(retValue.toString()).toBe('1000000')
+    const retValue = toWei(mockValue, mockDecimals)
+    const retValueBN = toWei(mockValueBN, mockDecimals)
+    expect(retValue.toString()).toBe('22000000000000000000')
+    expect(retValueBN.toString()).toBe('22000000000000000000')
+  })
+})
+
+describe('fromWei', () => {
+  it('fromWei should return expected output', () => {
+    const mockValue = '515096723460346549336314614912'
+    const mockValueBN = BigNumber.from('515096723460346549336314614912')
+    const mockDecimals = 6
+
+    const retValue = fromWei(mockValue, mockDecimals)
+    const retValueBN = fromWei(mockValueBN, mockDecimals)
+
+    expect(retValue.toString()).toBe('515096723460346549336314')
+    expect(retValueBN.toString()).toBe('515096723460346549336314')
   })
 })

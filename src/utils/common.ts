@@ -1,9 +1,13 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 import { parseUnits } from 'ethers/lib/utils'
 
-import { ZERO_BN } from '@/src/constants/bigNumber'
 import { DISPLAY_DECIMALS, NATIVE_DECIMALS } from '@/src/constants/common'
 
+/**
+ * It takes a number and returns a formatted number as string
+ * @param {number} value - number - The number to format
+ * @param displayDecimals - The number of decimal places to display.
+ */
 export const formatNumber = (value: number, displayDecimals = DISPLAY_DECIMALS): string =>
   value !== undefined
     ? Intl.NumberFormat('en', {
@@ -34,7 +38,7 @@ export const formatAmount = (
 export const formatPercentage = (value: BigNumber, decimals: number) =>
   `${parseFloat(
     FixedNumber.fromValue(value, decimals, 'fixed256x27').toUnsafeFloat().toFixed(DISPLAY_DECIMALS),
-  )} %`
+  )}%`
 
 /**
  * Convert all wei values to a BigNumber as human readable form

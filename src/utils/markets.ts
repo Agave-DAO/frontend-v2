@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { fromWei } from '@/src/utils/common'
 
 type Params = { totalSupply: BigNumber; price: BigNumber; tokenAddress: string }
@@ -19,7 +20,13 @@ export const getMarketSize = ({ price, tokenAddress, totalSupply }: Params) => {
  */
 export const getPriceShares = (rewardData: { liquidity: string; totalShares: string }) => {
   const { liquidity, totalShares } = rewardData
-  return BigNumber.from(((parseFloat(liquidity) / parseFloat(totalShares)) * 1e16).toFixed())
+  const [numerator, denominator] = [parseFloat(liquidity), parseFloat(totalShares)]
+
+  if (denominator === 0) {
+    return ZERO_BN
+  }
+
+  return BigNumber.from(((numerator / denominator) * 1e16).toFixed())
 }
 
 export const getIncentiveRate = ({
