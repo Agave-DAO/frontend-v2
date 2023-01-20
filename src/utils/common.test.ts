@@ -39,7 +39,7 @@ describe('formatPercentage', () => {
 })
 
 describe('toWei', () => {
-  it('fromWie should return expected output', () => {
+  it('toWei should return expected output', () => {
     const mockValue = '22'
     const mockValueBN = BigNumber.from('22')
     const mockDecimals = 18
