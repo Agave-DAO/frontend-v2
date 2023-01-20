@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react'
 
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import { JsonRpcBatchProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { OnboardAPI, WalletState } from '@web3-onboard/core'
 import injectedModule from '@web3-onboard/injected-wallets'
 import { init, useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'
@@ -101,6 +101,7 @@ export type Web3Context = {
   wallet: WalletState | null
   walletChainId: number | null
   web3Provider: Web3Provider | null
+  batchProvider: JsonRpcBatchProvider
 }
 
 export type Web3Connected = RequiredNonNull<Web3Context>
@@ -134,6 +135,11 @@ export default function Web3ConnectionProvider({ children }: Props) {
 
   const readOnlyAppProvider = useMemo(
     () => new JsonRpcProvider(getNetworkConfig(appChainId)?.rpcUrl, appChainId),
+    [appChainId],
+  )
+
+  const batchProvider = useMemo(
+    () => new JsonRpcBatchProvider(getNetworkConfig(appChainId)?.rpcUrl, appChainId),
     [appChainId],
   )
 
@@ -194,12 +200,11 @@ export default function Web3ConnectionProvider({ children }: Props) {
     }
   }
 
-  const value = {
+  const value: Web3Context = {
     address,
     appChainId,
     balance: wallet?.accounts[0].balance,
     connectWallet: handleConnectWallet,
-    connectedChain,
     connectingWallet,
     disconnectWallet: handleDisconnectWallet,
     getExplorerUrl,
@@ -210,10 +215,10 @@ export default function Web3ConnectionProvider({ children }: Props) {
     pushNetwork: setChain,
     readOnlyAppProvider,
     setAppChainId,
-    settingChain,
     wallet,
     walletChainId,
     web3Provider,
+    batchProvider,
   }
 
   return <Web3ContextConnection.Provider value={value}>{children}</Web3ContextConnection.Provider>

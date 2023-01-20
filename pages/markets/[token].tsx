@@ -14,7 +14,7 @@ import useGetAssetsPriceInDAI from '@/src/hooks/agave/useGetAssetsPriceInDAI'
 import useGetUserAccountData from '@/src/hooks/agave/useGetUserAccountData'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
-import { AgaveLendingABI__factory } from '@/types/generated/typechain'
+import { AgaveLending__factory } from '@/types/generated/typechain'
 
 type Props = {
   address: string
@@ -34,8 +34,8 @@ function MarketImp({ address, tokenAddress }: Props) {
     throw Error('There is not token info for the token address provided')
   }
 
-  const lendingPoolAddress = contracts['LendingPool'].address[appChainId]
-  const lendingPool = useContractInstance(AgaveLendingABI__factory, 'LendingPool')
+  const lendingPoolAddress = contracts['AgaveLendingPool'].address[appChainId]
+  const lendingPool = useContractInstance(AgaveLending__factory, 'LendingPool')
 
   const [{ data: userAccountData }] = useGetUserAccountData(address || ethers.constants.AddressZero)
   const [{ data: assetPricesInDAI }] = useGetAssetsPriceInDAI([

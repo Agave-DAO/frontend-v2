@@ -248,6 +248,14 @@ images: {
 
 To consume them, we implemented the hook [`useTokensLists`](./src/hooks/useTokensLists.tsx). You can find a usage example in [`src/components/token/TokenDropdown.tsx`](./src/components/token/TokenDropdown.tsx). And see it in action in our example page.
 
+## Protocol Data
+
+### useAgaveMarketsData
+
+filepath: `src/hooks/agave/useAgaveMarketsData.tsx`
+
+React hook that can be used to get Agave markets information from an array of tokens addresses (reserve tokens addresses). The hook accepts an array of tokens addresses and returns data for each token as `marketData`, such as `priceData`, `reserveData`, `assetData`, and `incentiveData`. Additionally, the hook provides a number of functions that can be used to get data about a single market from the result, such as `getMarketSize`, `getTotalBorrowed`, `getDepositAPY`, `getBorrowRate`, and `getIncentiveRate`.
+
 ## Contributing
 
 Contributions are welcome through [discussions](https://github.com/BootNodeDev/frontend-starter-kit/discussions), [issues](https://github.com/BootNodeDev/frontend-starter-kit/issues) and [pull requests](https://github.com/BootNodeDev/frontend-starter-kit/compare).
