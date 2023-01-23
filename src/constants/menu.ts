@@ -4,6 +4,10 @@ export const sections = [
     section: 'home',
   },
   {
+    href: '/dashboard',
+    section: 'dashboard',
+  },
+  {
     href: '/markets',
     section: 'markets',
   },
