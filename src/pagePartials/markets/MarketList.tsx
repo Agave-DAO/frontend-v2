@@ -33,13 +33,13 @@ const CustomHR = styled.hr`
   margin: 15px 0;
 `
 
-const Asset = ({ symbol }: { symbol: string }) => (
+export const Asset = ({ symbol }: { symbol: string }) => (
   <strong>
     <TokenIcon symbol={symbol} /> {symbol}
   </strong>
 )
 
-const Rates = ({
+export const Rates = ({
   base,
   incentive,
   total,
@@ -63,7 +63,7 @@ const Rates = ({
 )
 
 export const MarketList = withGenericSuspense(
-  ({ reserveTokensAddresses }: { reserveTokensAddresses: string[] }) => {
+  () => {
     const {
       agaveMarketsData,
       getBorrowRate,
@@ -71,7 +71,7 @@ export const MarketList = withGenericSuspense(
       getIncentiveRate,
       getMarketSize,
       getTotalBorrowed,
-    } = useAgaveMarketsData(reserveTokensAddresses)
+    } = useAgaveMarketsData()
 
     if (!agaveMarketsData) {
       return <CustomP>Unable to get markets</CustomP>

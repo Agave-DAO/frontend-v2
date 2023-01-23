@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
-import useSWR from 'swr'
+import useSWR, { useSWRConfig } from 'swr'
 
 import { AgaveProtocolTokenType, agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
@@ -175,9 +175,10 @@ const fetchAgaveMarketsData = async ({
 // If the array of token is to big, we can split the tokens array into small arrays of tokens (such as pagination)
 const useMarketsDataQuery = (reserveTokensAddresses: string[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
+
   // Simple cacheKey to get the cache data in other uses.
   const { data } = useSWR(
-    reserveTokensAddresses?.length ? `agave-tokens-data` : null,
+    reserveTokensAddresses?.length ? [`agave-tokens-data`, reserveTokensAddresses] : null,
     () => {
       if (!reserveTokensAddresses?.length) {
         return
@@ -201,8 +202,13 @@ const useMarketsDataQuery = (reserveTokensAddresses: string[]) => {
  * Returns marketsData query result and a bunch of functions that are used to get data about the tokens
  * @param {string[]} string - string[]
  */
-export const useAgaveMarketsData = (reserveTokensAddresses: string[]) => {
-  const agaveMarketsData = useMarketsDataQuery(reserveTokensAddresses)
+export const useAgaveMarketsData = (reserveTokensAddresses?: string[]) => {
+  /* If reserveTokensAddresses is empty, then it will return the address of all the reserve tokens. */
+  const marketAddresses = !reserveTokensAddresses?.length
+    ? agaveTokens.reserveTokens.map(({ address }) => address)
+    : reserveTokensAddresses
+
+  const agaveMarketsData = useMarketsDataQuery(marketAddresses)
   const rewardTokenData = useRewardTokenData()?.pools[0]
 
   /* Get the market data for a given token address. */

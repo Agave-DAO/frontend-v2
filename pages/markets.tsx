@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 import { BaseCard } from '@/src/components/common/BaseCard'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { MarketList } from '@/src/pagePartials/markets/MarketList'
 
 const Card = styled(BaseCard)`
@@ -15,12 +14,11 @@ const Card = styled(BaseCard)`
 `
 
 const Markets: NextPage = () => {
-  const reserveTokensAddresses = agaveTokens.reserveTokens.map(({ address }) => address)
   return (
     <>
       <BaseTitle>Markets</BaseTitle>
       <Card>
-        <MarketList reserveTokensAddresses={reserveTokensAddresses} />
+        <MarketList />
       </Card>
     </>
   )
