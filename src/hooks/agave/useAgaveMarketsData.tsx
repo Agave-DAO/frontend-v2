@@ -93,6 +93,7 @@ const fetchAssetIncentiveData = async (
   chainId: ChainsValues,
 ) => {
   const relatedTokens = agaveTokens.getRelatedTokensByAddress(tokenAddress)
+
   const agToken = relatedTokens.find(({ type }) => type === 'ag')
   const variableDebtToken = relatedTokens.find(({ type }) => type === 'variableDebt')
 
@@ -106,7 +107,7 @@ const fetchAssetIncentiveData = async (
   )
 
   const agTokenIncentiveData = await contract.getAssetData(agToken.address)
-  const variableDebtIncentiveData = await contract.getAssetData(agToken.address)
+  const variableDebtIncentiveData = await contract.getAssetData(variableDebtToken.address)
 
   return {
     incentiveData: {
