@@ -10,25 +10,13 @@ import { ChainsValues } from '@/types/chains'
 import { AaveProtocolDataProvider__factory } from '@/types/generated/typechain'
 import { isFulfilled } from '@/types/utils'
 
-type ReserveData = {
-  currentATokenBalance: BigNumber
-  currentStableDebt: BigNumber
-  currentVariableDebt: BigNumber
-  principalStableDebt: BigNumber
-  scaledVariableDebt: BigNumber
-  stableBorrowRate: BigNumber
-  liquidityRate: BigNumber
-  stableRateLastUpdated: number
-  usageAsCollateralEnabled: boolean
-}
-
 const fetchUserReserveData = async (
   reserveAddress: string,
   userAddress: string,
   provider: JsonRpcBatchProvider,
   chainId: ChainsValues,
 ) => {
-  const userReserveData: ReserveData = await AaveProtocolDataProvider__factory.connect(
+  const userReserveData = await AaveProtocolDataProvider__factory.connect(
     contracts.AaveProtocolDataProvider.address[chainId],
     provider,
   ).getUserReserveData(reserveAddress, userAddress)

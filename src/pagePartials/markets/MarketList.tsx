@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Asset } from '@/src/components/helpers/Asset'
 import { Percentage } from '@/src/components/helpers/Percentage'
-import { Rates } from '@/src/components/helpers/Rates'
+import { CustomHR, Grid, Rates } from '@/src/components/helpers/Rates'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
@@ -12,24 +12,9 @@ import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
 import { formatAmount, fromWei } from '@/src/utils/common'
 
-export const Grid = styled.div`
-  align-items: center;
-  column-gap: 20px;
-  display: flex;
-  row-gap: 20px;
-  > * {
-    flex: 1;
-    text-align: center;
-  }
-`
-
 export const CustomP = styled.p`
   margin: 0;
   line-height: 1.8;
-`
-
-export const CustomHR = styled.hr`
-  margin: 15px 0;
 `
 
 export const MarketList = withGenericSuspense(

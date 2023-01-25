@@ -1,29 +1,13 @@
 import Link from 'next/link'
-import styled from 'styled-components'
 
 import { Amount } from '@/src/components/helpers/Amount'
 import { Asset } from '@/src/components/helpers/Asset'
-import { Rates } from '@/src/components/helpers/Rates'
+import { CustomHR, Grid, Rates } from '@/src/components/helpers/Rates'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserBorrows } from '@/src/hooks/agave/useUserBorrows'
 import { RequiredConnection } from '@/src/hooks/requiredConnection'
-
-const Grid = styled.div`
-  align-items: center;
-  column-gap: 20px;
-  display: flex;
-  row-gap: 20px;
-  > * {
-    flex: 1;
-    text-align: center;
-  }
-`
-
-const CustomHR = styled.hr`
-  margin: 15px 0;
-`
 
 const UserBorrowsList = withGenericSuspense(
   () => {

@@ -5,6 +5,7 @@ import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
 import { useUserReservesData } from '@/src/hooks/agave/useUserReservesData'
 import { fromWei } from '@/src/utils/common'
+import { isSameAddress } from '@/src/utils/isSameAddress'
 
 export enum BorrowMode {
   Stable = 'Stable',
@@ -42,7 +43,9 @@ export const useUserBorrows = () => {
 
   const userBorrowsWithMarketData = userReservesData.map(({ reserveAddress, userReserveData }) => {
     /* Find the market data for the reserve that the user has a borrow. */
-    const marketData = agaveMarketsData.find((market) => market.tokenAddress === reserveAddress)
+    const marketData = agaveMarketsData.find((market) =>
+      isSameAddress(market.tokenAddress, reserveAddress),
+    )
 
     if (!marketData) {
       return null

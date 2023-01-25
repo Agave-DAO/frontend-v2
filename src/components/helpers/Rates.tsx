@@ -1,7 +1,22 @@
+import styled from 'styled-components'
+
 import { BigNumber } from 'ethers'
 
-import { CustomHR, Grid } from '../../pagePartials/markets/MarketList'
 import { Percentage } from '@/src/components/helpers/Percentage'
+
+export const CustomHR = styled.hr`
+  margin: 15px 0;
+`
+export const Grid = styled.div`
+  align-items: center;
+  column-gap: 20px;
+  display: flex;
+  row-gap: 20px;
+  > * {
+    flex: 1;
+    text-align: center;
+  }
+`
 
 export const Rates = ({
   base,
