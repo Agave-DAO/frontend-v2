@@ -1,9 +1,27 @@
-import { BorrowMode, UserBorrow } from '../../pagePartials/dashboard/UserBorrows'
+import { BigNumber } from '@ethersproject/bignumber'
+
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
 import { useUserReservesData } from '@/src/hooks/agave/useUserReservesData'
 import { fromWei } from '@/src/utils/common'
+
+export enum BorrowMode {
+  Stable = 'Stable',
+  Variable = 'Variable',
+}
+
+export type UserBorrow = {
+  assetAddress: string
+  borrowedAmount: BigNumber
+  borrowedAmountInDAI: BigNumber
+  borrowRate: {
+    base: BigNumber
+    incentive: BigNumber
+    total: BigNumber
+  }
+  borrowMode: string
+}
 
 /**
  * Combine the user's borrows with the market data.

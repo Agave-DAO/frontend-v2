@@ -1,19 +1,18 @@
 import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { BigNumber } from 'ethers'
-
 import { Amount } from '@/src/components/helpers/Amount'
+import { Asset } from '@/src/components/helpers/Asset'
 import { Percentage } from '@/src/components/helpers/Percentage'
+import { Rates } from '@/src/components/helpers/Rates'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
-import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
 import { formatAmount, fromWei } from '@/src/utils/common'
 
-const Grid = styled.div`
+export const Grid = styled.div`
   align-items: center;
   column-gap: 20px;
   display: flex;
@@ -29,38 +28,9 @@ export const CustomP = styled.p`
   line-height: 1.8;
 `
 
-const CustomHR = styled.hr`
+export const CustomHR = styled.hr`
   margin: 15px 0;
 `
-
-export const Asset = ({ symbol }: { symbol: string }) => (
-  <strong>
-    <TokenIcon symbol={symbol} /> {symbol}
-  </strong>
-)
-
-export const Rates = ({
-  base,
-  incentive,
-  total,
-}: {
-  base: BigNumber
-  incentive: BigNumber
-  total: BigNumber
-}) => (
-  <div>
-    <Grid>
-      Total rate: <Percentage decimals={25} value={total} />
-    </Grid>
-    <CustomHR />
-    <Grid>
-      Base rate: <Percentage decimals={25} value={base} />
-    </Grid>
-    <Grid>
-      Incentive rate: <Percentage decimals={25} value={incentive} />
-    </Grid>
-  </div>
-)
 
 export const MarketList = withGenericSuspense(
   () => {

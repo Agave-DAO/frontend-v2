@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
+import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
-import { BigNumber } from 'ethers'
-import useSWR, { useSWRConfig } from 'swr'
+import useSWR from 'swr'
 
 import { AgaveProtocolTokenType, agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'

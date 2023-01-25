@@ -1,33 +1,14 @@
 import Link from 'next/link'
 import styled from 'styled-components'
 
-import { BigNumber } from 'ethers'
-
-import { useUserBorrows } from '../../hooks/agave/useUserBorrows'
-import { Asset, Rates } from '../markets/MarketList'
 import { Amount } from '@/src/components/helpers/Amount'
+import { Asset } from '@/src/components/helpers/Asset'
+import { Rates } from '@/src/components/helpers/Rates'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { useUserBorrows } from '@/src/hooks/agave/useUserBorrows'
 import { RequiredConnection } from '@/src/hooks/requiredConnection'
-import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
-
-export enum BorrowMode {
-  Stable = 'Stable',
-  Variable = 'Variable',
-}
-
-export type UserBorrow = {
-  assetAddress: string
-  borrowedAmount: BigNumber
-  borrowedAmountInDAI: BigNumber
-  borrowRate: {
-    base: BigNumber
-    incentive: BigNumber
-    total: BigNumber
-  }
-  borrowMode: string
-}
 
 const Grid = styled.div`
   align-items: center;
