@@ -35,7 +35,7 @@ function MarketImp({ address, tokenAddress }: Props) {
   }
 
   const lendingPoolAddress = contracts['AgaveLendingPool'].address[appChainId]
-  const lendingPool = useContractInstance(AgaveLending__factory, 'LendingPool')
+  const lendingPool = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
 
   const [{ data: userAccountData }] = useGetUserAccountData(address || ethers.constants.AddressZero)
   const [{ data: assetPricesInDAI }] = useGetAssetsPriceInDAI([

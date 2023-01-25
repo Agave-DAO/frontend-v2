@@ -29,14 +29,14 @@ export const Rates = ({
 }) => (
   <div>
     <Grid>
-      Total rate: <Percentage decimals={25} value={total} />
+      Total: <Percentage decimals={25} value={total} />
     </Grid>
     <CustomHR />
     <Grid>
-      Base rate: <Percentage decimals={25} value={base} />
+      Base: <Percentage decimals={25} value={base} />
     </Grid>
     <Grid>
-      Incentive rate: <Percentage decimals={25} value={incentive} />
+      Incentive: <Percentage decimals={25} value={incentive} />
     </Grid>
   </div>
 )
