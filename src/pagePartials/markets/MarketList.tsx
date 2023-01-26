@@ -1,69 +1,24 @@
 import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { BigNumber } from 'ethers'
-
 import { Amount } from '@/src/components/helpers/Amount'
+import { Asset } from '@/src/components/helpers/Asset'
 import { Percentage } from '@/src/components/helpers/Percentage'
+import { CustomHR, Grid, Rates } from '@/src/components/helpers/Rates'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
-import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
 import { formatAmount, fromWei } from '@/src/utils/common'
-
-const Grid = styled.div`
-  align-items: center;
-  column-gap: 20px;
-  display: flex;
-  row-gap: 20px;
-  > * {
-    flex: 1;
-    text-align: center;
-  }
-`
 
 export const CustomP = styled.p`
   margin: 0;
   line-height: 1.8;
 `
 
-const CustomHR = styled.hr`
-  margin: 15px 0;
-`
-
-const Asset = ({ symbol }: { symbol: string }) => (
-  <strong>
-    <TokenIcon symbol={symbol} /> {symbol}
-  </strong>
-)
-
-const Rates = ({
-  base,
-  incentive,
-  total,
-}: {
-  base: BigNumber
-  incentive: BigNumber
-  total: BigNumber
-}) => (
-  <div>
-    <Grid>
-      Total rate: <Percentage decimals={25} value={total} />
-    </Grid>
-    <CustomHR />
-    <Grid>
-      Base rate: <Percentage decimals={25} value={base} />
-    </Grid>
-    <Grid>
-      Incentive rate: <Percentage decimals={25} value={incentive} />
-    </Grid>
-  </div>
-)
-
 export const MarketList = withGenericSuspense(
-  ({ reserveTokensAddresses }: { reserveTokensAddresses: string[] }) => {
+  () => {
     const {
       agaveMarketsData,
       getBorrowRate,
@@ -71,7 +26,7 @@ export const MarketList = withGenericSuspense(
       getIncentiveRate,
       getMarketSize,
       getTotalBorrowed,
-    } = useAgaveMarketsData(reserveTokensAddresses)
+    } = useAgaveMarketsData()
 
     if (!agaveMarketsData) {
       return <CustomP>Unable to get markets</CustomP>
