@@ -54,6 +54,50 @@ describe('AgaveTokens', () => {
     expect(allTokens.length).toEqual(8)
   })
 
+  it('returns all incentives tokens', () => {
+    const allIncentivesTokens = agaveTokens.allIncentivesTokens
+
+    expect(allIncentivesTokens.length).toEqual(4)
+    expect(allIncentivesTokens).toEqual([
+      {
+        address: '0x0000000000000000000000000000000000000011',
+        name: 'Agave interest bearing TT1',
+        symbol: 'agTT1',
+        decimals: 18,
+        chainId: 100,
+        logoURI: '/coins/tt1.png',
+        type: 'ag',
+      },
+      {
+        address: '0x0000000000000000000000000000000000000012',
+        name: 'Agave variable debt bearing TT1',
+        symbol: 'variableDebtTT1',
+        decimals: 18,
+        chainId: 100,
+        logoURI: '/coins/tt1.png',
+        type: 'variableDebt',
+      },
+      {
+        address: '0x0000000000000000000000000000000000000021',
+        name: 'Agave interest bearing TT2',
+        symbol: 'agTT2',
+        decimals: 18,
+        chainId: 100,
+        logoURI: '/coins/tt2.png',
+        type: 'ag',
+      },
+      {
+        address: '0x0000000000000000000000000000000000000022',
+        name: 'Agave variable debt bearing TT2',
+        symbol: 'variableDebtTT2',
+        decimals: 18,
+        chainId: 100,
+        logoURI: '/coins/tt2.png',
+        type: 'variableDebt',
+      },
+    ])
+  })
+
   it('returns all reserve tokens', () => {
     const reserveTokens = agaveTokens.reserveTokens
 

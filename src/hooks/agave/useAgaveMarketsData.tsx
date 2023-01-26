@@ -55,7 +55,7 @@ const fetchTokenPrice = async (
   provider: JsonRpcBatchProvider,
   chainId: ChainsValues,
 ) => {
-  const contract = AaveOracle__factory.connect(contracts.AgaveOracle.address[chainId], provider)
+  const contract = AaveOracle__factory.connect(contracts.AaveOracle.address[chainId], provider)
   return { priceData: await contract.getAssetPrice(tokenAddress), tokenAddress }
 }
 
@@ -102,7 +102,7 @@ const fetchAssetIncentiveData = async (
   }
 
   const contract = BaseIncentivesController__factory.connect(
-    contracts.IncentiveBaseController.address[chainId],
+    contracts.BaseIncentivesController.address[chainId],
     provider,
   )
 

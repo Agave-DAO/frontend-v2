@@ -6,6 +6,7 @@ import { BaseCard } from '@/src/components/common/BaseCard'
 import { BaseParagraph } from '@/src/components/text/BaseParagraph'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { Code } from '@/src/components/text/Code'
+import UserRewards from '@/src/pagePartials/index/UserRewards'
 import { useWeb3ConnectedApp, useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
 const Card = styled(BaseCard)`
@@ -35,6 +36,9 @@ const Home: NextPage = () => {
         )}
 
         <Link href={'/markets'}>Markets</Link>
+      </Card>
+      <Card>
+        <UserRewards />
       </Card>
     </>
   )

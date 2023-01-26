@@ -1,5 +1,5 @@
-import { protocolTokens } from '@/public/protocolTokens.json'
-import { tokens } from '@/public/reserveTokens.json'
+import protocolTokens from '@/public/protocolTokens.json'
+import reserveTokens from '@/public/reserveTokens.json'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 import { Token } from '@/types/token'
 import { RequiredFieldsOnly } from '@/types/utils'
@@ -27,14 +27,15 @@ export interface IDAgaveTokens {
   reserveTokens: Token[]
   protocolTokens: AgaveProtocolTokens
   allTokens: TokenWithType[]
+  allIncentivesTokens: TokenWithType[]
   getRelatedTokensByAddress: (tokenAddress: string) => TokenInfo[]
   getTokenByAddress: (tokenAddress: string) => TokenWithType
   getTokenByFieldAndValue: (fieldAndValue: ValidLookupFields) => TokenWithType | undefined
 }
 
 class AgaveTokens implements IDAgaveTokens {
-  private _reserveTokens: Token[] = tokens
-  private _protocolTokens: AgaveProtocolTokens = protocolTokens
+  private _reserveTokens: Token[] = reserveTokens.tokens
+  private _protocolTokens: AgaveProtocolTokens = protocolTokens.protocolTokens
   private _protocolName = 'Agave'
   private _validLookupFields: (keyof ValidLookupFields)[] = ['address', 'symbol', 'name']
 
@@ -71,6 +72,10 @@ class AgaveTokens implements IDAgaveTokens {
         ]
       }),
     ]
+  }
+
+  get allIncentivesTokens(): TokenWithType[] {
+    return this.allTokens.filter(({ type }) => ['ag', 'variableDebt'].includes(type))
   }
 
   getRelatedTokensByAddress(tokenAddress: string): TokenInfo[] {
