@@ -281,7 +281,7 @@ export const useAgaveMarketsData = (reserveTokensAddresses?: string[]) => {
   const getIncentiveRate = useCallback(
     (tokenAddress: string, tokenType: AgaveProtocolTokenType) => {
       const marketData = getMarket(tokenAddress)
-      if (!marketData || !rewardTokenData) {
+      if (!marketData || !marketData.incentiveData || !rewardTokenData) {
         return ZERO_BN
       }
 
