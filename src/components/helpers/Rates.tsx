@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import { BigNumber } from 'ethers'
 
 import { Percentage } from '@/src/components/helpers/Percentage'
+import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
 
 export const CustomHR = styled.hr`
   margin: 15px 0;
 `
-export const Grid = styled.div`
+export const Grid = styled(SimpleGrid)`
   align-items: center;
   column-gap: 20px;
   display: flex;
@@ -29,14 +30,14 @@ export const Rates = ({
 }) => (
   <div>
     <Grid>
-      Total rate: <Percentage decimals={25} value={total} />
+      Total: <Percentage decimals={25} value={total} />
     </Grid>
     <CustomHR />
     <Grid>
-      Base rate: <Percentage decimals={25} value={base} />
+      Base: <Percentage decimals={25} value={base} />
     </Grid>
     <Grid>
-      Incentive rate: <Percentage decimals={25} value={incentive} />
+      Incentive: <Percentage decimals={25} value={incentive} />
     </Grid>
   </div>
 )
