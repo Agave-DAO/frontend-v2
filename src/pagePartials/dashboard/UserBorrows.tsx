@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Asset } from '@/src/components/helpers/Asset'
 import { CustomHR, Grid, Rates } from '@/src/components/helpers/Rates'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { useUserBorrows } from '@/src/hooks/agave/useUserBorrows'
-import { RequiredConnection } from '@/src/hooks/requiredConnection'
+import { useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
 
 const UserBorrowsList = withGenericSuspense(
   () => {

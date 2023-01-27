@@ -9,7 +9,7 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
-import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { formatAmount, fromWei } from '@/src/utils/common'
 
 export const CustomP = styled.p`
@@ -26,7 +26,7 @@ export const MarketList = withGenericSuspense(
       getIncentiveRate,
       getMarketSize,
       getTotalBorrowed,
-    } = useAgaveMarketsData()
+    } = useMarketsData()
 
     if (!agaveMarketsData) {
       return <CustomP>Unable to get markets</CustomP>

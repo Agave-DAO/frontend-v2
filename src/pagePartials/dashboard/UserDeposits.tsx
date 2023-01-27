@@ -9,8 +9,8 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { ToggleSwitch } from '@/src/components/helpers/ToggleSwitch'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { useSetReserveAsCollateral } from '@/src/hooks/agave/useSetReserveAsCollatoral'
-import { useUserDeposits } from '@/src/hooks/agave/useUserDeposits'
+import { useSetReserveAsCollateral } from '@/src/hooks/mutations/useSetReserveAsCollateral'
+import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
 
 const AsCollateral = ({
   assetAddress,

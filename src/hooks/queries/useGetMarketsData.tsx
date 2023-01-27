@@ -1,21 +1,12 @@
-import { useCallback } from 'react'
-
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import useSWR from 'swr'
 
-import { AgaveProtocolTokenType, agaveTokens } from '@/src/config/agaveTokens'
-import { ZERO_BN } from '@/src/constants/bigNumber'
+import { agaveTokens } from '@/src/config/agaveTokens'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { contracts } from '@/src/contracts/contracts'
-import { useRewardTokenData } from '@/src/hooks/symmetrics/useRewardTokenData'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { isSameAddress } from '@/src/utils/isSameAddress'
-import {
-  getIncentiveRate as calculateIncentiveRate,
-  getMarketSize as calculateMarketSize,
-  getPriceShares,
-} from '@/src/utils/markets'
 import { ChainsValues } from '@/types/chains'
 import {
   AaveOracle__factory,
@@ -173,7 +164,7 @@ const fetchAgaveMarketsData = async ({
 
 // TODO warning with the number of batch calls.
 // If the array of token is to big, we can split the tokens array into small arrays of tokens (such as pagination)
-const useMarketsDataQuery = (reserveTokensAddresses: string[]) => {
+export const useGetMarketsData = (reserveTokensAddresses: string[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
 
   // Simple cacheKey to get the cache data in other uses.
@@ -196,132 +187,4 @@ const useMarketsDataQuery = (reserveTokensAddresses: string[]) => {
   )
 
   return data
-}
-
-/**
- * Returns marketsData query result and a bunch of functions that are used to get data about the tokens
- * @param {string[]} string - string[]
- */
-export const useAgaveMarketsData = (reserveTokensAddresses?: string[]) => {
-  /* If reserveTokensAddresses is empty, then it will return the address of all the reserve tokens. */
-  const marketAddresses = !reserveTokensAddresses?.length
-    ? agaveTokens.reserveTokens.map(({ address }) => address)
-    : reserveTokensAddresses
-
-  const agaveMarketsData = useMarketsDataQuery(marketAddresses)
-  const rewardTokenData = useRewardTokenData()?.pools[0]
-
-  /* Get the market data for a given token address. */
-  const getMarket = useCallback(
-    (address: string) => {
-      return agaveMarketsData?.find(({ tokenAddress }) => tokenAddress === address)
-    },
-    [agaveMarketsData],
-  )
-
-  /* Returns the market size of a token. */
-  const getMarketSize = useCallback(
-    (tokenAddress: string) => {
-      const marketData = getMarket(tokenAddress)
-      if (!marketData) {
-        return ZERO_BN
-      }
-      const { availableLiquidity, totalVariableDebt } = marketData.reserveData
-
-      return calculateMarketSize({
-        tokenAddress,
-        totalSupply: totalVariableDebt.add(availableLiquidity),
-        price: marketData.priceData,
-      })
-    },
-    [getMarket],
-  )
-
-  const getTotalBorrowed = useCallback(
-    (tokenAddress: string) => {
-      const marketData = getMarket(tokenAddress)
-      if (!marketData) {
-        return ZERO_BN
-      }
-      const { totalStableDebt, totalVariableDebt } = marketData.reserveData
-      return totalStableDebt.add(totalVariableDebt)
-    },
-    [getMarket],
-  )
-
-  const getDepositAPY = useCallback(
-    (tokenAddress: string) => {
-      const marketData = getMarket(tokenAddress)
-      if (!marketData) {
-        return ZERO_BN
-      }
-      return marketData.reserveData.liquidityRate
-    },
-    [getMarket],
-  )
-
-  const getBorrowRate = useCallback(
-    (tokenAddress: string) => {
-      const marketData = getMarket(tokenAddress)
-      if (!marketData) {
-        return {
-          stable: ZERO_BN,
-          variable: ZERO_BN,
-        }
-      }
-      const { stableBorrowRate, variableBorrowRate } = marketData.reserveData
-      return {
-        stable: stableBorrowRate,
-        variable: variableBorrowRate,
-      }
-    },
-    [getMarket],
-  )
-
-  const getIncentiveRate = useCallback(
-    (tokenAddress: string, tokenType: AgaveProtocolTokenType) => {
-      const marketData = getMarket(tokenAddress)
-      if (!marketData || !marketData.incentiveData || !rewardTokenData) {
-        return ZERO_BN
-      }
-
-      const {
-        incentiveData,
-        priceData: tokenPrice,
-        reserveData: { availableLiquidity, totalVariableDebt },
-      } = marketData
-
-      const emissionPerSeconds =
-        tokenType === 'ag'
-          ? incentiveData.agTokenEmissionPerSeconds
-          : tokenType === 'variableDebt'
-          ? incentiveData.variableDebtEmissionPerSeconds
-          : ZERO_BN
-
-      const tokenSupply =
-        tokenType === 'ag'
-          ? totalVariableDebt.add(availableLiquidity)
-          : tokenType === 'variableDebt'
-          ? totalVariableDebt
-          : ZERO_BN
-
-      return calculateIncentiveRate({
-        emissionPerSeconds,
-        tokenSupply,
-        priceShares: getPriceShares(rewardTokenData),
-        tokenAddress,
-        tokenPrice,
-      })
-    },
-    [getMarket, rewardTokenData],
-  )
-
-  return {
-    agaveMarketsData,
-    getIncentiveRate,
-    getMarketSize,
-    getTotalBorrowed,
-    getDepositAPY,
-    getBorrowRate,
-  }
 }

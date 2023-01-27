@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 import TxButton from '@/src/components/buttons/txButton'
 import { Amount } from '@/src/components/helpers/Amount'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
-import { useCalculateUserRewards } from '@/src/hooks/agave/useCalculateUserRewards'
-import { useClaimRewards } from '@/src/hooks/agave/useClaimRewards'
-import { RequiredConnection } from '@/src/hooks/requiredConnection'
+import { useClaimRewards } from '@/src/hooks/mutations/useClaimRewards'
+import { useUserRewards } from '@/src/hooks/presentation/useUserRewards'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { fromWei } from '@/src/utils/common'
 
@@ -17,7 +17,7 @@ const Grid = styled(SimpleGrid)`
 
 const UserRewardsContent = () => {
   const { address: userAddress } = useWeb3ConnectedApp()
-  const { rewardsBalance, totalValue } = useCalculateUserRewards(userAddress)
+  const { rewardsBalance, totalValue } = useUserRewards(userAddress)
   const claimRewards = useClaimRewards(userAddress)
   const disableSubmit = rewardsBalance.isZero()
 
