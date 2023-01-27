@@ -20,6 +20,7 @@ const AsCollateral = ({
   assetAddress: string
 }) => {
   const [checked, setChecked] = useState(currentValue)
+  const [loading, setLoading] = useState(false)
   const setReserveAsCollateral = useSetReserveAsCollateral()
 
   // Checking if the asset is WXDAI. If it is, then it's always collateral and the user can't change it.
@@ -27,11 +28,15 @@ const AsCollateral = ({
 
   const toggleSwitchHandler = async () => {
     setChecked(!checked)
+    setLoading(true)
     try {
-      await setReserveAsCollateral(assetAddress, !checked)
+      const tx = await setReserveAsCollateral(assetAddress, !checked)
+      await tx.wait()
+      setLoading(false)
     } catch (error) {
       console.log(error)
       setChecked(checked)
+      setLoading(false)
     }
   }
 
@@ -39,7 +44,7 @@ const AsCollateral = ({
     <Grid>
       <ToggleSwitch
         checked={checked}
-        disabled={isAlwaysCollateral}
+        disabled={isAlwaysCollateral || loading}
         id={`asCollateral-${assetAddress}`}
         onChange={toggleSwitchHandler}
       />

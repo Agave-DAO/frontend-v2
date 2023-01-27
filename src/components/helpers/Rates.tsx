@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import { BigNumber } from 'ethers'
 
 import { Percentage } from '@/src/components/helpers/Percentage'
+import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
 
 export const CustomHR = styled.hr`
   margin: 15px 0;
 `
-export const Grid = styled.div`
+export const Grid = styled(SimpleGrid)`
   align-items: center;
   column-gap: 20px;
   display: flex;
