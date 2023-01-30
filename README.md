@@ -62,6 +62,9 @@ Inside the `src` folder you will find:
 - `constants`
 - `contracts`: All the contracts your dApp will interact with have to be configured here.
 - `hooks`: React hooks.
+  - `queries`: Hooks that retrieve data from the blockchain (or api)
+  - `presentation`: Hooks that transform and combine data to show in the UI
+  - `mutations`: Hooks that provides a mutation to write data on the blockchain (or api)
 - `pagePartials`: This folder was thought to be used as a complement to the files in `pages` folder. Sometimes a page can become big and this is the place where helper components related to a particular page will reside. We suggest having one folder per page.
 - `providers`: React providers.
 - `subgraph`: Queries and configuration for Subgraphs.
@@ -250,9 +253,9 @@ To consume them, we implemented the hook [`useTokensLists`](./src/hooks/useToken
 
 ## Protocol Data
 
-### useAgaveMarketsData
+### useMarketsData
 
-filepath: `src/hooks/agave/useAgaveMarketsData.tsx`
+filepath: `src/hooks/presentation/useAgaveMarketsData.tsx`
 
 React hook that can be used to get Agave markets information from an array of tokens addresses (reserve tokens addresses). The hook accepts an array of tokens addresses and returns data for each token as `marketData`, such as `priceData`, `reserveData`, `assetData`, and `incentiveData`. Additionally, the hook provides a number of functions that can be used to get data about a single market from the result, such as `getMarketSize`, `getTotalBorrowed`, `getDepositAPY`, `getBorrowRate`, and `getIncentiveRate`.
 
