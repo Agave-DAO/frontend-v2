@@ -10,6 +10,7 @@ import { isSameAddress } from '@/src/utils/isSameAddress'
 import { ChainsValues } from '@/types/chains'
 import {
   AaveOracle__factory,
+  AaveProtocolDataProvider,
   AaveProtocolDataProvider__factory,
   BaseIncentivesController__factory,
 } from '@/types/generated/typechain'
@@ -26,15 +27,8 @@ export type IncentiveData = {
 export type AgaveMarketData = {
   tokenAddress: string
   priceData: BigNumber
-  reserveData: {
-    totalStableDebt: BigNumber
-    totalVariableDebt: BigNumber
-    liquidityRate: BigNumber
-    variableBorrowRate: BigNumber
-    stableBorrowRate: BigNumber
-    availableLiquidity: BigNumber
-  }
-  assetData: { isActive: boolean; isFrozen: boolean }
+  reserveData: Awaited<ReturnType<AaveProtocolDataProvider['getReserveData']>>
+  assetData: Awaited<ReturnType<AaveProtocolDataProvider['getReserveConfigurationData']>>
   incentiveData: IncentiveData
 }
 
@@ -163,7 +157,7 @@ const fetchAgaveMarketsData = async ({
 }
 
 // TODO warning with the number of batch calls.
-// If the array of token is to big, we can split the tokens array into small arrays of tokens (such as pagination)
+// If the array of token is too big, we can split the tokens array into smaller chunks (such as pagination)
 export const useGetMarketsData = (reserveTokensAddresses: string[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
 

@@ -232,9 +232,9 @@ describe('AgaveTokens', () => {
   })
 
   it('returns `undefined` if token by field is not found', () => {
-    const tokenInfo = agaveTokens.getTokenByFieldAndValue({ symbol: 'TT3' })
-
-    expect(tokenInfo).toBeUndefined()
+    expect(() => agaveTokens.getTokenByFieldAndValue({ symbol: 'TT3' })).toThrowError(
+      'Unsupported token',
+    )
   })
 
   it('throws error if field is not supported', () => {
