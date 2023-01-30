@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -27,6 +28,7 @@ export const MarketList = withGenericSuspense(
       getMarketSize,
       getTotalBorrowed,
     } = useAgaveMarketsData()
+    const router = useRouter()
 
     if (!agaveMarketsData) {
       return <CustomP>Unable to get markets</CustomP>
@@ -44,6 +46,10 @@ export const MarketList = withGenericSuspense(
         ),
       [getMarketSize, noFrozenMarkets],
     )
+
+    const handleRowClick = (tokenSymbol: string) => {
+      router.push(`/markets/${tokenSymbol}`)
+    }
 
     return (
       <>
@@ -63,7 +69,7 @@ export const MarketList = withGenericSuspense(
 
           return (
             <Fragment key={tokenAddress}>
-              <Grid>
+              <Grid onClick={() => handleRowClick(symbol)}>
                 <Asset symbol={symbol} />
                 <Amount value={priceData} />
                 <Amount value={getMarketSize(tokenAddress)} />

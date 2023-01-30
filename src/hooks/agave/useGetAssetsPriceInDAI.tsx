@@ -3,9 +3,9 @@ import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { AaveOracle__factory } from '@/types/generated/typechain'
 
 export default function useGetAssetsPriceInDAI(addresses: string[]) {
-  const agaveOracle = useContractInstance(AaveOracle__factory, 'AgaveOracle')
+  const aaveOracle = useContractInstance(AaveOracle__factory, 'AaveOracle')
 
-  const calls = [agaveOracle.getAssetsPrices] as const
+  const calls = [aaveOracle.getAssetsPrices] as const
   return useContractCall(
     calls,
     [[addresses]],

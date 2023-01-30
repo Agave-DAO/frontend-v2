@@ -122,9 +122,7 @@ class AgaveTokens implements IDAgaveTokens {
     return tokenInfo
   }
 
-  getTokenByFieldAndValue(
-    fieldAndValue: Partial<RequiredFieldsOnly<Token>>,
-  ): TokenWithType | undefined {
+  getTokenByFieldAndValue(fieldAndValue: Partial<RequiredFieldsOnly<Token>>): TokenWithType {
     const [field, value] = Object.entries(fieldAndValue)[0]
 
     if (!field || !value) {
@@ -135,11 +133,21 @@ class AgaveTokens implements IDAgaveTokens {
       throw new Error('Invalid field')
     }
 
+    let foundToken: TokenWithType | undefined
+
     if (field === 'address') {
-      return this.allTokens.find((token) => isSameAddress(token[field], value))
+      foundToken = this.allTokens.find((token) => isSameAddress(token[field], value))
+    } else {
+      foundToken = this.allTokens.find(
+        (token) => token[field].toLowerCase() === value.toLowerCase(),
+      )
     }
 
-    return this.allTokens.find((token) => token[field].toLowerCase() === value.toLowerCase())
+    if (!foundToken) {
+      throw Error('Unsupported token')
+    }
+
+    return foundToken
   }
 
   private getReserveTokenByAddress(tokenAddress: string): Token {
