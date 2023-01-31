@@ -62,9 +62,9 @@ Inside the `src` folder you will find:
 - `constants`
 - `contracts`: All the contracts your dApp will interact with have to be configured here.
 - `hooks`: React hooks.
-  - `queries`: Hooks that retrieve data from the blockchain (or api)
-  - `presentation`: Hooks that transform and combine data to show in the UI
-  - `mutations`: Hooks that provides a mutation to write data on the blockchain (or api)
+  - `queries`: Hooks that retrieve data from the blockchain (or api). _shouldn't be used directly from inside a Component_
+  - `presentation`: Hooks that transform and combine data to show in the UI. _Should be used in components_
+  - `mutations`: Hooks that provides a mutation to write data on the blockchain (or api). _Should be used in components_
 - `pagePartials`: This folder was thought to be used as a complement to the files in `pages` folder. Sometimes a page can become big and this is the place where helper components related to a particular page will reside. We suggest having one folder per page.
 - `providers`: React providers.
 - `subgraph`: Queries and configuration for Subgraphs.
