@@ -11,6 +11,7 @@ import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useSetReserveAsCollateral } from '@/src/hooks/agave/useSetReserveAsCollatoral'
 import { useUserDeposits } from '@/src/hooks/agave/useUserDeposits'
+import { RequiredConnection } from '@/src/hooks/requiredConnection'
 
 const AsCollateral = ({
   assetAddress,
@@ -112,7 +113,9 @@ export const UserDeposits = () => {
         <strong>Actions</strong>
       </Grid>
       <CustomHR />
-      <UserDepositsList />
+      <RequiredConnection isNotConnectedText="Connect your wallet to see your deposits">
+        <UserDepositsList />
+      </RequiredConnection>
     </div>
   )
 }

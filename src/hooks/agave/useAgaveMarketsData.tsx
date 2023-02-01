@@ -100,14 +100,16 @@ const fetchAssetIncentiveData = async (
     provider,
   )
 
-  const agTokenIncentiveData = await contract.getAssetData(agToken.address)
-  const variableDebtIncentiveData = await contract.getAssetData(variableDebtToken.address)
+  const [agTokenIncentiveData, variableDebtIncentiveData] = await Promise.all([
+    contract.getAssetData(agToken.address),
+    contract.getAssetData(variableDebtToken.address),
+  ])
 
   return {
     incentiveData: {
       // TODO should stableDebtToken has incentiveData?
-      agTokenEmissionPerSeconds: agTokenIncentiveData[1],
-      variableDebtEmissionPerSeconds: variableDebtIncentiveData[1],
+      agTokenEmissionPerSeconds: agTokenIncentiveData[1] || ZERO_BN,
+      variableDebtEmissionPerSeconds: variableDebtIncentiveData[1] || ZERO_BN,
     },
     tokenAddress,
   }

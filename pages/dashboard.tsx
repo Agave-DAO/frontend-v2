@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { BaseCard } from '@/src/components/common/BaseCard'
 import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
+import { UserAccountDetails } from '@/src/pagePartials/dashboard/UserAccountDetails'
 import { UserBorrows } from '@/src/pagePartials/dashboard/UserBorrows'
 import { UserDeposits } from '@/src/pagePartials/dashboard/UserDeposits'
 
@@ -18,6 +19,7 @@ const Dashboard: NextPage = () => {
   return (
     <>
       <BaseCard>
+        <UserAccountDetails />
         <Grid>
           <UserBorrows />
           <UserDeposits />
