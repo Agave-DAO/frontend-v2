@@ -4,6 +4,7 @@ import { agaveTokens } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesData'
 import { fromWei } from '@/src/utils/common'
+import { isSameAddress } from '@/src/utils/isSameAddress'
 
 export type UserDeposit = {
   assetAddress: string
@@ -30,7 +31,9 @@ export const useUserDeposits = (): UserDeposit[] => {
   const userDepositsWithMarketData: (UserDeposit | null)[] = userReservesData.map(
     ({ reserveAddress, userReserveData }) => {
       /* Find the market data for the reserve that the user has a deposit. */
-      const marketData = agaveMarketsData.find((market) => market.tokenAddress === reserveAddress)
+      const marketData = agaveMarketsData.find((market) =>
+        isSameAddress(market.tokenAddress, reserveAddress),
+      )
 
       if (!marketData) {
         return null

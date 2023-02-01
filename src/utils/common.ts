@@ -28,12 +28,14 @@ export const formatAmount = (
   decimals: number = NATIVE_DECIMALS,
   symbol = '$',
   symbolPosition: SymbolPosition = 'before',
+  displayDecimals: number = DISPLAY_DECIMALS,
 ): string =>
   symbol
     ? `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(
         FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
+        displayDecimals,
       )}${symbolPosition === 'after' ? ` ${symbol}` : ''}`
-    : `${formatNumber(FixedNumber.fromValue(value, decimals).toUnsafeFloat())}`
+    : `${formatNumber(FixedNumber.fromValue(value, decimals).toUnsafeFloat(), displayDecimals)}`
 
 export const formatPercentage = (value: BigNumber, decimals: number) =>
   `${parseFloat(

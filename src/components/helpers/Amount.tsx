@@ -4,6 +4,7 @@ import { SymbolPosition, formatAmount } from '@/src/utils/common'
 
 export const Amount = ({
   decimals,
+  displayDecimals,
   symbol,
   symbolPosition,
   value,
@@ -12,4 +13,5 @@ export const Amount = ({
   decimals?: number
   symbol?: string
   symbolPosition?: SymbolPosition
-}) => <span>{formatAmount(value, decimals, symbol, symbolPosition)}</span>
+  displayDecimals?: number
+}) => <span>{formatAmount(value, decimals, symbol, symbolPosition, displayDecimals)}</span>

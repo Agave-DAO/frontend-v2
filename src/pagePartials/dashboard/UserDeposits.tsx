@@ -5,6 +5,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { Asset } from '@/src/components/helpers/Asset'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { CustomHR, Grid } from '@/src/components/helpers/Rates'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { ToggleSwitch } from '@/src/components/helpers/ToggleSwitch'
 import { Loading } from '@/src/components/loading/Loading'
@@ -112,7 +113,9 @@ export const UserDeposits = () => {
         <strong>Actions</strong>
       </Grid>
       <CustomHR />
-      <UserDepositsList />
+      <RequiredConnection isNotConnectedText="Connect your wallet to see your deposits">
+        <UserDepositsList />
+      </RequiredConnection>
     </div>
   )
 }
