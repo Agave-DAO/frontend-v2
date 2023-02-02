@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 
 import { Asset } from '@/src/components/helpers/Asset'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import WithdrawToken from '@/src/components/token/Withdraw'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { RequiredConnection } from '@/src/hooks/requiredConnection'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { getTokenInfo } from '@/src/utils/getTokenInfo'

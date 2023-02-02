@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 
 import { ZERO_BN } from '@/src/constants/bigNumber'
-import { useGetRewardsBalance } from '@/src/hooks/agave/useGetRewardsBalance'
-import useGetUserAccountData from '@/src/hooks/agave/useGetUserAccountData'
-import { useUserBorrows } from '@/src/hooks/agave/useUserBorrows'
-import { useUserDeposits } from '@/src/hooks/agave/useUserDeposits'
+import { useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
+import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
+import { useGetRewardsBalance } from '@/src/hooks/queries/useGetRewardsBalance'
+import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 import { toWei } from '@/src/utils/common'
 
 export const useUserAccountDetails = (address: string) => {

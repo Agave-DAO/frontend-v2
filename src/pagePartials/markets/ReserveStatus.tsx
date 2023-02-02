@@ -6,7 +6,7 @@ import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { useGetMarketDetails } from '@/src/hooks/agave/useGetMarketDetails'
+import { useMarketDetails } from '@/src/hooks/presentation/useMarketDetails'
 
 const Grid = styled(SimpleGrid)`
   justify-content: center;
@@ -22,7 +22,7 @@ const TokenWithSymbol = styled(SimpleGrid)`
 
 export function ReserveStatus({ tokenAddress }: { tokenAddress: string }) {
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  const { borrowed, liquidity, reserveSize, utilizationRate } = useGetMarketDetails(tokenAddress)
+  const { borrowed, liquidity, reserveSize, utilizationRate } = useMarketDetails(tokenAddress)
 
   return (
     <BaseCard>

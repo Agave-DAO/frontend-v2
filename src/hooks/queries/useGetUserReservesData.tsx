@@ -30,7 +30,7 @@ const fetchUserReserveData = async (
 /**
  * HOOK - useUserReservesData - Fetches user reserves data for all reserve tokens in a batch request.
  */
-export const useUserReservesData = () => {
+export const useGetUserReservesData = () => {
   const { address, appChainId, batchProvider } = useWeb3Connection()
 
   return useSWR(

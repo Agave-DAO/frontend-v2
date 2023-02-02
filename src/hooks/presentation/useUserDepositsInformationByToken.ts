@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
-import { useUserDepositsByToken } from '@/src/hooks/agave/useUserDepositsByToken'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { useUserDepositsByToken } from '@/src/hooks/presentation/useUserDepositsByToken'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
 
 type MyInformationUserDeposits =
@@ -25,7 +25,7 @@ export function useUserDepositsInformationByToken({
 }): MyInformationUserDeposits {
   const userDeposits = useUserDepositsByToken(tokenAddress)
   const { balance } = useAccountBalance({ accountAddress: userAddress, tokenAddress })
-  const marketData = useAgaveMarketsData([tokenAddress])
+  const marketData = useMarketsData([tokenAddress])
   const market = marketData.getMarket(tokenAddress)
 
   if (!userDeposits || !market) {

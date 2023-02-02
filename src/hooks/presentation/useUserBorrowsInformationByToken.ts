@@ -1,8 +1,8 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 
-import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
-import useGetUserAccountData from '@/src/hooks/agave/useGetUserAccountData'
-import { useUserBorrowsByToken } from '@/src/hooks/agave/useUserBorrowsByToken'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { useUserBorrowsByToken } from '@/src/hooks/presentation/useUserBorrowsByToken'
+import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 
 type MyInformationUserBorrows =
   | {
@@ -29,7 +29,7 @@ export function useUserBorrowsInformationByToken({
 }): MyInformationUserBorrows {
   const userBorrows = useUserBorrowsByToken(tokenAddress)
   const [{ data }] = useGetUserAccountData(userAddress)
-  const marketData = useAgaveMarketsData([tokenAddress])
+  const marketData = useMarketsData([tokenAddress])
   const market = marketData.getMarket(tokenAddress)
   const userAccountData = data?.[0]
 

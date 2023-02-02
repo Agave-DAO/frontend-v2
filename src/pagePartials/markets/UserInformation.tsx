@@ -1,6 +1,6 @@
 import { BaseCard } from '@/src/components/common/BaseCard'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
-import { RequiredConnection } from '@/src/hooks/requiredConnection'
 import { UserBorrowDetails } from '@/src/pagePartials/markets/UserBorrowDetails'
 import { UserDepositDetails } from '@/src/pagePartials/markets/UserDepositDetails'
 

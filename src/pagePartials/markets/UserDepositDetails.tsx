@@ -8,7 +8,7 @@ import { Loading } from '@/src/components/loading/Loading'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { useUserDepositsInformationByToken } from '@/src/hooks/agave/useUserDepositsInformationByToken'
+import { useUserDepositsInformationByToken } from '@/src/hooks/presentation/useUserDepositsInformationByToken'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const Grid = styled(SimpleGrid)`

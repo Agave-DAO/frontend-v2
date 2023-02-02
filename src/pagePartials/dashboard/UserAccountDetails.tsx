@@ -2,10 +2,10 @@ import styled from 'styled-components'
 
 import { Amount } from '@/src/components/helpers/Amount'
 import { Grid } from '@/src/components/helpers/Rates'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
-import { useUserAccountDetails } from '@/src/hooks/agave/useUserAccountDetails'
-import { RequiredConnection } from '@/src/hooks/requiredConnection'
+import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const Wrapper = styled.div`

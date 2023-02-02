@@ -9,7 +9,7 @@ import { Loading } from '@/src/components/loading/Loading'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { useUserBorrowsInformationByToken } from '@/src/hooks/agave/useUserBorrowsInformationByToken'
+import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export const Grid = styled(SimpleGrid)`

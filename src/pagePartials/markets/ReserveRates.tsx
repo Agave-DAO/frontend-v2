@@ -4,7 +4,7 @@ import { BaseCard } from '@/src/components/common/BaseCard'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { Rates } from '@/src/components/helpers/Rates'
 import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
-import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 
 const Grid = styled(SimpleGrid)`
   justify-content: center;
@@ -15,7 +15,7 @@ const Column = styled(SimpleGrid)`
 `
 
 export function ReserveRates({ tokenAddress }: { tokenAddress: string }) {
-  const marketData = useAgaveMarketsData([tokenAddress])
+  const marketData = useMarketsData([tokenAddress])
 
   return (
     <BaseCard>

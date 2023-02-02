@@ -1,4 +1,4 @@
-import { useUserBorrows } from '@/src/hooks/agave/useUserBorrows'
+import { useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 
 export function useUserBorrowsByToken(tokenAddress: string) {

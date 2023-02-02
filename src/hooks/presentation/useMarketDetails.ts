@@ -3,12 +3,12 @@ import { Zero } from '@ethersproject/constants'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { DISPLAY_DECIMALS } from '@/src/constants/common'
-import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { fromWei } from '@/src/utils/common'
 
-export const useGetMarketDetails = (tokenAddress: string) => {
+export const useMarketDetails = (tokenAddress: string) => {
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  const marketData = useAgaveMarketsData([tokenAddress])
+  const marketData = useMarketsData([tokenAddress])
   const market = marketData.getMarket(tokenAddress)
 
   const liquidity = {

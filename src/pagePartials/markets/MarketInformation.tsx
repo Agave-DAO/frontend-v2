@@ -7,7 +7,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
-import { useAgaveMarketsData } from '@/src/hooks/agave/useAgaveMarketsData'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 
 const Grid = styled(SimpleGrid)`
   justify-content: center;
@@ -18,7 +18,7 @@ const Column = styled(SimpleGrid)`
 `
 
 export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
-  const { getMarket } = useAgaveMarketsData([tokenAddress])
+  const { getMarket } = useMarketsData([tokenAddress])
   const { assetData, priceData } = getMarket(tokenAddress)
 
   const usedAsCollateral = assetData.usageAsCollateralEnabled ? assetData.ltv.gt(Zero) : false

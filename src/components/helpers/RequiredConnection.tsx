@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { ButtonPrimary } from '@/src/components/buttons/Button'
 import { chainsConfig } from '@/src/config/web3'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
-import { ChainsValues } from '@/types/chains'
 
 const Wrapper = styled.div`
   display: flex;
@@ -35,9 +34,18 @@ type RequiredConnectionProps = {
   minHeight?: number
   isNotConnectedText?: string
   isWrongNetworkText?: string
-  networkToCheck?: ChainsValues
 }
 
+/**
+ * Component that renders children only if user is connected to the wallet and is on the correct network.
+ * If user is not connected, it renders a button to connect wallet and a text.
+ * If user is connected to the wrong network, it renders a button to switch to the correct network and a text.
+ * @param children - Component to render if user is connected to the wallet and is on the correct network
+ * @param minHeight - Minimum height of the component
+ * @param isNotConnectedText - Text to show if user is not connected
+ * @param isWrongNetworkText - Text to show if user is connected to the wrong network
+ * @returns Component that renders children only if user is connected to the wallet and is on the correct network.
+ */
 const RequiredConnection: React.FC<RequiredConnectionProps> = ({
   children,
   minHeight,

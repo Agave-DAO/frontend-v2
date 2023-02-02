@@ -5,13 +5,13 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { Asset } from '@/src/components/helpers/Asset'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { CustomHR, Grid } from '@/src/components/helpers/Rates'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { ToggleSwitch } from '@/src/components/helpers/ToggleSwitch'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { useSetReserveAsCollateral } from '@/src/hooks/agave/useSetReserveAsCollatoral'
-import { useUserDeposits } from '@/src/hooks/agave/useUserDeposits'
-import { RequiredConnection } from '@/src/hooks/requiredConnection'
+import { useSetReserveAsCollateral } from '@/src/hooks/mutations/useSetReserveAsCollateral'
+import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
 
 const AsCollateral = ({
   assetAddress,

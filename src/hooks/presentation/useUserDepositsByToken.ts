@@ -1,4 +1,4 @@
-import { useUserDeposits } from '@/src/hooks/agave/useUserDeposits'
+import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 
 export function useUserDepositsByToken(tokenAddress: string) {
