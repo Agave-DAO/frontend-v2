@@ -3,7 +3,6 @@ import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import useSWR from 'swr'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { ZERO_BN } from '@/src/constants/bigNumber'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { contracts } from '@/src/contracts/contracts'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
@@ -15,7 +14,6 @@ import {
   AaveProtocolDataProvider__factory,
   BaseIncentivesController__factory,
 } from '@/types/generated/typechain'
-import { isFulfilled } from '@/types/utils'
 
 /**
  * TYPES
@@ -100,8 +98,8 @@ const fetchAssetIncentiveData = async (
   return {
     incentiveData: {
       // TODO should stableDebtToken has incentiveData?
-      agTokenEmissionPerSeconds: agTokenIncentiveData[1] || ZERO_BN,
-      variableDebtEmissionPerSeconds: variableDebtIncentiveData[1] || ZERO_BN,
+      agTokenEmissionPerSeconds: agTokenIncentiveData[1],
+      variableDebtEmissionPerSeconds: variableDebtIncentiveData[1],
     },
     tokenAddress,
   }
@@ -131,14 +129,12 @@ const fetchAgaveMarketsData = async ({
     incentiveDataPromises.push(fetchAssetIncentiveData(tokenAddress, provider, chainId))
   })
 
-  const combinedPromisesResolved = await Promise.allSettled([
+  const rawResults = await Promise.all([
     ...pricesDataPromises,
     ...reserveDataPromises,
     ...assetDataPromises,
     ...incentiveDataPromises,
   ])
-
-  const rawResults = combinedPromisesResolved.filter(isFulfilled).map(({ value }) => value)
 
   /* Merge the results of the promises by reserve token address. */
   const tokensData = reserveTokensAddresses.map((reserveAddress) => {
@@ -146,6 +142,10 @@ const fetchAgaveMarketsData = async ({
     const rawDataByReserveToken = rawResults.filter(({ tokenAddress }) =>
       isSameAddress(reserveAddress, tokenAddress),
     )
+
+    if (!rawDataByReserveToken.length) {
+      throw Error('Error on getting market data with address: ' + reserveAddress)
+    }
 
     let tokenData: AgaveMarketData = {} as AgaveMarketData
 
@@ -164,9 +164,13 @@ const fetchAgaveMarketsData = async ({
 export const useGetMarketsData = (reserveTokensAddresses: string[]) => {
   const { appChainId, batchProvider } = useWeb3Connection()
 
+  const cacheKey = reserveTokensAddresses?.length
+    ? `agave-tokens-data-${reserveTokensAddresses.join('-')}`
+    : null
+
   // Simple cacheKey to get the cache data in other uses.
   const { data } = useSWR(
-    reserveTokensAddresses?.length ? [`agave-tokens-data`, reserveTokensAddresses] : null,
+    cacheKey,
     () => {
       if (!reserveTokensAddresses?.length) {
         return
@@ -176,6 +180,7 @@ export const useGetMarketsData = (reserveTokensAddresses: string[]) => {
         provider: batchProvider,
         chainId: appChainId,
       }
+
       return fetchAgaveMarketsData(fetcherParams)
     },
     {
