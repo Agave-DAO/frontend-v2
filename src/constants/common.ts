@@ -5,4 +5,4 @@ export const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''
 
 export const NATIVE_DECIMALS = 18
 export const DISPLAY_DECIMALS = 3
-export const TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL = 5_000
+export const TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL = 10_000

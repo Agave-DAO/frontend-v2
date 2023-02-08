@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router'
-
 import { BigNumber } from 'ethers'
 
 import { Asset } from '@/src/components/helpers/Asset'
@@ -8,17 +6,16 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import BorrowToken from '@/src/components/token/Borrow'
 import { ZERO_BN } from '@/src/constants/bigNumber'
+import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
+import { BorrowInfo } from '@/src/pagePartials/markets/BorrowInfo'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { getTokenInfo } from '@/src/utils/getTokenInfo'
 import { AgaveLending__factory } from '@/types/generated/typechain'
 
 function BorrowImpl() {
-  const { query } = useRouter()
-  const token = query.token as string
-  const tokenInfo = getTokenInfo(token)
+  const tokenInfo = useMarketByURLParam()
 
   const { address: userAddress } = useWeb3ConnectedApp()
   const lendingPool = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
@@ -55,7 +52,10 @@ function BorrowImpl() {
 function Borrow() {
   return (
     <RequiredConnection>
-      <BorrowImpl />
+      <>
+        <BorrowInfo />
+        <BorrowImpl />
+      </>
     </RequiredConnection>
   )
 }

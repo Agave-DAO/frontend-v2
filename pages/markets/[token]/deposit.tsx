@@ -1,21 +1,18 @@
-import { useRouter } from 'next/router'
-
 import { Asset } from '@/src/components/helpers/Asset'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import DepositToken from '@/src/components/token/Deposit'
 import { contracts } from '@/src/contracts/contracts'
+import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
+import { DepositInfo } from '@/src/pagePartials/markets/DepositInfo'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { getTokenInfo } from '@/src/utils/getTokenInfo'
 import { AgaveLending__factory } from '@/types/generated/typechain'
 
 function DepositImpl() {
-  const { query } = useRouter()
   const { address: userAddress, appChainId } = useWeb3ConnectedApp()
-  const token = query.token as string
-  const tokenInfo = getTokenInfo(token)
+  const tokenInfo = useMarketByURLParam()
 
   const lendingPool = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
   const lendingPoolAddress = contracts['AgaveLendingPool'].address[appChainId]
@@ -37,7 +34,10 @@ function DepositImpl() {
 function Deposit() {
   return (
     <RequiredConnection>
-      <DepositImpl />
+      <>
+        <DepositInfo />
+        <DepositImpl />
+      </>
     </RequiredConnection>
   )
 }
