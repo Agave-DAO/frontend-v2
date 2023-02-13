@@ -10,6 +10,7 @@ import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
+import { UserActions, UserDetailsActions } from '@/src/pagePartials/markets/UserDetailsActions'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export const Grid = styled(SimpleGrid)`
@@ -68,6 +69,17 @@ function UserBorrowsImp({
   )
 }
 
+const borrowActions: UserActions = {
+  primary: {
+    label: 'Borrow',
+    target: (tokenAddress) => `/markets/${tokenAddress}/borrow`,
+  },
+  secondary: {
+    label: 'Repay',
+    target: (tokenAddress) => `/markets/${tokenAddress}/repay`,
+  },
+}
+
 export const UserBorrowDetails = withGenericSuspense(
   function UserBorrows({ tokenAddress }: { tokenAddress: string }) {
     const { address: userAddress } = useWeb3ConnectedApp()
@@ -75,6 +87,11 @@ export const UserBorrowDetails = withGenericSuspense(
       <BaseCard>
         <BaseTitle>Borrows</BaseTitle>
         <UserBorrowsImp tokenAddress={tokenAddress} userAddress={userAddress} />
+        <UserDetailsActions
+          primary={borrowActions.primary}
+          secondary={borrowActions.secondary}
+          tokenAddress={tokenAddress}
+        />
       </BaseCard>
     )
   },
