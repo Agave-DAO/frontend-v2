@@ -6,6 +6,7 @@ import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
 import { UserAccountDetails } from '@/src/pagePartials/dashboard/UserAccountDetails'
 import { UserBorrows } from '@/src/pagePartials/dashboard/UserBorrows'
 import { UserDeposits } from '@/src/pagePartials/dashboard/UserDeposits'
+import UserRewards from '@/src/pagePartials/index/UserRewards'
 
 const Grid = styled(SimpleGrid)`
   align-items: flex-start;
@@ -24,6 +25,7 @@ const Dashboard: NextPage = () => {
           <UserBorrows />
           <UserDeposits />
         </Grid>
+        <UserRewards />
       </BaseCard>
     </>
   )

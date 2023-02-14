@@ -22,22 +22,24 @@ const UserRewardsContent = () => {
   const disableSubmit = rewardsBalance.isZero()
 
   return (
-    <Grid alignItems="start">
-      <div>
-        <div>Rewards:</div>
+    <div>
+      <h2>Rewards:</h2>
+      <Grid>
         <div>
-          <Amount symbol="" value={rewardsBalance} /> <span>40% AGVE - 60% GNO</span>
+          <div>
+            <Amount symbol="" value={rewardsBalance} /> <span>40% AGVE - 60% GNO</span>
+          </div>
+          <div>
+            <Amount value={fromWei(totalValue)} />
+          </div>
         </div>
         <div>
-          <Amount value={fromWei(totalValue)} />
+          <TxButton disabled={disableSubmit} tx={claimRewards}>
+            Claim {`>`}
+          </TxButton>
         </div>
-      </div>
-      <div>
-        <TxButton disabled={disableSubmit} tx={claimRewards}>
-          Claim {`>`}
-        </TxButton>
-      </div>
-    </Grid>
+      </Grid>
+    </div>
   )
 }
 

@@ -21,12 +21,14 @@ describe('formatAmount', () => {
     const retValueWithDefaultSymbolAndDefaultPosition = formatAmount(mockValue, mockDecimals)
     const retValueWithoutSymbol = formatAmount(mockValue, mockDecimals, '')
     const retValueWith6DisplayDecimals = formatAmount(mockValue, mockDecimals, '', 'after', 6)
+    const retInfinityValue = formatAmount(BigNumber.from('99999999999999999999999999999999999999'))
 
     expect(retValueWithSymbolBefore).toBe('ETH 22.531')
     expect(retValueWithSymbolAfter).toBe('22.531 ETH')
     expect(retValueWithDefaultSymbolAndDefaultPosition).toBe('$ 22.531')
     expect(retValueWithoutSymbol).toBe('22.531')
     expect(retValueWith6DisplayDecimals).toBe('22.531147')
+    expect(retInfinityValue).toBe('∞')
   })
 })
 

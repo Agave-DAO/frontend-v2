@@ -29,13 +29,18 @@ export const formatAmount = (
   symbol = '$',
   symbolPosition: SymbolPosition = 'before',
   displayDecimals: number = DISPLAY_DECIMALS,
-): string =>
-  symbol
+): string => {
+  // Find another way to do this
+  if (value.gt('9999999999999999999999999999999999999')) {
+    return '∞'
+  }
+  return symbol
     ? `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(
         FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
         displayDecimals,
       )}${symbolPosition === 'after' ? ` ${symbol}` : ''}`
     : `${formatNumber(FixedNumber.fromValue(value, decimals).toUnsafeFloat(), displayDecimals)}`
+}
 
 export const formatPercentage = (value: BigNumber, decimals: number) =>
   `${parseFloat(
