@@ -121,12 +121,14 @@ type BalancePosition =
   | 'topCenter'
   | 'topLeft'
   | 'topRight'
+  | 'none'
   | undefined
 
 interface Props extends DOMAttributes<HTMLDivElement>, HTMLAttributes<HTMLDivElement> {
   balancePosition?: BalancePosition
   decimals: number
   disabled?: boolean
+  displayMaxButton?: boolean
   maxDisabled?: boolean
   maxValue: string
   setStatus: (status: TextfieldStatus | undefined) => void
@@ -140,6 +142,7 @@ export const TokenInput = ({
   balancePosition,
   decimals,
   disabled,
+  displayMaxButton = true,
   maxDisabled,
   maxValue,
   setStatus,
@@ -151,7 +154,7 @@ export const TokenInput = ({
 }: Props) => {
   const maxValueFormatted = formatUnits(maxValue, decimals)
   const valueGreaterThanMaxValue = useMemo(
-    () => (value && BigNumber.from(value).gt(maxValue) ? true : false),
+    () => !!(value && BigNumber.from(value).gt(maxValue)),
     [maxValue, value],
   )
 
@@ -171,9 +174,11 @@ export const TokenInput = ({
 
   return (
     <Wrapper {...restProps}>
-      <Balance balancePosition={balancePosition}>
-        Balance: {maxValueFormatted} {symbol ? symbol : 'tokens'}
-      </Balance>
+      {balancePosition !== 'none' && (
+        <Balance balancePosition={balancePosition}>
+          Balance: {maxValueFormatted} {symbol ? symbol : 'tokens'}
+        </Balance>
+      )}
       <BigNumberInput
         decimals={decimals}
         onChange={(value) => {
@@ -191,9 +196,11 @@ export const TokenInput = ({
         )}
         value={value}
       />
-      <MaxButton disabled={maxDisabled} onClick={() => setValue(maxValue)}>
-        Max
-      </MaxButton>
+      {displayMaxButton && (
+        <MaxButton disabled={maxDisabled} onClick={() => setValue(maxValue)}>
+          Max
+        </MaxButton>
+      )}
     </Wrapper>
   )
 }

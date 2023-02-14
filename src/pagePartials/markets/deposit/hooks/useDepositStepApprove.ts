@@ -1,0 +1,42 @@
+import { useCallback } from 'react'
+
+import { useContractInstance } from '@/src/hooks/useContractInstance'
+import useTransaction from '@/src/hooks/useTransaction'
+import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { AgaveLending__factory, ERC20__factory } from '@/types/generated/typechain'
+
+export const useDepositStepApprove = ({
+  amount,
+  tokenAddress,
+}: {
+  amount: string
+  tokenAddress: string
+}) => {
+  const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
+  const erc20 = useContractInstance(ERC20__factory, tokenAddress)
+  const sendTx = useTransaction()
+
+  const approve = useCallback(async () => {
+    const tx = await sendTx(() => erc20.approve(agaveLending.address, amount))
+    const receipt = await tx.wait()
+
+    return receipt.transactionHash
+  }, [amount, erc20, agaveLending, sendTx])
+
+  return useStepStates({
+    title: 'Approve',
+    description: 'Approve to delegate',
+    status: 'active',
+    actionText: 'Approve',
+    async mainAction() {
+      this.loading()
+
+      try {
+        const txHash = await approve()
+        this.nextStep(txHash)
+      } catch (e) {
+        this.failed()
+      }
+    },
+  } as StepWithActions)
+}
