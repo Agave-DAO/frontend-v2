@@ -5,21 +5,24 @@ import { darken } from 'polished'
 
 const error = '#db3333'
 const success = '#33dd33'
-const primary = '#220022'
-const secondary = '#E56399'
-const tertiary = '#A6CFD5'
+const primary = '#019D8B'
+const secondary = '#122C34'
+const tertiary = '#BCF298'
 const textColor = '#fff'
 const borderColor = 'rgba(250,250,250,0.2)'
-const darkGray = 'rgb(10, 25, 50)'
+const darkGray = '#0D2026'
 const darkGrayDarkened = darken(0.1, 'rgb(10, 25, 50)')
 const darkBlue = 'rgb(6, 75, 141)'
 const componentBackgroundColor = 'rgba(13, 2, 2, 0.85)'
+const darkBackground = '13, 32, 38'
+const darkBackground04 = `rgba(${darkBackground}, 0.4)`
+const darkBackground06 = `rgba(${darkBackground}, 0.6)`
+const accent = '#9BEFD7'
 
 export const dark = {
   body: {
     backgroundColor: darkGray,
-    backgroundImage:
-      'linear-gradient(80deg, rgb(17, 10, 10) 15%, rgb(92, 33, 52) 33%, rgb(6, 75, 141) 65%, rgb(13, 2, 2) 98%)',
+    backgroundImage: `radial-gradient(64.22% 34.97% at 0% 0%, ${tertiary}4d 0%, ${tertiary}00 100%), linear-gradient(188.87deg, ${primary} 4.99%, ${secondary} 62.79%)`,
   },
   buttonDropdown: {
     backgroundColor: darkGray,
@@ -47,8 +50,11 @@ export const dark = {
     borderColor: borderColor,
   },
   colors: {
+    accent: accent,
     borderColor: borderColor,
     componentBackgroundColor: componentBackgroundColor,
+    darkBackground04: darkBackground04,
+    darkBackground06: darkBackground06,
     darkBlue: darkBlue,
     darkGray: darkGray,
     darkGrayDarkened: darkGrayDarkened,
@@ -90,7 +96,7 @@ export const dark = {
     },
   },
   header: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'transparent',
     color: textColor,
   },
   mainMenu: {

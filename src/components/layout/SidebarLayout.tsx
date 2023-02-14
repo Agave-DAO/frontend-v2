@@ -1,7 +1,6 @@
 import { PropsWithChildren } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Main as BaseMain } from '@/src/components/layout/Main'
 import { Sidebar as BaseSidebar } from '@/src/components/layout/Sidebar'
 
 export type SidebarPlacement = 'right' | 'left' | undefined
@@ -52,7 +51,7 @@ const Sidebar = styled(BaseSidebar)<Props>`
   }
 `
 
-const Main = styled(BaseMain)<Props>`
+const Main = styled.div<Props>`
   order: 0;
 
   @media (min-width: ${({ theme }) => theme.breakPoints.tabletLandscapeStart}) {

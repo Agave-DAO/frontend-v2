@@ -7,7 +7,7 @@ import { Logo as BaseLogo } from '@/src/components/common/Logo'
 import { NotificationsDropdown } from '@/src/components/header/NotificationsDropdown'
 import { SwitchThemeButton } from '@/src/components/header/SwitchThemeButton'
 import { UserDropdown } from '@/src/components/header/UserDropdown'
-import { ContainerPadding } from '@/src/components/helpers/ContainerPadding'
+import { InnerContainer as BaseInnerContainer } from '@/src/components/helpers/InnerContainer'
 import { MainMenu } from '@/src/components/navigation/MainMenu'
 import { MobileMenu } from '@/src/components/navigation/MobileMenu'
 import WrongNetwork from '@/src/components/utils/WrongNetwork'
@@ -15,28 +15,23 @@ import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
 const Wrapper = styled.header`
   align-items: center;
-  background-color: ${({ theme }) => theme.header.backgroundColor};
-  color: ${({ theme }) => theme.header.color};
+  background-color: ${({ theme: { header } }) => header.backgroundColor};
+  color: ${({ theme: { header } }) => header.color};
   display: flex;
   flex-grow: 0;
   flex-shrink: 0;
-  height: ${({ theme }) => theme.header.height};
-  position: sticky;
-  top: 0;
+  height: var(--header-full-height);
+  padding-top: var(--header-padding-top);
+  position: relative;
   z-index: 10;
 `
 
-const InnerContainer = styled.div`
+const InnerContainer = styled(BaseInnerContainer)`
   align-items: center;
-  display: flex;
   flex-direction: row;
   flex-shrink: 0;
   height: 100%;
   justify-content: space-between;
-  margin: 0 auto;
-  width: 100%;
-
-  ${ContainerPadding}
 `
 
 const Start = styled.div`
@@ -49,8 +44,8 @@ const Start = styled.div`
 const Logo = styled(BaseLogo)`
   display: none;
 
-  @media (min-width: ${({ theme }) => theme.breakPoints.tabletLandscapeStart}) {
-    display: flex;
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+    display: block;
   }
 `
 

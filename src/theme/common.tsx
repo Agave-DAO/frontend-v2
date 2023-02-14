@@ -26,7 +26,7 @@ export const common = {
     borderRadius: borderRadius,
   },
   header: {
-    height: '60px',
+    height: '46px',
   },
   layout: {
     horizontalPaddingDesktopStart: '20px',
@@ -34,7 +34,7 @@ export const common = {
     horizontalPaddingMobile: '10px',
     horizontalPaddingTabletLandscapeStart: '15px',
     horizontalPaddingTabletPortraitStart: '15px',
-    maxWidth: '1360px',
+    maxWidth: '1152px',
   },
   breakPoints: {
     desktopStart: '1025px',

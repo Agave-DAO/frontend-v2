@@ -7,9 +7,10 @@ export const Head = () => {
       : { hostname: 'localhost', port: 3000, protocol: 'http:' }
   const portString = port ? `:${port}` : ''
   const siteURL = typeof window !== 'undefined' ? `${protocol}//${hostname}${portString}` : ''
-  const title = 'BootNode - Frontend Starter Kit'
-  const description = 'BootNode - Frontend Starter Kit'
-  const twitterHandle = '@'
+  const title = 'Agave - Liquidity Protocol'
+  const description =
+    'Earn interest on deposits and borrow assets thanks to Agave, a decentralized, non-custodial money market and lending protocol on Gnosis Chain.'
+  const twitterHandle = '@Agave_lending'
 
   return (
     <NextHead>

@@ -11,7 +11,6 @@ import { Header } from '@/src/components/header/Header'
 import { InnerContainer } from '@/src/components/helpers/InnerContainer'
 import SafeSuspense from '@/src/components/helpers/SafeSuspense'
 import { Footer } from '@/src/components/layout/Footer'
-import { Main } from '@/src/components/layout/Main'
 import Toast from '@/src/components/toast/Toast'
 import { Head } from '@/src/pagePartials/index/Head'
 import { TransactionNotificationProvider } from '@/src/providers/TransactionNotificationProvider'
@@ -20,10 +19,34 @@ import ThemeProvider from '@/src/providers/themeProvider'
 import 'sanitize.css'
 import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
 
+const Scroll = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: calc(100vh - var(--header-full-height));
+  overflow: auto;
+  position: fixed;
+  top: var(--header-full-height);
+  width: 100vw;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+    height: auto;
+    position: relative;
+    top: auto;
+    width: auto;
+    z-index: 5;
+  }
+`
+
 const Container = styled(InnerContainer)`
   flex-grow: 1;
-  padding-bottom: 25px;
+  padding-bottom: 40px;
   padding-top: 25px;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.desktopStart}) {
+    padding-bottom: 65px;
+    padding-top: 120px;
+  }
 `
 
 const Web3ConnectionProvider = dynamic(() => import('@/src/providers/web3ConnectionProvider'), {
@@ -40,7 +63,7 @@ type AppPropsWithLayout = AppProps & {
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   // Black magic explained here https://nextjs.org/docs/basic-features/layouts
-  const getLayout = Component.getLayout ?? ((page) => <Main>{page}</Main>)
+  const getLayout = Component.getLayout ?? ((page) => <>{page}</>)
 
   return (
     <>
@@ -57,11 +80,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
             <SafeSuspense>
               <TransactionNotificationProvider>
                 <CookiesWarningProvider>
-                  <Header />
                   <TokenIconsProvider>
-                    <Container>{getLayout(<Component {...pageProps} />)}</Container>
+                    <Header />
+                    <Scroll>
+                      <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
+                      <Footer />
+                    </Scroll>
                   </TokenIconsProvider>
-                  <Footer />
                 </CookiesWarningProvider>
               </TransactionNotificationProvider>
             </SafeSuspense>

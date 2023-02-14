@@ -8,7 +8,7 @@ export const InnerContainer = styled.div`
   flex-shrink: 0;
   margin: 0 auto;
   max-width: 100%;
-  width: ${({ theme }) => theme.layout.maxWidth};
+  width: ${({ theme: { layout } }) => layout.maxWidth};
 
   ${ContainerPadding}
 `

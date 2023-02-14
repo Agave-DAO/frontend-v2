@@ -4,6 +4,12 @@ import { onBoardCSS } from '@/src/theme/onBoard'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const GlobalStyles = createGlobalStyle<{ theme: any }>`
+  :root {
+    --header-padding-top: 25px;
+    --header-full-height: calc(${({ theme: { header } }) =>
+      header.height} + var(--header-padding-top));
+  }
+
   html {
     font-size: 10px;
     scroll-behavior: smooth;
