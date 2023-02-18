@@ -1,75 +1,259 @@
 import { DOMAttributes } from 'react'
-import styled from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
-import { ContainerPadding } from '@/src/components/helpers/ContainerPadding'
+import { LogoMini } from '@/src/components/assets/LogoMini'
+import { ButtonConnect } from '@/src/components/buttons/Button'
+import { MobileMenuButton } from '@/src/components/buttons/MobileMenuButton'
+import { SocialLinks } from '@/src/components/common/SocialLinks'
+import { UserDropdown as BaseUserDropdown } from '@/src/components/header/UserDropdown'
 import { NavLink as BaseNavLink } from '@/src/components/navigation/NavLink'
+import { links } from '@/src/constants/links'
 import { sections } from '@/src/constants/menu'
+import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
-const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.modal.overlayColor};
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  top: ${({ theme }) => theme.header.height};
-  width: 100vw;
-  z-index: 5;
+const Wrapper = styled.span<{ isOpen?: boolean }>`
+  --mobile-menu-min-width: 18px;
+  --mobile-menu-transition-time: 0.25s;
 
-  @media (min-width: ${({ theme }) => theme.breakPoints.tabletLandscapeStart}) {
+  width: var(--mobile-menu-min-width);
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     display: none;
   }
+
+  ${({ isOpen }) =>
+    isOpen
+      ? css`
+          background-color: ${({ theme: { colors } }) => colors.black};
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          overflow-x: auto;
+          position: fixed;
+          right: 0;
+          top: 0;
+          transition: width var(--mobile-menu-transition-time) linear;
+          width: 100vw;
+          z-index: 5;
+        `
+      : css`
+          .hideIfClosed {
+            display: none;
+          }
+        `}
+`
+
+const Top = styled.span<{ isOpen?: boolean }>`
+  ${({ isOpen }) =>
+    isOpen &&
+    css`
+      background: ${({ theme: { mobileMenu } }) => mobileMenu.background};
+      flex-shrink: 0;
+      padding: var(--header-padding-top)
+        ${({ theme: { layout } }) => layout.horizontalPaddingMobile} 100px;
+    `}
+`
+
+const TopContents = styled.span<{ isOpen?: boolean }>`
+  display: none;
+
+  ${({ isOpen }) =>
+    isOpen &&
+    css`
+      display: block;
+    `}
+`
+
+const Head = styled.span<{ isOpen?: boolean }>`
+  ${({ isOpen }) =>
+    isOpen &&
+    css`
+      align-items: center;
+      display: flex;
+      height: calc(var(--header-full-height) - var(--header-padding-top));
+      justify-content: space-between;
+    `}
+`
+
+const hoveringAnimation = keyframes`
+  0% {
+    top: 0;
+  }
+
+  25% {
+    top: 2px;
+  }
+
+  50% {
+    top: 0;
+  }
+
+  75% {
+    top: -2px;
+  }
+
+  100% {
+    top: 0;
+  }
+`
+
+const Logo = styled(LogoMini)<{ isOpen?: boolean }>`
+  animation-duration: 1s;
+  animation-iteration-count: 15;
+  animation-name: ${hoveringAnimation};
+  animation-timing-function: linear;
+  animation-delay: 0.75s;
+  position: relative;
+
+  ${({ isOpen }) =>
+    !isOpen &&
+    css`
+      display: none;
+    `}
+`
+
+const Title = styled.h1`
+  color: ${({ theme: { colors } }) => colors.textColor};
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 80px 0 30px;
+`
+
+const UserControls = styled.span`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 32px;
+`
+
+const UserDropdown = styled(BaseUserDropdown)`
+  .dropdownItems {
+    left: 0;
+    right: auto;
+  }
+`
+
+const Button = styled(ButtonConnect)`
+  font-weight: 400;
 `
 
 const Menu = styled.nav`
   display: flex;
   flex-direction: column;
+  row-gap: 16px;
 
-  @media (min-width: ${({ theme }) => theme.breakPoints.tabletLandscapeStart}) {
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
     display: none;
   }
 `
 
-const NavLink = styled(BaseNavLink)`
+const MenuItem = css`
+  --horizontal-padding: 10px;
+
   align-items: center;
-  background-color: ${({ theme }) => theme.mobileMenu.backgroundColor};
-  border-bottom: 1px solid ${({ theme }) => theme.mobileMenu.borderColor};
-  color: ${({ theme }) => theme.mobileMenu.color};
+  background-color: ${({ theme: { colors } }) => colors.black};
+  background-image: url('data:image/svg+xml;base64, PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSI4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNLjgzNyA3LjgzM2EuNTYzLjU2MyAwIDAxMC0uODA4TDMuOTI1IDQgLjgzNy45NzVhLjU2My41NjMgMCAwMTAtLjgwOC41OTIuNTkyIDAgMDEuODI1IDBsMy41IDMuNDI5YS41NjMuNTYzIDAgMDEwIC44MDhsLTMuNSAzLjQyOWEuNTkyLjU5MiAwIDAxLS44MjUgMHoiIGZpbGw9IiM5QkVGRDciLz48L3N2Zz4=');
+  background-position: calc(100% - var(--horizontal-padding)) 50%;
+  border-radius: 8px;
+  color: ${({ theme: { colors } }) => colors.accent};
   display: flex;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 400;
-  gap: 10px;
+  height: 42px;
+  justify-content: space-between;
   line-height: 1.2;
-  min-height: 42px;
+  padding: 0 var(--horizontal-padding);
   text-decoration: none;
-  user-select: none;
-  width: 100%;
-
-  ${ContainerPadding}
-
-  &.active {
-    font-weight: 700;
-  }
+  transition: opacity 0.25s linear;
+  white-space: nowrap;
 
   &:active {
     opacity: 0.7;
   }
+`
 
-  &:last-child {
-    border-bottom: none;
+const NavLink = styled(BaseNavLink)`
+  ${MenuItem}
+`
+
+const Link = styled.a`
+  ${MenuItem}
+
+  background-color: ${({ theme: { colors } }) => colors.darkestGray};
+  color: ${({ theme: { colors } }) => colors.lighterGray};
+`
+
+const Bottom = styled.span<{ isOpen?: boolean }>`
+  display: none;
+
+  ${({ isOpen }) =>
+    isOpen &&
+    css`
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      flex-shrink: 0;
+      padding: 45px ${({ theme: { layout } }) => layout.horizontalPaddingMobile} 0;
+    `}
+`
+
+const Social = styled(SocialLinks)`
+  margin-top: auto;
+  padding: 40px 0;
+
+  .socialTitle {
+    color: ${({ theme: { colors } }) => colors.lightestGray};
+    font-size: 1.2rem;
+  }
+
+  .socialLink {
+    background-color: ${({ theme: { colors } }) => colors.darkerGray};
   }
 `
 
-export const MobileMenu: React.FC<DOMAttributes<HTMLDivElement>> = ({ ...restProps }) => {
+interface Props extends DOMAttributes<HTMLDivElement> {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export const MobileMenu: React.FC<Props> = ({ isOpen, onClose, ...restProps }) => {
+  const { connectWallet, isWalletConnected } = useWeb3Connection()
+
   return (
-    <Wrapper {...restProps}>
-      <Menu>
-        {sections.map(({ href, section }) => {
-          return (
-            <NavLink href={href} key={`mobile_menu_item_${section}`}>
-              {section}
-            </NavLink>
-          )
-        })}
-      </Menu>
+    <Wrapper isOpen={isOpen} {...restProps}>
+      <Top isOpen={isOpen}>
+        <Head isOpen={isOpen}>
+          <Logo isOpen={isOpen} />
+          <MobileMenuButton isOpen={isOpen} onClick={onClose} />
+        </Head>
+        <TopContents isOpen={isOpen}>
+          <Title>Menu</Title>
+          <UserControls>
+            {isWalletConnected && <UserDropdown />}
+            {!isWalletConnected && <Button onClick={connectWallet}>Connect Wallet</Button>}
+          </UserControls>
+          <Menu onClick={onClose}>
+            {sections.map(({ href, section }) => {
+              return (
+                <NavLink href={href} key={`mobile_menu_item_${section}`}>
+                  {section}
+                </NavLink>
+              )
+            })}
+          </Menu>
+        </TopContents>
+      </Top>
+      <Bottom isOpen={isOpen}>
+        <Menu>
+          {links.map(({ href, text }, index) => (
+            <Link href={href} key={index} target="_blank">
+              {text}
+            </Link>
+          ))}
+        </Menu>
+        <Social />
+      </Bottom>
     </Wrapper>
   )
 }

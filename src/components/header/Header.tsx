@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
-import { MobileMenuButton } from '@/src/components/buttons/MobileMenuButton'
+import { ButtonGradient } from '@/src/components/buttons/Button'
 import { Logo as BaseLogo } from '@/src/components/common/Logo'
-import { NotificationsDropdown } from '@/src/components/header/NotificationsDropdown'
-import { SwitchThemeButton } from '@/src/components/header/SwitchThemeButton'
+// Disabled (for now)
+// import { SwitchThemeButton } from '@/src/components/header/SwitchThemeButton'
 import { UserDropdown } from '@/src/components/header/UserDropdown'
 import { InnerContainer as BaseInnerContainer } from '@/src/components/helpers/InnerContainer'
 import { MainMenu } from '@/src/components/navigation/MainMenu'
@@ -34,38 +33,31 @@ const InnerContainer = styled(BaseInnerContainer)`
   justify-content: space-between;
 `
 
-const Start = styled.div`
-  align-items: center;
-  column-gap: 20px;
-  display: flex;
-  justify-content: flex-start;
-`
-
 const Logo = styled(BaseLogo)`
-  display: none;
+  height: 29px;
+  width: 84px;
 
-  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     display: block;
+    height: 46px;
+    width: 133px;
   }
 `
 
 const End = styled.div`
-  align-items: center;
-  column-gap: 40px;
-  display: flex;
-  height: 100%;
-  justify-content: flex-end;
-`
+  display: none;
 
-const UserControls = styled.div`
-  align-items: center;
-  column-gap: 15px;
-  display: flex;
-  height: 100%;
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    align-items: center;
+    column-gap: 32px;
+    display: flex;
+    height: 100%;
+    justify-content: flex-end;
+  }
 `
 
 export const Header: React.FC = (props) => {
-  const { connectWallet, isWalletConnected, isWalletNetworkSupported } = useWeb3Connection()
+  const { connectWallet, isWalletConnected } = useWeb3Connection()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
@@ -76,25 +68,18 @@ export const Header: React.FC = (props) => {
     <>
       <Wrapper {...props}>
         <InnerContainer>
-          <MobileMenuButton onClick={toggleMenu} />
-          <Start>
-            <Logo />
-          </Start>
+          <Logo />
           <End>
-            <WrongNetwork />
-            {isWalletConnected && isWalletNetworkSupported && <MainMenu />}
-            {isWalletConnected && (
-              <UserControls>
-                <NotificationsDropdown />
-                <SwitchThemeButton />
-                <UserDropdown />
-              </UserControls>
-            )}
-            {!isWalletConnected && <ButtonPrimary onClick={connectWallet}>Connect</ButtonPrimary>}
+            <MainMenu />
+            {/* Disabled (for now) */}
+            {/* <SwitchThemeButton /> */}
+            {isWalletConnected && <UserDropdown />}
+            {!isWalletConnected && <ButtonGradient onClick={connectWallet}>Connect</ButtonGradient>}
           </End>
+          <MobileMenu isOpen={isMenuOpen} onClose={toggleMenu} />
         </InnerContainer>
       </Wrapper>
-      {isMenuOpen && <MobileMenu onClick={toggleMenu} />}
+      <WrongNetwork />
     </>
   )
 }

@@ -4,32 +4,25 @@ import { NavLink as BaseNavLink } from '@/src/components/navigation/NavLink'
 import { sections } from '@/src/constants/menu'
 
 const Wrapper = styled.nav`
-  display: none;
-
-  @media (min-width: ${({ theme }) => theme.breakPoints.tabletLandscapeStart}) {
-    align-items: center;
-    display: flex;
-    gap: 20px;
-    margin-left: 20px;
-  }
+  align-items: center;
+  column-gap: 32px;
+  display: flex;
 `
 
 const NavLink = styled(BaseNavLink)`
   align-items: center;
-  color: ${({ theme }) => theme.mainMenu.color};
+  color: ${({ theme: { mainMenu } }) => mainMenu.color};
   display: flex;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 400;
-  gap: 8px;
   line-height: 1.2;
   text-decoration: none;
 
   &.active {
-    font-weight: 700;
   }
 
   &:hover {
-    text-decoration: underline;
+    color: ${({ theme: { mainMenu } }) => mainMenu.colorHover};
   }
 `
 

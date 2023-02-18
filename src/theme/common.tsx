@@ -13,7 +13,7 @@ export const common = {
   fonts: {
     defaultSize: '1.4rem',
     family:
-      "'Roboto', 'Helvetica Neue', 'Arial', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'",
+      "'Droid Sans', 'Helvetica Neue', 'Arial', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'",
     familyCode: "'source-code-pro', 'Menlo', 'Monaco', 'Consolas', 'Courier New', 'monospace'",
   },
   checkBox: {
@@ -31,7 +31,7 @@ export const common = {
   layout: {
     horizontalPaddingDesktopStart: '20px',
     horizontalPaddingDesktopWideStart: '20px',
-    horizontalPaddingMobile: '10px',
+    horizontalPaddingMobile: '15px',
     horizontalPaddingTabletLandscapeStart: '15px',
     horizontalPaddingTabletPortraitStart: '15px',
     maxWidth: '1152px',

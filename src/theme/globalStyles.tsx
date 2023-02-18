@@ -36,6 +36,7 @@ export const GlobalStyles = createGlobalStyle<{ theme: any }>`
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    overflow: hidden;
     width: 100%;
   }
 

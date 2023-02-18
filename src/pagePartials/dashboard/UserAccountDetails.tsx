@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 import { Amount } from '@/src/components/helpers/Amount'
 import { Grid } from '@/src/components/helpers/Rates'
-import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
@@ -70,11 +69,9 @@ const UserAccountDetailsImpl = withGenericSuspense(
 
 export const UserAccountDetails = () => {
   return (
-    <RequiredConnection isNotConnectedText="Connect your wallet to see your account details">
-      <Wrapper>
-        <h2>My Account</h2>
-        <UserAccountDetailsImpl />
-      </Wrapper>
-    </RequiredConnection>
+    <Wrapper>
+      <h2>My Account</h2>
+      <UserAccountDetailsImpl />
+    </Wrapper>
   )
 }

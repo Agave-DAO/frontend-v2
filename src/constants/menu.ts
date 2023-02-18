@@ -1,18 +1,10 @@
 export const sections = [
   {
     href: '/',
-    section: 'home',
+    section: 'All Markets',
   },
   {
-    href: '/dashboard',
-    section: 'dashboard',
-  },
-  {
-    href: '/markets',
-    section: 'markets',
-  },
-  {
-    href: '/about',
-    section: 'about',
+    href: '/stake',
+    section: 'Stake',
   },
 ] as const

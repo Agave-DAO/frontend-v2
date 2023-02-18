@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { ButtonPrimary } from '@/src/components/buttons/Button'
+import { ButtonConnect } from '@/src/components/buttons/Button'
 import { chainsConfig } from '@/src/config/web3'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
@@ -62,7 +63,7 @@ const RequiredConnection: React.FC<RequiredConnectionProps> = ({
     return (
       <Wrapper style={{ minHeight }} {...restProps}>
         {!!isNotConnectedText.length && <Text>{isNotConnectedText}</Text>}
-        <ButtonPrimary onClick={connectWallet}>Connect wallet</ButtonPrimary>
+        <ButtonConnect onClick={connectWallet}>Connect wallet</ButtonConnect>
       </Wrapper>
     )
   }

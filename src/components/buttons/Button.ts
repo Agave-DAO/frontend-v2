@@ -16,36 +16,55 @@ export const ActiveButtonCSS = css`
   }
 `
 
-export const ButtonCSS = css`
+interface ButtonProps {
+  borderRadiusVariant?: 'fullyRounded' | 'round' | 'square'
+}
+
+export const ButtonCSS = css<ButtonProps>`
   align-items: center;
-  border-radius: 6px;
   border-style: solid;
   border-width: 1px;
   column-gap: 10px;
   cursor: pointer;
   display: flex;
   font-family: ${({ theme: { fonts } }) => fonts.family};
-  font-size: 1.4rem;
-  font-weight: 500;
-  height: 34px;
+  font-size: 1.6rem;
+  font-weight: 400;
+  height: 38px;
   justify-content: center;
   line-height: 1;
   outline: none;
-  padding: 0 12px;
+  padding: 0 24px;
   text-align: center;
   text-decoration: none;
   transition: all 0.15s ease-out;
   user-select: none;
   white-space: nowrap;
 
+  ${({ borderRadiusVariant }) =>
+    borderRadiusVariant === 'fullyRounded'
+      ? css`
+          border-radius: 20px;
+        `
+      : borderRadiusVariant === 'round'
+      ? css`
+          border-radius: 8px;
+        `
+      : borderRadiusVariant === 'square'
+      ? css`
+          border-radius: 0;
+        `
+      : ''}
+
   ${ActiveButtonCSS}
 `
 
-const BaseButton = styled.button`
+const BaseButton = styled.button<ButtonProps>`
   ${ButtonCSS}
 `
 
 BaseButton.defaultProps = {
+  borderRadiusVariant: 'fullyRounded',
   type: 'button',
 }
 
@@ -77,6 +96,54 @@ export const ButtonPrimaryCSS = css`
 export const ButtonPrimary = styled(BaseButton)`
   ${ButtonPrimaryCSS}
 `
+
+ButtonPrimary.defaultProps = {
+  borderRadiusVariant: 'fullyRounded',
+}
+
+export const ButtonGradientCSS = css`
+  background-image: ${({ theme: { buttonGradient } }) => buttonGradient.backgroundImage};
+  border: none;
+  color: ${({ theme: { buttonGradient } }) => buttonGradient.color};
+
+  &:hover {
+    background-image: ${({ theme: { buttonGradient } }) => buttonGradient.backgroundImageHover};
+    color: ${({ theme: { buttonGradient } }) => buttonGradient.colorHover};
+    opacity: 0.8;
+  }
+
+  ${DisabledButtonCSS}
+
+  &[disabled],
+  &[disabled]:hover {
+    background-image: ${({ theme: { buttonGradient } }) => buttonGradient.backgroundImage};
+    color: ${({ theme: { buttonGradient } }) => buttonGradient.color};
+  }
+`
+
+export const ButtonGradient = styled(BaseButton)`
+  ${ButtonGradientCSS}
+`
+
+ButtonGradient.defaultProps = {
+  borderRadiusVariant: 'fullyRounded',
+}
+
+export const ButtonConnect = styled(ButtonGradient)`
+  font-size: 1.6rem;
+  font-weight: 700;
+  height: 54px;
+
+  color: ${({ theme: { buttonConnect } }) => buttonConnect.color};
+
+  &:hover {
+    color: ${({ theme: { buttonConnect } }) => buttonConnect.colorHover};
+  }
+`
+
+ButtonConnect.defaultProps = {
+  borderRadiusVariant: 'round',
+}
 
 export const ButtonDropdownIsOpenCSS = css`
   &::after {

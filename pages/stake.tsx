@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 import { BaseCard } from '@/src/components/common/BaseCard'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
-import { MarketList } from '@/src/pagePartials/markets/MarketList'
 
 const Card = styled(BaseCard)`
   margin-bottom: 30px;
@@ -16,10 +15,8 @@ const Card = styled(BaseCard)`
 const Markets: NextPage = () => {
   return (
     <>
-      <BaseTitle>Markets</BaseTitle>
-      <Card>
-        <MarketList />
-      </Card>
+      <BaseTitle>Stake</BaseTitle>
+      <Card>Stake goes here</Card>
     </>
   )
 }

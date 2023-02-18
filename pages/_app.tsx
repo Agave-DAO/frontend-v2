@@ -24,7 +24,8 @@ const Scroll = styled.div`
   flex-direction: column;
   flex-grow: 1;
   height: calc(100vh - var(--header-full-height));
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: fixed;
   top: var(--header-full-height);
   width: 100vw;
@@ -40,6 +41,7 @@ const Scroll = styled.div`
 
 const Container = styled(InnerContainer)`
   flex-grow: 1;
+  overflow: hidden;
   padding-bottom: 40px;
   padding-top: 25px;
 
