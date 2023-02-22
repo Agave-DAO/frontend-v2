@@ -9,6 +9,7 @@ import { Loading } from '@/src/components/loading/Loading'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
 import { UserActions, UserDetailsActions } from '@/src/pagePartials/markets/UserDetailsActions'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
@@ -30,7 +31,7 @@ function UserBorrowsImp({
   tokenAddress: string
   userAddress: string
 }) {
-  const { borrowedAmount, healthFactor, ltv, maxBorrow, userHasBorrows } =
+  const { healthFactor, ltv, maxBorrow, stableDebtAmount, userHasBorrows, variableDebtAmount } =
     useUserBorrowsInformationByToken({
       tokenAddress,
       userAddress,
@@ -44,10 +45,17 @@ function UserBorrowsImp({
   return (
     <Column>
       <Grid>
-        <div>Borrowed</div>
+        <div>Variable Borrowed</div>
         <TokenWithSymbol>
           <TokenIcon symbol={symbol} />
-          <Amount decimals={decimals} symbol="" value={borrowedAmount} />
+          <Amount decimals={decimals} symbol="" value={variableDebtAmount || ZERO_BN} />
+        </TokenWithSymbol>
+      </Grid>
+      <Grid>
+        <div>Stable Borrowed</div>
+        <TokenWithSymbol>
+          <TokenIcon symbol={symbol} />
+          <Amount decimals={decimals} symbol="" value={stableDebtAmount || ZERO_BN} />
         </TokenWithSymbol>
       </Grid>
       <Grid>

@@ -70,9 +70,7 @@ export const BorrowInfo = () => {
 
   const [{ data: userData }] = useGetUserAccountData(address)
 
-  const borrowedAmount = useUserBorrowsByToken(tokenInfo.address)?.borrowedAmount || ZERO_BN
-  const borrowedAmountInDAI =
-    useUserBorrowsByToken(tokenInfo.address)?.borrowedAmountInDAI || ZERO_BN
+  const { totalBorrowed, totalBorrowedInDAI } = useUserBorrowsByToken(tokenInfo.address)
 
   const { agaveMarketsData, getBorrowRate, getIncentiveRate } = useMarketsData([tokenInfo.address])
 
@@ -94,12 +92,13 @@ export const BorrowInfo = () => {
         <div>
           <Amount
             decimals={tokenInfo.decimals}
+            displayDecimals={4}
             symbol={tokenInfo.symbol}
             symbolPosition="after"
-            value={borrowedAmount}
+            value={totalBorrowed}
           />
           <br />
-          <Amount value={borrowedAmountInDAI} />
+          <Amount displayDecimals={4} value={totalBorrowedInDAI} />
         </div>
       </Grid>
       <CustomHR />

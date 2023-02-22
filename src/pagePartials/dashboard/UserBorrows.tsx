@@ -7,7 +7,7 @@ import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
+import { BorrowMode, useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
 
 const UserBorrowsList = withGenericSuspense(
   () => {
@@ -17,7 +17,7 @@ const UserBorrowsList = withGenericSuspense(
       <>
         {userBorrows.map(
           ({ assetAddress, borrowMode, borrowRate, borrowedAmount, borrowedAmountInDAI }) => {
-            const { address, decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
+            const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
             return (
               <div key={`${assetAddress}-${borrowMode}`}>
                 <Grid>
@@ -39,11 +39,15 @@ const UserBorrowsList = withGenericSuspense(
                     total={borrowRate.total}
                   />
 
-                  <p>{borrowMode}</p>
+                  <p style={{ textTransform: 'capitalize' }}>{BorrowMode[borrowMode]}</p>
 
                   <Grid>
-                    <Link href={`/markets/${address}/repay?mode=${borrowMode}`}>Repay</Link>
-                    <Link href={`/markets/${address}/borrow?mode=${borrowMode}`}>Borrow</Link>
+                    <Link href={`/markets/${symbol}/repay?mode=${BorrowMode[borrowMode]}`}>
+                      Repay
+                    </Link>
+                    <Link href={`/markets/${symbol}/borrow?mode=${BorrowMode[borrowMode]}`}>
+                      Borrow
+                    </Link>
                   </Grid>
                 </Grid>
                 <CustomHR />

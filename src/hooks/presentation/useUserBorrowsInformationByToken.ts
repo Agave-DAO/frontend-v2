@@ -1,19 +1,27 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 
+import { BorrowMode } from './useUserBorrows'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useUserBorrowsByToken } from '@/src/hooks/presentation/useUserBorrowsByToken'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 
 type MyInformationUserBorrows =
   | {
-      borrowedAmount: BigNumber
+      variableDebtAmount: BigNumber
+      stableDebtAmount: BigNumber
       healthFactor: string
       ltv: BigNumber
       maxBorrow: number
       userHasBorrows: true
+      totalBorrowed: BigNumber
+      totalBorrowedInDAI: BigNumber
     }
   | {
-      borrowedAmount?: unknown
+      variableDebtAmount?: unknown
+      stableDebtAmount?: unknown
+      totalBorrowed?: unknown
+      totalBorrowedInDAI?: unknown
       healthFactor?: unknown
       ltv?: unknown
       maxBorrow?: unknown
@@ -27,19 +35,17 @@ export function useUserBorrowsInformationByToken({
   tokenAddress: string
   userAddress: string
 }): MyInformationUserBorrows {
-  const userBorrows = useUserBorrowsByToken(tokenAddress)
+  const { borrows, totalBorrowed, totalBorrowedInDAI } = useUserBorrowsByToken(tokenAddress)
   const [{ data }] = useGetUserAccountData(userAddress)
   const marketData = useMarketsData([tokenAddress])
   const market = marketData.getMarket(tokenAddress)
   const userAccountData = data?.[0]
 
-  if (!userBorrows || !userAccountData || !market) {
+  if (!borrows.length || !userAccountData || !market) {
     return {
       userHasBorrows: false,
     }
   }
-
-  const borrowedAmount = userBorrows.borrowedAmount
 
   const healthFactor = FixedNumber.fromValue(userAccountData.healthFactor, 18)
     .toUnsafeFloat()
@@ -56,7 +62,12 @@ export function useUserBorrowsInformationByToken({
   }
 
   return {
-    borrowedAmount,
+    variableDebtAmount:
+      borrows.find((b) => b.borrowMode === BorrowMode.variable)?.borrowedAmount || ZERO_BN,
+    stableDebtAmount:
+      borrows.find((b) => b.borrowMode === BorrowMode.stable)?.borrowedAmount || ZERO_BN,
+    totalBorrowed,
+    totalBorrowedInDAI,
     healthFactor,
     ltv,
     maxBorrow,

@@ -8,8 +8,8 @@ import { fromWei } from '@/src/utils/common'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 
 export enum BorrowMode {
-  Stable = 'Stable',
-  Variable = 'Variable',
+  stable = 1,
+  variable = 2,
 }
 
 export type UserBorrow = {
@@ -21,7 +21,7 @@ export type UserBorrow = {
     incentive: BigNumber
     total: BigNumber
   }
-  borrowMode: string
+  borrowMode: BorrowMode
 }
 
 /**
@@ -62,7 +62,7 @@ export const useUserBorrows = () => {
     if (userHasVariableDebtBorrow) {
       userReserveBorrows.push({
         assetAddress: reserveAddress,
-        borrowMode: BorrowMode.Variable,
+        borrowMode: BorrowMode.variable,
         borrowedAmount: userReserveData.currentVariableDebt,
         borrowedAmountInDAI: fromWei(
           userReserveData.currentVariableDebt.mul(marketData.priceData),
@@ -81,7 +81,7 @@ export const useUserBorrows = () => {
     if (userHasStableDebtBorrow) {
       userReserveBorrows.push({
         assetAddress: reserveAddress,
-        borrowMode: BorrowMode.Stable,
+        borrowMode: BorrowMode.stable,
         borrowedAmount: userReserveData.currentStableDebt,
         borrowedAmountInDAI: fromWei(
           userReserveData.currentStableDebt.mul(marketData.priceData),

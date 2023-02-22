@@ -34,6 +34,7 @@ type Props = {
   label?: string
   tokenAddress: string
   spenderAddress: string
+  maxValue?: BigNumber
   action: (value: string) => Promise<ContractTransaction>
   onMined?: (r: ContractReceipt) => void
   onSend?: (t: ContractTransaction) => void
@@ -43,6 +44,7 @@ type Props = {
 const DepositToken = ({
   action,
   label = 'Deposit',
+  maxValue,
   onFail,
   onMined,
   onSend,
@@ -71,6 +73,8 @@ const DepositToken = ({
   const disableSubmit =
     tokenInputStatus === TextfieldStatus.error || BigNumber.from(value || ZERO_BN).eq(ZERO_BN)
 
+  const maxValueOrBalance = maxValue && maxValue.lt(data[0]) ? maxValue : data[0]
+
   return (
     <SimpleGrid alignItems="flex-start">
       <Formfield
@@ -78,7 +82,7 @@ const DepositToken = ({
           <TokenInput
             balancePosition="topRight"
             decimals={tokenInfo?.decimals}
-            maxValue={data[0].toString()}
+            maxValue={maxValueOrBalance.toString()}
             setStatus={setTokenInputStatus}
             setStatusText={setTokenInputStatusText}
             setValue={setValue}

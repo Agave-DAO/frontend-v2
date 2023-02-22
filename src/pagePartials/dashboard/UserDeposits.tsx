@@ -62,7 +62,7 @@ const UserDepositsList = withGenericSuspense(
       <>
         {userDeposits.map(
           ({ asCollateral, assetAddress, depositRate, depositedAmount, depositedAmountInDAI }) => {
-            const { address, decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
+            const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
             return (
               <div key={`${assetAddress}-deposit`}>
                 <Grid>
@@ -83,8 +83,8 @@ const UserDepositsList = withGenericSuspense(
                   <AsCollateral assetAddress={assetAddress} currentValue={asCollateral} />
 
                   <Grid>
-                    <Link href={`/markets/${address}/deposit`}>Deposit</Link>
-                    <Link href={`/markets/${address}/withdraw`}>Withdraw</Link>
+                    <Link href={`/markets/${symbol}/deposit`}>Deposit</Link>
+                    <Link href={`/markets/${symbol}/withdraw`}>Withdraw</Link>
                   </Grid>
                 </Grid>
                 <CustomHR />
