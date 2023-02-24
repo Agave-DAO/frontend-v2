@@ -22,7 +22,7 @@ export type StepWithDispatch = Readonly<[Step, Dispatch<Action>]>
 export type StepWithActions = Step & {
   activate: () => void
   loading: () => void
-  failed: () => void
+  failed: (error?: string) => void
   reset: () => void
   nextStep: (payload: string) => void
 }

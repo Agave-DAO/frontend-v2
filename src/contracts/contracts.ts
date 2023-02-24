@@ -4,6 +4,7 @@ import AaveProtocolDataProvider from '@/src/contracts/abis/AaveProtocolDataProvi
 import AgaveLendingPool from '@/src/contracts/abis/AgaveLending.json'
 import BaseIncentivesController from '@/src/contracts/abis/BaseIncentivesController.json'
 import ERC20 from '@/src/contracts/abis/ERC20.json'
+import WETHGateway from '@/src/contracts/abis/WETHGateway.json'
 
 export const contracts = {
   WxDAI: {
@@ -47,6 +48,12 @@ export const contracts = {
       [Chains.gnosis]: '0xfa255f5104f129B78f477e9a6D050a02f31A5D86',
     },
     abi: BaseIncentivesController,
+  },
+  WETHGateway: {
+    address: {
+      [Chains.gnosis]: '0x36A644cC38Ae257136EEca5919800f364d73FeFC',
+    },
+    abi: WETHGateway,
   },
 } as const
 

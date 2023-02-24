@@ -1,9 +1,7 @@
 import { Zero } from '@ethersproject/constants'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { useContractCall } from '@/src/hooks/useContractCall'
-import { useContractInstance } from '@/src/hooks/useContractInstance'
-import { AaveOracle, AaveOracle__factory } from '@/types/generated/typechain'
+import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 
 export const useGetGnoPrice = () => {
   const gnoAddress = agaveTokens.getTokenByFieldAndValue({ symbol: 'GNO' })?.address
@@ -12,13 +10,11 @@ export const useGetGnoPrice = () => {
     throw new Error('GNO address not found')
   }
 
-  const aaveOracle = useContractInstance(AaveOracle__factory, 'AaveOracle')
-  const calls = [aaveOracle.getAssetPrice] as const
-  const [{ data: gnoPrice }, refreshGnoPrice] = useContractCall<AaveOracle, typeof calls>(
-    calls,
-    [[gnoAddress]],
-    `getGnoPrice-${gnoAddress}`,
-  )
+  const [{ data }, refreshGnoPrice] = useGetAssetsPriceInDAI([gnoAddress])
+  const [gnoPrice] = data?.[0] ?? [Zero]
 
-  return { gnoPrice: gnoPrice?.[0] ?? Zero, refreshGnoPrice }
+  return {
+    gnoPrice,
+    refreshGnoPrice,
+  }
 }

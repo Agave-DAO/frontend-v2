@@ -1,50 +1,20 @@
-import { BigNumber } from 'ethers'
-
 import { Asset } from '@/src/components/helpers/Asset'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
-import BorrowToken from '@/src/components/token/Borrow'
-import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
-import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
-import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
-import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { BorrowInfo } from '@/src/pagePartials/markets/BorrowInfo'
-import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { AgaveLending__factory } from '@/types/generated/typechain'
+import { Borrow as BorrowAction } from '@/src/pagePartials/markets/borrow/Borrow'
 
 function BorrowImpl() {
   const tokenInfo = useMarketByURLParam()
-
-  const { address: userAddress } = useWeb3ConnectedApp()
-  const lendingPool = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
-
-  const [{ data: userAccountData }] = useGetUserAccountData(userAddress)
-  const [{ data: assetPricesInDAI }] = useGetAssetsPriceInDAI([
-    '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83',
-  ])
-
-  const availableToBorrowDAI = userAccountData?.[0].availableBorrowsETH // 0.0001 eth
-  const tokenPrice = assetPricesInDAI?.[0]?.[0] // 1330 usd
-  const maxBorrow =
-    availableToBorrowDAI?.mul(BigNumber.from(10).pow(18)).div(tokenPrice || BigNumber.from(1)) ||
-    ZERO_BN
 
   return (
     <>
       <BaseTitle>
         Borrow <Asset symbol={tokenInfo.symbol} />
       </BaseTitle>
-      <BorrowToken
-        action={(amount) => lendingPool.borrow(tokenInfo.address, amount, 2, 0, userAddress)}
-        maxValue={
-          tokenInfo.decimals < 18
-            ? maxBorrow.div(BigNumber.from(10).pow(18 - tokenInfo.decimals))
-            : maxBorrow
-        }
-        tokenAddress={tokenInfo.address}
-      />
+      <BorrowAction tokenAddress={tokenInfo.address} />
     </>
   )
 }
@@ -59,5 +29,7 @@ function Borrow() {
     </RequiredConnection>
   )
 }
+
+Borrow.displayName = 'BorrowPage'
 
 export default withGenericSuspense(Borrow)
