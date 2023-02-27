@@ -7,9 +7,9 @@ import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesDa
 import { fromWei } from '@/src/utils/common'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 
-export enum BorrowMode {
+export enum InterestRateMode {
   stable = 1,
-  variable = 2,
+  variable,
 }
 
 export type UserBorrow = {
@@ -21,7 +21,7 @@ export type UserBorrow = {
     incentive: BigNumber
     total: BigNumber
   }
-  borrowMode: BorrowMode
+  borrowMode: InterestRateMode
 }
 
 /**
@@ -62,7 +62,7 @@ export const useUserBorrows = () => {
     if (userHasVariableDebtBorrow) {
       userReserveBorrows.push({
         assetAddress: reserveAddress,
-        borrowMode: BorrowMode.variable,
+        borrowMode: InterestRateMode.variable,
         borrowedAmount: userReserveData.currentVariableDebt,
         borrowedAmountInDAI: fromWei(
           userReserveData.currentVariableDebt.mul(marketData.priceData),
@@ -81,7 +81,7 @@ export const useUserBorrows = () => {
     if (userHasStableDebtBorrow) {
       userReserveBorrows.push({
         assetAddress: reserveAddress,
-        borrowMode: BorrowMode.stable,
+        borrowMode: InterestRateMode.stable,
         borrowedAmount: userReserveData.currentStableDebt,
         borrowedAmountInDAI: fromWei(
           userReserveData.currentStableDebt.mul(marketData.priceData),

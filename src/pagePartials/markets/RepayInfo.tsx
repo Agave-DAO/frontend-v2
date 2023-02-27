@@ -2,7 +2,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { CustomHR, Grid } from '@/src/components/helpers/Rates'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
-import { BorrowMode } from '@/src/hooks/presentation/useUserBorrows'
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useUserBorrowsByToken } from '@/src/hooks/presentation/useUserBorrowsByToken'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
@@ -56,7 +56,9 @@ export const RepayInfo = () => {
         <>
           <CustomHR />
           <Grid key={`${assetAddress}_${borrowMode}`}>
-            <div style={{ textTransform: 'capitalize' }}>{BorrowMode[borrowMode]} Borrowed</div>
+            <div style={{ textTransform: 'capitalize' }}>
+              {InterestRateMode[borrowMode]} Borrowed
+            </div>
             <div>
               <Amount
                 decimals={tokenInfo.decimals}

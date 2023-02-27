@@ -7,7 +7,7 @@ import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { BorrowMode, useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
+import { InterestRateMode, useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
 
 const UserBorrowsList = withGenericSuspense(
   () => {
@@ -39,13 +39,13 @@ const UserBorrowsList = withGenericSuspense(
                     total={borrowRate.total}
                   />
 
-                  <p style={{ textTransform: 'capitalize' }}>{BorrowMode[borrowMode]}</p>
+                  <p style={{ textTransform: 'capitalize' }}>{InterestRateMode[borrowMode]}</p>
 
                   <Grid>
-                    <Link href={`/markets/${symbol}/repay?mode=${BorrowMode[borrowMode]}`}>
+                    <Link href={`/markets/${symbol}/repay?mode=${InterestRateMode[borrowMode]}`}>
                       Repay
                     </Link>
-                    <Link href={`/markets/${symbol}/borrow?mode=${BorrowMode[borrowMode]}`}>
+                    <Link href={`/markets/${symbol}/borrow?mode=${InterestRateMode[borrowMode]}`}>
                       Borrow
                     </Link>
                   </Grid>

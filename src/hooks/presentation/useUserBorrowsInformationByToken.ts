@@ -1,6 +1,6 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 
-import { BorrowMode } from './useUserBorrows'
+import { InterestRateMode } from './useUserBorrows'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useUserBorrowsByToken } from '@/src/hooks/presentation/useUserBorrowsByToken'
@@ -63,9 +63,9 @@ export function useUserBorrowsInformationByToken({
 
   return {
     variableDebtAmount:
-      borrows.find((b) => b.borrowMode === BorrowMode.variable)?.borrowedAmount || ZERO_BN,
+      borrows.find((b) => b.borrowMode === InterestRateMode.variable)?.borrowedAmount || ZERO_BN,
     stableDebtAmount:
-      borrows.find((b) => b.borrowMode === BorrowMode.stable)?.borrowedAmount || ZERO_BN,
+      borrows.find((b) => b.borrowMode === InterestRateMode.stable)?.borrowedAmount || ZERO_BN,
     totalBorrowed,
     totalBorrowedInDAI,
     healthFactor,
