@@ -1,14 +1,15 @@
 import React, { ButtonHTMLAttributes, useCallback } from 'react'
+import styled from 'styled-components'
 
 import { ContractReceipt, ContractTransaction } from '@ethersproject/contracts'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
+import { ButtonCSS, ButtonPrimaryCSS } from '@/src/components/buttons/Button'
 import useTransaction from '@/src/hooks/useTransaction'
 
 interface TxButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  onFail?: (error: unknown) => void
   onMined?: (r: ContractReceipt) => void
   onSend?: (t: ContractTransaction) => void
-  onFail?: (error: unknown) => void
   tx: () => Promise<ContractTransaction>
 }
 
@@ -36,10 +37,20 @@ const TxButton: React.FC<TxButtonProps> = ({
   }, [onFail, onMined, onSend, sendTx, tx])
 
   return (
-    <ButtonPrimary onClick={txHandler} {...restProps}>
+    <button onClick={txHandler} type="button" {...restProps}>
       {children}
-    </ButtonPrimary>
+    </button>
   )
+}
+
+export const TxButtonStyled = styled(TxButton)`
+  ${ButtonCSS}
+  ${ButtonPrimaryCSS}
+`
+
+TxButtonStyled.defaultProps = {
+  borderRadiusVariant: 'fullyRounded',
+  type: 'button',
 }
 
 export default TxButton

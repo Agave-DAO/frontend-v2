@@ -9,9 +9,9 @@ export const Amount = ({
   symbolPosition,
   value,
 }: {
-  value: BigNumber
   decimals?: number
+  displayDecimals?: number
   symbol?: string
   symbolPosition?: SymbolPosition
-  displayDecimals?: number
-}) => <span>{formatAmount(value, decimals, symbol, symbolPosition, displayDecimals)}</span>
+  value: BigNumber
+}) => <>{formatAmount(value, decimals, symbol, symbolPosition, displayDecimals)}</>

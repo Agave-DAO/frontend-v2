@@ -18,9 +18,6 @@ const NavLink = styled(BaseNavLink)`
   line-height: 1.2;
   text-decoration: none;
 
-  &.active {
-  }
-
   &:hover {
     color: ${({ theme: { mainMenu } }) => mainMenu.colorHover};
   }

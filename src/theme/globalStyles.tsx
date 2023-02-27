@@ -8,6 +8,11 @@ export const GlobalStyles = createGlobalStyle<{ theme: any }>`
     --header-padding-top: 25px;
     --header-full-height: calc(${({ theme: { header } }) =>
       header.height} + var(--header-padding-top));
+
+      /* Tooltip */
+      --rt-color-dark:  ${({ theme: { tooltip } }) => tooltip.backgroundColor};
+      --rt-color-info:  ${({ theme: { tooltip } }) => tooltip.textColor};
+      --rt-opacity: 1;
   }
 
   html {
@@ -52,4 +57,12 @@ export const GlobalStyles = createGlobalStyle<{ theme: any }>`
   }
 
   ${onBoardCSS}
+
+  .customTooltip {
+    border-radius: 6px;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    padding: 12px;
+    z-index: 5;
+  }
 `

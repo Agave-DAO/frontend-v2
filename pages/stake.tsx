@@ -12,7 +12,7 @@ const Card = styled(BaseCard)`
   }
 `
 
-const Markets: NextPage = () => {
+const Stake: NextPage = () => {
   return (
     <>
       <BaseTitle>Stake</BaseTitle>
@@ -21,4 +21,4 @@ const Markets: NextPage = () => {
   )
 }
 
-export default Markets
+export default Stake

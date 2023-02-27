@@ -121,4 +121,11 @@ export const light = {
     borderColor: borderColor,
     boxShadow: '0 0 10px 0 rgba(255, 255, 255, 0.25)',
   },
+  tooltip: {
+    iconBackgroundColor: '#000',
+    iconBorderColor: '#fff',
+    textBackgroundColor: '#000',
+    textBorderColor: '#fff',
+    textColor: '#fff',
+  },
 }

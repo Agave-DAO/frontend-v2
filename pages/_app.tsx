@@ -12,12 +12,15 @@ import { InnerContainer } from '@/src/components/helpers/InnerContainer'
 import SafeSuspense from '@/src/components/helpers/SafeSuspense'
 import { Footer } from '@/src/components/layout/Footer'
 import Toast from '@/src/components/toast/Toast'
+import TooltipConfig from '@/src/components/tooltip/TooltipConfig'
 import { Head } from '@/src/pagePartials/index/Head'
 import { TransactionNotificationProvider } from '@/src/providers/TransactionNotificationProvider'
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
-import 'sanitize.css'
 import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
+
+import 'sanitize.css'
+import 'react-tooltip/dist/react-tooltip.css'
 
 const Scroll = styled.div`
   display: flex;
@@ -93,6 +96,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               </TransactionNotificationProvider>
             </SafeSuspense>
             <Toast />
+            <TooltipConfig />
           </ThemeProvider>
         </Web3ConnectionProvider>
       </SWRConfig>

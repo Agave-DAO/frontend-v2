@@ -7,11 +7,20 @@ const error = '#db3333'
 const success = '#33dd33'
 const primary = '#019D8B'
 const primaryDarkened = darken(0.1, primary)
+
 const secondary = '#122C34'
+const secondary20 = `${secondary}33`
+
 const tertiary = '#BCF298'
+const tertiary0 = `${tertiary}00`
+const tertiary30 = `${tertiary}4d`
 
 const black = '#0D2026'
+
 const green = '#40B390'
+const darkGreen = '#006268'
+const darkGreen20 = `${darkGreen}33`
+
 const mainDark3 = '#0B464F'
 
 const textColor = '#fff'
@@ -19,9 +28,9 @@ const textColor = '#fff'
 const lightestGray = '#F0F4F4'
 const lighterGray = '#D1DDDC'
 
-const borderColor = 'rgba(250,250,250,0.2)'
+const borderColor = 'rgba(250, 250, 250, 0.2)'
 
-const darkGray = '#0D2026'
+const darkGray = '#0F3B3F'
 const darkestGray = '#122C34'
 const darkerGray = '#344B47'
 const darkGrayDarkened = darken(0.1, 'rgb(10, 25, 50)')
@@ -33,15 +42,17 @@ const darkBackground06 = `rgba(${darkBackground}, 0.6)`
 const accent = '#9BEFD7'
 
 const gradientLight = `linear-gradient(84.32deg, ${tertiary} 0%, ${green} 99.25%)`
-const mainBodyGradient = `radial-gradient(64.22% 34.97% at 0% 0%, ${tertiary}4d 0%, ${tertiary}00 100%), linear-gradient(188.87deg, ${primary} 4.99%, ${secondary} 62.79%)`
+const mainBodyGradient = `radial-gradient(64.22% 34.97% at 0% 0%, ${tertiary30} 0%, ${tertiary0} 100%), linear-gradient(188.87deg, ${primary} 4.99%, ${secondary} 62.79%)`
+const greenGradientMedium = `linear-gradient(180deg, ${darkGreen20} 0%, ${darkGreen}00 100%)`
+const greenGradientLight = `radial-gradient(64.22% 34.97% at 0% 0%, ${tertiary30} 0%, ${tertiary0} 100%), linear-gradient(188.87deg, ${primary} 4.99%, ${darkGreen} 62.79%);`
 
 export const dark = {
   body: {
-    backgroundColor: darkGray,
+    backgroundColor: black,
     backgroundImage: mainBodyGradient,
   },
   buttonDropdown: {
-    backgroundColor: darkGray,
+    backgroundColor: black,
     backgroundColorHover: darkGrayDarkened,
     borderColor: borderColor,
     borderColorHover: borderColor,
@@ -72,7 +83,7 @@ export const dark = {
   },
   checkBox: {
     backgroundColorActive: secondary,
-    backgroundColor: darkGray,
+    backgroundColor: black,
     borderColor: borderColor,
   },
   colors: {
@@ -84,14 +95,21 @@ export const dark = {
     darkBackground06: darkBackground06,
     darkGray: darkGray,
     darkGrayDarkened: darkGrayDarkened,
+    darkGreen20: darkGreen20,
     darkerGray: darkerGray,
     darkestGray: darkestGray,
     error: error,
+    greenGradientLight: greenGradientLight,
+    greenGradientMedium: greenGradientMedium,
     lighterGray: lighterGray,
     lightestGray: lightestGray,
+    mainDark3: mainDark3,
     primary: primary,
+    secondary20: secondary20,
     secondary: secondary,
     success: success,
+    tertiary0: tertiary0,
+    tertiary30: tertiary30,
     tertiary: tertiary,
     textColor: textColor,
   },
@@ -110,13 +128,13 @@ export const dark = {
     },
   },
   textField: {
-    backgroundColor: darkGray,
+    backgroundColor: black,
     borderColor: borderColor,
     color: textColor,
     errorColor: error,
     successColor: success,
     active: {
-      backgroundColor: darkGray,
+      backgroundColor: black,
       borderColor: secondary,
       boxShadow: 'none',
       color: textColor,
@@ -134,8 +152,7 @@ export const dark = {
     colorHover: secondary,
   },
   mobileMenu: {
-    background:
-      'radial-gradient(64.22% 34.97% at 0% 0%, rgba(188, 242, 152, 0.2) 0%, rgba(188, 242, 152, 0) 100%), linear-gradient(0deg, #122C34, #122C34), #fff',
+    background: `radial-gradient(64.22% 34.97% at 0% 0%, rgba(188, 242, 152, 0.2) 0%, rgba(188, 242, 152, 0) 100%), linear-gradient(0deg, ${darkestGray}, ${darkestGray}), #fff`,
     items: {
       color: textColor,
       backgroundColor: '#000',
@@ -147,7 +164,7 @@ export const dark = {
   },
   radioButton: {
     backgroundColorActive: secondary,
-    backgroundColor: darkGray,
+    backgroundColor: black,
     borderColor: borderColor,
   },
   onBoard: {
@@ -161,5 +178,9 @@ export const dark = {
     backgroundColor: componentBackgroundColor,
     borderColor: borderColor,
     boxShadow: '0 0 10px rgba(255, 255, 255, 0.25)',
+  },
+  tooltip: {
+    backgroundColor: '#000',
+    textColor: '#fff',
   },
 }
