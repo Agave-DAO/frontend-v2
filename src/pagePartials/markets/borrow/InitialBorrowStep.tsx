@@ -10,6 +10,8 @@ import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
+import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useBorrowStepInitial } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 

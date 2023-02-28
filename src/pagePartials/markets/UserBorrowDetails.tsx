@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 import { BaseCard } from '@/src/components/common/BaseCard'
 import { Amount } from '@/src/components/helpers/Amount'
+import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
@@ -60,7 +61,7 @@ function UserBorrowsImp({
       </Grid>
       <Grid>
         <div>Health factor</div>
-        <div>{healthFactor}</div>
+        <HealthFactor value={healthFactor} />
       </Grid>
       <Grid>
         <div>Loan to Value</div>

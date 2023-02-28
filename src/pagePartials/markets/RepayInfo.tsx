@@ -1,4 +1,5 @@
 import { Amount } from '@/src/components/helpers/Amount'
+import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { CustomHR, Grid } from '@/src/components/helpers/Rates'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
@@ -76,7 +77,7 @@ export const RepayInfo = () => {
       <Grid>
         <div>Health Factor</div>
         <div>
-          <Amount symbol="" value={healthFactor} />
+          <HealthFactor value={healthFactor} />
         </div>
       </Grid>
       <CustomHR />

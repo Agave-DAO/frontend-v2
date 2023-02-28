@@ -10,7 +10,7 @@ import { AgaveLending__factory } from '@/types/generated/typechain'
     availableBorrowsETH: BigNumber; // as wei
     currentLiquidationThreshold: BigNumber; // as Fixed4 -> e.g. 7021 = 70.21
     ltv: BigNumber; // as Fixed4 -> e.g. 7021 = 70.21
-    healthFactor: BigNumber; // as Ray -> // e.g. 1500403183017056862 = 1.50
+    healthFactor: BigNumber; // as Wei
  * }
  */
 export default function useGetUserAccountData(address: string) {

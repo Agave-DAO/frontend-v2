@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { Amount } from '@/src/components/helpers/Amount'
+import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { CustomHR, Grid } from '@/src/components/helpers/Rates'
 import { ZERO_BN } from '@/src/constants/bigNumber'
@@ -95,7 +96,7 @@ export const DepositInfo = () => {
       <Grid>
         <div>Health Factor</div>
         <div>
-          <Amount symbol="" value={healthFactor} />
+          <HealthFactor value={healthFactor} />
         </div>
       </Grid>
       <CustomHR />

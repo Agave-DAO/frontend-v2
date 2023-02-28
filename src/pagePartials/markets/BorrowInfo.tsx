@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Button } from '@/src/components/buttons/Button'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Asset } from '@/src/components/helpers/Asset'
+import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { CustomHR, Grid, Rates } from '@/src/components/helpers/Rates'
 import { agaveTokens } from '@/src/config/agaveTokens'
@@ -140,7 +141,7 @@ export const BorrowInfo = () => {
       <Grid>
         <div>Health Factor</div>
         <div>
-          <Amount symbol="" value={healthFactor} />
+          <HealthFactor value={healthFactor} />
         </div>
       </Grid>
       <CustomHR />

@@ -30,10 +30,6 @@ export const formatAmount = (
   symbolPosition: SymbolPosition = 'before',
   displayDecimals: number = DISPLAY_DECIMALS,
 ): string => {
-  // Find another way to do this
-  if (value.gt('9999999999999999999999999999999999999')) {
-    return '∞'
-  }
   return symbol
     ? `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(
         FixedNumber.fromValue(value, decimals).toUnsafeFloat(),

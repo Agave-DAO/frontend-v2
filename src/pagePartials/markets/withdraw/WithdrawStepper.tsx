@@ -2,7 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 
 import { ButtonPrimary } from '@/src/components/buttons/Button'
 import { Amount } from '@/src/components/helpers/Amount'
+import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { Steps } from '@/src/pagePartials/markets/stepper'
 import { useWithdrawSteps } from '@/src/pagePartials/markets/withdraw/hooks/useWithdrawSteps'
 
@@ -13,7 +15,11 @@ interface WithdrawStepperInfoProps {
 
 const WithdrawStepperInfo = ({ amount, tokenAddress }: WithdrawStepperInfoProps) => {
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  const newHealthFactor = 0
+
+  const newHealthFactor = useNewHealthFactorCalculator(tokenAddress).newHealthFactor({
+    amount: BigNumber.from(amount),
+    type: 'withdraw',
+  })
 
   return (
     <>
@@ -31,7 +37,7 @@ const WithdrawStepperInfo = ({ amount, tokenAddress }: WithdrawStepperInfoProps)
       </div>
       <div data-id="info-newHealthFactor">
         <div>New health factor</div>
-        <div>{newHealthFactor}%</div>
+        <HealthFactor value={newHealthFactor} />
       </div>
     </>
   )

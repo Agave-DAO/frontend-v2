@@ -10,7 +10,7 @@ type MyInformationUserBorrows =
   | {
       variableDebtAmount: BigNumber
       stableDebtAmount: BigNumber
-      healthFactor: string
+      healthFactor: BigNumber
       ltv: BigNumber
       maxBorrow: number
       userHasBorrows: true
@@ -47,10 +47,6 @@ export function useUserBorrowsInformationByToken({
     }
   }
 
-  const healthFactor = FixedNumber.fromValue(userAccountData.healthFactor, 18)
-    .toUnsafeFloat()
-    .toFixed(2)
-
   const ltv = userAccountData.ltv
 
   let maxBorrow: number
@@ -68,7 +64,7 @@ export function useUserBorrowsInformationByToken({
       borrows.find((b) => b.borrowMode === InterestRateMode.stable)?.borrowedAmount || ZERO_BN,
     totalBorrowed,
     totalBorrowedInDAI,
-    healthFactor,
+    healthFactor: userAccountData.healthFactor || ZERO_BN,
     ltv,
     maxBorrow,
     userHasBorrows: true,

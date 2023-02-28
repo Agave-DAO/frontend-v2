@@ -2,7 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 
 import { ButtonPrimary } from '@/src/components/buttons/Button'
 import { Amount } from '@/src/components/helpers/Amount'
+import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useBorrowSteps } from '@/src/pagePartials/markets/borrow/hooks/useBorrowSteps'
 import { Steps } from '@/src/pagePartials/markets/stepper'
 
@@ -13,7 +15,11 @@ interface BorrowStepperInfoProps {
 
 const BorrowStepperInfo = ({ amount, tokenAddress }: BorrowStepperInfoProps) => {
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  const newHealthFactor = 0
+
+  const newHealthFactor = useNewHealthFactorCalculator(tokenAddress).newHealthFactor({
+    amount: BigNumber.from(amount),
+    type: 'borrow',
+  })
 
   return (
     <>
@@ -31,7 +37,9 @@ const BorrowStepperInfo = ({ amount, tokenAddress }: BorrowStepperInfoProps) => 
       </div>
       <div data-id="info-newHealthFactor">
         <div>New health factor</div>
-        <div>{newHealthFactor}%</div>
+        <div>
+          <HealthFactor value={newHealthFactor} />
+        </div>
       </div>
     </>
   )
