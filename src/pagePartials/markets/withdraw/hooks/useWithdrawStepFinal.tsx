@@ -23,7 +23,7 @@ export const useWithdrawStepFinal = ({
     tokenInfo.decimals,
   )
 
-  const final = () => router.push('/dashboard')
+  const final = () => router.push('/my-account')
 
   return useStepStates({
     title: 'Done',
