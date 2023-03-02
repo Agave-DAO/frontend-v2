@@ -6,7 +6,7 @@ import { darken } from 'polished'
 const error = '#db3333'
 const success = '#33dd33'
 const primary = '#019D8B'
-const primaryDarkened = darken(0.1, primary)
+const primaryDarkened = darken(0.05, primary)
 
 const secondary = '#122C34'
 const secondary20 = `${secondary}33`
@@ -22,13 +22,17 @@ const darkGreen = '#006268'
 const darkGreen20 = `${darkGreen}33`
 
 const mainDark3 = '#0B464F'
+const mainDark4 = '#0E3940'
 
 const textColor = '#fff'
+const textColor50 = 'rgba(255, 255, 255, 0.5)'
+
+const borderColor = 'rgba(250, 250, 250, 0.2)'
 
 const lightestGray = '#F0F4F4'
 const lighterGray = '#D1DDDC'
 
-const borderColor = 'rgba(250, 250, 250, 0.2)'
+const gray = '#97B1AB'
 
 const darkGray = '#0F3B3F'
 const darkestGray = '#122C34'
@@ -37,6 +41,8 @@ const darkGrayDarkened = darken(0.1, 'rgb(10, 25, 50)')
 
 const componentBackgroundColor = 'rgba(13, 2, 2, 0.85)'
 const darkBackground = '13, 32, 38'
+const darkBackground0 = `rgba(${darkBackground}, 0)`
+const darkBackground02 = `rgba(${darkBackground}, 0.2)`
 const darkBackground04 = `rgba(${darkBackground}, 0.4)`
 const darkBackground06 = `rgba(${darkBackground}, 0.6)`
 const accent = '#9BEFD7'
@@ -91,26 +97,32 @@ export const dark = {
     black: black,
     borderColor: borderColor,
     componentBackgroundColor: componentBackgroundColor,
+    darkBackground02: darkBackground02,
     darkBackground04: darkBackground04,
     darkBackground06: darkBackground06,
+    darkBackground0: darkBackground0,
     darkGray: darkGray,
     darkGrayDarkened: darkGrayDarkened,
     darkGreen20: darkGreen20,
     darkerGray: darkerGray,
     darkestGray: darkestGray,
     error: error,
+    gray: gray,
     greenGradientLight: greenGradientLight,
     greenGradientMedium: greenGradientMedium,
     lighterGray: lighterGray,
     lightestGray: lightestGray,
     mainDark3: mainDark3,
+    mainDark4: mainDark4,
     primary: primary,
+    primaryDarkened: primaryDarkened,
     secondary20: secondary20,
     secondary: secondary,
     success: success,
     tertiary0: tertiary0,
     tertiary30: tertiary30,
     tertiary: tertiary,
+    textColor50: textColor50,
     textColor: textColor,
   },
   dropdown: {
@@ -128,19 +140,18 @@ export const dark = {
     },
   },
   textField: {
-    backgroundColor: black,
-    borderColor: borderColor,
+    backgroundColor: mainDark4,
+    borderColor: 'transparent',
     color: textColor,
     errorColor: error,
     successColor: success,
     active: {
-      backgroundColor: black,
-      borderColor: secondary,
-      boxShadow: 'none',
+      backgroundColor: mainDark4,
+      borderColor: 'transparent',
       color: textColor,
     },
     placeholder: {
-      color: 'lightGray',
+      color: textColor50,
     },
   },
   header: {

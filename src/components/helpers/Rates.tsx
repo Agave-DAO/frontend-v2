@@ -32,7 +32,6 @@ export const Rates = ({
     <Grid>
       Total: <Percentage decimals={25} value={total} />
     </Grid>
-    <CustomHR />
     <Grid>
       Base: <Percentage decimals={25} value={base} />
     </Grid>

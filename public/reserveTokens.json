@@ -6,7 +6,7 @@
       "address": "0x9c58bacc331c9aa871afd802db6379a98e80cedb",
       "decimals": 18,
       "chainId": 100,
-      "logoURI": "/coins/gno.png"
+      "logoURI": "/coins/gno.svg"
     },
     {
       "symbol": "WETH",
@@ -46,7 +46,7 @@
       "address": "0xe2e73a1c69ecf83f464efce6a5be353a37ca09b2",
       "decimals": 18,
       "chainId": 100,
-      "logoURI": "/coins/link.webp"
+      "logoURI": "/coins/link.svg"
     },
     {
       "symbol": "FOX",

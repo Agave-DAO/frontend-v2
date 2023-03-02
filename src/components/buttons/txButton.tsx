@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, useCallback } from 'react'
+import { ButtonHTMLAttributes, useCallback } from 'react'
 import styled from 'styled-components'
 
 import { ContractReceipt, ContractTransaction } from '@ethersproject/contracts'

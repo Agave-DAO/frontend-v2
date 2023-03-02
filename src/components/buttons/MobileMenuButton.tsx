@@ -13,8 +13,8 @@ const Wrapper = styled.button<{ isOpen?: boolean }>`
   justify-content: flex-end;
   padding: 0;
   position: relative;
-  user-select: none;
   position: relative;
+  user-select: none;
   width: var(--mobile-menu-min-width);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {

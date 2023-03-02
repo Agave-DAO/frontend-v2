@@ -13,7 +13,7 @@ const Wrapper = styled.div<{ isConnected: boolean }>`
   ${({ isConnected }) =>
     isConnected &&
     css`
-      @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.desktopStart}) {
+      @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
         display: grid;
         grid-template-columns: 1fr 2fr;
         column-gap: 24px;
@@ -30,7 +30,7 @@ const WelcomeText = styled.div<{ isConnected: boolean }>`
       display: none;
     `}
 
-  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.desktopStart}) {
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
@@ -117,7 +117,7 @@ const UserInfo = styled.div`
     padding: 36px 24px;
   }
 
-  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.desktopStart}) {
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     width: auto;
   }
 `
