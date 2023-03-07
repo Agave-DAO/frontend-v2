@@ -4,6 +4,7 @@ import AaveProtocolDataProvider from '@/src/contracts/abis/AaveProtocolDataProvi
 import AgaveLendingPool from '@/src/contracts/abis/AgaveLending.json'
 import BaseIncentivesController from '@/src/contracts/abis/BaseIncentivesController.json'
 import ERC20 from '@/src/contracts/abis/ERC20.json'
+import StakedToken from '@/src/contracts/abis/StakedToken.json'
 import WETHGateway from '@/src/contracts/abis/WETHGateway.json'
 
 export const contracts = {
@@ -54,6 +55,12 @@ export const contracts = {
       [Chains.gnosis]: '0x36A644cC38Ae257136EEca5919800f364d73FeFC',
     },
     abi: WETHGateway,
+  },
+  StakedToken: {
+    address: {
+      [Chains.gnosis]: '0x610525b415c1BFAeAB1a3fc3d85D87b92f048221',
+    },
+    abi: StakedToken,
   },
 } as const
 
