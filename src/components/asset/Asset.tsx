@@ -13,7 +13,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: fit-content;
-  overflow: hidden;
 `
 
 export const Head = styled.div`
@@ -60,7 +59,10 @@ export const Icon = styled.div<{ symbol?: string }>`
 
 export const HeadContents = styled.div`
   display: flex;
+  flex-direction: column;
   flex-grow: 1;
+  justify-content: center;
+  margin: auto 0;
 `
 
 export const Body = styled.div`

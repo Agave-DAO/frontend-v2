@@ -1,10 +1,12 @@
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 
+import { ActionsWrapper } from '@/src/components/asset/ActionsWrapper'
+import { UserAsset } from '@/src/components/asset/UserAsset'
+import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { Amount } from '@/src/components/helpers/Amount'
-import { Asset } from '@/src/components/helpers/Asset'
-import { CustomHR, Grid, Rates } from '@/src/components/helpers/Rates'
-import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
+import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { AssetsList } from '@/src/components/layout/AssetsList'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { InterestRateMode, useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
@@ -12,50 +14,61 @@ import { InterestRateMode, useUserBorrows } from '@/src/hooks/presentation/useUs
 const UserBorrowsList = withGenericSuspense(
   () => {
     const userBorrows = useUserBorrows()
+    const router = useRouter()
 
-    return (
+    return !userBorrows.length ? (
+      <EmptyContent
+        link={{
+          text: 'All markets',
+          href: '/',
+        }}
+        text="In order to borrow you need to deposit any asset to be used as collateral."
+        title="Nothing borrowed yet"
+      />
+    ) : (
       <>
         {userBorrows.map(
           ({ assetAddress, borrowMode, borrowRate, borrowedAmount, borrowedAmountInDAI }) => {
             const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
             return (
-              <div key={`${assetAddress}-${borrowMode}`}>
-                <Grid>
-                  <Asset symbol={symbol} />
-                  <div>
-                    <Amount
-                      decimals={decimals}
-                      symbol={symbol}
-                      symbolPosition="after"
-                      value={borrowedAmount}
-                    />
-                    <br />
-                    <Amount value={borrowedAmountInDAI} />
-                  </div>
-
-                  <Rates
-                    base={borrowRate.base}
-                    incentive={borrowRate.incentive}
-                    total={borrowRate.total}
+              <UserAsset
+                badge={InterestRateMode[borrowMode]}
+                baseRate={borrowRate.base}
+                incentivesRate={borrowRate.incentive}
+                key={`${assetAddress}-${borrowMode}`}
+                tokenAddress={assetAddress}
+                tokenValue={
+                  <Amount
+                    decimals={decimals}
+                    symbol={symbol}
+                    symbolPosition="after"
+                    value={borrowedAmount}
                   />
-
-                  <p style={{ textTransform: 'capitalize' }}>{InterestRateMode[borrowMode]}</p>
-
-                  <Grid>
-                    <Link href={`/markets/${symbol}/repay?mode=${InterestRateMode[borrowMode]}`}>
-                      Repay
-                    </Link>
-                    <Link href={`/markets/${symbol}/borrow?mode=${InterestRateMode[borrowMode]}`}>
-                      Borrow
-                    </Link>
-                  </Grid>
-                </Grid>
-                <CustomHR />
-              </div>
+                }
+                totalAPY={borrowRate.total}
+                usdValue={<Amount value={borrowedAmountInDAI} />}
+              >
+                <ActionsWrapper>
+                  <ActionButton
+                    onClick={() =>
+                      router.push(`/markets/${symbol}/repay?mode=${InterestRateMode[borrowMode]}`)
+                    }
+                    variant="dark"
+                  >
+                    Repay
+                  </ActionButton>
+                  <ActionButton
+                    onClick={() =>
+                      router.push(`/markets/${symbol}/borrow?mode=${InterestRateMode[borrowMode]}`)
+                    }
+                  >
+                    Borrow
+                  </ActionButton>
+                </ActionsWrapper>
+              </UserAsset>
             )
           },
         )}
-        {!userBorrows.length && <p style={{ textAlign: 'center' }}>No borrows in current wallet</p>}
       </>
     )
   },
@@ -64,19 +77,8 @@ const UserBorrowsList = withGenericSuspense(
 
 export const UserBorrows = () => {
   return (
-    <div>
-      <h2>My Borrows</h2>
-      <Grid>
-        <strong>Asset</strong>
-        <strong>Borrowed</strong>
-        <strong>APR</strong>
-        <strong>Mode</strong>
-        <strong>Actions</strong>
-      </Grid>
-      <CustomHR />
-      <RequiredConnection isNotConnectedText="Connect your wallet to see your borrows">
-        <UserBorrowsList />
-      </RequiredConnection>
-    </div>
+    <AssetsList>
+      <UserBorrowsList />
+    </AssetsList>
   )
 }

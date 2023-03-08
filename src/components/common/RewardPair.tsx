@@ -9,9 +9,9 @@ const Wrapper = styled.div`
   display: flex;
 `
 
-export const TokenPair: React.FC = ({ ...restProps }) => (
+export const RewardPair: React.FC<{ size?: number }> = ({ size = 16, ...restProps }) => (
   <Wrapper {...restProps}>
-    <GNOMini />
-    <AGAVEMini />
+    <GNOMini size={size} />
+    <AGAVEMini size={size} />
   </Wrapper>
 )

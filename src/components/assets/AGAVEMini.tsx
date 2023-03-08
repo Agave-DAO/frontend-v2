@@ -6,13 +6,17 @@ const Wrapper = styled.svg`
   flex-shrink: 0;
 `
 
-export const AGAVEMini: React.FC<HTMLAttributes<SVGElement>> = ({ className, ...restProps }) => (
+interface Props extends HTMLAttributes<SVGElement> {
+  size?: number
+}
+
+export const AGAVEMini: React.FC<Props> = ({ className, size = 16, ...restProps }) => (
   <Wrapper
     className={`AGAVEMini ${className}`}
     fill="none"
-    height="16"
+    height={`${size}`}
     viewBox="0 0 16 16"
-    width="16"
+    width={`${size}`}
     xmlns="http://www.w3.org/2000/svg"
     {...restProps}
   >

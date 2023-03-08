@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 
 import { HomeTabs } from '@/src/components/common/HomeTabs'
-import { Account } from '@/src/pagePartials/dashboard/Account'
+import { Account } from '@/src/pagePartials/account/Account'
 import { MarketList } from '@/src/pagePartials/markets/MarketList'
 
 const Home: NextPage = () => {

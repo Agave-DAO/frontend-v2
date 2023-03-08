@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 import { NavLink as BaseNavLink } from '@/src/components/navigation/NavLink'
 import { sections } from '@/src/constants/menu'
+import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
 const Wrapper = styled.nav`
   align-items: center;
@@ -24,8 +25,12 @@ const NavLink = styled(BaseNavLink)`
 `
 
 export const MainMenu: React.FC = ({ ...restProps }) => {
+  const { isWalletConnected, isWalletNetworkSupported } = useWeb3Connection()
+  const isConnected = isWalletConnected && isWalletNetworkSupported
+
   return (
     <Wrapper {...restProps}>
+      {isConnected && <NavLink href="/my-account">My account</NavLink>}
       {sections.map(({ href, section }) => {
         return (
           <NavLink href={href} key={`main_menu_item_${section}`}>

@@ -35,9 +35,10 @@ export const ButtonGoTo: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = ({ 
   </Wrapper>
 )
 
-export const AGoTo = React.forwardRef(function CustomComponent({ ...restProps }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const AGoTo = React.forwardRef(function CustomComponent(props, ref) {
   return (
-    <Wrapper as="a" {...restProps}>
+    <Wrapper as="a" {...props}>
       <ChevronRight />
     </Wrapper>
   )

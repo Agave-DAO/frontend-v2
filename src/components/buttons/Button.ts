@@ -145,6 +145,82 @@ ButtonConnect.defaultProps = {
   borderRadiusVariant: 'round',
 }
 
+export const ButtonPrimaryDarkCSS = css`
+  background-color: ${({ theme: { buttonPrimaryDark } }) => buttonPrimaryDark.backgroundColor};
+  border-color: ${({ theme: { buttonPrimaryDark } }) => buttonPrimaryDark.borderColor};
+  color: ${({ theme: { buttonPrimaryDark } }) => buttonPrimaryDark.color};
+
+  &:hover {
+    background-color: ${({ theme: { buttonPrimaryDark } }) =>
+      buttonPrimaryDark.backgroundColorHover};
+    border-color: ${({ theme: { buttonPrimaryDark } }) => buttonPrimaryDark.borderColorHover};
+    color: ${({ theme: { buttonPrimaryDark } }) => buttonPrimaryDark.colorHover};
+  }
+
+  ${DisabledButtonCSS}
+
+  &[disabled],
+  &[disabled]:hover {
+    background-color: ${({ theme: { buttonPrimaryDark } }) => buttonPrimaryDark.backgroundColor};
+    border-color: ${({ theme: { buttonPrimaryDark } }) => buttonPrimaryDark.borderColor};
+    color: ${({ theme: { buttonPrimaryDark } }) => buttonPrimaryDark.color};
+  }
+`
+
+export const ButtonPrimaryDark = styled(BaseButton)`
+  ${ButtonPrimaryDarkCSS}
+`
+
+export const ButtonDarkCSS = css`
+  background-color: ${({ theme: { buttonDark } }) => buttonDark.backgroundColor};
+  border-color: ${({ theme: { buttonDark } }) => buttonDark.borderColor};
+  color: ${({ theme: { buttonDark } }) => buttonDark.color};
+
+  &:hover {
+    background-color: ${({ theme: { buttonDark } }) => buttonDark.backgroundColorHover};
+    border-color: ${({ theme: { buttonDark } }) => buttonDark.borderColorHover};
+    color: ${({ theme: { buttonDark } }) => buttonDark.colorHover};
+  }
+
+  ${DisabledButtonCSS}
+
+  &[disabled],
+  &[disabled]:hover {
+    background-color: ${({ theme: { buttonDark } }) => buttonDark.backgroundColor};
+    border-color: ${({ theme: { buttonDark } }) => buttonDark.borderColor};
+    color: ${({ theme: { buttonDark } }) => buttonDark.color};
+  }
+`
+
+export const ButtonDark = styled(BaseButton)`
+  ${ButtonDarkCSS}
+`
+
+export const ButtonLightCSS = css`
+  background-color: ${({ theme: { buttonLight } }) => buttonLight.backgroundColor};
+  border-color: ${({ theme: { buttonLight } }) => buttonLight.borderColor};
+  color: ${({ theme: { buttonLight } }) => buttonLight.color};
+
+  &:hover {
+    background-color: ${({ theme: { buttonLight } }) => buttonLight.backgroundColorHover};
+    border-color: ${({ theme: { buttonLight } }) => buttonLight.borderColorHover};
+    color: ${({ theme: { buttonLight } }) => buttonLight.colorHover};
+  }
+
+  ${DisabledButtonCSS}
+
+  &[disabled],
+  &[disabled]:hover {
+    background-color: ${({ theme: { buttonLight } }) => buttonLight.backgroundColor};
+    border-color: ${({ theme: { buttonLight } }) => buttonLight.borderColor};
+    color: ${({ theme: { buttonLight } }) => buttonLight.color};
+  }
+`
+
+export const ButtonLight = styled(BaseButton)`
+  ${ButtonLightCSS}
+`
+
 export const ButtonDropdownIsOpenCSS = css`
   &::after {
     transform: rotate(180deg);
@@ -165,10 +241,10 @@ export const ButtonDropdownCSS = css<{ currentThemeName?: ThemeType }>`
   &::after {
     --dimensions: 8px;
 
-    content: '';
-
     background-position: 50% 50%;
     background-repeat: no-repeat;
+    color: ${({ theme: { buttonDropdown } }) => buttonDropdown.color};
+    content: '';
     flex-shrink: 0;
     gap: 10px;
     height: var(--dimensions);
@@ -186,22 +262,19 @@ export const ButtonDropdownCSS = css<{ currentThemeName?: ThemeType }>`
 
   .isOpen & {
     ${ButtonDropdownIsOpenCSS}
-  }
+    ${DisabledButtonCSS}
 
-  ${DisabledButtonCSS}
+    &:active {
+      opacity: 1;
+    }
 
-  &:active {
-    opacity: 1;
-  }
-
-  &[disabled],
-  &[disabled]:hover {
-    background-color: ${({ theme: { buttonDropdown } }) => buttonDropdown.borderColor};
-    border-color: ${({ theme: { buttonDropdown } }) => buttonDropdown.borderColor};
-    color: ${({ theme: { buttonDropdown } }) => buttonDropdown.color};
+    &[disabled],
+    &[disabled]:hover {
+      background-color: ${({ theme: { buttonDropdown } }) => buttonDropdown.borderColor};
+      border-color: ${({ theme: { buttonDropdown } }) => buttonDropdown.borderColor};
+    }
   }
 `
-
 export const ButtonDropdown = styled(Button)<{ currentThemeName?: ThemeType }>`
   ${ButtonDropdownCSS}
 `

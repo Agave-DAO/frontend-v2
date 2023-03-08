@@ -1,99 +1,78 @@
-import Link from 'next/link'
-import { useState } from 'react'
+import { useRouter } from 'next/router'
 
+import { ActionsWrapper } from '@/src/components/asset/ActionsWrapper'
+import { UserAsset } from '@/src/components/asset/UserAsset'
+import { ActionButton } from '@/src/components/buttons/ActionButton'
+import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
 import { Amount } from '@/src/components/helpers/Amount'
-import { Asset } from '@/src/components/helpers/Asset'
-import { Percentage } from '@/src/components/helpers/Percentage'
-import { CustomHR, Grid } from '@/src/components/helpers/Rates'
-import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
+import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
-import { ToggleSwitch } from '@/src/components/helpers/ToggleSwitch'
+import { AssetsList } from '@/src/components/layout/AssetsList'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { useSetReserveAsCollateral } from '@/src/hooks/mutations/useSetReserveAsCollateral'
 import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
-
-const AsCollateral = ({
-  assetAddress,
-  currentValue,
-}: {
-  currentValue: boolean
-  assetAddress: string
-}) => {
-  const [checked, setChecked] = useState(currentValue)
-  const [loading, setLoading] = useState(false)
-  const setReserveAsCollateral = useSetReserveAsCollateral()
-
-  // Checking if the asset is WXDAI. If it is, then it's always collateral and the user can't change it.
-  const isAlwaysCollateral = agaveTokens.getTokenByAddress(assetAddress).symbol === 'WXDAI'
-
-  const toggleSwitchHandler = async () => {
-    setChecked(!checked)
-    setLoading(true)
-    try {
-      const tx = await setReserveAsCollateral(assetAddress, !checked)
-      await tx.wait()
-      setLoading(false)
-    } catch (error) {
-      console.log(error)
-      setChecked(checked)
-      setLoading(false)
-    }
-  }
-
-  return (
-    <Grid>
-      <ToggleSwitch
-        checked={checked}
-        disabled={isAlwaysCollateral || loading}
-        id={`asCollateral-${assetAddress}`}
-        onChange={toggleSwitchHandler}
-      />
-      <p>{checked ? 'YES' : 'NO'}</p>
-    </Grid>
-  )
-}
 
 const UserDepositsList = withGenericSuspense(
   () => {
     const userDeposits = useUserDeposits()
+    const router = useRouter()
 
-    return (
+    return !userDeposits.length ? (
+      <EmptyContent
+        link={{
+          text: 'All markets',
+          href: '/',
+        }}
+        text="Your account is empty. Move cryptocurrency from your wallet and start earning interest."
+        title="Nothing deposited yet"
+      />
+    ) : (
       <>
         {userDeposits.map(
           ({ asCollateral, assetAddress, depositRate, depositedAmount, depositedAmountInDAI }) => {
             const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
+            const items = [
+              {
+                text: 'Withdraw',
+                onClick: () => router.push(`/markets/${symbol}/withdraw`),
+              },
+              {
+                text: 'Swap',
+                onClick: () => console.log('nothing yet'),
+              },
+              {
+                text: 'Strategies',
+                onClick: () => console.log('nothing yet'),
+              },
+            ]
+
             return (
-              <div key={`${assetAddress}-deposit`}>
-                <Grid>
-                  <Asset symbol={symbol} />
-                  <div>
-                    <Amount
-                      decimals={decimals}
-                      symbol={symbol}
-                      symbolPosition="after"
-                      value={depositedAmount}
-                    />
-                    <br />
-                    <Amount value={depositedAmountInDAI} />
-                  </div>
-
-                  <Percentage decimals={25} value={depositRate} />
-
-                  <AsCollateral assetAddress={assetAddress} currentValue={asCollateral} />
-
-                  <Grid>
-                    <Link href={`/markets/${symbol}/deposit`}>Deposit</Link>
-                    <Link href={`/markets/${symbol}/withdraw`}>Withdraw</Link>
-                  </Grid>
-                </Grid>
-                <CustomHR />
-              </div>
+              <UserAsset
+                baseRate={depositRate}
+                incentivesRate={depositRate}
+                key={`${assetAddress}-deposit`}
+                tokenAddress={assetAddress}
+                tokenValue={
+                  <Amount
+                    decimals={decimals}
+                    symbol={symbol}
+                    symbolPosition="after"
+                    value={depositedAmount}
+                  />
+                }
+                totalAPY={depositRate}
+                usdValue={<Amount value={depositedAmountInDAI} />}
+                useAsCollateral={asCollateral}
+              >
+                <ActionsWrapper>
+                  <MoreActionsDropdown items={items} />
+                  <ActionButton onClick={() => router.push(`/markets/${symbol}/deposit`)}>
+                    Deposit
+                  </ActionButton>
+                </ActionsWrapper>
+              </UserAsset>
             )
           },
-        )}
-        {!userDeposits.length && (
-          <p style={{ textAlign: 'center' }}>No deposits in current wallet</p>
         )}
       </>
     )
@@ -103,19 +82,8 @@ const UserDepositsList = withGenericSuspense(
 
 export const UserDeposits = () => {
   return (
-    <div>
-      <h2>My Deposits</h2>
-      <Grid>
-        <strong>Asset</strong>
-        <strong>Deposited</strong>
-        <strong>APY</strong>
-        <strong>Collateral</strong>
-        <strong>Actions</strong>
-      </Grid>
-      <CustomHR />
-      <RequiredConnection isNotConnectedText="Connect your wallet to see your deposits">
-        <UserDepositsList />
-      </RequiredConnection>
-    </div>
+    <AssetsList>
+      <UserDepositsList />
+    </AssetsList>
   )
 }

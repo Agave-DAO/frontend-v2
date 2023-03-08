@@ -26,5 +26,5 @@ export const HealthFactor = ({
     return formatAmount(value, decimals, symbol, symbolPosition, displayDecimals)
   }, [value, decimals, symbol, symbolPosition, displayDecimals])
 
-  return <span>{renderAmount}</span>
+  return <>{renderAmount}</>
 }

@@ -86,7 +86,7 @@ const EmptyContent = styled.div`
   text-align: center;
 `
 
-export const UserAccountDetails: React.FC = withGenericSuspense(
+export const UserAccountSummary: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const { address } = useWeb3ConnectedApp()
     const { currentLTV, healthFactor, userBorrows, userCollateral, userDeposits } =
@@ -114,7 +114,7 @@ export const UserAccountDetails: React.FC = withGenericSuspense(
             </Value>
           </InfoRow>
           <InfoRow>
-            <Label>Current LTV</Label>
+            <Label>LTV</Label>
             <Value>
               <Amount displayDecimals={3} value={currentLTV} />
             </Value>
@@ -122,7 +122,7 @@ export const UserAccountDetails: React.FC = withGenericSuspense(
         </Info>
         <HFWrapper>
           <Title>
-            Health factor <Tooltip content="Some text here!" />
+            Health status <Tooltip content="Some text here!" />
           </Title>
           <HealthFactor value={healthFactor} />
         </HFWrapper>

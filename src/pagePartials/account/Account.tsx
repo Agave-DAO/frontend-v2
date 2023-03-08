@@ -1,22 +1,28 @@
 import styled, { css } from 'styled-components'
 
 import { ButtonConnect } from '@/src/components/buttons/Button'
-import { UserAccountDetails } from '@/src/pagePartials/dashboard/UserAccountDetails'
-import UserRewards from '@/src/pagePartials/index/UserRewards'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
+import { UserAccountSummary } from '@/src/pagePartials/account/UserAccountSummary'
+import UserBalanceSummary from '@/src/pagePartials/account/UserBalanceSummary'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
 const Wrapper = styled.div<{ isConnected: boolean }>`
   display: flex;
   margin: 0 auto 64px;
+  min-height: 469px;
   width: 100%;
 
   ${({ isConnected }) =>
     isConnected &&
     css`
+      @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+        min-height: 358px;
+      }
+
       @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+        column-gap: 24px;
         display: grid;
         grid-template-columns: 1fr 2fr;
-        column-gap: 24px;
       }
     `}
 `
@@ -118,6 +124,7 @@ const UserInfo = styled.div`
   }
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    flex-grow: 1;
     width: auto;
   }
 `
@@ -134,10 +141,12 @@ export const Account: React.FC = ({ ...restProps }) => {
         {!isConnected && <Button onClick={connectWallet}>Connect wallet</Button>}
       </WelcomeText>
       {isConnected && (
-        <UserInfo>
-          <UserRewards />
-          <UserAccountDetails />
-        </UserInfo>
+        <RequiredConnection>
+          <UserInfo>
+            <UserBalanceSummary />
+            <UserAccountSummary />
+          </UserInfo>
+        </RequiredConnection>
       )}
     </Wrapper>
   )

@@ -35,7 +35,6 @@ export function withGenericSuspense<TProps>(
   fallback?: FC<TProps>,
 ) {
   const displayName = Component.displayName || Component.name || 'Component'
-
   const ComponentWithGenericSuspense = (props: IntrinsicElements & TProps) => (
     <ErrorBoundary
       fallbackRender={({ error, resetErrorBoundary }) => (

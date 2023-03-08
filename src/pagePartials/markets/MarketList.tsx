@@ -6,6 +6,7 @@ import { Magnifier as SVG } from '@/src/components/assets/Magnifier'
 import { Textfield } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { AssetsList } from '@/src/components/layout/AssetsList'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
@@ -62,21 +63,6 @@ const Magnifier = styled(SVG)`
   z-index: 5;
 `
 
-const Assets = styled.div`
-  display: grid;
-  gap: 16px;
-  grid-template-columns: 1fr;
-  margin: 0 auto;
-  max-width: 952px;
-  order: 2;
-  width: 100%;
-
-  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    gap: 24px;
-    grid-template-columns: 1fr 1fr;
-  }
-`
-
 export const MarketList: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const { agaveMarketsData, getBorrowRate, getDepositAPY, getIncentiveRate, getTotalBorrowed } =
@@ -94,7 +80,7 @@ export const MarketList: React.FC = withGenericSuspense(
           />
           <Magnifier />
         </SearchWrapper>
-        <Assets>
+        <AssetsList>
           {agaveMarketsData
             // no frozen markets
             .filter(({ assetData: { isFrozen } }) => !isFrozen)
@@ -157,7 +143,7 @@ export const MarketList: React.FC = withGenericSuspense(
                 />
               )
             })}
-        </Assets>
+        </AssetsList>
       </Wrapper>
     ) : (
       <>There was an error retrieveing data...</>

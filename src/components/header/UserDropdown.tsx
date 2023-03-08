@@ -2,8 +2,11 @@ import styled from 'styled-components'
 
 import { Logout } from '@/src/components/assets/Logout'
 import { ButtonPrimary } from '@/src/components/buttons/Button'
-import { DropdownPosition } from '@/src/components/common/Dropdown'
-import { Dropdown as BaseDropdown } from '@/src/components/common/Dropdown'
+import {
+  Dropdown as BaseDropdown,
+  DropdownPosition,
+  ItemProps,
+} from '@/src/components/common/Dropdown'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { truncateStringInTheMiddle } from '@/src/utils/strings'
 
@@ -30,7 +33,7 @@ const Button = styled(ButtonPrimary)`
   white-space: nowrap;
 `
 
-const Item = styled.div`
+const Item = styled.div<ItemProps>`
   align-items: center;
   border-bottom: 1px solid
     ${({
@@ -38,11 +41,7 @@ const Item = styled.div`
         dropdown: { item },
       },
     }) => item.borderColor};
-  color: ${({
-    theme: {
-      dropdown: { item },
-    },
-  }) => item.color};
+  color: ${({ theme: { colors } }) => colors.textColor};
   column-gap: 10px;
   cursor: pointer;
   display: flex;
@@ -52,16 +51,13 @@ const Item = styled.div`
   line-height: 1.2;
   overflow: hidden;
   padding: 8px 12px;
+  text-decoration: none;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
 
   &:hover {
-    background-color: ${({
-      theme: {
-        dropdown: { item },
-      },
-    }) => item.backgroundColorHover};
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
   &:first-child {
@@ -76,11 +72,7 @@ const Item = styled.div`
   }
 
   path.fill {
-    fill: ${({
-      theme: {
-        dropdown: { item },
-      },
-    }) => item.color};
+    fill: ${({ theme: { colors } }) => colors.textColor};
   }
 `
 

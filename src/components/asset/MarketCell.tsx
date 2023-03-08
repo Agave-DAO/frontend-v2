@@ -45,33 +45,47 @@ const MarketCellValue = styled.div`
   color: ${({ theme: { colors } }) => colors.textColor};
   column-gap: 4px;
   display: flex;
+  flex-wrap: wrap;
   font-size: 1.6rem;
   font-weight: 700;
   line-height: 1.2;
   margin: auto 0 0 0;
-  flex-wrap: wrap;
 `
 
-export const MarketRows = styled.div<{ isOpen?: boolean }>`
+// make collapsible version!!1111
+export const MarketRows = styled.div`
   --market-rows-row-gap: 8px;
+  --container-height: 160px;
 
   display: flex;
   flex-direction: column;
   row-gap: var(--market-rows-row-gap);
-  transition: all 0.25s linear;
+`
+
+export const MarketRowsCollapsable = styled(MarketRows)<{ isOpen?: boolean }>`
+  transition: all 0.15s linear;
+
+  > * {
+    opacity: 0;
+    transition: opacity 0.25s linear;
+  }
 
   ${({ isOpen }) =>
-    !isOpen
+    isOpen
       ? css`
-          max-height: 0;
-          overflow: hidden;
+          max-height: 90px;
+
+          > * {
+            opacity: 1;
+          }
         `
       : css`
-          max-height: 200px;
+          max-height: 0;
+          overflow: hidden;
         `}
 `
 
-MarketRows.defaultProps = {
+MarketRowsCollapsable.defaultProps = {
   isOpen: true,
 }
 

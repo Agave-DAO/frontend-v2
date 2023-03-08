@@ -68,10 +68,10 @@ interface ItemsProps {
 const Items = styled.div<ItemsProps>`
   background-color: ${({ theme: { dropdown } }) => dropdown.background};
   border-radius: ${({ theme: { dropdown } }) => dropdown.borderRadius};
-  border: 1px solid ${({ theme: { dropdown } }) => dropdown.borderColor};
   box-shadow: ${({ theme: { dropdown } }) => dropdown.boxShadow};
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
-  min-width: 90px;
+  min-width: 140px;
+  padding: 4px;
   position: absolute;
   white-space: nowrap;
 
@@ -128,14 +128,14 @@ export const DropdownItemCSS = css<ItemProps>`
   border-bottom: 1px solid ${({ theme: { dropdown } }) => dropdown.item.borderColor};
   cursor: pointer;
   display: flex;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 400;
   gap: 10px;
   justify-content: ${({ justifyContent }) => justifyContent};
   line-height: 1.4;
-  min-height: 30px;
+  min-height: 28px;
   overflow: hidden;
-  padding: 0 12px;
+  padding: 0 8px;
   text-decoration: none;
   transition: background-color 0.15s linear;
   user-select: none;
@@ -209,7 +209,7 @@ DropdownItem.defaultProps = {
   justifyContent: 'flex-start',
 }
 
-interface Props extends DOMAttributes<HTMLDivElement>, HTMLAttributes<HTMLDivElement> {
+export interface Props extends DOMAttributes<HTMLDivElement>, HTMLAttributes<HTMLDivElement> {
   activeItemHighlight?: boolean | undefined
   className?: string
   disabled?: boolean

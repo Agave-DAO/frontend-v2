@@ -7,9 +7,10 @@ import {
   Wrapper as MarketCellWrapper,
   MarketRow,
   MarketRows,
+  MarketRowsCollapsable,
 } from '@/src/components/asset/MarketCell'
-import { TokenPair } from '@/src/components/asset/TokenPair'
 import { ButtonToggleInfo } from '@/src/components/buttons/ButtonToggleInfo'
+import { RewardPair } from '@/src/components/common/RewardPair'
 
 const MarketCellPlaceholder = styled(MarketCellWrapper)``
 
@@ -50,18 +51,18 @@ export const MarketBody: React.FC<Props> = ({
             <MarketCell data={borrowVariableAPR} />
             <MarketCell data={borrowStableAPR} />
           </MarketRow>
-          <MarketRows isOpen={isOpen}>
+          <MarketRowsCollapsable isOpen={isOpen}>
             <MarketRow>
               <MarketCell data={depositBaseRate} />
               <MarketCell data={borrowBaseRate} />
               <MarketCellPlaceholder />
             </MarketRow>
             <MarketRow>
-              <MarketCell data={{ ...depositIncentivesRate, extraInfo: <TokenPair /> }} />
-              <MarketCell data={{ ...borrowIncentivesRate, extraInfo: <TokenPair /> }} />
+              <MarketCell data={{ ...depositIncentivesRate, extraInfo: <RewardPair /> }} />
+              <MarketCell data={{ ...borrowIncentivesRate, extraInfo: <RewardPair /> }} />
               <MarketCellPlaceholder />
             </MarketRow>
-          </MarketRows>
+          </MarketRowsCollapsable>
         </MarketRows>
         <ButtonToggleInfo isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
       </MarketBodyActionWrapper>

@@ -23,7 +23,7 @@ export const common = {
     dimensions: radioAndCheckDimensions,
   },
   dropdown: {
-    borderRadius: borderRadius,
+    borderRadius: '8px',
   },
   header: {
     height: '46px',

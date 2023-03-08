@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 
-import { ButtonClaim } from '@/src/components/buttons/ButtonClaim'
+import { RewardPair } from '@/src/components/common/RewardPair'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
-import { useClaimRewards } from '@/src/hooks/mutations/useClaimRewards'
 import { useUserRewards } from '@/src/hooks/presentation/useUserRewards'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { fromWei } from '@/src/utils/common'
@@ -122,17 +121,16 @@ const RewardsBalance = styled.div`
   }
 `
 
-export const UserRewards: React.FC = ({ ...restProps }) => {
+export const UserBalanceSummary: React.FC = ({ ...restProps }) => {
   const { address: userAddress } = useWeb3ConnectedApp()
   const { rewardsBalance, totalValue } = useUserRewards(userAddress)
-  const claimRewards = useClaimRewards(userAddress)
   const noRewards = rewardsBalance.isZero()
   const noFunds = totalValue.isZero()
 
   return (
     <Wrapper {...restProps}>
       <Row>
-        <Text>Account</Text>
+        <Text>Approximate balance</Text>
         <AccountBalance>
           <Balance>
             {noFunds ? '$0.00' : <Amount displayDecimals={3} value={fromWei(totalValue)} />}
@@ -144,17 +142,17 @@ export const UserRewards: React.FC = ({ ...restProps }) => {
       </Row>
       <Row>
         <Text>
-          Claim your rewards <Tooltip content="Some text here!" />
+          Rewards <Tooltip content="Some text here!" />
         </Text>
         <Rewards>
           <RewardsBalance>
             {noRewards ? '$0.00' : <Amount displayDecimals={3} value={rewardsBalance} />}
           </RewardsBalance>
-          <ButtonClaim disabled={noRewards} tx={claimRewards} />
+          <RewardPair size={18} />
         </Rewards>
       </Row>
     </Wrapper>
   )
 }
 
-export default withGenericSuspense(UserRewards)
+export default withGenericSuspense(UserBalanceSummary)

@@ -38,8 +38,8 @@ export const HomeTabs: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, .
     <Wrapper isConnected={isConnected} {...restProps}>
       {isConnected && (
         <Tabs>
-          <Tab href="/my-account">My account</Tab>
           <Tab href="/">All markets</Tab>
+          <Tab href="/my-account">My account</Tab>
         </Tabs>
       )}
       <Contents>{children}</Contents>

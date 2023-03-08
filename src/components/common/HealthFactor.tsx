@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 
 import { BigNumber } from 'ethers'
-import { parseInt } from 'lodash'
 
-import { Amount } from '@/src/components/helpers/Amount'
-import { SymbolPosition, formatAmount } from '@/src/utils/common'
+import { HealthFactor as HFHelper } from '@/src/components/helpers/HealthFactor'
+import { fromWei } from '@/src/utils/common'
 
 const Wrapper = styled.div`
   column-gap: 2px;
@@ -66,11 +65,11 @@ export const HealthFactor: React.FC<{ value: BigNumber }> = ({ value, ...restPro
    * I'm gonna fake a range between 0 and 2 for this 'progress' thing.
    * Any value above 2 is changed to 2. The correct value (which could be anything) is displayed to the right, anyway.
    */
-  const maxProgress = 2
-  const formattedValue = parseFloat(formatAmount(value, 2, ''))
-  const sanitizedValue =
-    formattedValue < 0 ? 0 : formattedValue > maxProgress ? maxProgress : formattedValue
-  const progress = (sanitizedValue * 100) / maxProgress
+  const formatted = fromWei(value)
+  const maxValue = BigNumber.from(2)
+  const sanitizedValue = formatted.gt(maxValue) ? maxValue : formatted
+  const progress = sanitizedValue.mul(100).div(maxValue).toNumber()
+
   /**
    * I'm forcing the minimum and maximum percentages only for display purposes.
    * Any number above or below these values will make the arrow go out of the progress bar.
@@ -78,17 +77,13 @@ export const HealthFactor: React.FC<{ value: BigNumber }> = ({ value, ...restPro
   const minPercentage = 2
   const maxPercentage = 98
   const sanitizedProgress =
-    progress < minPercentage || isNaN(formattedValue)
-      ? minPercentage
-      : progress > maxPercentage
-      ? maxPercentage
-      : progress
+    progress < minPercentage ? minPercentage : progress > maxPercentage ? maxPercentage : progress
 
   return (
     <Wrapper {...restProps}>
       <ProgressBar progress={sanitizedProgress} />
       <Value>
-        <Amount displayDecimals={2} symbol={''} value={value} />
+        <HFHelper value={value} />
       </Value>
     </Wrapper>
   )
