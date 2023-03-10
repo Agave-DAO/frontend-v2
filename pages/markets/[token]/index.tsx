@@ -210,7 +210,6 @@ const MarketDetails: React.FC = withGenericSuspense(
     </>
   ),
 )
-
 // generate the actions html files for each market
 export async function getStaticPaths() {
   // Get the list of markets
@@ -235,6 +234,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: { params: { token: string; action: string } }) {
   const { token } = params
+  // TODO - we need to add the tokens for both market versions here
   const tokenExists = agaveTokens.reserveTokens.find(
     (t) => t.symbol === token || t.address === token,
   )
