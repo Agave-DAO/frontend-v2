@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 import { HealthFactor } from '@/src/components/common/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
+import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
@@ -116,7 +117,7 @@ export const UserAccountSummary: React.FC = withGenericSuspense(
           <InfoRow>
             <Label>LTV</Label>
             <Value>
-              <Amount displayDecimals={3} value={currentLTV} />
+              <Percentage decimals={18} value={currentLTV} />
             </Value>
           </InfoRow>
         </Info>

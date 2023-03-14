@@ -112,7 +112,7 @@ export const MyRewards: React.FC = withGenericSuspense(({ ...restProps }) => {
         <Label>Rewards</Label>
         <Reward>
           <RewardValue>
-            {noRewards ? '0.00' : <Amount displayDecimals={3} symbol="" value={rewardsBalance} />}
+            {noRewards ? '0.00' : <Amount displayDecimals={5} symbol="" value={rewardsBalance} />}
           </RewardValue>
           <Percentage>
             40%

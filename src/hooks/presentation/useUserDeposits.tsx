@@ -11,6 +11,7 @@ export type UserDeposit = {
   depositedAmount: BigNumber
   depositedAmountInDAI: BigNumber
   depositRate: BigNumber
+  incentiveRate: BigNumber
   asCollateral: boolean
 }
 
@@ -22,7 +23,7 @@ export type UserDeposit = {
 export const useUserDeposits = (): UserDeposit[] => {
   const { data: userReservesData } = useGetUserReservesData()
 
-  const { agaveMarketsData, getDepositAPY } = useMarketsData()
+  const { agaveMarketsData, getDepositAPY, getIncentiveRate } = useMarketsData()
 
   if (!userReservesData || !agaveMarketsData) {
     return []
@@ -52,6 +53,7 @@ export const useUserDeposits = (): UserDeposit[] => {
           userReserveData.currentATokenBalance.mul(marketData.priceData),
           decimals,
         ),
+        incentiveRate: getIncentiveRate(reserveAddress, 'ag'),
         depositRate: getDepositAPY(reserveAddress),
         asCollateral: userReserveData.usageAsCollateralEnabled,
       }

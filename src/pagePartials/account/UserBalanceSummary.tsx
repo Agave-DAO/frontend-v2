@@ -4,6 +4,7 @@ import { RewardPair } from '@/src/components/common/RewardPair'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
+import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
 import { useUserRewards } from '@/src/hooks/presentation/useUserRewards'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { fromWei } from '@/src/utils/common'
@@ -123,9 +124,9 @@ const RewardsBalance = styled.div`
 
 export const UserBalanceSummary: React.FC = ({ ...restProps }) => {
   const { address: userAddress } = useWeb3ConnectedApp()
-  const { rewardsBalance, totalValue } = useUserRewards(userAddress)
-  const noRewards = rewardsBalance.isZero()
-  const noFunds = totalValue.isZero()
+  const { userDeposits, userRewards } = useUserAccountDetails(userAddress)
+  const noRewards = userRewards.isZero()
+  const noDeposits = userDeposits.isZero()
 
   return (
     <Wrapper {...restProps}>
@@ -133,7 +134,7 @@ export const UserBalanceSummary: React.FC = ({ ...restProps }) => {
         <Text>Approximate balance</Text>
         <AccountBalance>
           <Balance>
-            {noFunds ? '$0.00' : <Amount displayDecimals={3} value={fromWei(totalValue)} />}
+            {noDeposits ? '$0.00' : <Amount displayDecimals={3} value={userDeposits} />}
           </Balance>
           <Tooltip content="Some text here!">
             <TooltipIcon />
@@ -146,7 +147,7 @@ export const UserBalanceSummary: React.FC = ({ ...restProps }) => {
         </Text>
         <Rewards>
           <RewardsBalance>
-            {noRewards ? '$0.00' : <Amount displayDecimals={3} value={rewardsBalance} />}
+            {noRewards ? '$0.00' : <Amount displayDecimals={5} value={userRewards} />}
           </RewardsBalance>
           <RewardPair size={18} />
         </Rewards>

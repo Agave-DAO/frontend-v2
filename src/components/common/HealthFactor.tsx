@@ -83,7 +83,7 @@ export const HealthFactor: React.FC<{ value: BigNumber }> = ({ value, ...restPro
     <Wrapper {...restProps}>
       <ProgressBar progress={sanitizedProgress} />
       <Value>
-        <HFHelper value={value} />
+        <HFHelper displayDecimals={2} value={value} />
       </Value>
     </Wrapper>
   )

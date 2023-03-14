@@ -66,14 +66,14 @@ const depositActions: UserActions = {
   },
   grouped: [
     { label: 'Withdraw', target: (tokenAddress: string) => `/markets/${tokenAddress}/withdraw` },
-    {
-      label: 'Swap',
-      target: (tokenAddress: string) => `/swap/${tokenAddress}`,
-    },
-    {
-      label: 'Strategies',
-      target: (tokenAddress: string) => `/strategies/${tokenAddress}`,
-    },
+    // {
+    //   label: 'Swap',
+    //   target: (tokenAddress: string) => `/swap/${tokenAddress}`,
+    // },
+    // {
+    //   label: 'Strategies',
+    //   target: (tokenAddress: string) => `/strategies/${tokenAddress}`,
+    // },
   ],
 }
 

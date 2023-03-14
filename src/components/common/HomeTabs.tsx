@@ -1,6 +1,8 @@
+import Link from 'next/link'
 import { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
+import { NavLink } from '../navigation/NavLink'
 import { Tabs as BaseTabs, TabLink as Tab } from '@/src/components/tabs/Tabs'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
@@ -38,8 +40,12 @@ export const HomeTabs: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, .
     <Wrapper isConnected={isConnected} {...restProps}>
       {isConnected && (
         <Tabs>
-          <Tab href="/">All markets</Tab>
-          <Tab href="/my-account">My account</Tab>
+          <Tab href="/" scroll={false} shallow>
+            All markets
+          </Tab>
+          <Tab href="/my-account" scroll={false} shallow>
+            My account
+          </Tab>
         </Tabs>
       )}
       <Contents>{children}</Contents>

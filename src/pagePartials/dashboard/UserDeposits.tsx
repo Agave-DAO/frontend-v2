@@ -29,39 +29,47 @@ const UserDepositsList = withGenericSuspense(
     ) : (
       <>
         {userDeposits.map(
-          ({ asCollateral, assetAddress, depositRate, depositedAmount, depositedAmountInDAI }) => {
+          ({
+            asCollateral,
+            assetAddress,
+            depositRate,
+            depositedAmount,
+            depositedAmountInDAI,
+            incentiveRate,
+          }) => {
             const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
             const items = [
               {
                 text: 'Withdraw',
                 onClick: () => router.push(`/markets/${symbol}/withdraw`),
               },
-              {
-                text: 'Swap',
-                onClick: () => console.log('nothing yet'),
-              },
-              {
-                text: 'Strategies',
-                onClick: () => console.log('nothing yet'),
-              },
+              // {
+              //   text: 'Swap',
+              //   onClick: () => console.log('nothing yet'),
+              // },
+              // {
+              //   text: 'Strategies',
+              //   onClick: () => console.log('nothing yet'),
+              // },
             ]
 
             return (
               <UserAsset
                 baseRate={depositRate}
-                incentivesRate={depositRate}
+                incentivesRate={incentiveRate}
                 key={`${assetAddress}-deposit`}
                 tokenAddress={assetAddress}
                 tokenValue={
                   <Amount
                     decimals={decimals}
+                    displayDecimals={3}
                     symbol={symbol}
                     symbolPosition="after"
                     value={depositedAmount}
                   />
                 }
-                totalAPY={depositRate}
-                usdValue={<Amount value={depositedAmountInDAI} />}
+                totalAPY={depositRate.add(incentiveRate)}
+                usdValue={<Amount displayDecimals={3} value={depositedAmountInDAI} />}
                 useAsCollateral={asCollateral}
               >
                 <ActionsWrapper>
