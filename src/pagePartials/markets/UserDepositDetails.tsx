@@ -1,95 +1,136 @@
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
-import { BaseCard } from '@/src/components/common/BaseCard'
+import { BigNumber } from 'ethers'
+
+import { ActionButton } from '@/src/components/buttons/ActionButton'
+import { HealthFactor } from '@/src/components/common/HealthFactor'
+import { InnerCard } from '@/src/components/common/InnerCard'
+import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
+import { EmphasizedRowValue, Row, RowKey, RowValue, Rows } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
+import { Text as ECText, Title as ECTitle } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
-import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
+import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { Loading } from '@/src/components/loading/Loading'
-import { BaseTitle } from '@/src/components/text/BaseTitle'
+import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
+import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDepositsInformationByToken } from '@/src/hooks/presentation/useUserDepositsInformationByToken'
-import { UserActions, UserDetailsActions } from '@/src/pagePartials/markets/UserDetailsActions'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { toWei } from '@/src/utils/common'
 
-const Grid = styled(SimpleGrid)`
-  justify-content: center;
-`
-const Column = styled(SimpleGrid)`
-  flex-direction: column;
-`
-const TokenWithSymbol = styled(SimpleGrid)`
-  column-gap: 8px;
-`
-
-function UserDepositsImp({
-  tokenAddress,
-  userAddress,
-}: {
+const UserDepositsImp: React.FC<{
   tokenAddress: string
   userAddress: string
-}) {
+}> = ({ tokenAddress, userAddress, ...restProps }) => {
   const { balance, depositedAmount, userHasDeposits } = useUserDepositsInformationByToken({
     tokenAddress,
     userAddress,
   })
   const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
 
-  if (!userHasDeposits) {
-    return <div>No deposits</div>
-  }
-
-  return (
-    <Column>
-      <Grid>
-        <div>Your wallet balance</div>
-        <TokenWithSymbol>
-          <TokenIcon symbol={symbol} />
-          <Amount decimals={decimals} symbol="" value={balance} />
-        </TokenWithSymbol>
-      </Grid>
-      <Grid>
-        <div>You already deposited</div>
-        <TokenWithSymbol>
-          <TokenIcon symbol={symbol} />
-          <Amount decimals={decimals} symbol="" value={depositedAmount} />
-        </TokenWithSymbol>
-      </Grid>
-    </Column>
+  return userHasDeposits ? (
+    <Rows {...restProps}>
+      <Row variant="dark">
+        <RowKey>Your wallet balance</RowKey>
+        <RowValue>
+          <TokenIcon dimensions={18} symbol={symbol} />
+          <EmphasizedRowValue>
+            <Amount decimals={decimals} symbol="" value={balance} />
+          </EmphasizedRowValue>
+        </RowValue>
+      </Row>
+      <Row>
+        <RowKey>You already deposited</RowKey>
+        <RowValue>
+          <TokenIcon dimensions={18} symbol={symbol} />
+          <EmphasizedRowValue>
+            <Amount decimals={decimals} symbol="" value={depositedAmount} />
+          </EmphasizedRowValue>
+        </RowValue>
+      </Row>
+      <Row variant="dark">
+        <RowKey>
+          Health factor <Tooltip content="Some text here!" />
+        </RowKey>
+        <RowValue>
+          <HealthFactor badgeVariant="light" dark size="sm" value={toWei(BigNumber.from(50), 16)} />
+        </RowValue>
+      </Row>
+    </Rows>
+  ) : (
+    <></>
   )
 }
 
-const depositActions: UserActions = {
-  primary: {
-    label: 'Deposit',
-    target: (tokenAddress: string) => `/markets/${tokenAddress}/deposit`,
-  },
-  grouped: [
-    { label: 'Withdraw', target: (tokenAddress: string) => `/markets/${tokenAddress}/withdraw` },
-    // {
-    //   label: 'Swap',
-    //   target: (tokenAddress: string) => `/swap/${tokenAddress}`,
-    // },
-    // {
-    //   label: 'Strategies',
-    //   target: (tokenAddress: string) => `/strategies/${tokenAddress}`,
-    // },
-  ],
-}
+const Wrapper = styled.div``
+
+const Top = styled(InnerCard)`
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+`
+
+const Bottom = styled(InnerCard)`
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+`
+
+const Title = styled(InnerTitle)`
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+  padding-top: 16px;
+`
 
 export const UserDepositDetails = withGenericSuspense(
-  function UserDeposits({ tokenAddress }: { tokenAddress: string }) {
+  ({ tokenAddress, ...restProps }: { tokenAddress: string }) => {
     const { address: userAddress } = useWeb3ConnectedApp()
+    const { userHasDeposits } = useUserDepositsInformationByToken({
+      tokenAddress,
+      userAddress,
+    })
+    const router = useRouter()
+    const items = [
+      {
+        text: 'Withdraw',
+        onClick: () => router.push(`/markets/${tokenAddress}/withdraw`),
+      },
+      // {
+      //   text: 'Swap',
+      //   onClick: () => router.push(`/swap/${tokenAddress}`),
+      // },
+      // {
+      //   text: 'Strategies',
+      //   onClick: () => router.push(`/strategies/${tokenAddress}`),
+      // },
+    ]
+
     return (
-      <BaseCard>
-        <BaseTitle>Deposits</BaseTitle>
-        <UserDepositsImp tokenAddress={tokenAddress} userAddress={userAddress} />
-        <UserDetailsActions
-          grouped={depositActions.grouped}
-          primary={depositActions.primary}
-          tokenAddress={tokenAddress}
-        />
-      </BaseCard>
+      <Wrapper {...restProps}>
+        <Top>
+          <Title>Deposits</Title>
+          {userHasDeposits ? (
+            <UserDepositsImp tokenAddress={tokenAddress} userAddress={userAddress} />
+          ) : (
+            <>
+              <ECTitle>Nothing deposited yet</ECTitle>
+              <ECText>
+                Your account is empty. Move cryptocurrency from your wallet and start earning
+                interest.
+              </ECText>
+            </>
+          )}
+        </Top>
+        <Bottom>
+          <ActionsWrapper>
+            <MoreActionsDropdown disabled={!userHasDeposits} items={items} size="lg" />
+            <ActionButton onClick={() => router.push(`/markets/${tokenAddress}/deposit`)}>
+              Deposit
+            </ActionButton>
+          </ActionsWrapper>
+        </Bottom>
+      </Wrapper>
     )
   },
   () => <Loading text="Fetching user deposits..." />,

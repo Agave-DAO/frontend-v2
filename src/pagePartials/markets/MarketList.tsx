@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Market } from '@/src/components/asset/Market'
@@ -9,8 +9,9 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { AssetsList } from '@/src/components/layout/AssetsList'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
-import { fromWei } from '@/src/utils/common'
+import { formatAmount, fromWei } from '@/src/utils/common'
 
 const Wrapper = styled.div`
   display: flex;
@@ -38,11 +39,12 @@ const WelcomeText = styled.p`
 
 const SearchWrapper = styled.div`
   order: 1;
-  margin: 0 auto 16px;
+  margin: 0 auto 32px;
   position: relative;
   width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    margin-bottom: 16px;
     max-width: 734px;
     order: 0;
   }
@@ -63,13 +65,77 @@ const Magnifier = styled(SVG)`
   z-index: 5;
 `
 
+const MarketSize = styled.div`
+  align-items: center;
+  background: ${({ theme: { colors } }) => colors.mainDark440};
+  border-radius: 16px;
+  border: 1px solid ${({ theme: { colors } }) => colors.darkGreen50};
+  display: flex;
+  height: 50px;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  order: 2;
+  padding: 0 16px;
+  width: 100%;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    border-radius: 60px;
+    column-gap: 16px;
+    height: 53px;
+    margin: 0 auto 24px;
+    padding: 0 32px;
+    width: fit-content;
+  }
+`
+
+const MarketSizeLabel = styled.span`
+  color: ${({ theme: { colors } }) => colors.white60};
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.2;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    font-size: 1.4rem;
+  }
+`
+
+const MarketSizeValue = styled.span`
+  color: ${({ theme: { colors } }) => colors.textColor};
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    font-size: 2.1rem;
+  }
+`
+
 export const MarketList: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
-    const { agaveMarketsData, getBorrowRate, getDepositAPY, getIncentiveRate, getTotalBorrowed } =
-      useMarketsData()
+    const {
+      agaveMarketsData,
+      getBorrowRate,
+      getDepositAPY,
+      getIncentiveRate,
+      getMarketSize,
+      getTotalBorrowed,
+    } = useMarketsData()
     const [search, setSearch] = useState('')
+    const markets = agaveMarketsData
+      ? agaveMarketsData.filter(({ assetData: { isFrozen } }) => !isFrozen)
+      : undefined
+    const totalMarketSize = useMemo(
+      () =>
+        markets
+          ? markets.reduce(
+              (currentTotal, { tokenAddress }) => currentTotal.add(getMarketSize(tokenAddress)),
+              ZERO_BN,
+            )
+          : undefined,
+      [getMarketSize, markets],
+    )
 
-    return agaveMarketsData ? (
+    return markets ? (
       <Wrapper {...restProps}>
         <WelcomeText>Move cryptocurrency from your wallet and start earning interest.</WelcomeText>
         <SearchWrapper>
@@ -80,10 +146,14 @@ export const MarketList: React.FC = withGenericSuspense(
           />
           <Magnifier />
         </SearchWrapper>
+        {totalMarketSize && (
+          <MarketSize>
+            <MarketSizeLabel>Current Market size</MarketSizeLabel>
+            <MarketSizeValue>{formatAmount(totalMarketSize)}</MarketSizeValue>
+          </MarketSize>
+        )}
         <AssetsList>
-          {agaveMarketsData
-            // no frozen markets
-            .filter(({ assetData: { isFrozen } }) => !isFrozen)
+          {markets
             // pretty shitty search filter (improve when possible)
             .filter(({ tokenAddress }) => {
               const { symbol } = agaveTokens.getTokenByAddress(tokenAddress)

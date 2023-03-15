@@ -9,7 +9,6 @@ import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 const Wrapper = styled.div<{ isConnected: boolean }>`
   display: flex;
   margin: 0 auto 64px;
-  min-height: 469px;
   width: 100%;
 
   ${({ isConnected }) =>

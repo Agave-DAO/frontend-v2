@@ -2,6 +2,7 @@ import Link from 'next/link'
 import styled from 'styled-components'
 
 import { Head, HeadContents, Icon } from '@/src/components/asset/Asset'
+import { AssetTitle } from '@/src/components/asset/AssetTitle'
 import { AssetValue, Props as AssetValueProps } from '@/src/components/asset/AssetValue'
 import { AGoTo as BaseAGoTo } from '@/src/components/buttons/ButtonGoTo'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
@@ -31,6 +32,7 @@ export const MarketHead: React.FC<Props> = ({
         <TokenIcon dimensions={36} symbol={symbol} />
       </Icon>
       <HeadContents>
+        <AssetTitle>Market Size</AssetTitle>
         <AssetValue tokenValue={tokenValue} usdValue={usdValue} />
       </HeadContents>
       <Link href={href} legacyBehavior passHref>

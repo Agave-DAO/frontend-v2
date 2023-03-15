@@ -1,91 +1,275 @@
+import { createRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { BaseCard } from '@/src/components/common/BaseCard'
+import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
+
+import { Icon as BaseIcon } from '@/src/components/asset/Asset'
+import { InnerCard } from '@/src/components/common/InnerCard'
+import { Rows as BaseRows, Row, RowKey, RowValue } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
-import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
-import { BaseTitle } from '@/src/components/text/BaseTitle'
+import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useMarketDetails } from '@/src/hooks/presentation/useMarketDetails'
 
-const Grid = styled(SimpleGrid)`
-  justify-content: center;
+const ChartWrapper = styled.div`
+  position: relative;
 `
 
-const Column = styled(SimpleGrid)`
+const ChartWithIcon = styled.div<{ baseChartSize: number }>`
+  --chart-size: ${({ baseChartSize }) => baseChartSize}px;
+
+  height: var(--chart-size);
+  margin: 0 auto 24px;
+  position: relative;
+  width: var(--chart-size);
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    --chart-size: 214px;
+
+    margin-bottom: 0;
+  }
+`
+
+const Icon = styled(BaseIcon)`
+  --icon-size: 40px;
+
+  border-radius: 50%;
+  height: var(--icon-size);
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--icon-size);
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    --icon-size: 77px;
+  }
+`
+
+const Legends = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+`
+
+const LegendColor = styled.div<{ color: string }>`
+  --legend-color-size: 16px;
+
+  background-color: ${({ color }) => color};
+  border-radius: 50%;
+  height: var(--legend-color-size);
+  margin-bottom: 8px;
+  width: var(--legend-color-size);
+`
+
+const LegendWrapper = styled.div`
+  &:nth-child(2) {
+    ${LegendColor} {
+      margin-left: auto;
+
+      @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+        margin: 0;
+        order: 2;
+      }
+    }
+  }
+`
+
+const Legend = styled.div`
+  display: flex;
   flex-direction: column;
+  margin-bottom: 16px;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+    column-gap: 8px;
+    flex-direction: row;
+    margin-bottom: 24px;
+  }
 `
 
-const TokenWithSymbol = styled(SimpleGrid)`
+const LegendLabel = styled.div`
+  color: ${({ theme: { colors } }) => colors.textColor};
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.2;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+    font-size: 1.6rem;
+  }
+`
+
+const USDAmount = styled.div`
+  color: ${({ theme: { colors } }) => colors.textColor};
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 4px;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+    font-size: 1.8rem;
+  }
+`
+
+const TokenAmount = styled.div`
+  align-items: center;
+  color: ${({ theme: { colors } }) => colors.textColor};
   column-gap: 8px;
+  display: flex;
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.2;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+    font-size: 1.6rem;
+  }
 `
 
-export function ReserveStatus({ tokenAddress }: { tokenAddress: string }) {
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  const { borrowed, liquidity, reserveSize, utilizationRate } = useMarketDetails(tokenAddress)
+type Value = {
+  price: BigNumber
+  wei: BigNumber
+}
+
+type ChartValues = {
+  numberValue: number
+  rawValue: Value
+  title: string
+}
+
+const Chart: React.FC<{
+  availableLiquidity: Value
+  decimals: number
+  tokenSymbol: string
+  totalBorrowed: Value
+}> = ({ availableLiquidity, decimals, tokenSymbol, totalBorrowed }) => {
+  const toNumber = (value: BigNumber) => FixedNumber.fromValue(value, decimals).toUnsafeFloat()
+
+  const data: ChartValues[] = [
+    {
+      numberValue: toNumber(availableLiquidity.wei),
+      rawValue: availableLiquidity,
+      title: 'Available Liquidity',
+    },
+    {
+      numberValue: toNumber(totalBorrowed.wei),
+      rawValue: totalBorrowed,
+      title: 'Total Borrowed',
+    },
+  ]
+  const chartColors = ['#BCF298', '#40B3B3']
+  const baseChartSize = 98
+  const baseOuterRadius = baseChartSize / 2
+  const node = createRef<HTMLDivElement>()
+  const [outerRadius, setOuterRadius] = useState(baseOuterRadius)
+  const innerRadius = outerRadius <= 49 ? outerRadius - 22 : outerRadius - 50
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (node) {
+        const { current } = node as any
+
+        if (current) {
+          const { clientWidth } = current
+          setOuterRadius(clientWidth / 2)
+        }
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    handleResize()
+  }, [node])
 
   return (
-    <BaseCard>
-      <BaseTitle>Reserve Status</BaseTitle>
-      <AGorgeousChart borrowedPercentage={borrowed.percentage} />
-      <Grid>
-        <Column>
-          <div>Available Liquidity</div>
-          <strong>
-            <Amount decimals={18} value={liquidity.price} />
-          </strong>
-          <TokenWithSymbol>
-            <TokenIcon symbol={tokenInfo.symbol} />
-            <Amount decimals={tokenInfo.decimals} symbol="" value={liquidity.wei} />
-          </TokenWithSymbol>
-        </Column>
-        <Column>
-          <div>Total Borrowed</div>
-          <strong>
-            <Amount value={borrowed.price} />
-          </strong>
-          <TokenWithSymbol>
-            <TokenIcon symbol={tokenInfo.symbol} />
-            <Amount decimals={tokenInfo.decimals} symbol="" value={borrowed.wei} />
-          </TokenWithSymbol>
-        </Column>
-      </Grid>
-      <Column>
-        <Grid>
-          <div>Reserve Size</div>
-          <Amount value={reserveSize.price} />
-        </Grid>
-        <Grid>
-          <div>Utilization Rate</div>
-          <div>{utilizationRate}%</div>
-        </Grid>
-      </Column>
-    </BaseCard>
+    <ChartWrapper>
+      <ChartWithIcon baseChartSize={baseChartSize} ref={node}>
+        <ResponsiveContainer>
+          <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
+            <Pie
+              data={data}
+              dataKey="numberValue"
+              innerRadius={innerRadius}
+              outerRadius={outerRadius}
+              stroke="none"
+            >
+              {data.map((entry, index) => (
+                <Cell fill={chartColors[index % chartColors.length]} key={`cell-${index}`} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+        <Icon symbol={tokenSymbol}>
+          <TokenIcon dimensions={40} symbol={tokenSymbol} />
+        </Icon>
+      </ChartWithIcon>
+      <Legends>
+        {data.map(({ title }, index) => (
+          <LegendWrapper key={index}>
+            <Legend>
+              <LegendColor color={chartColors[index % chartColors.length]} />
+              <LegendLabel>{title}</LegendLabel>
+            </Legend>
+            <USDAmount>
+              <Amount decimals={18} value={data[index].rawValue.price} />
+            </USDAmount>
+            <TokenAmount>
+              <TokenIcon dimensions={18} symbol={tokenSymbol} />
+              <Amount decimals={decimals} symbol="" value={data[index].rawValue.wei} />
+            </TokenAmount>
+          </LegendWrapper>
+        ))}
+      </Legends>
+    </ChartWrapper>
   )
 }
 
-function AGorgeousChart({ borrowedPercentage }: { borrowedPercentage: number }) {
+const Wrapper = styled(InnerCard)`
+  padding-top: 24px;
+`
+
+const Title = styled(InnerTitle)`
+  margin-bottom: 32px;
+`
+
+const Rows = styled(BaseRows)`
+  margin-top: 32px;
+`
+
+export const ReserveStatus: React.FC<{ tokenAddress: string }> = ({
+  tokenAddress,
+  ...restProps
+}) => {
+  const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
+  const { borrowed, liquidity, reserveSize, utilizationRate } = useMarketDetails(tokenAddress)
+
   return (
-    <Grid>
-      <div>
-        <div
-          style={{
-            width: '100px',
-            background: 'lightblue',
-            height: '10px',
-            display: 'flex',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <div
-            style={{
-              width: `${borrowedPercentage}px`,
-              background: 'green',
-              height: '10px',
-            }}
-          />
-        </div>
-      </div>
-    </Grid>
+    <Wrapper {...restProps}>
+      <Title>Reserve Status</Title>
+      <Chart
+        availableLiquidity={liquidity}
+        decimals={decimals}
+        tokenSymbol={symbol}
+        totalBorrowed={borrowed}
+      />
+      <Rows>
+        <Row variant="light">
+          <RowKey>Reserve Size</RowKey>
+          <RowValue>
+            <Amount value={reserveSize.price} />
+          </RowValue>
+        </Row>
+        <Row variant="light">
+          <RowKey>Utilization Rate</RowKey>
+          <RowValue>{utilizationRate}%</RowValue>
+        </Row>
+      </Rows>
+    </Wrapper>
   )
 }

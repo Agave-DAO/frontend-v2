@@ -101,7 +101,7 @@ const ButtonDark = styled(BaseButtonDark)`
 
 export const MyRewards: React.FC = withGenericSuspense(({ ...restProps }) => {
   const { address: userAddress } = useWeb3ConnectedApp()
-  const { rewardsBalance, totalValue } = useUserRewards(userAddress)
+  const { rewardsBalance, totalValue, unclaimedRewardsFormatted } = useUserRewards(userAddress)
 
   const noRewards = rewardsBalance.isZero()
   const claimRewards = useClaimRewards(userAddress)
@@ -111,9 +111,7 @@ export const MyRewards: React.FC = withGenericSuspense(({ ...restProps }) => {
       <Info>
         <Label>Rewards</Label>
         <Reward>
-          <RewardValue>
-            {noRewards ? '0.00' : <Amount displayDecimals={5} symbol="" value={rewardsBalance} />}
-          </RewardValue>
+          <RewardValue>{noRewards ? '0.00' : unclaimedRewardsFormatted}</RewardValue>
           <Percentage>
             40%
             <AGAVEMini size={18} />

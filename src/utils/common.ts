@@ -1,7 +1,11 @@
-import { BigNumber, BigNumberish, FixedNumber } from '@ethersproject/bignumber'
+import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 import { parseUnits } from 'ethers/lib/utils'
 
-import { DISPLAY_DECIMALS, NATIVE_DECIMALS } from '@/src/constants/common'
+import {
+  DISPLAY_DECIMALS,
+  MAX_HEALTH_FACTOR_VALUE_TO_RENDER,
+  NATIVE_DECIMALS,
+} from '@/src/constants/common'
 
 /**
  * It takes a number and returns a formatted number as string
@@ -164,4 +168,17 @@ export const calculatePercentageTimePassedBetweenDates = (
   const percentage = (timePassed / timeTotal) * 100
 
   return percentage > 100 ? 100 : percentage
+}
+
+export const formatHealthFactor = (
+  value: BigNumber,
+  decimals?: number,
+  symbol?: string,
+  symbolPosition?: SymbolPosition,
+  displayDecimals?: number,
+) => {
+  const formatted = fromWei(value, decimals)
+  return formatted.gt(MAX_HEALTH_FACTOR_VALUE_TO_RENDER)
+    ? '∞'
+    : formatAmount(value, decimals ?? 18, symbol || '', symbolPosition, displayDecimals ?? 1)
 }

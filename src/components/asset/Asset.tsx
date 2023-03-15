@@ -6,7 +6,6 @@ import { BigNumber } from 'ethers'
 const Wrapper = styled.div`
   --padding-medium: 16px;
   --padding-xl: 24px;
-  --token-icon-size: 58px;
 
   background-color: rgba(1, 157, 139, 0.1);
   border-radius: 16px;
@@ -23,6 +22,8 @@ export const Head = styled.div`
 `
 
 export const Icon = styled.div<{ symbol?: string }>`
+  --token-icon-size: 58px;
+
   align-items: center;
   background-color: ${({ symbol, theme: { colors } }) => {
     const symbolLowerCase = symbol?.toLowerCase() as string
@@ -54,6 +55,7 @@ export const Icon = styled.div<{ symbol?: string }>`
   flex-shrink: 0;
   height: var(--token-icon-size);
   justify-content: center;
+  transition: background-color 0.25s linear;
   width: var(--token-icon-size);
 `
 

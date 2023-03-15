@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router'
 
-import { ActionsWrapper } from '@/src/components/asset/ActionsWrapper'
 import { UserAsset } from '@/src/components/asset/UserAsset'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
 import { Amount } from '@/src/components/helpers/Amount'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { AssetsList } from '@/src/components/layout/AssetsList'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
@@ -73,7 +73,7 @@ const UserDepositsList = withGenericSuspense(
                 useAsCollateral={asCollateral}
               >
                 <ActionsWrapper>
-                  <MoreActionsDropdown items={items} />
+                  <MoreActionsDropdown items={items} size="lg" />
                   <ActionButton onClick={() => router.push(`/markets/${symbol}/deposit`)}>
                     Deposit
                   </ActionButton>

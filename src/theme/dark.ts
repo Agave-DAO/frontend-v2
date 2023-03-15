@@ -18,18 +18,26 @@ const tertiary0 = `${tertiary}00`
 const tertiary30 = `${tertiary}4d`
 
 const black = '#0D2026'
+const black20 = `${black}33`
 
 const darkGreen = '#006268'
 const darkGreenDarkened = darken(0.05, darkGreen)
 const darkGreen20 = `${darkGreen}33`
+const darkGreen50 = `${darkGreen}80`
 
 const mainDark1 = '#007F7C'
 const mainDark3 = '#0B464F'
 const mainDark4 = '#0E3940'
+const mainDark440 = `${mainDark4}66`
+const mainDark450 = `${mainDark4}80`
+
+const white05 = 'rgba(255, 255, 255, 0.05)'
+const white50 = 'rgba(255, 255, 255, 0.5)'
+const white60 = 'rgba(255, 255, 255, 0.6)'
 
 const textColor = '#fff'
-const textColor50 = 'rgba(255, 255, 255, 0.5)'
-const textColor60 = 'rgba(255, 255, 255, 0.6)'
+const textColor50 = white50
+const textColor60 = white60
 
 const borderColor = 'rgba(250, 250, 250, 0.2)'
 
@@ -39,7 +47,7 @@ const lighterGray = '#D1DDDC'
 const gray = '#97B1AB'
 
 const darkGray = '#0F3B3F'
-const darkestGray = '#122C34'
+const darkestGray = secondary
 const darkerGray = '#344B47'
 const darkGrayDarkened = darken(0.1, 'rgb(10, 25, 50)')
 
@@ -117,9 +125,17 @@ export const dark = {
     color: mainDark1,
     colorHover: '#fff',
   },
+  buttonNeutral: {
+    backgroundColor: lighterGray,
+    backgroundColorHover: gray,
+    borderColor: 'transparent',
+    borderColorHover: 'transparent',
+    color: darkestGray,
+    colorHover: darkestGray,
+  },
   card: {
-    backgroundColor: 'rgba(13, 2, 2, 0.65)',
-    borderColor: borderColor,
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
   },
   checkBox: {
     backgroundColorActive: secondary,
@@ -128,6 +144,7 @@ export const dark = {
   },
   colors: {
     accent: accent,
+    black20: black20,
     black: black,
     borderColor: borderColor,
     componentBackgroundColor: componentBackgroundColor,
@@ -138,6 +155,7 @@ export const dark = {
     darkGray: darkGray,
     darkGrayDarkened: darkGrayDarkened,
     darkGreen20: darkGreen20,
+    darkGreen50: darkGreen50,
     darkerGray: darkerGray,
     darkestGray: darkestGray,
     error: error,
@@ -148,6 +166,8 @@ export const dark = {
     lightestGray: lightestGray,
     mainDark1: mainDark1,
     mainDark3: mainDark3,
+    mainDark440: mainDark440,
+    mainDark450: mainDark450,
     mainDark4: mainDark4,
     primary10: primary10,
     primary: primary,
@@ -162,6 +182,9 @@ export const dark = {
     textColor50: textColor50,
     textColor60: textColor60,
     textColor: textColor,
+    white05: white05,
+    white50: white50,
+    white60: white60,
   },
   dropdown: {
     background: dropdownBackground,

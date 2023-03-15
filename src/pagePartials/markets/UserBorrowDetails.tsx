@@ -1,37 +1,32 @@
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
-import { BaseCard } from '@/src/components/common/BaseCard'
+import { ActionButton } from '@/src/components/buttons/ActionButton'
+import { HealthFactor } from '@/src/components/common/HealthFactor'
+import { InnerCard } from '@/src/components/common/InnerCard'
+import { EmphasizedRowValue, Row, RowKey, RowValue, Rows } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
-import { HealthFactor } from '@/src/components/helpers/HealthFactor'
+import { Text as ECText, Title as ECTitle } from '@/src/components/helpers/EmptyContent'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
-import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
+import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { Loading } from '@/src/components/loading/Loading'
-import { BaseTitle } from '@/src/components/text/BaseTitle'
+import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
+import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
-import { UserActions, UserDetailsActions } from '@/src/pagePartials/markets/UserDetailsActions'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
-export const Grid = styled(SimpleGrid)`
-  justify-content: center;
-`
-export const Column = styled(SimpleGrid)`
-  flex-direction: column;
-`
-export const TokenWithSymbol = styled(SimpleGrid)`
-  column-gap: 8px;
-`
-
-function UserBorrowsImp({
+const UserBorrowsImp = ({
   tokenAddress,
   userAddress,
+  ...restProps
 }: {
   tokenAddress: string
   userAddress: string
-}) {
+}) => {
   const { healthFactor, ltv, maxBorrow, stableDebtAmount, userHasBorrows, variableDebtAmount } =
     useUserBorrowsInformationByToken({
       tokenAddress,
@@ -39,69 +34,112 @@ function UserBorrowsImp({
     })
   const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
 
-  if (!userHasBorrows) {
-    return <div>No borrows</div>
-  }
-
-  return (
-    <Column>
-      <Grid>
-        <div>Variable Borrowed</div>
-        <TokenWithSymbol>
-          <TokenIcon symbol={symbol} />
-          <Amount decimals={decimals} symbol="" value={variableDebtAmount || ZERO_BN} />
-        </TokenWithSymbol>
-      </Grid>
-      <Grid>
-        <div>Stable Borrowed</div>
-        <TokenWithSymbol>
-          <TokenIcon symbol={symbol} />
-          <Amount decimals={decimals} symbol="" value={stableDebtAmount || ZERO_BN} />
-        </TokenWithSymbol>
-      </Grid>
-      <Grid>
-        <div>Health factor</div>
-        <HealthFactor value={healthFactor} />
-      </Grid>
-      <Grid>
-        <div>Loan to Value</div>
-        <Percentage decimals={2} value={ltv} />
-      </Grid>
-      <Grid>
-        <div>You can borrow</div>
-        <TokenWithSymbol>
-          <TokenIcon symbol={symbol} />
-          <div>{maxBorrow}</div>
-        </TokenWithSymbol>
-      </Grid>
-    </Column>
+  return userHasBorrows ? (
+    <Rows {...restProps}>
+      <Row>
+        <RowKey>Stable borrowed</RowKey>
+        <RowValue>
+          <TokenIcon dimensions={18} symbol={symbol} />
+          <EmphasizedRowValue>
+            <Amount decimals={decimals} symbol="" value={stableDebtAmount || ZERO_BN} />
+          </EmphasizedRowValue>
+        </RowValue>
+      </Row>
+      <Row variant="dark">
+        <RowKey>Variable borrowed</RowKey>
+        <RowValue>
+          <TokenIcon dimensions={18} symbol={symbol} />
+          <EmphasizedRowValue>
+            <Amount decimals={decimals} symbol="" value={variableDebtAmount || ZERO_BN} />
+          </EmphasizedRowValue>
+        </RowValue>
+      </Row>
+      <Row>
+        <RowKey>
+          Health factor <Tooltip content="Some text here!" />
+        </RowKey>
+        <RowValue>
+          <HealthFactor badgeVariant="light" dark size="sm" value={healthFactor} />
+        </RowValue>
+      </Row>
+      <Row variant="dark">
+        <RowKey>
+          Loan to value <Tooltip content="Some text here!" />
+        </RowKey>
+        <RowValue>
+          <Percentage decimals={2} value={ltv} />
+        </RowValue>
+      </Row>
+      <Row>
+        <RowKey>You can borrow</RowKey>
+        <RowValue>
+          <TokenIcon dimensions={18} symbol={symbol} />
+          <EmphasizedRowValue>{maxBorrow}</EmphasizedRowValue>
+        </RowValue>
+      </Row>
+    </Rows>
+  ) : (
+    <></>
   )
 }
 
-const borrowActions: UserActions = {
-  primary: {
-    label: 'Borrow',
-    target: (tokenAddress) => `/markets/${tokenAddress}/borrow`,
-  },
-  secondary: {
-    label: 'Repay',
-    target: (tokenAddress) => `/markets/${tokenAddress}/repay`,
-  },
-}
+const Wrapper = styled.div``
+
+const Top = styled(InnerCard)`
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+`
+
+const Bottom = styled(InnerCard)`
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+`
+
+const Title = styled(InnerTitle)`
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+  padding-top: 16px;
+`
 
 export const UserBorrowDetails = withGenericSuspense(
-  function UserBorrows({ tokenAddress }: { tokenAddress: string }) {
+  ({ tokenAddress, ...restProps }: { tokenAddress: string }) => {
     const { address: userAddress } = useWeb3ConnectedApp()
+    const { userHasBorrows } = useUserBorrowsInformationByToken({
+      tokenAddress,
+      userAddress,
+    })
+    const router = useRouter()
+
     return (
-      <BaseCard>
-        <BaseTitle>Borrows</BaseTitle>
-        <UserBorrowsImp tokenAddress={tokenAddress} userAddress={userAddress} />
-        <UserDetailsActions
-          primary={borrowActions.primary}
-          secondary={borrowActions.secondary}
-          tokenAddress={tokenAddress}
-        />
-      </BaseCard>
+      <Wrapper {...restProps}>
+        <Top>
+          <Title>Borrows</Title>
+          {userHasBorrows ? (
+            <UserBorrowsImp tokenAddress={tokenAddress} userAddress={userAddress} />
+          ) : (
+            <>
+              <ECTitle>Nothing borrowed yet</ECTitle>
+              <ECText>
+                In order to borrow you need to deposit any asset to be used as collateral.
+              </ECText>
+            </>
+          )}
+        </Top>
+        <Bottom>
+          <ActionsWrapper>
+            <ActionButton
+              disabled={!userHasBorrows}
+              onClick={() => router.push(`/markets/${tokenAddress}/repay`)}
+              variant="dark"
+            >
+              Repay
+            </ActionButton>
+            <ActionButton onClick={() => router.push(`/markets/${tokenAddress}/borrow`)}>
+              Borrow
+            </ActionButton>
+          </ActionsWrapper>
+        </Bottom>
+      </Wrapper>
     )
   },
   () => <Loading text="Fetching user borrows..." />,

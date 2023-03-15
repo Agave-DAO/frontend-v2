@@ -1,99 +1,90 @@
+import { useState } from 'react'
 import styled from 'styled-components'
 
-import { DebounceInput } from 'react-debounce-input'
-
-import { ButtonDropdown } from '@/src/components/buttons/Button'
-import { Dropdown, DropdownItem } from '@/src/components/common/Dropdown'
-import { TextfieldCSS } from '@/src/components/form/Textfield'
+import { Icon } from '@/src/components/asset/Asset'
+import { ChevronDown } from '@/src/components/assets/ChevronDown'
+import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/common/Dropdown'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { useTokensLists } from '@/src/hooks/useTokensLists'
 import { Token } from '@/types/token'
 
-const Wrapper = styled(Dropdown)`
-  --inner-padding: 8px;
+const Wrapper = styled.div`
+  align-items: center;
+  column-gap: 15px;
+  display: flex;
+`
 
+const NoToken = styled.span`
+  color: #000;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+`
+
+const Dropdown = styled(BaseDropdown)`
   .dropdownItems {
     max-height: 340px;
     overflow: auto;
   }
 `
 
-const Button = styled(ButtonDropdown)`
-  > span {
-    flex-shrink: 0;
+const Button = styled.button`
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: ${({ theme: { colors } }) => colors.textColor};
+  column-gap: 15px;
+  cursor: pointer;
+  display: flex;
+  font-family: ${({ theme: { fonts } }) => fonts.family};
+  font-size: 2.4rem;
+  font-weight: 700;
+  padding: 0;
+
+  &:active {
+    opacity: 0.7;
   }
 `
 
-const TextfieldContainer = styled.div<{ closeOnClick?: boolean }>`
-  background-color: ${({ theme }) => theme.dropdown.background};
-  border-bottom: 1px solid ${({ theme: { colors } }) => colors.borderColor};
-  padding: var(--inner-padding);
-  position: sticky;
-  top: 0;
-  z-index: 1;
-`
+const ButtonText = styled.span``
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Textfield: any = styled(DebounceInput)`
-  ${TextfieldCSS};
+export const TokenDropdown: React.FC<{
+  activeTokenSymbol?: string
+  onChange?: (token: Token | null) => void
+}> = ({ activeTokenSymbol = '', onChange, ...restProps }) => {
+  const { onSelectToken, tokensList } = useTokensLists(onChange)
+  const [currentToken, setCurrentToken] = useState<string>(activeTokenSymbol)
 
-  flex-shrink: 0;
-  max-width: 100%;
-  width: auto;
-`
-
-const NoResults = styled.div<{ closeOnClick?: boolean }>`
-  align-items: center;
-  color: ${({ theme: { colors } }) => colors.textColor};
-  display: flex;
-  font-size: 1.3rem;
-  font-weight: 500;
-  height: 80px;
-  justify-content: center;
-  line-height: 1.2;
-  padding: var(--inner-padding);
-`
-
-export const TokenDropdown: React.FC<{ onChange?: (token: Token | null) => void }> = ({
-  onChange,
-  ...restProps
-}) => {
-  const { onSelectToken, searchString, setSearchString, token, tokensList } =
-    useTokensLists(onChange)
+  const onSelect = (token: Token) => {
+    onSelectToken(token)
+    setCurrentToken(token.symbol)
+  }
 
   return (
-    <Wrapper
-      dropdownButton={
-        <Button>
-          {token && <TokenIcon symbol={token.symbol} />}
-          {token ? token.symbol : 'Select a token...'}
-        </Button>
-      }
-      items={[
-        <TextfieldContainer closeOnClick={false} key="tokenSearchInput">
-          <Textfield
-            debounceTimeout={300}
-            onChange={(e: { target: { value: string } }) => setSearchString(e.target.value)}
-            placeholder="Search token..."
-            type="search"
-            value={searchString}
-          />
-        </TextfieldContainer>,
-        ...tokensList.map((item, index) => (
+    <Wrapper>
+      <Icon symbol={currentToken}>
+        {currentToken ? <TokenIcon dimensions={40} symbol={currentToken} /> : <NoToken>?</NoToken>}
+      </Icon>
+      <Dropdown
+        dropdownButton={
+          <Button>
+            <ButtonText>{currentToken ? currentToken : 'Select token'}</ButtonText>
+            <ChevronDown />
+          </Button>
+        }
+        items={tokensList.map((item, index) => (
           <DropdownItem
             key={index}
             onClick={() => {
-              onSelectToken(item)
+              onSelect(item)
             }}
           >
-            <TokenIcon symbol={item.symbol} />
             {item.symbol}
           </DropdownItem>
-        )),
-        tokensList.length === 0 ? <NoResults closeOnClick={false}>Not found.</NoResults> : <></>,
-      ]}
-      {...restProps}
-    />
+        ))}
+        {...restProps}
+      />
+    </Wrapper>
   )
 }
 

@@ -34,7 +34,7 @@ export const ButtonCSS = css<ButtonProps>`
   justify-content: center;
   line-height: 1;
   outline: none;
-  padding: 0 24px;
+  padding: 0 18px;
   text-align: center;
   text-decoration: none;
   transition: all 0.15s ease-out;
@@ -219,6 +219,31 @@ export const ButtonLightCSS = css`
 
 export const ButtonLight = styled(BaseButton)`
   ${ButtonLightCSS}
+`
+
+export const ButtonNeutralCSS = css`
+  background-color: ${({ theme: { buttonNeutral } }) => buttonNeutral.backgroundColor};
+  border-color: ${({ theme: { buttonNeutral } }) => buttonNeutral.borderColor};
+  color: ${({ theme: { buttonNeutral } }) => buttonNeutral.color};
+
+  &:hover {
+    background-color: ${({ theme: { buttonNeutral } }) => buttonNeutral.backgroundColorHover};
+    border-color: ${({ theme: { buttonNeutral } }) => buttonNeutral.borderColorHover};
+    color: ${({ theme: { buttonNeutral } }) => buttonNeutral.colorHover};
+  }
+
+  ${DisabledButtonCSS}
+
+  &[disabled],
+  &[disabled]:hover {
+    background-color: ${({ theme: { buttonNeutral } }) => buttonNeutral.backgroundColor};
+    border-color: ${({ theme: { buttonNeutral } }) => buttonNeutral.borderColor};
+    color: ${({ theme: { buttonNeutral } }) => buttonNeutral.color};
+  }
+`
+
+export const ButtonNeutral = styled(BaseButton)`
+  ${ButtonNeutralCSS}
 `
 
 export const ButtonDropdownIsOpenCSS = css`

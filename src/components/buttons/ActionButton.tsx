@@ -29,32 +29,45 @@ export const ButtonCSS = css`
   }
 `
 
-const Wrapper = styled.button``
+const Wrapper = styled.button`
+  ${ButtonCSS}
+`
 
 const ButtonPrimary = styled(BaseButtonPrimary)`
-  ${ButtonCSS}
-`
-
-const ButtonDark = styled(BaseButtonDark)`
-  ${ButtonCSS}
-`
-
-const ButtonLight = styled(BaseButtonLight)`
-  ${ButtonCSS}
-
-  svg > path {
-    fill: ${({ theme: { colors } }) => colors.mainDark1};
+  svg > path,
+  &:disabled:hover svg > path {
+    fill: ${({ theme: { buttonPrimary } }) => buttonPrimary.color};
   }
 
   &:hover {
     svg > path {
-      fill: #fff;
+      fill: ${({ theme: { buttonPrimary } }) => buttonPrimary.colorHover};
     }
   }
+`
 
-  &:disabled:hover {
+const ButtonDark = styled(BaseButtonDark)`
+  svg > path,
+  &:disabled:hover svg > path {
+    fill: ${({ theme: { buttonDark } }) => buttonDark.color};
+  }
+
+  &:hover {
     svg > path {
-      fill: ${({ theme: { colors } }) => colors.mainDark1};
+      fill: ${({ theme: { buttonDark } }) => buttonDark.colorHover};
+    }
+  }
+`
+
+const ButtonLight = styled(BaseButtonLight)`
+  svg > path,
+  &:disabled:hover svg > path {
+    fill: ${({ theme: { buttonLight } }) => buttonLight.color};
+  }
+
+  &:hover {
+    svg > path {
+      fill: ${({ theme: { buttonLight } }) => buttonLight.colorHover};
     }
   }
 `
