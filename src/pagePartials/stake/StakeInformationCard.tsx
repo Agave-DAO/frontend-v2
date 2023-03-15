@@ -3,13 +3,11 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
-import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
 import { secondsToString } from '@/src/utils/common'
 
 export const StakeInformationCard = withGenericSuspense(() => {
-  const { stakingAPY, totalStaked, yieldPerMonth } = useStakeInformation()
-
-  const { cooldownSeconds, unstakeWindow } = useGetStakeTokenData().data
+  const { cooldownSeconds, stakingAPY, totalStaked, unstakeWindow, yieldPerMonth } =
+    useStakeInformation()
 
   return (
     <BaseCard>

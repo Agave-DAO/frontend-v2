@@ -6,8 +6,8 @@ import { WeiPerEther } from '@ethersproject/constants'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
 import {
+  useGetUserAmountAvailableToClaim,
   useGetUserAmountAvailableToStake,
-  useGetUserAmountClaimable,
   useGetUserAmountInStake,
   useGetUserStakeCooldown,
 } from '@/src/hooks/queries/useGetUserStakeData'
@@ -18,6 +18,7 @@ const YEAR_IN_SECONDS = 60 * 60 * 24 * 365
 /**
  * This hook is used to get all the information needed to display the stake page
  * @returns
+ * stakeTokenAddress: Address of the token that is staked
  * isCooldownActive: Boolean that indicates if the user has activated the cooldown
  * isInUnstakeWindow: Boolean that indicates if the user is in the unstake window
  * userActivateCooldownFrom: Date when the user activated the cooldown
@@ -33,14 +34,14 @@ const YEAR_IN_SECONDS = 60 * 60 * 24 * 365
  */
 export const useStakeInformation = () => {
   const {
-    data: { cooldownSeconds, emissionPerSecond, totalStaked, unstakeWindow },
+    data: { cooldownSeconds, emissionPerSecond, stakedTokenAddress, totalStaked, unstakeWindow },
     refetch: refetchStakeData,
   } = useGetStakeTokenData()
   const { data: amountStaked, refetch: refetchUserAmountStaked } = useGetUserAmountInStake()
   const { data: amountAvailableToStake, refetch: refetchUserAmountAvailableToStake } =
     useGetUserAmountAvailableToStake()
   const { data: amountAvailableToClaim, refetch: refetchUserAmountAvailableToClaim } =
-    useGetUserAmountClaimable()
+    useGetUserAmountAvailableToClaim()
   const { data: userStakeCooldown, refetch: refetchUserStakeCooldown } = useGetUserStakeCooldown()
 
   const yieldPerSecond = emissionPerSecond.mul(amountStaked).div(WeiPerEther)
@@ -105,6 +106,7 @@ export const useStakeInformation = () => {
   }
 
   return {
+    stakedTokenAddress,
     isCooldownActive: activeCooldown.gt(0),
     isInUnstakeWindow,
     activateCooldownFrom,
@@ -116,6 +118,8 @@ export const useStakeInformation = () => {
     yieldPerMonth,
     stakingAPY,
     totalStaked,
+    cooldownSeconds,
+    unstakeWindow,
     refetchAllStakeData,
   }
 }

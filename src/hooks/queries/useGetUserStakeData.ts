@@ -53,7 +53,7 @@ export const useGetUserAmountAvailableToStake = () => {
  * @returns amount of AGAVE staked tokens that the user can claim.
  */
 
-export const useGetUserAmountClaimable = () => {
+export const useGetUserAmountAvailableToClaim = () => {
   const { address } = useWeb3ConnectedApp()
   const stakedTokenContract = useContractInstance(StakedToken__factory, 'StakedToken')
 
@@ -83,6 +83,9 @@ export const useGetUserStakeCooldown = () => {
     stakedTokenContractCalls,
     [[address]],
     `StakedToken-stakersCooldowns-${address}`,
+    {
+      refreshInterval: 10_000,
+    },
   )
 
   return { data: userStakeCooldown?.[0] ?? Zero, refetch }

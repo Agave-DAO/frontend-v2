@@ -54,7 +54,7 @@ export default function useTransaction() {
           e.data,
         )
 
-        notifyRejectSignature(error.code === 4001 ? 'User denied signature' : error.message)
+        notifyRejectSignature(error.name)
         throw error
       }
     },

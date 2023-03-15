@@ -1,3 +1,4 @@
+import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { AaveOracle__factory } from '@/types/generated/typechain'
@@ -11,7 +12,7 @@ export default function useGetAssetsPriceInDAI(addresses: string[]) {
     [[addresses]],
     `AaveOracle-getAssetsPrices-${addresses.join('-')}`,
     {
-      refreshInterval: 10_000,
+      refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
     },
   )
 }

@@ -1,5 +1,6 @@
 import { Zero } from '@ethersproject/constants'
 
+import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { ERC20__factory } from '@/types/generated/typechain'
@@ -19,7 +20,7 @@ export function useAccountBalance({
     [[accountAddress]],
     `balanceOf-${tokenAddress}-${accountAddress}`,
     {
-      refreshInterval: 10_000,
+      refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
     },
   )
 

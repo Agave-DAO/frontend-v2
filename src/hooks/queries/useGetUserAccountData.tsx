@@ -1,3 +1,4 @@
+import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { AgaveLending__factory } from '@/types/generated/typechain'
@@ -21,6 +22,6 @@ export default function useGetUserAccountData(address: string) {
     calls,
     [[address as string]],
     `lendingPool-getUserAccountData-${address}`,
-    { refreshInterval: 10_000 },
+    { refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL },
   )
 }
