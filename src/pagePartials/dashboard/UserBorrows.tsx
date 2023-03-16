@@ -35,6 +35,7 @@ const UserBorrowsList = withGenericSuspense(
                 badge={InterestRateMode[borrowMode]}
                 baseRate={borrowRate.base}
                 incentivesRate={borrowRate.incentive}
+                isBorrow
                 key={`${assetAddress}-${borrowMode}`}
                 tokenAddress={assetAddress}
                 tokenValue={
@@ -45,7 +46,7 @@ const UserBorrowsList = withGenericSuspense(
                     value={borrowedAmount}
                   />
                 }
-                totalAPY={borrowRate.total}
+                totalAP={borrowRate.total}
                 usdValue={<Amount value={borrowedAmountInDAI} />}
               >
                 <ActionsWrapper>

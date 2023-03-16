@@ -68,7 +68,7 @@ const UserDepositsList = withGenericSuspense(
                     value={depositedAmount}
                   />
                 }
-                totalAPY={depositRate.add(incentiveRate)}
+                totalAP={depositRate.add(incentiveRate)}
                 usdValue={<Amount displayDecimals={3} value={depositedAmountInDAI} />}
                 useAsCollateral={asCollateral}
               >

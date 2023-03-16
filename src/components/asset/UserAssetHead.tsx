@@ -100,8 +100,9 @@ const UseAsCollateral = styled(MainRow)`
 export interface Props extends AssetValueProps {
   badge?: string
   baseRate: BigNumber
-  totalAPY: BigNumber
   incentivesRate: BigNumber
+  isBorrow?: boolean
+  totalAP: BigNumber
   tokenAddress: string
   useAsCollateral?: boolean
 }
@@ -110,9 +111,10 @@ export const UserAssetHead: React.FC<Props> = ({
   badge,
   baseRate,
   incentivesRate,
+  isBorrow = false,
   tokenAddress,
   tokenValue,
-  totalAPY,
+  totalAP,
   usdValue,
   useAsCollateral,
   ...restProps
@@ -135,9 +137,9 @@ export const UserAssetHead: React.FC<Props> = ({
       </Controls>
       <HeadInnerCollapsable isOpen={isOpen}>
         <MainRow>
-          <Label>Total APY</Label>
+          <Label>Total {isBorrow ? 'APR' : 'APY'}</Label>
           <Value>
-            <Percentage decimals={25} value={totalAPY} />
+            <Percentage decimals={25} value={totalAP} />
           </Value>
         </MainRow>
         <Row>
