@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 import { Discord } from '@/src/components/assets/Discord'
-import { Medium } from '@/src/components/assets/Medium'
 import { Telegram } from '@/src/components/assets/Telegram'
 import { Twitter } from '@/src/components/assets/Twitter'
 
@@ -90,11 +89,11 @@ export const SocialLinks: React.FC = (props) => {
       icon: <Twitter />,
       title: 'Agave Twitter',
     },
-    {
-      href: 'https://agavefinance.medium.com/',
-      icon: <Medium />,
-      title: 'Agave Medium',
-    },
+    // {
+    //   href: 'https://agavefinance.medium.com/',
+    //   icon: <Medium />,
+    //   title: 'Agave Medium',
+    // },
   ]
 
   return (

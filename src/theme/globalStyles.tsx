@@ -31,6 +31,14 @@ export const GlobalStyles = createGlobalStyle<{ theme: any }>`
     font-size: ${({ theme: { fonts } }) => fonts.defaultSize};
     min-height: 100vh;
     outline-color: ${({ theme: { colors } }) => colors.secondary};
+
+    &.modalOpen {
+      height: 100vh;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100vw;
+    }
   }
 
   code {
@@ -63,6 +71,6 @@ export const GlobalStyles = createGlobalStyle<{ theme: any }>`
     font-size: 1.4rem;
     line-height: 1.5;
     padding: 12px;
-    z-index: 5;
+    z-index: 1000;
   }
 `

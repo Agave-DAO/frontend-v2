@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 import { BigNumber } from 'ethers'
@@ -18,6 +17,7 @@ import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDepositsInformationByToken } from '@/src/hooks/presentation/useUserDepositsInformationByToken'
+import { useActionsContext } from '@/src/providers/actionsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { toWei } from '@/src/utils/common'
 
@@ -56,7 +56,12 @@ const UserDepositsImp: React.FC<{
           Health factor <Tooltip content="Some text here!" />
         </RowKey>
         <RowValue>
-          <HealthFactor badgeVariant="light" dark size="sm" value={toWei(BigNumber.from(50), 16)} />
+          <HealthFactor
+            badgeVariant="light"
+            size="sm"
+            value={toWei(BigNumber.from(50), 16)}
+            variant="dark"
+          />
         </RowValue>
       </Row>
     </Rows>
@@ -90,47 +95,42 @@ export const UserDepositDetails = withGenericSuspense(
       tokenAddress,
       userAddress,
     })
-    const router = useRouter()
+    const { openDepositWithdrawModal } = useActionsContext()
+
     const items = [
       {
         text: 'Withdraw',
-        onClick: () => router.push(`/markets/${tokenAddress}/withdraw`),
+        onClick: () => openDepositWithdrawModal(tokenAddress, 'withdraw'),
       },
-      // {
-      //   text: 'Swap',
-      //   onClick: () => router.push(`/swap/${tokenAddress}`),
-      // },
-      // {
-      //   text: 'Strategies',
-      //   onClick: () => router.push(`/strategies/${tokenAddress}`),
-      // },
     ]
 
     return (
-      <Wrapper {...restProps}>
-        <Top>
-          <Title>Deposits</Title>
-          {userHasDeposits ? (
-            <UserDepositsImp tokenAddress={tokenAddress} userAddress={userAddress} />
-          ) : (
-            <>
-              <ECTitle>Nothing deposited yet</ECTitle>
-              <ECText>
-                Your account is empty. Move cryptocurrency from your wallet and start earning
-                interest.
-              </ECText>
-            </>
-          )}
-        </Top>
-        <Bottom>
-          <ActionsWrapper>
-            <MoreActionsDropdown disabled={!userHasDeposits} items={items} size="lg" />
-            <ActionButton onClick={() => router.push(`/markets/${tokenAddress}/deposit`)}>
-              Deposit
-            </ActionButton>
-          </ActionsWrapper>
-        </Bottom>
-      </Wrapper>
+      <>
+        <Wrapper {...restProps}>
+          <Top>
+            <Title>Deposits</Title>
+            {userHasDeposits ? (
+              <UserDepositsImp tokenAddress={tokenAddress} userAddress={userAddress} />
+            ) : (
+              <>
+                <ECTitle>Nothing deposited yet</ECTitle>
+                <ECText>
+                  Your account is empty. Move cryptocurrency from your wallet and start earning
+                  interest.
+                </ECText>
+              </>
+            )}
+          </Top>
+          <Bottom>
+            <ActionsWrapper>
+              <MoreActionsDropdown disabled={!userHasDeposits} items={items} size="lg" />
+              <ActionButton onClick={() => openDepositWithdrawModal(tokenAddress, 'deposit')}>
+                Deposit
+              </ActionButton>
+            </ActionsWrapper>
+          </Bottom>
+        </Wrapper>
+      </>
     )
   },
   () => <Loading text="Fetching user deposits..." />,

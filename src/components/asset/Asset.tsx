@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  height: fit-content;
+  height: 100%; // not super convinced about this...
 `
 
 export const Head = styled.div`

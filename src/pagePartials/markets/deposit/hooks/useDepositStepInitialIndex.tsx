@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { Zero } from '@ethersproject/constants'
 
-import { useGetAllowance } from '@/src/hooks/queries/useGetAllowance'
+import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
-import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { AgaveLending__factory } from '@/types/generated/typechain'
 
 export const useDepositStepInitialIndex = ({
@@ -15,34 +13,19 @@ export const useDepositStepInitialIndex = ({
   amount: string
   tokenAddress: string
 }) => {
-  const { address: userAddress } = useWeb3ConnectedApp()
   const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
   const [initialStepIndex, setInitialStepIndex] = useState(0)
 
   /**
    * Allowance
    */
-  const allowancePromise = useGetAllowance({
-    from: userAddress,
-    to: agaveLending.address,
-    tokenAddress,
-  })
+  const { approvedAmount: allowance } = useGetERC20Allowance(tokenAddress, agaveLending.address)
 
   useEffect(() => {
-    if (typeof allowancePromise !== 'undefined') {
-      allowancePromise
-        .then((allowance) => {
-          if (allowance.gt(Zero)) {
-            if (allowance.gte(BigNumber.from(amount))) {
-              setInitialStepIndex(1)
-            }
-          }
-        })
-        .catch(() => {
-          setInitialStepIndex(0)
-        })
+    if (!allowance.isZero() && allowance.gte(BigNumber.from(amount))) {
+      setInitialStepIndex(1)
     }
-  }, [allowancePromise, amount])
+  }, [allowance, amount])
 
   return initialStepIndex
 }

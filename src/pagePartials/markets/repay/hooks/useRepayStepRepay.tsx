@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
 
 import { usePageModeParam } from '@/src/hooks/presentation/usePageModeParam'
+import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
+import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesData'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
@@ -18,15 +20,27 @@ export const useRepayStepRepay = ({
   const { address: userAddress } = useWeb3ConnectedApp()
   const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
   const sendTx = useTransaction()
+  const { mutate: refetchUserReservesData } = useGetUserReservesData()
+  const [, refetchUserAccountData] = useGetUserAccountData(userAddress)
 
   const repay = useCallback(async () => {
     const tx = await sendTx(() =>
       agaveLending.repay(tokenAddress, amount, interestRateMode, userAddress),
     )
     const receipt = await tx.wait()
-
+    refetchUserReservesData()
+    refetchUserAccountData()
     return receipt.transactionHash
-  }, [sendTx, agaveLending, tokenAddress, amount, interestRateMode, userAddress])
+  }, [
+    sendTx,
+    refetchUserReservesData,
+    refetchUserAccountData,
+    agaveLending,
+    tokenAddress,
+    amount,
+    interestRateMode,
+    userAddress,
+  ])
 
   return useStepStates({
     title: 'Repay',

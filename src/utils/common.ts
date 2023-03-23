@@ -35,7 +35,7 @@ export const formatAmount = (
   displayDecimals: number = DISPLAY_DECIMALS,
 ): string => {
   return symbol
-    ? `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(
+    ? `${symbolPosition === 'before' ? `${symbol}` : ''}${formatNumber(
         FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
         displayDecimals,
       )}${symbolPosition === 'after' ? ` ${symbol}` : ''}`
@@ -182,3 +182,6 @@ export const formatHealthFactor = (
     ? '∞'
     : formatAmount(value, decimals ?? 18, symbol || '', symbolPosition, displayDecimals ?? 1)
 }
+
+export const toNumber = (value: BigNumber, decimals: number) =>
+  FixedNumber.fromValue(value, decimals).toUnsafeFloat()

@@ -4,6 +4,7 @@
 import { darken } from 'polished'
 
 const error = '#F4387C'
+const errorDark = darken(0.1, error)
 const success = '#33dd33'
 const primary = '#019D8B'
 const primary10 = '#019D8B1A'
@@ -12,13 +13,16 @@ const primaryDarkened = darken(0.05, primary)
 
 const secondary = '#122C34'
 const secondary20 = `${secondary}33`
+const secondary30 = `${secondary}4D`
 
 const tertiary = '#BCF298'
 const tertiary0 = `${tertiary}00`
 const tertiary30 = `${tertiary}4d`
 
 const black = '#0D2026'
+const black05 = `${black}0D`
 const black20 = `${black}33`
+const black50 = `${black}80`
 
 const darkGreen = '#006268'
 const darkGreenDarkened = darken(0.05, darkGreen)
@@ -47,6 +51,7 @@ const lighterGray = '#D1DDDC'
 const gray = '#97B1AB'
 
 const darkGray = '#0F3B3F'
+const darkishGray = '#647C77'
 const darkestGray = secondary
 const darkerGray = '#344B47'
 const darkGrayDarkened = darken(0.1, 'rgb(10, 25, 50)')
@@ -133,6 +138,22 @@ export const dark = {
     color: darkestGray,
     colorHover: darkestGray,
   },
+  buttonMini: {
+    color: '#fff',
+    colorHover: '#fff',
+    regular: {
+      backgroundColor: mainDark3,
+      backgroundColorHover: mainDark4,
+    },
+    dark: {
+      backgroundColor: mainDark4,
+      backgroundColorHover: mainDark3,
+    },
+    danger: {
+      backgroundColor: error,
+      backgroundColorHover: errorDark,
+    },
+  },
   card: {
     backgroundColor: 'transparent',
     borderColor: 'transparent',
@@ -144,7 +165,9 @@ export const dark = {
   },
   colors: {
     accent: accent,
+    black05: black05,
     black20: black20,
+    black50: black50,
     black: black,
     borderColor: borderColor,
     componentBackgroundColor: componentBackgroundColor,
@@ -158,6 +181,7 @@ export const dark = {
     darkGreen50: darkGreen50,
     darkerGray: darkerGray,
     darkestGray: darkestGray,
+    darkishGray: darkishGray,
     error: error,
     gray: gray,
     greenGradientLight: greenGradientLight,
@@ -174,6 +198,7 @@ export const dark = {
     primaryDarkened: primaryDarkened,
     primaryLight: primaryLight,
     secondary20: secondary20,
+    secondary30: secondary30,
     secondary: secondary,
     success: success,
     tertiary0: tertiary0,
@@ -232,7 +257,7 @@ export const dark = {
     },
   },
   modal: {
-    overlayColor: 'rgba(0, 0, 0, 0.8)',
+    overlayColor: `linear-gradient(188.87deg, ${darkGreen} 4.99%, ${secondary} 62.79%)`,
   },
   radioButton: {
     backgroundColorActive: secondary,

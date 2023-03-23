@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
 import { Amount } from '@/src/components/helpers/Amount'
 import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { agaveTokens } from '@/src/config/agaveTokens'
@@ -61,7 +60,7 @@ export function BorrowStepper({ amount, cancel, tokenAddress }: BorrowStepperPro
     ...depositSteps,
     info: <BorrowStepperInfo amount={amount} tokenAddress={tokenAddress} />,
     title: 'Borrow overview',
-    titleButton: <ButtonPrimary onClick={cancel}>Cancel</ButtonPrimary>,
+    titleButton: { onClick: cancel, text: 'Cancel', variant: 'danger' as const },
   }
 
   return <Steps {...params} />

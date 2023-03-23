@@ -1,4 +1,4 @@
-import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { InterestRateMode } from './useUserBorrows'
 import { ZERO_BN } from '@/src/constants/bigNumber'

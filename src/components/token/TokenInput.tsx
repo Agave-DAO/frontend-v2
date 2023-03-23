@@ -1,206 +1,144 @@
-import { DOMAttributes, HTMLAttributes, useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { BigNumberInput } from 'big-number-input'
-import { BigNumber } from 'ethers/lib/ethers'
-import { formatUnits } from 'ethers/lib/utils'
+import { isAddress } from '@ethersproject/address'
+import { BigNumber } from 'ethers'
+import { debounce } from 'lodash'
 
-import { Textfield as BaseTextField, TextfieldStatus } from '@/src/components/form/Textfield'
+import { FormStatus as BaseFormStatus } from '@/src/components/form/FormStatus'
+import { TextfieldStatus } from '@/src/components/form/Textfield'
+import { Amount } from '@/src/components/helpers/Amount'
+import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { TokenIcon } from '@/src/components/token/TokenIcon'
+import {
+  Props as TokenInputProps,
+  TokenInputTextfield,
+} from '@/src/components/token/TokenInputTextfield'
+import { ZERO_BN } from '@/src/constants/bigNumber'
+import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
+import { fromWei } from '@/src/utils/common'
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ status?: TextfieldStatus | undefined }>`
+  align-items: center;
+  background-color: ${({ theme: { colors } }) => colors.lighterGray};
+  border-radius: 16px;
+  border: 1px solid ${({ theme: { colors } }) => colors.lighterGray};
+  column-gap: 8px;
   display: flex;
-  flex-direction: column;
-  position: relative;
-  row-gap: 6px;
-  width: 100%;
-`
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Textfield: any = styled(BaseTextField)`
-  padding-right: 40px;
+  flex-direction: row;
+  height: 57px;
+  justify-content: space-between;
+  padding: 16px;
   position: relative;
   width: 100%;
-  z-index: 0;
+
+  ${({ status }) =>
+    status === 'error' &&
+    css`
+      color: ${({ theme: { colors } }) => colors.error};
+      border-color: ${({ theme: { colors } }) => colors.error};
+
+      &::placeholder {
+        color: ${({ theme: { colors } }) => colors.error};
+      }
+    `}
 `
 
-const MaxButton = styled.button`
-  background: none;
-  border-radius: 3px;
-  border: 1px solid ${({ theme: { colors } }) => colors.borderColor};
-  color: ${({ theme }) => theme.colors.textColor};
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 400;
-  padding: 3px 5px;
+const USDValue = styled.div`
+  margin-left: auto;
+`
+
+const FormStatus = styled(BaseFormStatus)`
+  left: 49px;
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  transition: opacity 0.15s linear;
-  z-index: 5;
-
-  &:active {
-    opacity: 0.7;
-  }
+  top: calc(100% - 17px);
 `
 
-const CSSRight = css`
-  right: var(--balance-horizontal-displacement);
-`
-
-const CSSLeft = css`
-  left: var(--balance-horizontal-displacement);
-`
-
-const CSSTop = css`
-  top: calc(100% + var(--balance-vertical-displacement));
-`
-
-const CSSBottom = css`
-  bottom: calc(100% + var(--balance-vertical-displacement));
-`
-
-const CSSCenter = css`
-  left: 0;
-  right: 0;
-  text-align: center;
-`
-
-const Balance = styled.div<{ balancePosition?: BalancePosition }>`
-  --balance-horizontal-displacement: 3px;
-  --balance-vertical-displacement: 6px;
-
-  color: ${({ theme }) => theme.colors.textColor};
-  font-size: 1.2rem;
-  font-weight: 400;
-  line-height: 1.2;
-  position: absolute;
-  white-space: nowrap;
-
-  ${({ balancePosition }) =>
-    balancePosition === 'topLeft'
-      ? css`
-          ${CSSBottom}
-          ${CSSLeft}
-        `
-      : balancePosition === 'bottomLeft'
-      ? css`
-          ${CSSLeft}
-          ${CSSTop}
-        `
-      : balancePosition === 'topRight'
-      ? css`
-          ${CSSBottom}
-          ${CSSRight}
-        `
-      : balancePosition === 'bottomRight'
-      ? css`
-          ${CSSRight}
-          ${CSSTop}
-        `
-      : balancePosition === 'bottomCenter'
-      ? css`
-          ${CSSCenter}
-          ${CSSTop}
-        `
-      : balancePosition === 'topCenter'
-      ? css`
-          ${CSSBottom}
-          ${CSSCenter}
-        `
-      : css`
-          ${CSSRight}
-          ${CSSTop}
-        `}
-`
-
-type BalancePosition =
-  | 'bottomCenter'
-  | 'bottomLeft'
-  | 'bottomRight'
-  | 'topCenter'
-  | 'topLeft'
-  | 'topRight'
-  | 'none'
-  | undefined
-
-interface Props extends DOMAttributes<HTMLDivElement>, HTMLAttributes<HTMLDivElement> {
-  balancePosition?: BalancePosition
-  decimals: number
-  disabled?: boolean
-  displayMaxButton?: boolean
-  maxDisabled?: boolean
-  maxValue: string
-  setStatus: (status: TextfieldStatus | undefined) => void
-  setStatusText: (statusText: string | undefined) => void
-  setValue: (value: string) => void
-  symbol?: string
-  value: string
+interface Props extends TokenInputProps {
+  status?: TextfieldStatus | undefined
+  statusText?: string | undefined
+  symbol: string
+  address?: string
+  delay?: number
 }
 
-export const TokenInput = ({
-  balancePosition,
+const USDPrice = withGenericSuspense(
+  ({
+    amount,
+    decimals,
+    tokenAddress,
+  }: {
+    tokenAddress: string
+    amount: string
+    decimals: number
+  }) => {
+    const [{ data: currentPrice }] = useGetAssetsPriceInDAI([tokenAddress])
+
+    const amountInDai = useMemo(() => {
+      if (currentPrice?.[0][0] instanceof BigNumber) {
+        return fromWei(BigNumber.from(amount || 0).mul(currentPrice?.[0][0]), decimals)
+      }
+      return ZERO_BN
+    }, [amount, currentPrice, decimals])
+
+    return (
+      <USDValue>
+        <Amount value={amountInDai} />
+      </USDValue>
+    )
+  },
+)
+
+export const TokenInput: React.FC<Props> = ({
+  address,
   decimals,
+  delay = 500,
   disabled,
-  displayMaxButton = true,
-  maxDisabled,
   maxValue,
   setStatus,
   setStatusText,
   setValue,
+  status,
+  statusText,
   symbol,
   value,
   ...restProps
-}: Props) => {
-  const maxValueFormatted = formatUnits(maxValue, decimals)
-  const valueGreaterThanMaxValue = useMemo(
-    () => !!(value && BigNumber.from(value).gt(maxValue)),
-    [maxValue, value],
+}) => {
+  const [localValue, setLocalValue] = useState(value)
+  // build lodash debounce function to update the value after 600ms
+  const debouncedSetAmount = useMemo(
+    () =>
+      debounce((amount: string) => {
+        setValue(amount)
+      }, delay),
+    [delay, setValue],
   )
 
-  const clearStatuses = useCallback(() => {
-    setStatus(undefined)
-    setStatusText(undefined)
-  }, [setStatus, setStatusText])
-
   useEffect(() => {
-    if (valueGreaterThanMaxValue) {
-      setStatus(TextfieldStatus.error)
-      setStatusText('Insufficient balance')
-    } else {
-      clearStatuses()
-    }
-  }, [clearStatuses, setStatus, setStatusText, valueGreaterThanMaxValue])
+    setLocalValue(value)
+  }, [value])
 
   return (
-    <Wrapper {...restProps}>
-      {balancePosition !== 'none' && (
-        <Balance balancePosition={balancePosition}>
-          Balance: {maxValueFormatted} {symbol ? symbol : 'tokens'}
-        </Balance>
-      )}
-      <BigNumberInput
+    <Wrapper status={status} {...restProps}>
+      <TokenIcon dimensions={25} symbol={symbol} />
+      <TokenInputTextfield
         decimals={decimals}
-        onChange={(value) => {
-          setValue(value)
+        disabled={disabled}
+        maxValue={maxValue}
+        setStatus={setStatus}
+        setStatusText={setStatusText}
+        setValue={async (v) => {
+          setLocalValue(v)
+          debouncedSetAmount(v)
         }}
-        renderInput={(props) => (
-          <Textfield
-            disabled={disabled}
-            min="0"
-            placeholder="0.00"
-            status={valueGreaterThanMaxValue ? TextfieldStatus.error : undefined}
-            type="number"
-            {...props}
-          />
-        )}
-        value={value}
+        value={localValue}
       />
-      {displayMaxButton && (
-        <MaxButton disabled={maxDisabled} onClick={() => setValue(maxValue)}>
-          Max
-        </MaxButton>
+      {address && isAddress(address) ? (
+        <USDPrice amount={value} decimals={decimals} tokenAddress={address} />
+      ) : (
+        <USDValue />
       )}
+      {statusText && <FormStatus status={status}>{statusText}</FormStatus>}
     </Wrapper>
   )
 }

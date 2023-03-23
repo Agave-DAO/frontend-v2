@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
@@ -17,6 +16,7 @@ import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
+import { useActionsContext } from '@/src/providers/actionsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const UserBorrowsImp = ({
@@ -59,7 +59,7 @@ const UserBorrowsImp = ({
           Health factor <Tooltip content="Some text here!" />
         </RowKey>
         <RowValue>
-          <HealthFactor badgeVariant="light" dark size="sm" value={healthFactor} />
+          <HealthFactor badgeVariant="light" size="sm" value={healthFactor} variant="dark" />
         </RowValue>
       </Row>
       <Row variant="dark">
@@ -108,7 +108,7 @@ export const UserBorrowDetails = withGenericSuspense(
       tokenAddress,
       userAddress,
     })
-    const router = useRouter()
+    const { openBorrowRepayModal } = useActionsContext()
 
     return (
       <Wrapper {...restProps}>
@@ -129,12 +129,12 @@ export const UserBorrowDetails = withGenericSuspense(
           <ActionsWrapper>
             <ActionButton
               disabled={!userHasBorrows}
-              onClick={() => router.push(`/markets/${tokenAddress}/repay`)}
+              onClick={() => openBorrowRepayModal(tokenAddress, 'repay')}
               variant="dark"
             >
               Repay
             </ActionButton>
-            <ActionButton onClick={() => router.push(`/markets/${tokenAddress}/borrow`)}>
+            <ActionButton onClick={() => openBorrowRepayModal(tokenAddress, 'borrow')}>
               Borrow
             </ActionButton>
           </ActionsWrapper>

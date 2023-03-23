@@ -6,9 +6,7 @@ export const useGetRewardTokenData = () => {
 
   const gqlSymm = getSubgraphSdkByNetwork(appChainId, SubgraphName.SymmetricV1)
 
-  const { data: rewardTokenData } = gqlSymm.useSymmetricV1Pool(undefined, {
-    refreshInterval: 10_000,
-  })
+  const { data: rewardTokenData } = gqlSymm.useSymmetricV1Pool(undefined)
 
   return rewardTokenData
 }

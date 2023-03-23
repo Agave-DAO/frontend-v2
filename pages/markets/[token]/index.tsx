@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ButtonDark, ButtonPrimary } from '@/src/components/buttons/Button'
@@ -12,6 +13,7 @@ import { MarketInformation } from '@/src/pagePartials/markets/MarketInformation'
 import { ReserveRates } from '@/src/pagePartials/markets/ReserveRates'
 import { ReserveStatus } from '@/src/pagePartials/markets/ReserveStatus'
 import { UserInformation } from '@/src/pagePartials/markets/UserInformation'
+import { useActionsContext } from '@/src/providers/actionsProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { Token } from '@/types/token'
 
@@ -60,11 +62,12 @@ const UserConnectedActions: React.FC<{
     tokenAddress,
     userAddress,
   })
+  const { openBorrowRepayModal, openDepositWithdrawModal } = useActionsContext()
 
   const items = [
     {
       text: 'Withdraw',
-      onClick: () => router.push(`/markets/${tokenSymbol}/withdraw`),
+      onClick: () => openDepositWithdrawModal(tokenAddress, 'withdraw'),
     },
     {
       text: 'Swap',
@@ -79,15 +82,15 @@ const UserConnectedActions: React.FC<{
   if (userHasBorrows) {
     items.push({
       text: 'Repay',
-      onClick: () => router.push(`/markets/${tokenSymbol}/repay`),
+      onClick: () => openBorrowRepayModal(tokenAddress, 'repay'),
     })
   }
 
   return (
     <>
       <MoreActionsDropdown items={items} size="md" variant="neutral" />
-      <ButtonDark onClick={() => router.push(`/markets/${tokenSymbol}/borrow`)}>Borrow</ButtonDark>
-      <ButtonPrimary onClick={() => router.push(`/markets/${tokenSymbol}/deposit`)}>
+      <ButtonDark onClick={() => openBorrowRepayModal(tokenAddress, 'borrow')}>Borrow</ButtonDark>
+      <ButtonPrimary onClick={() => openDepositWithdrawModal(tokenAddress, 'deposit')}>
         Deposit
       </ButtonPrimary>
     </>
@@ -110,9 +113,9 @@ const Rates = styled(ReserveRates)`
   }
 `
 
-function MarketDetails() {
+const MarketDetails: React.FC = () => {
   const tokenInfo = useMarketByURLParam()
-  const { address: tokenAddress, symbol: tokenSymbol } = tokenInfo
+  const { address: tokenAddress, symbol: tokenSymbol } = useMemo(() => tokenInfo, [tokenInfo])
   const { address: userAddress, connectWallet, isWalletConnected } = useWeb3Connection()
   const router = useRouter()
 

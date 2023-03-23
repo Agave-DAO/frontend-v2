@@ -5,9 +5,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
-import { useUserRewards } from '@/src/hooks/presentation/useUserRewards'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { fromWei } from '@/src/utils/common'
 
 const TooltipIcon: React.FC = ({ ...restProps }) => (
   <svg

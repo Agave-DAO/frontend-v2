@@ -6,13 +6,13 @@ export enum TextfieldStatus {
   success = 'success',
 }
 
-interface TexfieldCSSProps {
+interface TextfieldCSSProps {
   status?: TextfieldStatus | undefined
 }
 
-export interface TextfieldProps extends InputHTMLAttributes<HTMLInputElement>, TexfieldCSSProps {}
+export interface TextfieldProps extends InputHTMLAttributes<HTMLInputElement>, TextfieldCSSProps {}
 
-export const TexfieldPartsCSS = css<TexfieldCSSProps>`
+export const TexfieldPartsCSS = css<TextfieldCSSProps>`
   &:active,
   &:focus {
     background-color: ${({ theme: { textField } }) => textField.active.backgroundColor};
@@ -77,7 +77,7 @@ export const TexfieldPartsCSS = css<TexfieldCSSProps>`
   }
 `
 
-export const TextfieldCSS = css<TexfieldCSSProps>`
+export const TextfieldCSS = css<TextfieldCSSProps>`
   --textfield-border-radius: 16px;
   --texfield-font-size: 1.4rem;
   --textfield-padding: 16px;

@@ -1,5 +1,5 @@
 import { DOMAttributes } from 'react'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { LogoMini } from '@/src/components/assets/LogoMini'
 import { ButtonConnect } from '@/src/components/buttons/Button'
@@ -75,36 +75,7 @@ const Head = styled.span<{ isOpen?: boolean }>`
     `}
 `
 
-const hoveringAnimation = keyframes`
-  0% {
-    top: 0;
-  }
-
-  25% {
-    top: 2px;
-  }
-
-  50% {
-    top: 0;
-  }
-
-  75% {
-    top: -2px;
-  }
-
-  100% {
-    top: 0;
-  }
-`
-
 const Logo = styled(LogoMini)<{ isOpen?: boolean }>`
-  animation-duration: 1s;
-  animation-iteration-count: 15;
-  animation-name: ${hoveringAnimation};
-  animation-timing-function: linear;
-  animation-delay: 0.75s;
-  position: relative;
-
   ${({ isOpen }) =>
     !isOpen &&
     css`

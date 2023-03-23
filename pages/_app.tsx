@@ -13,8 +13,10 @@ import SafeSuspense from '@/src/components/helpers/SafeSuspense'
 import { Footer } from '@/src/components/layout/Footer'
 import Toast from '@/src/components/toast/Toast'
 import TooltipConfig from '@/src/components/tooltip/TooltipConfig'
+import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { Head } from '@/src/pagePartials/index/Head'
 import { TransactionNotificationProvider } from '@/src/providers/TransactionNotificationProvider'
+import ActionsProvider from '@/src/providers/actionsProvider'
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
 import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
@@ -77,7 +79,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       <SWRConfig
         value={{
           suspense: true,
-          revalidateOnFocus: false,
+          revalidateOnFocus: true,
+          revalidateIfStale: false,
+          dedupingInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
         }}
       >
         <Web3ConnectionProvider>
@@ -86,11 +90,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               <TransactionNotificationProvider>
                 <CookiesWarningProvider>
                   <TokenIconsProvider>
-                    <Header />
-                    <Scroll>
-                      <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
-                      <Footer />
-                    </Scroll>
+                    <ActionsProvider>
+                      <Header />
+                      <Scroll>
+                        <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
+                        <Footer />
+                      </Scroll>
+                    </ActionsProvider>
                   </TokenIconsProvider>
                 </CookiesWarningProvider>
               </TransactionNotificationProvider>

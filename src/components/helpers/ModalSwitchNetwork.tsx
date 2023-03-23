@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 import { ButtonPrimary } from '@/src/components/buttons/Button'
-import { Modal } from '@/src/components/common/Modal'
+import { Modal } from '@/src/components/modals/Modal'
 import { chainsConfig } from '@/src/config/web3'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 

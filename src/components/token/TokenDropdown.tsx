@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Icon } from '@/src/components/asset/Asset'
@@ -55,10 +55,17 @@ export const TokenDropdown: React.FC<{
   const { onSelectToken, tokensList } = useTokensLists(onChange)
   const [currentToken, setCurrentToken] = useState<string>(activeTokenSymbol)
 
-  const onSelect = (token: Token) => {
-    onSelectToken(token)
-    setCurrentToken(token.symbol)
-  }
+  const onSelect = useCallback(
+    (token: Token) => {
+      onSelectToken(token)
+      setCurrentToken(token.symbol)
+    },
+    [onSelectToken],
+  )
+
+  useMemo(() => {
+    setCurrentToken(activeTokenSymbol)
+  }, [activeTokenSymbol])
 
   return (
     <Wrapper>

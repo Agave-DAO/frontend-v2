@@ -1,43 +1,57 @@
-import { Dispatch, SetStateAction } from 'react'
-import styled from 'styled-components'
+import { Dispatch, SetStateAction, useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
-import { Formfield } from '@/src/components/form/Formfield'
+import { HealthFactor } from '@/src/components/common/HealthFactor'
+import { Button, Row, RowKey, RowValue } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
-import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { agaveTokens } from '@/src/config/agaveTokens'
+import { TokenWithType } from '@/src/config/agaveTokens'
+import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useWithdrawStepInitial } from '@/src/pagePartials/markets/withdraw/hooks/useWithdrawStepInitial'
 
-const Column = styled(SimpleGrid)`
-  flex-direction: column;
-`
-
 interface InitialWithdrawStepInfoProps {
+  amount: string
   maxToWithdraw: BigNumber
   tokenAddress: string
+  tokenInfo: TokenWithType
 }
 
-function InitialWithdrawStepInfo({ maxToWithdraw, tokenAddress }: InitialWithdrawStepInfoProps) {
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+const InitialWithdrawStepInfo: React.FC<InitialWithdrawStepInfoProps> = ({
+  amount,
+  maxToWithdraw,
+  tokenAddress,
+  tokenInfo,
+}) => {
+  const sanitizedAmount = useMemo(() => BigNumber.from(amount ? amount : 0), [amount])
+  const newHealthFactor = useNewHealthFactorCalculator(tokenAddress).newHealthFactor({
+    amount: sanitizedAmount,
+    type: 'withdraw',
+  })
 
   return (
-    <SimpleGrid>
-      <div>Available to withdraw</div>
-      <div>
-        <TokenIcon symbol={tokenInfo.symbol} />
-        <Amount
-          decimals={tokenInfo.decimals}
-          displayDecimals={tokenInfo.decimals}
-          symbol=""
-          value={maxToWithdraw}
-        />
-      </div>
-    </SimpleGrid>
+    <>
+      <Row>
+        <RowKey>Available to withdraw</RowKey>
+        <RowValue>
+          <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
+          <Amount
+            decimals={tokenInfo.decimals}
+            displayDecimals={tokenInfo.decimals}
+            symbol=""
+            value={maxToWithdraw}
+          />
+        </RowValue>
+      </Row>
+      <Row variant="dark">
+        <RowKey>New health factor</RowKey>
+        <RowValue>
+          <HealthFactor badgeVariant="light" size="sm" value={newHealthFactor} variant="light" />
+        </RowValue>
+      </Row>
+    </>
   )
 }
 
@@ -48,12 +62,12 @@ interface InitialWithdrawStepProps {
   tokenAddress: string
 }
 
-export function InitialWithdrawStep({
+export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
   amount,
   nextStep,
   setAmount,
   tokenAddress,
-}: InitialWithdrawStepProps) {
+}) => {
   const {
     disableSubmit,
     maxToWithdraw,
@@ -65,37 +79,35 @@ export function InitialWithdrawStep({
   } = useWithdrawStepInitial({ amount, tokenAddress })
 
   const stepperProps = {
-    info: <InitialWithdrawStepInfo maxToWithdraw={maxToWithdraw} tokenAddress={tokenAddress} />,
-    title: 'Amount to withdraw',
-    titleButton: (
-      <ButtonPrimary onClick={() => setAmount(maxToWithdraw.toString())}>Use max</ButtonPrimary>
+    info: (
+      <InitialWithdrawStepInfo
+        amount={amount}
+        maxToWithdraw={maxToWithdraw}
+        tokenAddress={tokenAddress}
+        tokenInfo={tokenInfo}
+      />
     ),
+    title: 'Amount to withdraw',
+    titleButton: { onClick: () => setAmount(maxToWithdraw.toString()), text: 'Use max' },
   }
 
   return (
     <Stepper {...stepperProps}>
-      <Column data-id="action">
-        <Formfield
-          formControl={
-            <TokenInput
-              balancePosition="none"
-              decimals={tokenInfo.decimals}
-              displayMaxButton={false}
-              maxValue={maxToWithdraw.toString()}
-              setStatus={setTokenInputStatus}
-              setStatusText={setTokenInputStatusText}
-              setValue={setAmount}
-              symbol={tokenInfo.symbol}
-              value={amount}
-            />
-          }
-          status={tokenInputStatus}
-          statusText={tokenInputStatusText}
-        />
-        <ButtonPrimary disabled={disableSubmit} onClick={nextStep}>
-          Withdraw
-        </ButtonPrimary>
-      </Column>
+      <TokenInput
+        address={tokenAddress}
+        decimals={tokenInfo.decimals}
+        maxValue={maxToWithdraw.toString()}
+        setStatus={setTokenInputStatus}
+        setStatusText={setTokenInputStatusText}
+        setValue={setAmount}
+        status={tokenInputStatus}
+        statusText={tokenInputStatusText}
+        symbol={tokenInfo.symbol}
+        value={amount}
+      />
+      <Button disabled={disableSubmit} onClick={nextStep}>
+        Withdraw
+      </Button>
     </Stepper>
   )
 }

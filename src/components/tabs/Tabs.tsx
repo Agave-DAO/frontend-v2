@@ -55,6 +55,14 @@ const ActiveTabCSS = css`
   pointer-events: none;
 `
 
+const DisabledTabCSS = css`
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+`
+
 export const TabLink = styled(NavLink)`
   ${TabCSS}
 
@@ -63,10 +71,12 @@ export const TabLink = styled(NavLink)`
   }
 `
 
-export const Tab = styled.button<{ isActive?: boolean }>`
+export const Tab = styled.button<{ isActive?: boolean; disabled?: boolean }>`
   ${TabCSS}
 
   ${({ isActive }) => isActive && ActiveTabCSS}
+
+  ${({ disabled }) => disabled && DisabledTabCSS}
 `
 
 Tab.defaultProps = {

@@ -34,7 +34,7 @@ jest.mock('@/public/protocolTokens.json', (): { protocolTokens: AgaveProtocolTok
   }
 })
 
-const { address: tokenAddress, decimals } = agaveTokens.reserveTokens[0] // get first token of the token reserves array
+const { address: tokenAddress } = agaveTokens.reserveTokens[0] // get first token of the token reserves array
 
 const mockPriceShare = BigNumber.from(((1.5 / 12.5) * 1e16).toFixed())
 

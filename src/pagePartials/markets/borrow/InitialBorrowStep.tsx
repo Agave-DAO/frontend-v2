@@ -1,45 +1,58 @@
-import { Dispatch, SetStateAction } from 'react'
-import styled from 'styled-components'
+import { Dispatch, SetStateAction, useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
-import { Formfield } from '@/src/components/form/Formfield'
+import { HealthFactor } from '@/src/components/common/HealthFactor'
+import { Button, Row, RowKey, RowValue } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
-import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
+import { ToggleWrap } from '@/src/components/token/ToggleWrap'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { agaveTokens } from '@/src/config/agaveTokens'
-import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
+import { TokenWithType } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useBorrowStepInitial } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 
-const Column = styled(SimpleGrid)`
-  flex-direction: column;
-`
-
 interface InitialBorrowStepInfoProps {
+  amount: string
   maxToBorrow: BigNumber
   tokenAddress: string
+  tokenInfo: TokenWithType
 }
 
-function InitialBorrowStepInfo({ maxToBorrow, tokenAddress }: InitialBorrowStepInfoProps) {
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+const InitialBorrowStepInfo: React.FC<InitialBorrowStepInfoProps> = ({
+  amount,
+  maxToBorrow,
+  tokenAddress,
+  tokenInfo,
+}) => {
+  const sanitizedAmount = useMemo(() => BigNumber.from(amount ? amount : 0), [amount])
+  const newHealthFactor = useNewHealthFactorCalculator(tokenAddress).newHealthFactor({
+    amount: sanitizedAmount,
+    type: 'borrow',
+  })
 
   return (
-    <SimpleGrid>
-      <div>Available to borrow</div>
-      <div>
-        <TokenIcon symbol={tokenInfo.symbol} />
-        <Amount
-          decimals={tokenInfo.decimals}
-          displayDecimals={tokenInfo.decimals}
-          symbol=""
-          value={maxToBorrow}
-        />
-      </div>
-    </SimpleGrid>
+    <>
+      <Row>
+        <RowKey>Available to borrow</RowKey>
+        <RowValue>
+          <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
+          <Amount
+            decimals={tokenInfo.decimals}
+            displayDecimals={tokenInfo.decimals}
+            symbol=""
+            value={maxToBorrow}
+          />
+        </RowValue>
+      </Row>
+      <Row variant="dark">
+        <RowKey>New health factor</RowKey>
+        <RowValue>
+          <HealthFactor badgeVariant="light" size="sm" value={newHealthFactor} variant="light" />
+        </RowValue>
+      </Row>
+    </>
   )
 }
 
@@ -50,12 +63,12 @@ interface InitialBorrowStepProps {
   tokenAddress: string
 }
 
-export function InitialBorrowStep({
+export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
   amount,
   nextStep,
   setAmount,
   tokenAddress,
-}: InitialBorrowStepProps) {
+}) => {
   const {
     disableSubmit,
     maxToBorrow,
@@ -66,38 +79,45 @@ export function InitialBorrowStep({
     tokenInputStatusText,
   } = useBorrowStepInitial({ amount, tokenAddress })
 
+  const onToggleWrap = (isWrapped: boolean) => {
+    console.log(isWrapped)
+  }
+
+  const isXDAI = tokenInfo.symbol.toLowerCase() === 'xdai'
+  const isWXDAI = tokenInfo.symbol.toLowerCase() === 'wxdai'
+
   const stepperProps = {
-    info: <InitialBorrowStepInfo maxToBorrow={maxToBorrow} tokenAddress={tokenAddress} />,
-    title: 'Amount to borrow',
-    titleButton: (
-      <ButtonPrimary onClick={() => setAmount(maxToBorrow.toString())}>Use max</ButtonPrimary>
+    info: (
+      <InitialBorrowStepInfo
+        amount={amount}
+        maxToBorrow={maxToBorrow}
+        tokenAddress={tokenAddress}
+        tokenInfo={tokenInfo}
+      />
     ),
+    title: 'Amount to borrow',
+    titleButton: { onClick: () => setAmount(maxToBorrow.toString()), text: 'Use max' },
+    tokenWrapper:
+      isXDAI || isWXDAI ? <ToggleWrap isWrapped={isWXDAI} onChange={onToggleWrap} /> : null,
   }
 
   return (
     <Stepper {...stepperProps}>
-      <Column data-id="action">
-        <Formfield
-          formControl={
-            <TokenInput
-              balancePosition="none"
-              decimals={tokenInfo.decimals}
-              displayMaxButton={false}
-              maxValue={maxToBorrow.toString()}
-              setStatus={setTokenInputStatus}
-              setStatusText={setTokenInputStatusText}
-              setValue={setAmount}
-              symbol={tokenInfo.symbol}
-              value={amount}
-            />
-          }
-          status={tokenInputStatus}
-          statusText={tokenInputStatusText}
-        />
-        <ButtonPrimary disabled={disableSubmit} onClick={nextStep}>
-          Borrow
-        </ButtonPrimary>
-      </Column>
+      <TokenInput
+        address={tokenAddress}
+        decimals={tokenInfo.decimals}
+        maxValue={maxToBorrow.toString()}
+        setStatus={setTokenInputStatus}
+        setStatusText={setTokenInputStatusText}
+        setValue={setAmount}
+        status={tokenInputStatus}
+        statusText={tokenInputStatusText}
+        symbol={tokenInfo.symbol}
+        value={amount}
+      />
+      <Button disabled={disableSubmit} onClick={nextStep}>
+        Borrow
+      </Button>
     </Stepper>
   )
 }

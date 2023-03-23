@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
+import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
+import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesData'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
@@ -18,6 +20,8 @@ export const useWithdrawStepWithdraw = ({
   const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
   const WXDAIGateway = useContractInstance(WETHGateway__factory, 'WETHGateway')
   const sendTx = useTransaction()
+  const { mutate: refetchUserReservesData } = useGetUserReservesData()
+  const [, refetchUserAccountData] = useGetUserAccountData(userAddress)
 
   const withdraw = useCallback(async () => {
     const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
@@ -29,9 +33,19 @@ export const useWithdrawStepWithdraw = ({
       return agaveLending.withdraw(tokenAddress, amount, userAddress)
     })
     const receipt = await tx.wait()
-
+    refetchUserReservesData()
+    refetchUserAccountData()
     return receipt.transactionHash
-  }, [tokenAddress, sendTx, agaveLending, amount, userAddress, WXDAIGateway])
+  }, [
+    tokenAddress,
+    sendTx,
+    refetchUserReservesData,
+    refetchUserAccountData,
+    agaveLending,
+    amount,
+    userAddress,
+    WXDAIGateway,
+  ])
 
   return useStepStates({
     title: 'Withdraw',

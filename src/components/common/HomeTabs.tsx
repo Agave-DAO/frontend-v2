@@ -1,8 +1,6 @@
-import Link from 'next/link'
 import { HTMLAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
-import { NavLink } from '../navigation/NavLink'
 import { Tabs as BaseTabs, TabLink as Tab } from '@/src/components/tabs/Tabs'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 

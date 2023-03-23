@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from 'react'
+import { createRef, useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
@@ -149,7 +149,10 @@ const Chart: React.FC<{
   tokenSymbol: string
   totalBorrowed: Value
 }> = ({ availableLiquidity, decimals, tokenSymbol, totalBorrowed }) => {
-  const toNumber = (value: BigNumber) => FixedNumber.fromValue(value, decimals).toUnsafeFloat()
+  const toNumber = useCallback(
+    (value: BigNumber) => FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
+    [decimals],
+  )
 
   const data: ChartValues[] = [
     {
@@ -168,7 +171,10 @@ const Chart: React.FC<{
   const baseOuterRadius = baseChartSize / 2
   const node = createRef<HTMLDivElement>()
   const [outerRadius, setOuterRadius] = useState(baseOuterRadius)
-  const innerRadius = outerRadius <= 49 ? outerRadius - 22 : outerRadius - 50
+  const innerRadius = useMemo(
+    () => (outerRadius <= 49 ? outerRadius - 22 : outerRadius - 50),
+    [outerRadius],
+  )
 
   useEffect(() => {
     const handleResize = () => {
@@ -246,7 +252,10 @@ export const ReserveStatus: React.FC<{ tokenAddress: string }> = ({
   tokenAddress,
   ...restProps
 }) => {
-  const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
+  const { decimals, symbol } = useMemo(
+    () => agaveTokens.getTokenByAddress(tokenAddress),
+    [tokenAddress],
+  )
   const { borrowed, liquidity, reserveSize, utilizationRate } = useMarketDetails(tokenAddress)
 
   return (

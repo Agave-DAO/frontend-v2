@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router'
-
 import { UserAsset } from '@/src/components/asset/UserAsset'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
@@ -11,11 +9,12 @@ import { AssetsList } from '@/src/components/layout/AssetsList'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
+import { useActionsContext } from '@/src/providers/actionsProvider'
 
 const UserDepositsList = withGenericSuspense(
   () => {
     const userDeposits = useUserDeposits()
-    const router = useRouter()
+    const { openDepositWithdrawModal } = useActionsContext()
 
     return !userDeposits.length ? (
       <EmptyContent
@@ -41,16 +40,8 @@ const UserDepositsList = withGenericSuspense(
             const items = [
               {
                 text: 'Withdraw',
-                onClick: () => router.push(`/markets/${symbol}/withdraw`),
+                onClick: () => openDepositWithdrawModal(assetAddress, 'withdraw'),
               },
-              // {
-              //   text: 'Swap',
-              //   onClick: () => console.log('nothing yet'),
-              // },
-              // {
-              //   text: 'Strategies',
-              //   onClick: () => console.log('nothing yet'),
-              // },
             ]
 
             return (
@@ -62,7 +53,6 @@ const UserDepositsList = withGenericSuspense(
                 tokenValue={
                   <Amount
                     decimals={decimals}
-                    displayDecimals={3}
                     symbol={symbol}
                     symbolPosition="after"
                     value={depositedAmount}
@@ -74,7 +64,7 @@ const UserDepositsList = withGenericSuspense(
               >
                 <ActionsWrapper>
                   <MoreActionsDropdown items={items} size="lg" />
-                  <ActionButton onClick={() => router.push(`/markets/${symbol}/deposit`)}>
+                  <ActionButton onClick={() => openDepositWithdrawModal(assetAddress, 'deposit')}>
                     Deposit
                   </ActionButton>
                 </ActionsWrapper>

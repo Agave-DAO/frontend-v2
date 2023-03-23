@@ -1,105 +1,102 @@
 import { useMemo } from 'react'
+import styled from 'styled-components'
 
+import { Ok } from '@/src/components/assets/Ok'
+import { AssetInfo } from '@/src/components/common/AssetInfo'
+import { HealthFactor } from '@/src/components/common/HealthFactor'
+import { InnerCardDark } from '@/src/components/common/InnerCard'
+import { Row, RowKey, RowValueBig, Rows } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
-import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { Percentage } from '@/src/components/helpers/Percentage'
-import { CustomHR, Grid } from '@/src/components/helpers/Rates'
+import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
-import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
 import { useUserDepositsByToken } from '@/src/hooks/presentation/useUserDepositsByToken'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { Token } from '@/types/token'
 
-/**
- * Deposit screen information
- */
-export const DepositInfo = () => {
-  const tokenInfo = useMarketByURLParam()
+const Wrapper = styled.div`
+  width: 100%;
+`
 
+export const DepositInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) => {
   const { address } = useWeb3ConnectedApp()
-
   const { balance: walletBalance } = useAccountBalance({
     accountAddress: address,
-    tokenAddress: tokenInfo.address,
+    tokenAddress: token.address,
   })
-
   const [{ data: userData }] = useGetUserAccountData(address)
-
-  const depositedAmount = useUserDepositsByToken(tokenInfo.address)?.depositedAmount || ZERO_BN
+  const depositedAmount = useUserDepositsByToken(token.address)?.depositedAmount || ZERO_BN
   const depositedAmountInDAI =
-    useUserDepositsByToken(tokenInfo.address)?.depositedAmountInDAI || ZERO_BN
-
-  const { agaveMarketsData, getDepositAPY } = useMarketsData([tokenInfo.address])
-
-  const depositAPY = getDepositAPY(tokenInfo.address)
-
-  const healthFactor = userData?.[0].healthFactor || ZERO_BN
-
+    useUserDepositsByToken(token.address)?.depositedAmountInDAI || ZERO_BN
+  const { agaveMarketsData, getDepositAPY } = useMarketsData([token.address])
+  const depositAPY = useMemo(() => getDepositAPY(token.address), [getDepositAPY, token.address])
+  const healthFactor = useMemo(() => userData?.[0].healthFactor || ZERO_BN, [userData])
   const maxLTV = useMemo(() => agaveMarketsData?.[0].assetData.ltv || ZERO_BN, [agaveMarketsData])
-
   const collateralizable = useMemo(
     () => agaveMarketsData?.[0].assetData.usageAsCollateralEnabled || false,
     [agaveMarketsData],
   )
 
-  // return the data
   return (
-    <div style={{ width: 400 }}>
-      <CustomHR />
-      <Grid>
-        <div>Your assets</div>
-        <div>
+    <Wrapper {...restProps}>
+      <AssetInfo
+        title="Your assets"
+        tokenValue={
           <Amount
-            decimals={tokenInfo.decimals}
-            symbol={tokenInfo.symbol}
+            decimals={token.decimals}
+            symbol={token.symbol}
             symbolPosition="after"
             value={depositedAmount}
           />
-          <br />
-          <Amount value={depositedAmountInDAI} />
-        </div>
-      </Grid>
-      <CustomHR />
-      <Grid>
-        <div>Wallet Balance</div>
-        <div>
-          <Amount
-            decimals={tokenInfo.decimals}
-            symbol={tokenInfo.symbol}
-            symbolPosition="after"
-            value={walletBalance}
-          />
-        </div>
-      </Grid>
-      <CustomHR />
-      <Grid>
-        <div>Deposit APY</div>
-        <div>
-          <Percentage decimals={25} value={depositAPY} />
-        </div>
-      </Grid>
-      <CustomHR />
-      <Grid>
-        <div>Max. LTV</div>
-        <div>
-          <Percentage decimals={2} value={maxLTV} />
-        </div>
-      </Grid>
-      <CustomHR />
-      <Grid>
-        <div>Collateralizable</div>
-        <div>{collateralizable ? 'Yes' : 'No'}</div>
-      </Grid>
-      <CustomHR />
-      <Grid>
-        <div>Health Factor</div>
-        <div>
-          <HealthFactor value={healthFactor} />
-        </div>
-      </Grid>
-      <CustomHR />
-    </div>
+        }
+        usdValue={<Amount value={depositedAmountInDAI} />}
+      />
+      <InnerCardDark>
+        <Rows>
+          <Row variant="dark">
+            <RowKey>Wallet Balance</RowKey>
+            <RowValueBig>
+              <Amount
+                decimals={token.decimals}
+                symbol={token.symbol}
+                symbolPosition="after"
+                value={walletBalance}
+              />
+            </RowValueBig>
+          </Row>
+          <Row>
+            <RowKey>APY</RowKey>
+            <RowValueBig>
+              <Percentage decimals={25} value={depositAPY} />
+            </RowValueBig>
+          </Row>
+          <Row variant="dark">
+            <RowKey>
+              Max. LTV <Tooltip content="Some text here!" />
+            </RowKey>
+            <RowValueBig>
+              <Percentage decimals={2} value={maxLTV} />
+            </RowValueBig>
+          </Row>
+          <Row>
+            <RowKey>
+              Collateralizable <Tooltip content="Some text here!" />
+            </RowKey>
+            <RowValueBig>{collateralizable ? <Ok /> : 'No'}</RowValueBig>
+          </Row>
+          <Row variant="dark">
+            <RowKey>
+              Health Factor <Tooltip content="Some text here!" />
+            </RowKey>
+            <RowValueBig>
+              <HealthFactor badgeVariant="light" size="sm" value={healthFactor} variant="dark" />
+            </RowValueBig>
+          </Row>
+        </Rows>
+      </InnerCardDark>
+    </Wrapper>
   )
 }

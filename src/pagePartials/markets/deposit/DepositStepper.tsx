@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
 import { Amount } from '@/src/components/helpers/Amount'
 import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { agaveTokens } from '@/src/config/agaveTokens'
@@ -15,7 +14,6 @@ interface DepositStepperInfoProps {
 
 const DepositStepperInfo = ({ amount, tokenAddress }: DepositStepperInfoProps) => {
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-
   const newHealthFactor = useNewHealthFactorCalculator(tokenAddress).newHealthFactor({
     amount: BigNumber.from(amount),
     type: 'deposit',
@@ -59,7 +57,7 @@ export function DepositStepper({ amount, cancel, tokenAddress }: DepositStepperP
     ...depositSteps,
     info: <DepositStepperInfo amount={amount} tokenAddress={tokenAddress} />,
     title: 'Deposit overview',
-    titleButton: <ButtonPrimary onClick={cancel}>Cancel</ButtonPrimary>,
+    titleButton: { onClick: cancel, text: 'Cancel', variant: 'danger' as const },
   }
 
   return <Steps {...params} />

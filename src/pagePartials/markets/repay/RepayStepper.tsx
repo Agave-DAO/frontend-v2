@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
 import { Amount } from '@/src/components/helpers/Amount'
 import { HealthFactor } from '@/src/components/helpers/HealthFactor'
 import { agaveTokens } from '@/src/config/agaveTokens'
@@ -59,7 +58,7 @@ export function RepayStepper({ amount, cancel, tokenAddress }: RepayStepperProps
     ...depositSteps,
     info: <RepayStepperInfo amount={amount} tokenAddress={tokenAddress} />,
     title: 'Repay overview',
-    titleButton: <ButtonPrimary onClick={cancel}>Cancel</ButtonPrimary>,
+    titleButton: { onClick: cancel, text: 'Cancel', variant: 'danger' as const },
   }
 
   return <Steps {...params} />

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { StepAction } from './StepAction'
 import { StepCard } from './StepCard'
 import { Link as BaseLink } from '@/src/components/assets/Link'
+import { ButtonType } from '@/src/components/common/StepAuxiliaryAction'
 import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
 import { Stepper } from '@/src/pagePartials/markets/stepper/Stepper'
 import { Step } from '@/src/pagePartials/markets/stepper/types'
@@ -21,10 +22,17 @@ interface StepsProps {
   info: React.ReactNode
   steps: Readonly<Step[]>
   title: string
-  titleButton: React.ReactNode
+  titleButton: ButtonType
 }
 
-export function Steps({ currentStep, finalStep, info, steps, title, titleButton }: StepsProps) {
+export const Steps: React.FC<StepsProps> = ({
+  currentStep,
+  finalStep,
+  info,
+  steps,
+  title,
+  titleButton,
+}) => {
   const { getExplorerUrl } = useWeb3ConnectedApp()
 
   return (

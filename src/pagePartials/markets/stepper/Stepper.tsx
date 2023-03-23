@@ -1,31 +1,39 @@
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
-import { BaseCard } from '@/src/components/common/BaseCard'
-import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
-import { BaseTitle } from '@/src/components/text/BaseTitle'
+import { ButtonType, StepAuxiliaryAction } from '@/src/components/common/StepAuxiliaryAction'
+import { Rows as BaseRows, StepsCard } from '@/src/components/common/StepsCard'
 
-const Column = styled(SimpleGrid)`
-  flex-direction: column;
+const Rows = styled(BaseRows)`
+  margin-bottom: 16px;
 `
 
-interface StepperProps extends PropsWithChildren {
-  title: string
-  titleButton: React.ReactNode
+export const StepForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  width: 100%;
+`
+
+interface Props extends PropsWithChildren {
   info: React.ReactNode
+  title: string
+  titleButton: ButtonType
+  tokenWrapper?: React.ReactNode
 }
 
-export function Stepper({ children, info, title, titleButton }: StepperProps) {
-  return (
-    <BaseCard data-id="wizard">
-      <Column data-id="step">
-        <SimpleGrid data-id="step-header">
-          <BaseTitle>{title}</BaseTitle>
-          {titleButton}
-        </SimpleGrid>
-        <div data-id="step-info">{info}</div>
-        <div data-id="step-body">{children}</div>
-      </Column>
-    </BaseCard>
-  )
-}
+export const Stepper: React.FC<Props> = ({
+  children,
+  info,
+  title,
+  titleButton,
+  tokenWrapper,
+  ...restProps
+}) => (
+  <StepsCard {...restProps}>
+    {tokenWrapper}
+    <StepAuxiliaryAction button={titleButton} title={title} />
+    <Rows>{info}</Rows>
+    <StepForm>{children}</StepForm>
+  </StepsCard>
+)

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { MAX_UINT_256, ZERO_BN } from '@/src/constants/bigNumber'

@@ -6,7 +6,7 @@ import { Token } from '@/types/token'
 
 export const useTokensLists = (onChange?: (token: Token | null) => void) => {
   const { appChainId } = useWeb3Connection()
-  const [token, setToken] = useState<Token | null>(null)
+  const [token, setToken] = useState<Token | null>()
   const { tokensByNetwork } = useTokenIcons()
   const tokens = useMemo(() => tokensByNetwork[appChainId] || [], [appChainId, tokensByNetwork])
   const [tokensList, setTokensList] = useState(tokens)

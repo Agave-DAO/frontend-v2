@@ -5,7 +5,6 @@ import { BigNumber } from 'ethers'
 import { ButtonPrimary } from '@/src/components/buttons/Button'
 import { TxButtonStyled } from '@/src/components/buttons/txButton'
 import { BaseCard } from '@/src/components/common/BaseCard'
-import { Formfield } from '@/src/components/form/Formfield'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
@@ -139,23 +138,16 @@ export const UserStakeActionCard = withGenericSuspense(() => {
           />
         </h2>
       </SimpleGrid>
-
-      <Formfield
-        formControl={
-          <TokenInput
-            balancePosition="none"
-            decimals={18}
-            displayMaxButton={false}
-            maxValue={userAmountAvailableToStake.toString()}
-            setStatus={setTokenInputStatus}
-            setStatusText={setTokenInputStatusText}
-            setValue={setValue}
-            symbol={'AGVE'}
-            value={value}
-          />
-        }
+      <TokenInput
+        decimals={18}
+        maxValue={userAmountAvailableToStake.toString()}
+        setStatus={setTokenInputStatus}
+        setStatusText={setTokenInputStatusText}
+        setValue={setValue}
         status={tokenInputStatus}
         statusText={tokenInputStatusText}
+        symbol={'AGVE'}
+        value={value}
       />
       {!BigNumber.from(value || '0').isZero() ? (
         <>

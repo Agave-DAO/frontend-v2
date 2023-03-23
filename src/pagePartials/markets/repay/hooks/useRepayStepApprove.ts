@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 
+import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
@@ -16,13 +17,14 @@ export const useRepayStepApprove = ({
   const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
   const erc20 = useContractInstance(ERC20__factory, tokenAddress)
   const sendTx = useTransaction()
+  const { refetchAllowance } = useGetERC20Allowance(tokenAddress, agaveLending.address)
 
   const approve = useCallback(async () => {
     const tx = await sendTx(() => erc20.approve(agaveLending.address, amount))
     const receipt = await tx.wait()
-
+    refetchAllowance()
     return receipt.transactionHash
-  }, [amount, erc20, agaveLending, sendTx])
+  }, [sendTx, refetchAllowance, erc20, agaveLending.address, amount])
 
   return useStepStates({
     title: 'Approve',

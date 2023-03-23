@@ -5,6 +5,10 @@ export const links = [
   },
   {
     text: 'Forum',
-    href: 'https://forum.1hive.org/',
+    href: 'https://commonwealth.im/agave',
+  },
+  {
+    text: 'Wiki',
+    href: 'https://agavedev.notion.site/Agave-Docs-a0cb462422b941d89a6dc646cdb1bdf8',
   },
 ]

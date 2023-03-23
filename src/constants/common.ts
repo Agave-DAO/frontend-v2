@@ -10,3 +10,20 @@ export const DISPLAY_DECIMALS = 2
 export const TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL = 10_000
 export const MIN_SAFE_HEALTH_FACTOR = BigNumber.from(1200)
 export const MAX_HEALTH_FACTOR_VALUE_TO_RENDER = BigNumber.from(999)
+
+export const chartColors = [
+  '#2775CA',
+  '#69C993',
+  '#BCF298',
+  '#40B3B3',
+  '#F9F871',
+  '#9BEFD7',
+  '#4486B5',
+  '#D1DDDC',
+  '#647C77',
+  '#92DE95',
+  '#40B390',
+  '#019D8B',
+  '#006268',
+  '#0E3940',
+]

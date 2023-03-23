@@ -27,7 +27,7 @@ const errorMessages: Record<ErrorCode | 'default', string> = {
 export class TransactionError extends Error {
   code?: ErrorCode
   data?: string
-  constructor(message?: string, code?: ErrorCode, data?: any) {
+  constructor(message?: string, code?: ErrorCode, data?: never) {
     super(message)
     this.name = `${errorMessages[code || 'default']}`
     this.code = code

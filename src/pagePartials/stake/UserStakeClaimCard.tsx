@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
 import { TxButtonStyled } from '@/src/components/buttons/txButton'
 import { BaseCard } from '@/src/components/common/BaseCard'
 import { Amount } from '@/src/components/helpers/Amount'
