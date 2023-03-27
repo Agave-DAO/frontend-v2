@@ -1,9 +1,9 @@
 import { HTMLAttributes, useEffect } from 'react'
-import ReactDOM from 'react-dom'
 import styled, { css } from 'styled-components'
 
 import { Close as BaseClose } from '@/src/components/assets/Close'
 import { BaseCard } from '@/src/components/common/BaseCard'
+import BaseModal from '@/src/components/modals/BaseModal'
 
 const Wrapper = styled.div`
   align-items: center;
@@ -121,9 +121,7 @@ export const Modal: React.FC<Props> = ({
   title,
   ...restProps
 }: Props) => {
-  const portal = document.getElementById('modals') as HTMLElement
   const onCloseIsAFunction = onClose && typeof onClose === 'function'
-
   const onCloseModal = onCloseIsAFunction ? onClose : undefined
 
   useEffect(() => {
@@ -139,8 +137,7 @@ export const Modal: React.FC<Props> = ({
   }, [onClose, onCloseIsAFunction])
 
   return (
-    portal &&
-    ReactDOM.createPortal(
+    <BaseModal>
       <Wrapper
         className="modal"
         onClick={closeOnBackgroundClick ? onCloseModal : undefined}
@@ -160,8 +157,7 @@ export const Modal: React.FC<Props> = ({
           <Close onClick={onCloseModal} tabIndex={-1} />
           <Contents id="modalDescription">{children}</Contents>
         </Card>
-      </Wrapper>,
-      portal,
-    )
+      </Wrapper>
+    </BaseModal>
   )
 }

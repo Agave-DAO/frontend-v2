@@ -11,6 +11,7 @@ const Textfield: any = styled.input<TextfieldProps>`
   background-color: transparent;
   border: none;
   color: ${({ theme: { colors } }) => colors.darkestGray};
+  flex-grow: 1;
   font-size: 1.8rem;
   font-weight: 700;
   outline: none;

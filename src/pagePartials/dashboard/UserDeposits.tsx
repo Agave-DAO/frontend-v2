@@ -9,12 +9,12 @@ import { AssetsList } from '@/src/components/layout/AssetsList'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
-import { useActionsContext } from '@/src/providers/actionsProvider'
+import { useModalsContext } from '@/src/providers/modalsProvider'
 
 const UserDepositsList = withGenericSuspense(
   () => {
     const userDeposits = useUserDeposits()
-    const { openDepositWithdrawModal } = useActionsContext()
+    const { openDepositWithdrawModal } = useModalsContext()
 
     return !userDeposits.length ? (
       <EmptyContent

@@ -1,5 +1,4 @@
 export { StepAction } from './StepAction'
-export { StepCard } from './StepCard'
 export { Stepper } from './Stepper'
 export { Steps } from './Steps'
 

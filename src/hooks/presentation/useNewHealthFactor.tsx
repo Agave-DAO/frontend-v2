@@ -209,7 +209,7 @@ export function maxChangeGivenHealthFactor({
     maxAmountLimit = maxAmountLimit.lt(amount) ? maxAmountLimit : amount
   }
 
-  return maxAmountLimit
+  return maxAmountLimit.gt(ZERO_BN) ? maxAmountLimit : ZERO_BN
 }
 
 export function useNewHealthFactorCalculator(marketAddress: string) {

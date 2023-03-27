@@ -8,12 +8,12 @@ import { AssetsList } from '@/src/components/layout/AssetsList'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { InterestRateMode, useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
-import { useActionsContext } from '@/src/providers/actionsProvider'
+import { useModalsContext } from '@/src/providers/modalsProvider'
 
 const UserBorrowsList = withGenericSuspense(
   () => {
     const userBorrows = useUserBorrows()
-    const { openBorrowRepayModal } = useActionsContext()
+    const { openBorrowRepayModal } = useModalsContext()
 
     return !userBorrows.length ? (
       <EmptyContent

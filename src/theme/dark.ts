@@ -24,6 +24,9 @@ const black05 = `${black}0D`
 const black20 = `${black}33`
 const black50 = `${black}80`
 
+const overlay = '#11171C'
+const overlay50 = `${overlay}80`
+
 const darkGreen = '#006268'
 const darkGreenDarkened = darken(0.05, darkGreen)
 const darkGreen20 = `${darkGreen}33`
@@ -179,6 +182,7 @@ export const dark = {
     darkGrayDarkened: darkGrayDarkened,
     darkGreen20: darkGreen20,
     darkGreen50: darkGreen50,
+    darkGreen: darkGreen,
     darkerGray: darkerGray,
     darkestGray: darkestGray,
     darkishGray: darkishGray,
@@ -193,6 +197,8 @@ export const dark = {
     mainDark440: mainDark440,
     mainDark450: mainDark450,
     mainDark4: mainDark4,
+    overlay50: overlay50,
+    overlay: overlay,
     primary10: primary10,
     primary: primary,
     primaryDarkened: primaryDarkened,

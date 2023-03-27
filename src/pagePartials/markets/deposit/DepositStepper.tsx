@@ -1,7 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
+import { HealthFactor } from '@/src/components/common/HealthFactor'
+import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
-import { HealthFactor } from '@/src/components/helpers/HealthFactor'
+import { TokenIcon } from '@/src/components/token/TokenIcon'
+import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useDepositSteps } from '@/src/pagePartials/markets/deposit/hooks/useDepositSteps'
@@ -21,22 +24,30 @@ const DepositStepperInfo = ({ amount, tokenAddress }: DepositStepperInfoProps) =
 
   return (
     <>
-      <div data-id="summary">
-        <p>These are your transaction details.</p>
-        <p>Please verify them before submitting.</p>
-      </div>
-      <div data-id="info-amount">
-        <div>Amount</div>
-        <Amount
-          decimals={tokenInfo.decimals}
-          symbol={tokenInfo.symbol}
-          value={BigNumber.from(amount)}
-        />
-      </div>
-      <div data-id="info-newHealthFactor">
-        <div>New health factor</div>
-        <HealthFactor value={newHealthFactor} />
-      </div>
+      <Text>
+        These are your transaction details.
+        <br />
+        Please verify them before submitting.
+      </Text>
+      <Row variant="dark">
+        <RowKey>
+          Amount <Tooltip content="Some text here!" />
+        </RowKey>
+        <RowValueBig>
+          <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
+          <Amount
+            decimals={tokenInfo.decimals}
+            symbol={tokenInfo.symbol}
+            value={BigNumber.from(amount)}
+          />
+        </RowValueBig>
+      </Row>
+      <Row variant="dark">
+        <RowKey>New health factor</RowKey>
+        <RowValue>
+          <HealthFactor badgeVariant="light" size="sm" value={newHealthFactor} variant="light" />
+        </RowValue>
+      </Row>
     </>
   )
 }
@@ -47,7 +58,7 @@ interface DepositStepperProps {
   tokenAddress: string
 }
 
-export function DepositStepper({ amount, cancel, tokenAddress }: DepositStepperProps) {
+export const DepositStepper = ({ amount, cancel, tokenAddress }: DepositStepperProps) => {
   const depositSteps = useDepositSteps({
     tokenAddress,
     amount,

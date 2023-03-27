@@ -1,26 +1,28 @@
-import Link from 'next/link'
 import styled from 'styled-components'
 
-import { StepAction } from './StepAction'
-import { StepCard } from './StepCard'
-import { Link as BaseLink } from '@/src/components/assets/Link'
+import { Done } from '@/src/components/assets/Done'
 import { ButtonType } from '@/src/components/common/StepAuxiliaryAction'
-import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
+import { ExternalLink } from '@/src/components/common/StepsCard'
+import { Step } from '@/src/pagePartials/markets/stepper/Step'
+import { StepAction } from '@/src/pagePartials/markets/stepper/StepAction'
 import { Stepper } from '@/src/pagePartials/markets/stepper/Stepper'
-import { Step } from '@/src/pagePartials/markets/stepper/types'
+import { Step as StepType } from '@/src/pagePartials/markets/stepper/types'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
-const Column = styled(SimpleGrid)`
-  flex-direction: column;
+const Wrapper = styled.div`
+  background-color: ${({ theme: { colors } }) => colors.secondary};
+  border-radius: 16px;
+  column-gap: 8px;
+  display: flex;
+  margin: 4px 0;
+  padding: 8px;
 `
 
-const CHECK_MARK = '✓'
-
 interface StepsProps {
-  currentStep?: Step
-  finalStep: Step
+  currentStep?: StepType
+  finalStep: StepType
   info: React.ReactNode
-  steps: Readonly<Step[]>
+  steps: Readonly<StepType[]>
   title: string
   titleButton: ButtonType
 }
@@ -37,36 +39,32 @@ export const Steps: React.FC<StepsProps> = ({
 
   return (
     <Stepper info={info} title={title} titleButton={titleButton}>
-      <Column data-id="action">
-        <SimpleGrid>
-          {steps.map((step, index) => (
-            <StepCard
-              done={
-                step.txHash ? (
-                  <Link href={getExplorerUrl(step.txHash)} target="_blank">
-                    <BaseLink />
-                  </Link>
-                ) : (
-                  CHECK_MARK
-                )
-              }
-              index={index + 1}
-              key={step.title}
-              status={step.status}
-              title={step.title}
-            />
-          ))}
-          <StepCard
-            done={CHECK_MARK}
-            index={steps.length + 1}
-            status={finalStep.status}
-            title={finalStep.title}
+      <Wrapper>
+        {steps.map((step, index) => (
+          <Step
+            done={
+              step.txHash ? (
+                <ExternalLink href={getExplorerUrl(step.txHash)}>Explorer</ExternalLink>
+              ) : (
+                <Done />
+              )
+            }
+            index={index + 1}
+            key={step.title}
+            status={step.status}
+            title={step.title}
           />
-        </SimpleGrid>
-        <StepAction
-          {...(currentStep && currentStep.status !== 'completed' ? currentStep : finalStep)}
+        ))}
+        <Step
+          done={<Done />}
+          index={steps.length + 1}
+          status={finalStep.status}
+          title={finalStep.title}
         />
-      </Column>
+      </Wrapper>
+      <StepAction
+        {...(currentStep && currentStep.status !== 'completed' ? currentStep : finalStep)}
+      />
     </Stepper>
   )
 }

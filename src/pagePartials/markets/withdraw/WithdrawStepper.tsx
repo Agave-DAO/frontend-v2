@@ -4,6 +4,7 @@ import { HealthFactor } from '@/src/components/common/HealthFactor'
 import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
+import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { Steps } from '@/src/pagePartials/markets/stepper'
@@ -30,7 +31,9 @@ const WithdrawStepperInfo = ({ amount, tokenAddress }: WithdrawStepperInfoProps)
         Please verify them before submitting.
       </Text>
       <Row variant="dark">
-        <RowKey>Amount</RowKey>
+        <RowKey>
+          Amount <Tooltip content="Some text here!" />
+        </RowKey>
         <RowValueBig>
           <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
           <Amount decimals={tokenInfo.decimals} symbol="" value={BigNumber.from(amount)} />
@@ -52,7 +55,7 @@ interface WithdrawStepperProps {
   tokenAddress: string
 }
 
-export function WithdrawStepper({ amount, cancel, tokenAddress }: WithdrawStepperProps) {
+export const WithdrawStepper = ({ amount, cancel, tokenAddress }: WithdrawStepperProps) => {
   const depositSteps = useWithdrawSteps({
     tokenAddress,
     amount,

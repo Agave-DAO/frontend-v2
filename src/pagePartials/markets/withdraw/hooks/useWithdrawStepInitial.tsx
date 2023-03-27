@@ -8,6 +8,7 @@ import { agaveTokens } from '@/src/config/agaveTokens'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
+import { useLocalStorage, usePersistedState } from '@/src/hooks/usePersistedState'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export function useWithdrawStepInitial({
@@ -21,6 +22,8 @@ export function useWithdrawStepInitial({
   const agTokenInfo = agaveTokens
     .getRelatedTokensByAddress(tokenAddress)
     .find(({ type }) => type === 'ag')
+
+  const [minSafeHF] = usePersistedState('minSafeHF', MIN_SAFE_HEALTH_FACTOR.toNumber())
 
   const { maxAmountGivenHealthFactor } = useNewHealthFactorCalculator(tokenInfo.address)
 
@@ -39,8 +42,8 @@ export function useWithdrawStepInitial({
 
   const maxSafeAmount = maxAmountGivenHealthFactor({
     amount: balance,
-    targetValue: MIN_SAFE_HEALTH_FACTOR,
     type: 'withdraw',
+    targetValue: BigNumber.from(minSafeHF),
   })
 
   return {

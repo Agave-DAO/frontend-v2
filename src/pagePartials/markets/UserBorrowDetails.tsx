@@ -16,7 +16,7 @@ import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
-import { useActionsContext } from '@/src/providers/actionsProvider'
+import { useModalsContext } from '@/src/providers/modalsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const UserBorrowsImp = ({
@@ -108,7 +108,7 @@ export const UserBorrowDetails = withGenericSuspense(
       tokenAddress,
       userAddress,
     })
-    const { openBorrowRepayModal } = useActionsContext()
+    const { openBorrowRepayModal } = useModalsContext()
 
     return (
       <Wrapper {...restProps}>

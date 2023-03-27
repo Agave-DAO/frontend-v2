@@ -3,7 +3,14 @@ import { Dispatch, SetStateAction, useMemo } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { HealthFactor } from '@/src/components/common/HealthFactor'
-import { Button, Row, RowKey, RowValue } from '@/src/components/common/StepsCard'
+import {
+  Button,
+  ButtonWrapper,
+  Row,
+  RowKey,
+  RowValue,
+  StepActionButton,
+} from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
@@ -11,6 +18,7 @@ import { TokenWithType } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useRepayStepInitial } from '@/src/pagePartials/markets/repay/hooks/useRepayStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
+import { useModalsContext } from '@/src/providers/modalsProvider'
 
 interface InitialRepayStepInfoProps {
   amount: string
@@ -77,6 +85,7 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
     tokenInputStatus,
     tokenInputStatusText,
   } = useRepayStepInitial({ amount, tokenAddress })
+  const { openMinHealthConfigurationModal } = useModalsContext()
 
   const stepperProps = {
     info: (
@@ -105,9 +114,14 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
         symbol={tokenInfo.symbol}
         value={amount}
       />
-      <Button disabled={disableSubmit} onClick={nextStep}>
-        Repay
-      </Button>
+      <ButtonWrapper>
+        <Button disabled={disableSubmit} onClick={nextStep}>
+          Repay
+        </Button>
+        <StepActionButton onClick={openMinHealthConfigurationModal}>
+          Min health factor configuration
+        </StepActionButton>
+      </ButtonWrapper>
     </Stepper>
   )
 }

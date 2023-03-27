@@ -4,6 +4,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { useModalsContext } from '@/src/providers/modalsProvider'
 import { formatAmount } from '@/src/utils/common'
 
 export const useDepositStepFinal = ({
@@ -23,7 +24,12 @@ export const useDepositStepFinal = ({
     tokenInfo.decimals,
   )
 
-  const final = () => router.push('/my-account')
+  const { closeModal } = useModalsContext()
+
+  const final = () => {
+    router.push('/my-account')
+    closeModal()
+  }
 
   return useStepStates({
     title: 'Done',

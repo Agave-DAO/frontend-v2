@@ -17,7 +17,7 @@ import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDepositsInformationByToken } from '@/src/hooks/presentation/useUserDepositsInformationByToken'
-import { useActionsContext } from '@/src/providers/actionsProvider'
+import { useModalsContext } from '@/src/providers/modalsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { toWei } from '@/src/utils/common'
 
@@ -95,7 +95,7 @@ export const UserDepositDetails = withGenericSuspense(
       tokenAddress,
       userAddress,
     })
-    const { openDepositWithdrawModal } = useActionsContext()
+    const { openDepositWithdrawModal } = useModalsContext()
 
     const items = [
       {

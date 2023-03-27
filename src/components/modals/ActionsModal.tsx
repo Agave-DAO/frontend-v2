@@ -1,46 +1,18 @@
 import { useRouter } from 'next/router'
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
-import ReactDOM from 'react-dom'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 
-import { Close as BaseClose } from '@/src/components/assets/Close'
-import { LogoMini } from '@/src/components/assets/LogoMini'
 import { ButtonMini } from '@/src/components/buttons/Button'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
+import Modal from '@/src/components/modals/BaseModal'
+import { Body } from '@/src/components/modals/Body'
 import { BorrowRepay } from '@/src/components/modals/BorrowRepay'
 import { DepositWithdraw } from '@/src/components/modals/DepositWithdraw'
+import { Header } from '@/src/components/modals/Header'
+import { Overlay } from '@/src/components/modals/Overlay'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
-import { useActionsContext } from '@/src/providers/actionsProvider'
 import { BorrowRepayTabs, DepositWithdrawTabs } from '@/types/modal'
 import { Token } from '@/types/token'
-
-const openAnimation = keyframes`
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-`
-
-const Wrapper = styled.div`
-  align-items: center;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
-  animation-name: ${openAnimation};
-  animation-timing-function: linear;
-  background-image: ${({ theme: { modal } }) => modal.overlayColor};
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  left: 0;
-  overflow: auto;
-  padding: 10px;
-  position: fixed;
-  top: 0;
-  width: 100vw;
-  z-index: 100;
-`
 
 const Inner = styled.div`
   display: flex;
@@ -49,47 +21,6 @@ const Inner = styled.div`
   margin: 0 auto;
   max-width: 100%;
   width: ${({ theme: { layout } }) => layout.maxWidth};
-`
-
-const Head = styled.div`
-  align-items: center;
-  display: flex;
-  flex-grow: 0;
-  flex-shrink: 0;
-  height: var(--header-full-height);
-  justify-content: space-between;
-  margin-bottom: 40px;
-  padding-top: var(--header-padding-top);
-`
-
-const Logo = styled(LogoMini)`
-  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    height: 46px;
-    width: 48px;
-  }
-`
-
-const Body = styled.div`
-  display: flex;
-  flex-grow: 1;
-
-  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    background: linear-gradient(
-      180deg,
-      ${({ theme: { colors } }) => colors.darkBackground02} 0%,
-      ${({ theme: { colors } }) => colors.darkBackground0} 25.31%
-    );
-    border-radius: 24px;
-    padding: 56px 95px;
-  }
-`
-
-const Close = styled(BaseClose)`
-  cursor: pointer;
-
-  &:active {
-    opacity: 0.7;
-  }
 `
 
 const Contents = styled.div`
@@ -139,62 +70,36 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
   symbol,
   ...restProps
 }) => {
-  const portal = document.getElementById('modals') as HTMLElement
-  const body = document.getElementById('body') as HTMLElement
   const router = useRouter()
-  const { openModal } = useActionsContext()
-  const openModalClass = 'modalOpen'
-
-  const closeModal = useCallback(() => {
-    if (body) {
-      body.classList.remove(openModalClass)
-    }
-    onClose()
-  }, [body, onClose])
 
   const closeModalAndGo = useCallback(() => {
     router.push(`/markets/${symbol}`)
-    closeModal()
-  }, [closeModal, router, symbol])
+    onClose()
+  }, [onClose, router, symbol])
 
   useEffect(() => {
     const close = (e: { key: string }) => {
       if (e.key === 'Escape') {
-        closeModal()
+        onClose()
       }
     }
-
     window.addEventListener('keyup', close)
 
     return () => window.removeEventListener('keyup', close)
-  }, [closeModal])
-
-  useEffect(() => {
-    if (openModal && body) {
-      body.classList.add(openModalClass)
-    }
-  }, [body, openModal])
+  }, [onClose])
 
   return (
-    portal &&
-    ReactDOM.createPortal(
-      <Wrapper
+    <Modal>
+      <Overlay
         aria-describedby="modalDescription"
         aria-labelledby="modalTitle"
         className="modal"
-        onClick={closeOnBackgroundClick ? closeModal : undefined}
+        onClick={closeOnBackgroundClick ? onClose : undefined}
         {...restProps}
       >
         <RequiredConnection>
           <Inner>
-            <Head
-              onClick={(e) => {
-                e.stopPropagation()
-              }}
-            >
-              <Logo />
-              <Close onClick={closeModal} tabIndex={-1} />
-            </Head>
+            <Header onClose={onClose} />
             <Body
               onClick={(e) => {
                 e.stopPropagation()
@@ -213,9 +118,8 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
             </Body>
           </Inner>
         </RequiredConnection>
-      </Wrapper>,
-      portal,
-    )
+      </Overlay>
+    </Modal>
   )
 }
 

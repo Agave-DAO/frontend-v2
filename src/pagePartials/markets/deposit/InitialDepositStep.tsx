@@ -3,7 +3,15 @@ import { Dispatch, SetStateAction, useMemo } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { HealthFactor } from '@/src/components/common/HealthFactor'
-import { Button, Row, RowKey, RowValue, Text } from '@/src/components/common/StepsCard'
+import {
+  Button,
+  ButtonWrapper,
+  Row,
+  RowKey,
+  RowValue,
+  StepActionButton,
+  Text,
+} from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { ToggleWrap } from '@/src/components/token/ToggleWrap'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
@@ -12,6 +20,7 @@ import { TokenWithType } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useDepositStepInitial } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
+import { useModalsContext } from '@/src/providers/modalsProvider'
 
 interface InitialDepositStepInfoProps {
   amount: string
@@ -78,6 +87,7 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
     tokenInputStatus,
     tokenInputStatusText,
   } = useDepositStepInitial({ amount, tokenAddress })
+  const { openMinHealthConfigurationModal } = useModalsContext()
 
   const onToggleWrap = (isWrapped: boolean) => {
     console.log(isWrapped)
@@ -118,9 +128,14 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
         symbol={tokenInfo.symbol}
         value={amount}
       />
-      <Button disabled={disableSubmit} onClick={nextStep}>
-        Deposit
-      </Button>
+      <ButtonWrapper>
+        <Button disabled={disableSubmit} onClick={nextStep}>
+          Deposit
+        </Button>
+        <StepActionButton onClick={openMinHealthConfigurationModal}>
+          Min health factor configuration
+        </StepActionButton>
+      </ButtonWrapper>
     </Stepper>
   )
 }

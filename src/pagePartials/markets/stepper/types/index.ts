@@ -1,15 +1,15 @@
 import { Dispatch } from 'react'
 
 export type Step = {
-  title: string
-  description: string
-  status: 'idle' | 'active' | 'processing' | 'completed'
-  mainAction: () => Promise<unknown>
   actionText: string
-  txHash?: string
+  description: string
   error?: string
-  isLastToFinal?: boolean
   isFinal?: boolean
+  isLastToFinal?: boolean
+  mainAction: () => Promise<unknown>
+  status: 'idle' | 'active' | 'processing' | 'completed'
+  title: string
+  txHash?: string
 }
 
 export type Action = {

@@ -8,6 +8,7 @@ import { agaveTokens } from '@/src/config/agaveTokens'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
+import { useLocalStorage, usePersistedState } from '@/src/hooks/usePersistedState'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export function useDepositStepInitial({
@@ -20,6 +21,7 @@ export function useDepositStepInitial({
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const { address: accountAddress } = useWeb3ConnectedApp()
   const { balance } = useAccountBalance({ accountAddress, tokenAddress })
+  const [minSafeHF] = usePersistedState('minSafeHF', MIN_SAFE_HEALTH_FACTOR.toNumber())
 
   const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
   const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
@@ -32,7 +34,7 @@ export function useDepositStepInitial({
   const maxSafeAmount = maxAmountGivenHealthFactor({
     amount: balance,
     type: 'deposit',
-    targetValue: MIN_SAFE_HEALTH_FACTOR,
+    targetValue: BigNumber.from(minSafeHF),
   })
 
   return {
