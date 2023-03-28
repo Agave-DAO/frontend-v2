@@ -16,6 +16,7 @@ import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformatio
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { NumberType } from '@/src/utils/format'
 import { ERC20__factory, StakedToken__factory } from '@/types/generated/typechain'
 
 export const UserStakeActionCard = withGenericSuspense(() => {
@@ -131,7 +132,7 @@ export const UserStakeActionCard = withGenericSuspense(() => {
         <h2>
           <Amount
             decimals={18}
-            displayDecimals={6}
+            numberType={NumberType.TokenTx}
             symbol="AGVE"
             symbolPosition="after"
             value={userAmountAvailableToStake}

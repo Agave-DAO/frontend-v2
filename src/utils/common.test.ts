@@ -3,7 +3,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import {
   calculatePercentageTimePassedBetweenDates,
   formatAmount,
-  formatNumber,
   formatPercentage,
   fromWei,
   futureDateToCooldownPeriod,
@@ -11,57 +10,26 @@ import {
 } from './common'
 import { secondsToString } from '@/src/utils/common'
 
-describe('formatNumber', () => {
-  it('formatNumber should return expected output', () => {
-    const retValue = formatNumber(150000.356, 2)
-
-    expect(retValue).toBe('150,000.36')
-  })
-})
-
 describe('formatAmount', () => {
   it('formatAmount should return expected outputs', () => {
     const mockValue = BigNumber.from('22531146831900000000') // 22.5311468319 ETH
     const mockDecimals = 18
     const mockSymbol = 'ETH'
-    const displayDecimals = 3
 
-    const retValueWithSymbolBefore = formatAmount(
-      mockValue,
-      mockDecimals,
-      mockSymbol,
-      'before',
-      displayDecimals,
-    )
-    const retValueWithSymbolAfter = formatAmount(
-      mockValue,
-      mockDecimals,
-      mockSymbol,
-      'after',
-      displayDecimals,
-    )
+    const retValueWithSymbolBefore = formatAmount(mockValue, mockDecimals, mockSymbol, 'before')
+    const retValueWithSymbolAfter = formatAmount(mockValue, mockDecimals, mockSymbol, 'after')
     const retValueWithDefaultSymbolAndDefaultPosition = formatAmount(
       mockValue,
       mockDecimals,
       mockSymbol,
       'before',
-      3,
     )
-    const retValueWithoutSymbol = formatAmount(
-      mockValue,
-      mockDecimals,
-      mockSymbol,
-      'before',
-      displayDecimals,
-    )
+    const retValueWithoutSymbol = formatAmount(mockValue, mockDecimals, mockSymbol, 'before')
 
-    const retValueWith6DisplayDecimals = formatAmount(mockValue, mockDecimals, '', 'after', 6)
-
-    expect(retValueWithSymbolBefore).toBe('ETH 22.531')
-    expect(retValueWithSymbolAfter).toBe('22.531 ETH')
-    expect(retValueWithDefaultSymbolAndDefaultPosition).toBe('ETH 22.531')
-    expect(retValueWithoutSymbol).toBe('ETH 22.531')
-    expect(retValueWith6DisplayDecimals).toBe('22.531147')
+    expect(retValueWithSymbolBefore).toBe('ETH 22.53')
+    expect(retValueWithSymbolAfter).toBe('22.53 ETH')
+    expect(retValueWithDefaultSymbolAndDefaultPosition).toBe('ETH 22.53')
+    expect(retValueWithoutSymbol).toBe('ETH 22.53')
   })
 })
 

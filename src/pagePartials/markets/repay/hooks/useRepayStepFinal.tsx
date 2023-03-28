@@ -21,7 +21,6 @@ export const useRepayStepFinal = ({
     tokenInfo.decimals,
     tokenInfo.symbol,
     'after',
-    tokenInfo.decimals,
   )
 
   const { closeModal } = useModalsContext()

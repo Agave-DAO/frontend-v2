@@ -59,7 +59,7 @@ const UserDepositsList = withGenericSuspense(
                   />
                 }
                 totalAP={depositRate.add(incentiveRate)}
-                usdValue={<Amount displayDecimals={3} value={depositedAmountInDAI} />}
+                usdValue={<Amount value={depositedAmountInDAI} />}
                 useAsCollateral={asCollateral}
               >
                 <ActionsWrapper>

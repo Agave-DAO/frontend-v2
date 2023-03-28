@@ -19,6 +19,7 @@ import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHea
 import { useRepayStepInitial } from '@/src/pagePartials/markets/repay/hooks/useRepayStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useModalsContext } from '@/src/providers/modalsProvider'
+import { NumberType } from '@/src/utils/format'
 
 interface InitialRepayStepInfoProps {
   amount: string
@@ -47,7 +48,7 @@ const InitialRepayStepInfo: React.FC<InitialRepayStepInfoProps> = ({
           <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
           <Amount
             decimals={tokenInfo.decimals}
-            displayDecimals={tokenInfo.decimals}
+            numberType={NumberType.TokenTx}
             symbol=""
             value={maxToRepay}
           />

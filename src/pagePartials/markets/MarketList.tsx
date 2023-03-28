@@ -112,14 +112,8 @@ const MarketSizeValue = styled.span`
 
 export const MarketList: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
-    const {
-      agaveMarketsData,
-      getBorrowRate,
-      getDepositAPY,
-      getIncentiveRate,
-      getMarketSize,
-      getTotalBorrowed,
-    } = useMarketsData()
+    const { agaveMarketsData, getBorrowRate, getDepositAPY, getIncentiveRate, getMarketSize } =
+      useMarketsData()
     const [search, setSearch] = useState('')
     const markets = agaveMarketsData
       ? agaveMarketsData.filter(({ assetData: { isFrozen } }) => !isFrozen)
@@ -128,7 +122,7 @@ export const MarketList: React.FC = withGenericSuspense(
       () =>
         markets
           ? markets.reduce(
-              (currentTotal, { tokenAddress }) => currentTotal.add(getMarketSize(tokenAddress)),
+              (currentTotal, { tokenAddress }) => currentTotal.add(getMarketSize(tokenAddress).usd),
               ZERO_BN,
             )
           : undefined,
@@ -201,14 +195,10 @@ export const MarketList: React.FC = withGenericSuspense(
                       decimals={decimals}
                       symbol={symbol}
                       symbolPosition="after"
-                      value={getTotalBorrowed(tokenAddress)}
+                      value={getMarketSize(tokenAddress).wei}
                     />
                   }
-                  usdValue={
-                    <Amount
-                      value={fromWei(getTotalBorrowed(tokenAddress).mul(priceData), decimals)}
-                    />
-                  }
+                  usdValue={<Amount value={getMarketSize(tokenAddress).usd} />}
                   {...data}
                 />
               )

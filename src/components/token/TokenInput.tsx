@@ -17,6 +17,8 @@ import {
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 import { fromWei } from '@/src/utils/common'
+import { formatAmount } from '@/src/utils/common'
+import { NumberType } from '@/src/utils/format'
 
 const Wrapper = styled.div<{ status?: TextfieldStatus | undefined }>`
   align-items: center;
@@ -105,7 +107,7 @@ export const TokenInput: React.FC<Props> = ({
   ...restProps
 }) => {
   const [localValue, setLocalValue] = useState(value)
-  // build lodash debounce function to update the value after 600ms
+
   const debouncedSetAmount = useMemo(
     () =>
       debounce((amount: string) => {

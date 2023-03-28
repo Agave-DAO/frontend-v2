@@ -49,13 +49,12 @@ export const BorrowInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) 
         tokenValue={
           <Amount
             decimals={token.decimals}
-            displayDecimals={4}
             symbol={token.symbol}
             symbolPosition="after"
             value={totalBorrowed}
           />
         }
-        usdValue={<Amount displayDecimals={4} value={totalBorrowedInDAI} />}
+        usdValue={<Amount value={totalBorrowedInDAI} />}
       />
       <InnerCardDark>
         <Rows>

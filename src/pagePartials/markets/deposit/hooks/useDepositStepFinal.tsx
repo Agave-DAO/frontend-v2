@@ -21,7 +21,6 @@ export const useDepositStepFinal = ({
     tokenInfo.decimals,
     tokenInfo.symbol,
     'after',
-    tokenInfo.decimals,
   )
 
   const { closeModal } = useModalsContext()

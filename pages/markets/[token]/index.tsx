@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { ButtonDark, ButtonPrimary } from '@/src/components/buttons/Button'
 import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
-import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import SafeSuspense, { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
 import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
@@ -120,7 +120,10 @@ const MarketDetails: React.FC = () => {
   const router = useRouter()
 
   const onChange = (token: Token | null) => {
-    router.push(`/markets/${token?.symbol}`)
+    router.push(`/markets/${token?.symbol}`, undefined, {
+      shallow: true,
+      scroll: false,
+    })
   }
 
   return (

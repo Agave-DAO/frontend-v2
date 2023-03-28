@@ -7,6 +7,7 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { NumberType } from '@/src/utils/format'
 import { StakedToken__factory } from '@/types/generated/typechain'
 
 export const UserStakeClaimCard = withGenericSuspense(() => {
@@ -23,7 +24,7 @@ export const UserStakeClaimCard = withGenericSuspense(() => {
     <BaseCard style={{ flexDirection: 'column' }}>
       <p>Amount claimable:</p>
       <h2>
-        <Amount decimals={18} displayDecimals={8} value={userAmountAvailableToClaim} />
+        <Amount decimals={18} numberType={NumberType.TokenTx} value={userAmountAvailableToClaim} />
       </h2>
       <TxButtonStyled
         disabled={submitDisabled}

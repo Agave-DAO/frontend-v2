@@ -13,13 +13,7 @@ export const StakeInformationCard = withGenericSuspense(() => {
     <BaseCard>
       <div>
         <p> Agave per month: </p>
-        <Amount
-          decimals={18}
-          displayDecimals={5}
-          symbol="AGVE"
-          symbolPosition="after"
-          value={yieldPerMonth}
-        />
+        <Amount decimals={18} symbol="AGVE" symbolPosition="after" value={yieldPerMonth} />
       </div>
       <div>
         <p>Cooldown period: </p>
@@ -35,13 +29,7 @@ export const StakeInformationCard = withGenericSuspense(() => {
       </div>
       <div>
         <p>Funds in the Safety Module:</p>
-        <Amount
-          decimals={18}
-          displayDecimals={3}
-          symbol="AGVE"
-          symbolPosition="after"
-          value={totalStaked}
-        />
+        <Amount decimals={18} symbol="AGVE" symbolPosition="after" value={totalStaked} />
       </div>
     </BaseCard>
   )

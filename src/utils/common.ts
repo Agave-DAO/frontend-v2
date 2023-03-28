@@ -1,28 +1,13 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 import { parseUnits } from 'ethers/lib/utils'
 
-import {
-  DISPLAY_DECIMALS,
-  MAX_HEALTH_FACTOR_VALUE_TO_RENDER,
-  NATIVE_DECIMALS,
-} from '@/src/constants/common'
+import { NumberType, formatNumber } from './format'
+import { MAX_HEALTH_FACTOR_VALUE_TO_RENDER, NATIVE_DECIMALS } from '@/src/constants/common'
 
 /**
- * It takes a number and returns a formatted number as string
- * @param {number} value - number - The number to format
- * @param displayDecimals - The number of decimal places to display.
- */
-export const formatNumber = (value: number, displayDecimals = DISPLAY_DECIMALS): string =>
-  value !== undefined
-    ? Intl.NumberFormat('en', {
-        maximumFractionDigits: displayDecimals,
-      }).format(value)
-    : ''
-
-/**
- * It takes a BigNumber and formats it as a string
+ * It takes a BigNumber and formats it as a string using uniswap conedison
  * @param {BigNumber} value - The amount to format
- * @param {number} decimals - The number of decimals to display.
+ * @param {number} decimals - The number of decimals the token has.
  * @param [symbol=$] - The symbol to use for the currency.
  * @param {'before' | 'after'} [symbolPosition=before] - 'before' | 'after' = 'before'
  */
@@ -32,20 +17,21 @@ export const formatAmount = (
   decimals: number = NATIVE_DECIMALS,
   symbol = '$',
   symbolPosition: SymbolPosition = 'before',
-  displayDecimals: number = DISPLAY_DECIMALS,
+  numberType?: NumberType,
 ): string => {
+  const number = FixedNumber.fromValue(value, decimals, 'fixed256x27').toUnsafeFloat()
   return symbol
-    ? `${symbolPosition === 'before' ? `${symbol}` : ''}${formatNumber(
-        FixedNumber.fromValue(value, decimals).toUnsafeFloat(),
-        displayDecimals,
-      )}${symbolPosition === 'after' ? ` ${symbol}` : ''}`
-    : `${formatNumber(FixedNumber.fromValue(value, decimals).toUnsafeFloat(), displayDecimals)}`
+    ? `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(number, numberType)}${
+        symbolPosition === 'after' ? ` ${symbol}` : ''
+      }`
+    : `${formatNumber(number, numberType)}`
 }
 
-export const formatPercentage = (value: BigNumber, decimals: number) =>
-  `${parseFloat(
-    FixedNumber.fromValue(value, decimals, 'fixed256x27').toUnsafeFloat().toFixed(DISPLAY_DECIMALS),
+export const formatPercentage = (value: BigNumber, decimals: number) => {
+  return `${parseFloat(
+    FixedNumber.fromValue(value, decimals, 'fixed256x27').toUnsafeFloat().toFixed(3),
   )}%`
+}
 
 /**
  * Convert all wei values to a BigNumber as human readable form
@@ -175,12 +161,11 @@ export const formatHealthFactor = (
   decimals?: number,
   symbol?: string,
   symbolPosition?: SymbolPosition,
-  displayDecimals?: number,
 ) => {
   const formatted = fromWei(value, decimals)
   return formatted.gt(MAX_HEALTH_FACTOR_VALUE_TO_RENDER)
     ? '∞'
-    : formatAmount(value, decimals ?? 18, symbol || '', symbolPosition, displayDecimals ?? 1)
+    : formatAmount(value, decimals ?? 18, symbol || '', symbolPosition)
 }
 
 export const toNumber = (value: BigNumber, decimals: number) =>

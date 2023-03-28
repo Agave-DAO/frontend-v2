@@ -82,13 +82,7 @@ export const UserStakedCard = withGenericSuspense(() => {
     <BaseCard style={{ flexDirection: 'column' }}>
       <p>Amount staked:</p>
       <h2>
-        <Amount
-          decimals={18}
-          displayDecimals={8}
-          symbol="AGVE"
-          symbolPosition="after"
-          value={userAmountStaked}
-        />
+        <Amount symbol="AGVE" symbolPosition="after" value={userAmountStaked} />
       </h2>
 
       {showInitialCooldown && activateCooldownFrom && (

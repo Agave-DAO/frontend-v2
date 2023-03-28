@@ -20,6 +20,7 @@ import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHea
 import { useBorrowStepInitial } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useModalsContext } from '@/src/providers/modalsProvider'
+import { NumberType } from '@/src/utils/format'
 
 interface InitialBorrowStepInfoProps {
   amount: string
@@ -48,7 +49,7 @@ const InitialBorrowStepInfo: React.FC<InitialBorrowStepInfoProps> = ({
           <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
           <Amount
             decimals={tokenInfo.decimals}
-            displayDecimals={tokenInfo.decimals}
+            numberType={NumberType.TokenTx}
             symbol=""
             value={maxToBorrow}
           />

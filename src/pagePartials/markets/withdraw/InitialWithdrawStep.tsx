@@ -19,6 +19,7 @@ import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHea
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useWithdrawStepInitial } from '@/src/pagePartials/markets/withdraw/hooks/useWithdrawStepInitial'
 import { useModalsContext } from '@/src/providers/modalsProvider'
+import { NumberType } from '@/src/utils/format'
 
 interface InitialWithdrawStepInfoProps {
   amount: string
@@ -47,7 +48,7 @@ const InitialWithdrawStepInfo: React.FC<InitialWithdrawStepInfoProps> = ({
           <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
           <Amount
             decimals={tokenInfo.decimals}
-            displayDecimals={tokenInfo.decimals}
+            numberType={NumberType.TokenTx}
             symbol=""
             value={maxToWithdraw}
           />

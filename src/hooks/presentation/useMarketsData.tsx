@@ -4,12 +4,9 @@ import { AgaveProtocolTokenType, agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useGetMarketsData } from '@/src/hooks/queries/useGetMarketsData'
 import { useGetRewardTokenData } from '@/src/hooks/queries/useGetRewardTokenData'
+import { fromWei } from '@/src/utils/common'
 import { isSameAddress } from '@/src/utils/isSameAddress'
-import {
-  getIncentiveRate as calculateIncentiveRate,
-  getMarketSize as calculateMarketSize,
-  getPriceShares,
-} from '@/src/utils/markets'
+import { getIncentiveRate as calculateIncentiveRate, getPriceShares } from '@/src/utils/markets'
 
 /**
  * Returns the AgaveMarketData for a given array of reserve tokens addresses.
@@ -45,15 +42,18 @@ export const useMarketsData = (reserveTokensAddresses?: string[]) => {
       try {
         const marketData = getMarket(tokenAddress)
         const { availableLiquidity, totalVariableDebt } = marketData.reserveData
+        const { decimals } = agaveTokens.getTokenByAddress(tokenAddress)
 
-        return calculateMarketSize({
-          tokenAddress,
-          totalSupply: totalVariableDebt.add(availableLiquidity),
-          price: marketData.priceData,
-        })
+        return {
+          usd: fromWei(
+            totalVariableDebt.add(availableLiquidity).mul(marketData.priceData),
+            decimals,
+          ),
+          wei: totalVariableDebt.add(availableLiquidity),
+        }
       } catch (e) {
         console.error(e)
-        return ZERO_BN
+        return { usd: ZERO_BN, wei: ZERO_BN }
       }
     },
     [getMarket],

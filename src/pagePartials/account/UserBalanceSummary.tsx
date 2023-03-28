@@ -131,9 +131,7 @@ export const UserBalanceSummary: React.FC = ({ ...restProps }) => {
       <Row>
         <Text>Approximate balance</Text>
         <AccountBalance>
-          <Balance>
-            {noDeposits ? '$0.00' : <Amount displayDecimals={3} value={userDeposits} />}
-          </Balance>
+          <Balance>{noDeposits ? '$0.00' : <Amount value={userDeposits} />}</Balance>
           <Tooltip content="Some text here!">
             <TooltipIcon />
           </Tooltip>
@@ -144,9 +142,7 @@ export const UserBalanceSummary: React.FC = ({ ...restProps }) => {
           Rewards <Tooltip content="Some text here!" />
         </Text>
         <Rewards>
-          <RewardsBalance>
-            {noRewards ? '$0.00' : <Amount displayDecimals={5} value={userRewards} />}
-          </RewardsBalance>
+          <RewardsBalance>{noRewards ? '$0.00' : <Amount value={userRewards} />}</RewardsBalance>
           <RewardPair size={18} />
         </Rewards>
       </Row>

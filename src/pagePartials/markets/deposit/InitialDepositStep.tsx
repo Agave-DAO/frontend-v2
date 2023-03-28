@@ -21,6 +21,7 @@ import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHea
 import { useDepositStepInitial } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useModalsContext } from '@/src/providers/modalsProvider'
+import { NumberType } from '@/src/utils/format'
 
 interface InitialDepositStepInfoProps {
   amount: string
@@ -52,7 +53,12 @@ const InitialDepositStepInfo: React.FC<InitialDepositStepInfoProps> = ({
         <RowKey>Available to deposit</RowKey>
         <RowValue>
           <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
-          <Amount decimals={tokenInfo.decimals} displayDecimals={3} symbol="" value={balance} />
+          <Amount
+            decimals={tokenInfo.decimals}
+            numberType={NumberType.TokenTx}
+            symbol=""
+            value={balance}
+          />
         </RowValue>
       </Row>
       <Row variant="dark">

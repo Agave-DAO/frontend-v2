@@ -21,7 +21,6 @@ export const useBorrowStepFinal = ({
     tokenInfo.decimals,
     tokenInfo.symbol,
     'after',
-    tokenInfo.decimals,
   )
 
   const { closeModal } = useModalsContext()

@@ -110,7 +110,7 @@ export const HealthFactor: React.FC<{
     <Wrapper size={size} {...restProps}>
       <ProgressBar progress={sanitizedProgress} size={size} variant={variant} />
       <Value badgeVariant={badgeVariant}>
-        <HFHelper displayDecimals={2} value={value} />
+        <HFHelper value={value} />
       </Value>
     </Wrapper>
   )

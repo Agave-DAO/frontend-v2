@@ -4,17 +4,6 @@ import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { fromWei } from '@/src/utils/common'
 
-type Params = { totalSupply: BigNumber; price: BigNumber; tokenAddress: string }
-
-/**
- * Calculates MarketSize of a token (totalSupply * tokenPrice / 10 ** tokenDecimals) and convert it to a BigNumber value.
- */
-export const getMarketSize = ({ price, tokenAddress, totalSupply }: Params) => {
-  const { decimals } = agaveTokens.getTokenByAddress(tokenAddress)
-
-  return fromWei(totalSupply.mul(price), decimals)
-}
-
 /**
  * Calculates priceShare (liquidity / totalShares) and convert it to a BigNumber value.
  */

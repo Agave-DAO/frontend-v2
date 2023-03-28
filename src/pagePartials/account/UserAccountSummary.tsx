@@ -105,13 +105,13 @@ export const UserAccountSummary: React.FC = withGenericSuspense(
           <InfoRow>
             <Label>Borrowed</Label>
             <Value>
-              <Amount displayDecimals={3} value={userBorrows} />
+              <Amount value={userBorrows} />
             </Value>
           </InfoRow>
           <InfoRow>
             <Label>Collateral</Label>
             <Value>
-              <Amount displayDecimals={3} value={userCollateral} />
+              <Amount value={userCollateral} />
             </Value>
           </InfoRow>
           <InfoRow>

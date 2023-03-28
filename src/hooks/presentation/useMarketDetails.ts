@@ -31,8 +31,8 @@ export const useMarketDetails = (tokenAddress: string) => {
   }
 
   const reserveSize = {
-    wei: liquidity.wei.add(borrowed.wei),
-    price: marketData.getMarketSize(tokenAddress),
+    wei: marketData.getMarketSize(tokenAddress).wei,
+    price: marketData.getMarketSize(tokenAddress).usd,
   }
 
   const utilizationRate = reserveSize.wei.gt(Zero)

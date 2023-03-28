@@ -121,9 +121,7 @@ export const MyRewards: React.FC = withGenericSuspense(({ ...restProps }) => {
             <GNOMini size={18} />
           </Percentage>
         </Reward>
-        <RewardUSD>
-          {noRewards ? '$0.00' : <Amount displayDecimals={3} value={fromWei(totalValue)} />}
-        </RewardUSD>
+        <RewardUSD>{noRewards ? '$0.00' : <Amount value={fromWei(totalValue)} />}</RewardUSD>
       </Info>
       <Buttons>
         <ButtonDark
