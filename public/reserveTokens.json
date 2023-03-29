@@ -6,7 +6,11 @@
       "address": "0x9c58bacc331c9aa871afd802db6379a98e80cedb",
       "decimals": 18,
       "chainId": 100,
-      "logoURI": "/coins/gno.svg"
+      "logoURI": "/coins/gno.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
     },
     {
       "symbol": "WETH",
@@ -14,7 +18,11 @@
       "address": "0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1",
       "decimals": 18,
       "chainId": 100,
-      "logoURI": "/coins/eth.svg"
+      "logoURI": "/coins/eth.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
     },
     {
       "symbol": "WXDAI",
@@ -22,7 +30,11 @@
       "address": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d",
       "decimals": 18,
       "chainId": 100,
-      "logoURI": "/coins/wxdai.svg"
+      "logoURI": "/coins/wxdai.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": true
+      }
     },
     {
       "symbol": "USDC",
@@ -30,7 +42,11 @@
       "address": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
       "decimals": 6,
       "chainId": 100,
-      "logoURI": "/coins/usdc.svg"
+      "logoURI": "/coins/usdc.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
     },
     {
       "symbol": "WBTC",
@@ -38,7 +54,11 @@
       "address": "0x8e5bbbb09ed1ebde8674cda39a0c169401db4252",
       "decimals": 8,
       "chainId": 100,
-      "logoURI": "/coins/wbtc.svg"
+      "logoURI": "/coins/wbtc.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
     },
     {
       "symbol": "LINK",
@@ -46,7 +66,11 @@
       "address": "0xe2e73a1c69ecf83f464efce6a5be353a37ca09b2",
       "decimals": 18,
       "chainId": 100,
-      "logoURI": "/coins/link.svg"
+      "logoURI": "/coins/link.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
     },
     {
       "symbol": "FOX",
@@ -54,7 +78,11 @@
       "address": "0x21a42669643f45bc0e086b8fc2ed70c23d67509d",
       "decimals": 18,
       "chainId": 100,
-      "logoURI": "/coins/fox.svg"
+      "logoURI": "/coins/fox.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
     },
     {
       "symbol": "USDT",
@@ -62,7 +90,11 @@
       "address": "0x4ecaba5870353805a9f068101a40e0f32ed605c6",
       "decimals": 6,
       "chainId": 100,
-      "logoURI": "/coins/usdt.svg"
+      "logoURI": "/coins/usdt.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
     }
   ]
 }

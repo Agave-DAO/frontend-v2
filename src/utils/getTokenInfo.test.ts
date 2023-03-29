@@ -12,6 +12,10 @@ jest.mock('@/public/reserveTokens.json', (): Pick<TokenListResponse, 'tokens'> =
         decimals: 18,
         chainId: 100,
         logoURI: `/coins/tt2.png`,
+        extensions: {
+          isNative: false,
+          isNativeWrapper: false,
+        },
       },
     ],
   }
@@ -43,6 +47,10 @@ describe('getTokenInfo', () => {
       chainId: 100,
       logoURI: '/coins/tt2.png',
       type: 'variableDebt',
+      extensions: {
+        isNative: false,
+        isNativeWrapper: false,
+      },
     })
   })
 
@@ -56,6 +64,10 @@ describe('getTokenInfo', () => {
       chainId: 100,
       logoURI: '/coins/tt2.png',
       type: 'variableDebt',
+      extensions: {
+        isNative: false,
+        isNativeWrapper: false,
+      },
     })
   })
 

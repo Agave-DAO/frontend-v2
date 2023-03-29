@@ -85,5 +85,6 @@ export const TokensLists = {
   // '1INCH': 'https://gateway.ipfs.io/ipns/tokens.1inch.eth',
   // COINGECKO: 'https://tokens.coingecko.com/uniswap/all.json',
   // OPTIMISM: 'https://static.optimism.io/optimism.tokenlist.json',
-  gnosis: '/reserveTokens.json',
+  AGAVE_RESERVES: '/reserveTokens.json',
+  GNOSIS_NATIVE: '/nativeToken.json',
 } as const

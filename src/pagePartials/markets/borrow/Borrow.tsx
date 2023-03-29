@@ -2,8 +2,15 @@ import { useState } from 'react'
 
 import { BorrowStepper } from '@/src/pagePartials/markets/borrow/BorrowStepper'
 import { InitialBorrowStep } from '@/src/pagePartials/markets/borrow/InitialBorrowStep'
+import { Token } from '@/types/token'
 
-export function Borrow({ tokenAddress }: { tokenAddress: string }) {
+export function Borrow({
+  onTokenSelect,
+  tokenAddress,
+}: {
+  onTokenSelect: (token: Token) => void
+  tokenAddress: string
+}) {
   const [amount, setAmount] = useState('0')
   const [step, setStep] = useState<'initial' | 'tx'>('initial')
 
@@ -13,6 +20,7 @@ export function Borrow({ tokenAddress }: { tokenAddress: string }) {
         <InitialBorrowStep
           amount={amount}
           nextStep={() => setStep('tx')}
+          onTokenSelect={onTokenSelect}
           setAmount={setAmount}
           tokenAddress={tokenAddress}
         />

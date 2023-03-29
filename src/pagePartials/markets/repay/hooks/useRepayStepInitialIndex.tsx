@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
+import { agaveTokens } from '@/src/config/agaveTokens'
+import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
-import { useContractInstance } from '@/src/hooks/useContractInstance'
-import { AgaveLending__factory } from '@/types/generated/typechain'
+import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 // TODO: This is a duplicate of useDepositStepInitialIndex.tsx. Refactor to a single hook.
 export const useRepayStepInitialIndex = ({
@@ -14,19 +15,20 @@ export const useRepayStepInitialIndex = ({
   amount: string
   tokenAddress: string
 }) => {
-  const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
-  const [initialStepIndex, setInitialStepIndex] = useState(0)
+  const { appChainId } = useWeb3ConnectedApp()
+  const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
 
-  /**
-   * Allowance
-   */
-  const { approvedAmount: allowance } = useGetERC20Allowance(tokenAddress, agaveLending.address)
+  const { approvedAmount: allowance } = useGetERC20Allowance(tokenAddress, agaveLendingAddress)
 
-  useEffect(() => {
-    if (!allowance.isZero() && allowance.gte(BigNumber.from(amount))) {
-      setInitialStepIndex(1)
+  return useMemo(() => {
+    const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+
+    if (tokenInfo.extensions.isNative) {
+      return 1
     }
-  }, [allowance, amount])
 
-  return initialStepIndex
+    const isAllowanceEnough = !allowance.isZero() && allowance.gte(BigNumber.from(amount))
+
+    return isAllowanceEnough ? 1 : 0
+  }, [allowance, amount, tokenAddress])
 }

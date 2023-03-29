@@ -188,7 +188,7 @@ export const MarketList: React.FC = withGenericSuspense(
               return (
                 <Market
                   href={`/markets/${symbol}`}
-                  key={`market_${index}`}
+                  key={`market_${tokenAddress}`}
                   tokenAddress={tokenAddress}
                   tokenValue={
                     <Amount
@@ -206,7 +206,7 @@ export const MarketList: React.FC = withGenericSuspense(
         </AssetsList>
       </Wrapper>
     ) : (
-      <>There was an error retrieveing data...</>
+      <>There was an error retrieving data...</>
     )
   },
   () => <Loading text="Fetching markets..." />,

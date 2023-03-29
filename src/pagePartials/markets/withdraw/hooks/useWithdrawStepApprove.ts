@@ -1,6 +1,13 @@
 import { useCallback } from 'react'
 
+import { agaveTokens } from '@/src/config/agaveTokens'
+import { contracts } from '@/src/contracts/contracts'
+import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
+import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { ERC20__factory } from '@/types/generated/typechain'
 
 export const useWithdrawStepApprove = ({
   amount,
@@ -9,17 +16,49 @@ export const useWithdrawStepApprove = ({
   amount: string
   tokenAddress: string
 }) => {
-  // TODO: this is a placeholder for now
-  //  - this should be used only when we deal with XDAI/WXDAI
-  //  - if the amount is greater than WXDAI balance, we should use the WXDAIGateway to get more from XDAI
-  //  - this should be done as part of https://github.com/BootNodeDev/agave-dapp-v2/issues/76
+  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+  const agTokenInfo = agaveTokens.getProtocolTokenInfo(agaveTokens.wrapperToken.address, 'ag')
+  const isNativeToken = tokenInfo.extensions.isNative
+
+  const { appChainId } = useWeb3ConnectedApp()
+  const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
+  const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
+
+  const params = {
+    amount,
+    spender: isNativeToken ? wrappedNativeGatewayAddress : agaveLendingAddress,
+    asset: isNativeToken ? agTokenInfo.address : tokenAddress,
+  }
+
+  const erc20 = useContractInstance(ERC20__factory, params.asset)
+  const sendTx = useTransaction()
+
+  const { refetchAllowance: refetchTokenAllowance } = useGetERC20Allowance(
+    tokenAddress,
+    agaveLendingAddress,
+  )
+
+  const { refetchAllowance: refetchAGTokenAllowance } = useGetERC20Allowance(
+    agTokenInfo.address,
+    wrappedNativeGatewayAddress,
+  )
+
   const approve = useCallback<() => Promise<string>>(async () => {
-    return new Promise((resolve) => {
-      setInterval(() => {
-        resolve('')
-      }, 1000)
-    })
-  }, [])
+    const tx = await sendTx(() => erc20.approve(params.spender, params.amount))
+    const receipt = await tx.wait()
+
+    isNativeToken ? await refetchAGTokenAllowance() : await refetchTokenAllowance()
+
+    return receipt.transactionHash
+  }, [
+    erc20,
+    isNativeToken,
+    params.amount,
+    params.spender,
+    refetchAGTokenAllowance,
+    refetchTokenAllowance,
+    sendTx,
+  ])
 
   return useStepStates({
     title: 'Approve',

@@ -213,6 +213,9 @@ export function maxChangeGivenHealthFactor({
 }
 
 export function useNewHealthFactorCalculator(marketAddress: string) {
+  marketAddress = agaveTokens.getTokenByAddress(marketAddress).extensions.isNative
+    ? agaveTokens.wrapperToken.address
+    : marketAddress
   const { totalBorrowsValue, totalCollateralMaxCapacity, userAssetsData } = useUserAllAssetsData()
 
   const userAssetData = useMemo(

@@ -12,14 +12,16 @@ import {
   StepActionButton,
 } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
+import { ToggleWrap } from '@/src/components/token/ToggleWrap'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { TokenWithType } from '@/src/config/agaveTokens'
+import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useRepayStepInitial } from '@/src/pagePartials/markets/repay/hooks/useRepayStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 import { NumberType } from '@/src/utils/format'
+import { Token } from '@/types/token'
 
 interface InitialRepayStepInfoProps {
   amount: string
@@ -67,6 +69,7 @@ const InitialRepayStepInfo: React.FC<InitialRepayStepInfoProps> = ({
 interface InitialRepayStepProps {
   amount: string
   nextStep: () => void
+  onTokenSelect: (token: Token) => void
   setAmount: Dispatch<SetStateAction<string>>
   tokenAddress: string
 }
@@ -74,6 +77,7 @@ interface InitialRepayStepProps {
 export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
   amount,
   nextStep,
+  onTokenSelect,
   setAmount,
   tokenAddress,
 }) => {
@@ -88,6 +92,12 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
   } = useRepayStepInitial({ amount, tokenAddress })
   const { openMinHealthConfigurationModal } = useModalsContext()
 
+  const onToggleWrap = (isWrapped: boolean) => {
+    onTokenSelect(isWrapped ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
+  }
+
+  const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
+
   const stepperProps = {
     info: (
       <InitialRepayStepInfo
@@ -99,12 +109,15 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
     ),
     title: 'Amount to repay',
     titleButton: { onClick: () => setAmount(maxToRepay.toString()), text: 'Use max' },
+    tokenWrapper: isNativeRelated ? (
+      <ToggleWrap isWrapped={tokenInfo.extensions.isNativeWrapper} onChange={onToggleWrap} />
+    ) : null,
   }
 
   return (
     <Stepper {...stepperProps}>
       <TokenInput
-        address={tokenAddress}
+        address={isNativeRelated ? agaveTokens.wrapperToken.address : tokenAddress}
         decimals={tokenInfo.decimals}
         maxValue={maxToRepay.toString()}
         setStatus={setTokenInputStatus}

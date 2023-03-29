@@ -16,10 +16,11 @@ const Tabs = styled(BaseTabs)`
 
 interface Props {
   activeTab?: BorrowRepayTabs
+  onTokenSelect: (token: Token) => void
   token: Token | null
 }
 
-const BorrowRepayBase: React.FC<Props> = ({ activeTab, token }) => {
+const BorrowRepayBase: React.FC<Props> = ({ activeTab, onTokenSelect, token }) => {
   const [tab, setTab] = useState<BorrowRepayTabs>(activeTab || 'borrow')
   const borrowActive = tab === 'borrow'
   const repayActive = tab === 'repay'
@@ -36,8 +37,8 @@ const BorrowRepayBase: React.FC<Props> = ({ activeTab, token }) => {
           Repay
         </Tab>
       </Tabs>
-      {borrowActive && <Borrow tokenAddress={token.address} />}
-      {repayActive && <Repay tokenAddress={token.address} />}
+      {borrowActive && <Borrow onTokenSelect={onTokenSelect} tokenAddress={token.address} />}
+      {repayActive && <Repay onTokenSelect={onTokenSelect} tokenAddress={token.address} />}
     </>
   ) : null
 }

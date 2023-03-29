@@ -1,6 +1,8 @@
+import nativeToken from '@/public/nativeToken.json'
 import protocolTokens from '@/public/protocolTokens.json'
 import reserveTokens from '@/public/reserveTokens.json'
 import { isSameAddress } from '@/src/utils/isSameAddress'
+import { memoize } from '@/src/utils/memoize'
 import { Token } from '@/types/token'
 import { RequiredFieldsOnly } from '@/types/utils'
 
@@ -15,7 +17,7 @@ export type AgaveProtocolTokens = {
   }
 }
 
-export type AgaveProtocolTokenType = 'ag' | 'variableDebt' | 'stableDebt' | 'reserve'
+export type AgaveProtocolTokenType = 'ag' | 'variableDebt' | 'stableDebt' | 'reserve' | 'native'
 
 export type TokenWithType = Token & { type: AgaveProtocolTokenType }
 
@@ -24,6 +26,8 @@ export type TokenInfo = Pick<TokenWithType, 'address' | 'symbol' | 'type'>
 type ValidLookupFields = Pick<Token, 'address' | 'symbol' | 'name'>
 
 export interface IDAgaveTokens {
+  nativeToken: Token
+  wrapperToken: Token
   reserveTokens: Token[]
   protocolTokens: AgaveProtocolTokens
   allTokens: TokenWithType[]
@@ -31,9 +35,11 @@ export interface IDAgaveTokens {
   getRelatedTokensByAddress: (tokenAddress: string) => TokenInfo[]
   getTokenByAddress: (tokenAddress: string) => TokenWithType
   getTokenByFieldAndValue: (fieldAndValue: ValidLookupFields) => TokenWithType | undefined
+  getProtocolTokenInfo: (reserveAddress: string, type: AgaveProtocolTokenType) => Token
 }
 
 class AgaveTokens implements IDAgaveTokens {
+  private _nativeToken: Token = nativeToken.tokens[0]
   private _reserveTokens: Token[] = reserveTokens.tokens
   private _protocolTokens: AgaveProtocolTokens = protocolTokens.protocolTokens
   private _protocolName = 'Agave'
@@ -44,6 +50,23 @@ class AgaveTokens implements IDAgaveTokens {
     this.allTokens.every(this.isValidTokenInfo)
   }
 
+  get nativeToken() {
+    return this._nativeToken
+  }
+
+  @memoize()
+  get wrapperToken() {
+    const nativeWrapper = this._reserveTokens.find(
+      ({ extensions: { isNativeWrapper } }) => isNativeWrapper,
+    )
+
+    if (!nativeWrapper) {
+      throw new Error('Native wrapper must be defined')
+    }
+
+    return nativeWrapper
+  }
+
   get reserveTokens() {
     return this._reserveTokens
   }
@@ -52,32 +75,41 @@ class AgaveTokens implements IDAgaveTokens {
     return this._protocolTokens
   }
 
+  @memoize()
   get allTokens(): TokenWithType[] {
     return [
-      ...this.reserveTokens.map((tokenInfo) => ({
-        ...tokenInfo,
-        type: 'reserve' as AgaveProtocolTokenType,
-      })),
-      ...Object.values(this.reserveTokens).flatMap(({ address }) => {
+      {
+        ...this.nativeToken,
+        type: 'native',
+      },
+      ...this.reserveTokens.map(
+        (tokenInfo): TokenWithType => ({
+          ...tokenInfo,
+          type: 'reserve',
+        }),
+      ),
+      ...Object.values(this.reserveTokens).flatMap(({ address }): TokenWithType[] => {
         return [
-          { ...this.getProtocolTokenInfo(address, 'ag'), type: 'ag' as AgaveProtocolTokenType },
+          { ...this.getProtocolTokenInfo(address, 'ag'), type: 'ag' },
           {
             ...this.getProtocolTokenInfo(address, 'variableDebt'),
-            type: 'variableDebt' as AgaveProtocolTokenType,
+            type: 'variableDebt',
           },
           {
             ...this.getProtocolTokenInfo(address, 'stableDebt'),
-            type: 'stableDebt' as AgaveProtocolTokenType,
+            type: 'stableDebt',
           },
         ]
       }),
     ]
   }
 
+  @memoize()
   get allIncentivesTokens(): TokenWithType[] {
     return this.allTokens.filter(({ type }) => ['ag', 'variableDebt'].includes(type))
   }
 
+  @memoize()
   getRelatedTokensByAddress(tokenAddress: string): TokenInfo[] {
     const tokenInfo = this.getTokenByAddress(tokenAddress)
 
@@ -91,37 +123,39 @@ class AgaveTokens implements IDAgaveTokens {
         {
           address: tokenInfo.address,
           symbol: tokenInfo.symbol,
-          type: tokenInfo.type as AgaveProtocolTokenType,
+          type: tokenInfo.type,
         },
         ...Object.values(protocolTokens)
           .map(this.getTokenByAddress.bind(this))
           .map(({ address, symbol, type }) => ({
             address,
             symbol,
-            type: type as AgaveProtocolTokenType,
+            type,
           })),
       ]
     } else {
       const reserveToken = this.getReserveTokenByAddress(tokenAddress)
 
       if (!reserveToken) {
-        throw Error('Unsupported token')
+        throw Error(`Unsupported token: ${tokenAddress}`)
       }
 
       return this.getRelatedTokensByAddress(reserveToken.address)
     }
   }
 
+  @memoize()
   getTokenByAddress(tokenAddress: string): TokenWithType {
     const tokenInfo = this.getTokenByFieldAndValue({ address: tokenAddress })
 
     if (!tokenInfo) {
-      throw Error('Unsupported token')
+      throw Error(`Unsupported token: ${tokenAddress}`)
     }
 
     return tokenInfo
   }
 
+  @memoize()
   getTokenByFieldAndValue(fieldAndValue: Partial<RequiredFieldsOnly<Token>>): TokenWithType {
     const [field, value] = Object.entries(fieldAndValue)[0]
 
@@ -130,7 +164,7 @@ class AgaveTokens implements IDAgaveTokens {
     }
 
     if (!this._validLookupFields.some((validField) => validField === field)) {
-      throw new Error('Invalid field')
+      throw new Error(`Invalid field: ${field}`)
     }
 
     let foundToken: TokenWithType | undefined
@@ -144,12 +178,13 @@ class AgaveTokens implements IDAgaveTokens {
     }
 
     if (!foundToken) {
-      throw Error('Unsupported token')
+      throw Error(`Unsupported token: ${field} ${value}`)
     }
 
     return foundToken
   }
 
+  @memoize()
   private getReserveTokenByAddress(tokenAddress: string): Token {
     // lookup reserve token by reserve address
     const tokenInfo = this._reserveTokens.find((token) =>
@@ -169,7 +204,7 @@ class AgaveTokens implements IDAgaveTokens {
       )
 
       if (!foundToken) {
-        throw Error('Unsupported token')
+        throw Error(`Unsupported token: ${tokenAddress}`)
       }
 
       const [reserveAddress] = foundToken
@@ -188,7 +223,7 @@ class AgaveTokens implements IDAgaveTokens {
     )
 
     if (!foundToken) {
-      throw Error('Unsupported reserveAddress token')
+      throw Error(`Unsupported reserveAddress token: ${reserveAddress}`)
     }
 
     const [, protocolTokens] = foundToken
@@ -196,7 +231,8 @@ class AgaveTokens implements IDAgaveTokens {
     return protocolTokens
   }
 
-  private getProtocolTokenInfo(reserveAddress: string, tokenType: AgaveProtocolTokenType): Token {
+  @memoize()
+  getProtocolTokenInfo(reserveAddress: string, tokenType: AgaveProtocolTokenType): Token {
     const tokenInfo = this.getReserveTokenByAddress(reserveAddress)
     const protocolTokens = this.getProtocolTokensByReserve(reserveAddress)
 
@@ -223,7 +259,7 @@ class AgaveTokens implements IDAgaveTokens {
           symbol: `stableDebt${tokenInfo.symbol}`,
         }
       default:
-        throw new Error('Unsupported token type')
+        throw new Error(`Unsupported token type: ${tokenType}`)
     }
   }
 
@@ -250,6 +286,13 @@ class AgaveTokens implements IDAgaveTokens {
 
     if (tokenInfo.chainId === undefined) {
       throw new Error('Token chainId is required')
+    }
+
+    if (
+      tokenInfo.extensions.isNative === undefined ||
+      tokenInfo.extensions.isNativeWrapper === undefined
+    ) {
+      throw new Error('Token extensions.isNative and extensions.isNativeWrapper are required')
     }
 
     return true

@@ -1,0 +1,16 @@
+{
+  "tokens": [
+    {
+      "symbol": "XDAI",
+      "name": "XDAI",
+      "address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/xdai.svg",
+      "extensions": {
+        "isNative": true,
+        "isNativeWrapper": false
+      }
+    }
+  ]
+}

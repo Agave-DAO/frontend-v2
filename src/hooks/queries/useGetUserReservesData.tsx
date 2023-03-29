@@ -32,14 +32,12 @@ export const useGetUserReservesData = () => {
   const { address, appChainId, batchProvider } = useWeb3Connection()
 
   return useSWR(address ? [`user-reserves-data`, address] : null, async () => {
-    const reserveTokens = agaveTokens.reserveTokens
-
     if (!address) {
       return null
     }
 
     const rawUserReservesData = await Promise.allSettled(
-      reserveTokens.map((token) =>
+      agaveTokens.reserveTokens.map((token) =>
         fetchUserReserveData(token.address, address, batchProvider, appChainId),
       ),
     )

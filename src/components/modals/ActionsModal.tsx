@@ -135,7 +135,7 @@ export const DepositWithdrawModal: React.FC<DepositWithdrawModalProps> = ({
 
   return (
     <ActionsModal onTokenSelect={onTokenSelect} symbol={currentToken?.symbol || ''} {...restProps}>
-      <DepositWithdraw activeTab={activeTab} token={currentToken} />
+      <DepositWithdraw activeTab={activeTab} onTokenSelect={onTokenSelect} token={currentToken} />
     </ActionsModal>
   )
 }
@@ -152,7 +152,7 @@ export const BorrowRepayModal: React.FC<BorrowRepayModalProps> = ({
 
   return (
     <ActionsModal onTokenSelect={onTokenSelect} symbol={currentToken?.symbol || ''} {...restProps}>
-      <BorrowRepay activeTab={activeTab} token={currentToken} />
+      <BorrowRepay activeTab={activeTab} onTokenSelect={onTokenSelect} token={currentToken} />
     </ActionsModal>
   )
 }

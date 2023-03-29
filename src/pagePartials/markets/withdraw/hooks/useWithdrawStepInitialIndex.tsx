@@ -1,6 +1,11 @@
+import { useMemo } from 'react'
+
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { contracts } from '@/src/contracts/contracts'
+import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
+import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export const useWithdrawStepInitialIndex = ({
   amount,
@@ -10,17 +15,30 @@ export const useWithdrawStepInitialIndex = ({
   tokenAddress: string
 }) => {
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  // check if the token is the native token, then verify the allowance
-  if (tokenInfo.symbol === 'XDAI') {
-    // TODO: get the allowance. See: `useApproveDelegationMutation` in v1
-    const allowance = 0
-    // if the allowance is less than the amount, then return 0 (the allowance step)
-    if (BigNumber.from(allowance).lt(amount)) {
-      return 0
-    }
-    // if not, skip the allowance steps and return 1 (the withdrawal step)
-    return 1
-  }
-  // if the token is not the native token, then skip the allowance step and return 1 (the withdrawal step)
-  return 1
+  const isNativeToken = tokenInfo.extensions.isNative
+
+  const { appChainId } = useWeb3ConnectedApp()
+  const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
+  const { approvedAmount: agaveLendingAllowance } = useGetERC20Allowance(
+    tokenAddress,
+    agaveLendingAddress,
+  )
+
+  const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
+  const agTokenInfo = agaveTokens.getProtocolTokenInfo(
+    isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress,
+    'ag',
+  )
+  const { approvedAmount: wrappedNativeGatewayAllowance } = useGetERC20Allowance(
+    agTokenInfo.address,
+    wrappedNativeGatewayAddress,
+  )
+
+  return useMemo(() => {
+    const allowance = isNativeToken ? wrappedNativeGatewayAllowance : agaveLendingAllowance
+
+    const isAllowanceEnough = !allowance.isZero() && allowance.gte(BigNumber.from(amount))
+
+    return isAllowanceEnough ? 1 : 0
+  }, [agaveLendingAllowance, amount, isNativeToken, wrappedNativeGatewayAllowance])
 }

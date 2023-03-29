@@ -11,6 +11,10 @@ jest.mock('@/public/reserveTokens.json', (): Pick<TokenListResponse, 'tokens'> =
         decimals: 18,
         chainId: 100,
         logoURI: `/coins/tt1.png`,
+        extensions: {
+          isNative: false,
+          isNativeWrapper: false,
+        },
       },
       {
         address: `0x0000000000000000000000000000000000000020`,
@@ -19,6 +23,10 @@ jest.mock('@/public/reserveTokens.json', (): Pick<TokenListResponse, 'tokens'> =
         decimals: 18,
         chainId: 100,
         logoURI: `/coins/tt2.png`,
+        extensions: {
+          isNative: false,
+          isNativeWrapper: false,
+        },
       },
     ],
   }
@@ -67,6 +75,10 @@ describe('AgaveTokens', () => {
         chainId: 100,
         logoURI: '/coins/tt1.png',
         type: 'ag',
+        extensions: {
+          isNative: false,
+          isNativeWrapper: false,
+        },
       },
       {
         address: '0x0000000000000000000000000000000000000012',
@@ -76,6 +88,10 @@ describe('AgaveTokens', () => {
         chainId: 100,
         logoURI: '/coins/tt1.png',
         type: 'variableDebt',
+        extensions: {
+          isNative: false,
+          isNativeWrapper: false,
+        },
       },
       {
         address: '0x0000000000000000000000000000000000000021',
@@ -85,6 +101,10 @@ describe('AgaveTokens', () => {
         chainId: 100,
         logoURI: '/coins/tt2.png',
         type: 'ag',
+        extensions: {
+          isNative: false,
+          isNativeWrapper: false,
+        },
       },
       {
         address: '0x0000000000000000000000000000000000000022',
@@ -94,6 +114,10 @@ describe('AgaveTokens', () => {
         chainId: 100,
         logoURI: '/coins/tt2.png',
         type: 'variableDebt',
+        extensions: {
+          isNative: false,
+          isNativeWrapper: false,
+        },
       },
     ])
   })
@@ -202,6 +226,10 @@ describe('AgaveTokens', () => {
       chainId: 100,
       logoURI: `/coins/tt1.png`,
       type: `reserve`,
+      extensions: {
+        isNative: false,
+        isNativeWrapper: false,
+      },
     })
   })
 
@@ -216,6 +244,10 @@ describe('AgaveTokens', () => {
       chainId: 100,
       logoURI: `/coins/tt1.png`,
       type: `reserve`,
+      extensions: {
+        isNative: false,
+        isNativeWrapper: false,
+      },
     })
 
     const agTokenInfo = agaveTokens.getTokenByFieldAndValue({ symbol: 'agTT1' })
@@ -228,6 +260,10 @@ describe('AgaveTokens', () => {
       chainId: 100,
       logoURI: `/coins/tt1.png`,
       type: `ag`,
+      extensions: {
+        isNative: false,
+        isNativeWrapper: false,
+      },
     })
   })
 
@@ -259,6 +295,10 @@ describe('AgaveTokens', () => {
         chainId: 100,
         logoURI: `/coins/tt1.png`,
         type: `reserve`,
+        extensions: {
+          isNative: false,
+          isNativeWrapper: false,
+        },
       })
     }
   })

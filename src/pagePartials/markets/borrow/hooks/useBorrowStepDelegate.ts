@@ -1,6 +1,13 @@
 import { useCallback } from 'react'
 
+import { agaveTokens } from '@/src/config/agaveTokens'
+import { contracts } from '@/src/contracts/contracts'
+import { useGetVariableDebtBorrowAllowance } from '@/src/hooks/queries/useGetVariableDebtBorrowAllowance'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
+import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { VariableDebtToken__factory } from '@/types/generated/typechain'
 
 export const useBorrowStepDelegate = ({
   amount,
@@ -9,17 +16,34 @@ export const useBorrowStepDelegate = ({
   amount: string
   tokenAddress: string
 }) => {
-  // TODO: this is a placeholder for now
-  //  - this should be used only when we deal with XDAI/WXDAI
-  //  - if the amount is greater than WXDAI balance, we should use the WXDAIGateway to get more from XDAI
-  //  - this should be done as part of https://github.com/BootNodeDev/agave-dapp-v2/issues/76
+  const { appChainId } = useWeb3ConnectedApp()
+  const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
+  const variableDebtTokenAddress = agaveTokens.getProtocolTokenInfo(
+    agaveTokens.wrapperToken.address,
+    'variableDebt',
+  ).address
+
+  const params = {
+    amount,
+    spender: wrappedNativeGatewayAddress,
+    asset: variableDebtTokenAddress,
+  }
+
+  const variableDebtToken = useContractInstance(VariableDebtToken__factory, params.asset)
+  const sendTx = useTransaction()
+
+  const { refetchAllowance } = useGetVariableDebtBorrowAllowance(params.asset, params.spender)
+
   const approve = useCallback<() => Promise<string>>(async () => {
-    return new Promise((resolve) => {
-      setInterval(() => {
-        resolve('')
-      }, 1000)
-    })
-  }, [])
+    const tx = await sendTx(() =>
+      variableDebtToken.approveDelegation(params.spender, params.amount),
+    )
+    const receipt = await tx.wait()
+
+    await refetchAllowance()
+
+    return receipt.transactionHash
+  }, [params.amount, params.spender, refetchAllowance, sendTx, variableDebtToken])
 
   return useStepStates({
     title: 'Delegate',

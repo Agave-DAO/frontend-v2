@@ -15,12 +15,13 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { ToggleWrap } from '@/src/components/token/ToggleWrap'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { TokenWithType } from '@/src/config/agaveTokens'
+import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useBorrowStepInitial } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 import { NumberType } from '@/src/utils/format'
+import { Token } from '@/types/token'
 
 interface InitialBorrowStepInfoProps {
   amount: string
@@ -68,6 +69,7 @@ const InitialBorrowStepInfo: React.FC<InitialBorrowStepInfoProps> = ({
 interface InitialBorrowStepProps {
   amount: string
   nextStep: () => void
+  onTokenSelect: (token: Token) => void
   setAmount: Dispatch<SetStateAction<string>>
   tokenAddress: string
 }
@@ -75,6 +77,7 @@ interface InitialBorrowStepProps {
 export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
   amount,
   nextStep,
+  onTokenSelect,
   setAmount,
   tokenAddress,
 }) => {
@@ -90,11 +93,10 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
   const { openMinHealthConfigurationModal } = useModalsContext()
 
   const onToggleWrap = (isWrapped: boolean) => {
-    console.log(isWrapped)
+    onTokenSelect(isWrapped ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
   }
 
-  const isXDAI = tokenInfo.symbol.toLowerCase() === 'xdai'
-  const isWXDAI = tokenInfo.symbol.toLowerCase() === 'wxdai'
+  const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
 
   const stepperProps = {
     info: (
@@ -107,14 +109,15 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
     ),
     title: 'Amount to borrow',
     titleButton: { onClick: () => setAmount(maxToBorrow.toString()), text: 'Use max' },
-    tokenWrapper:
-      isXDAI || isWXDAI ? <ToggleWrap isWrapped={isWXDAI} onChange={onToggleWrap} /> : null,
+    tokenWrapper: isNativeRelated ? (
+      <ToggleWrap isWrapped={tokenInfo.extensions.isNativeWrapper} onChange={onToggleWrap} />
+    ) : null,
   }
 
   return (
     <Stepper {...stepperProps}>
       <TokenInput
-        address={tokenAddress}
+        address={isNativeRelated ? agaveTokens.wrapperToken.address : tokenAddress}
         decimals={tokenInfo.decimals}
         maxValue={maxToBorrow.toString()}
         setStatus={setTokenInputStatus}

@@ -22,19 +22,27 @@ const Wrapper = styled.div`
 `
 
 export const DepositInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) => {
-  const { address } = useWeb3ConnectedApp()
-  const { balance: walletBalance } = useAccountBalance({
-    accountAddress: address,
+  const { address: accountAddress, balance: accountBalance = ZERO_BN } = useWeb3ConnectedApp()
+
+  const { balance } = useAccountBalance({
+    accountAddress,
     tokenAddress: token.address,
   })
-  const [{ data: userData }] = useGetUserAccountData(address)
+
+  const [{ data: userData }] = useGetUserAccountData(accountAddress)
+
   const depositedAmount = useUserDepositsByToken(token.address)?.depositedAmount || ZERO_BN
   const depositedAmountInDAI =
     useUserDepositsByToken(token.address)?.depositedAmountInDAI || ZERO_BN
+
   const { agaveMarketsData, getDepositAPY } = useMarketsData([token.address])
+
   const depositAPY = useMemo(() => getDepositAPY(token.address), [getDepositAPY, token.address])
+
   const healthFactor = useMemo(() => userData?.[0].healthFactor || ZERO_BN, [userData])
+
   const maxLTV = useMemo(() => agaveMarketsData?.[0].assetData.ltv || ZERO_BN, [agaveMarketsData])
+
   const collateralizable = useMemo(
     () => agaveMarketsData?.[0].assetData.usageAsCollateralEnabled || false,
     [agaveMarketsData],
@@ -63,7 +71,7 @@ export const DepositInfo: React.FC<{ token: Token }> = ({ token, ...restProps })
                 decimals={token.decimals}
                 symbol={token.symbol}
                 symbolPosition="after"
-                value={walletBalance}
+                value={token.extensions.isNative ? accountBalance : balance}
               />
             </RowValueBig>
           </Row>

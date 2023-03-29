@@ -1,6 +1,11 @@
+import { useMemo } from 'react'
+
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { contracts } from '@/src/contracts/contracts'
+import { useGetVariableDebtBorrowAllowance } from '@/src/hooks/queries/useGetVariableDebtBorrowAllowance'
+import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export const useBorrowStepInitialIndex = ({
   amount,
@@ -9,18 +14,29 @@ export const useBorrowStepInitialIndex = ({
   amount: string
   tokenAddress: string
 }) => {
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  // check if the token is the native token, then verify the allowance
-  if (tokenInfo.symbol === 'XDAI') {
-    // TODO: get the allowance. See: `useApproveDelegationMutation` in v1
-    const allowance = 0
-    // if the allowance is less than the amount, then return 0 (the allowance step)
-    if (BigNumber.from(allowance).lt(amount)) {
-      return 0
+  const { appChainId } = useWeb3ConnectedApp()
+  const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
+  const variableDebtTokenAddress = agaveTokens.getProtocolTokenInfo(
+    agaveTokens.wrapperToken.address,
+    'variableDebt',
+  ).address
+  const { approvedAmount: borrowAllowance } = useGetVariableDebtBorrowAllowance(
+    variableDebtTokenAddress,
+    wrappedNativeGatewayAddress,
+  )
+
+  console.log('borrowAllowance', borrowAllowance.toString())
+
+  return useMemo(() => {
+    const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+
+    if (!tokenInfo.extensions.isNative) {
+      return 1
     }
-    // if not, skip the mode and allowance steps and return 1 (the borrow step)
-    return 1
-  }
-  // if the token is not the native token, then skip the allowance step and return 1 (the borrow step)
-  return 1
+
+    const isAllowanceEnough =
+      !borrowAllowance.isZero() && borrowAllowance.gte(BigNumber.from(amount))
+
+    return isAllowanceEnough ? 1 : 0
+  }, [borrowAllowance, amount, tokenAddress])
 }

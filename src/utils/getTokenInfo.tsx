@@ -3,9 +3,11 @@ import { isAddress } from 'ethers/lib/utils'
 import { agaveTokens } from '@/src/config/agaveTokens'
 
 /**
- * A helper function that may no last long
- * This function is used to get the token info from the token symbol or the token address
- * If nothing is found, it throws an error
+ * A helper function that may not last long.
+ *
+ * This function is used to get the token info from the token symbol or the token address.
+ *
+ * If nothing is found, it throws an error.
  * @param token
  */
 export function getTokenInfo(token: string) {

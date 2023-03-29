@@ -18,15 +18,29 @@ export const useMarketsData = (reserveTokensAddresses?: string[]) => {
     ? agaveTokens.reserveTokens.map(({ address }) => address)
     : reserveTokensAddresses
 
-  const agaveMarketsData = useGetMarketsData(marketAddresses)
+  const agaveMarketsData = useGetMarketsData(
+    marketAddresses.map((address) => {
+      const tokenInfo = agaveTokens.getTokenByAddress(address)
+
+      if (tokenInfo.extensions.isNative) {
+        return agaveTokens.wrapperToken.address
+      }
+
+      return address
+    }),
+  )
   const rewardTokenData = useGetRewardTokenData()?.pools[0]
 
   /* Get the market data for a given token address. */
   const getMarket = useCallback(
     (address: string) => {
+      const tokenInfo = agaveTokens.getTokenByAddress(address)
+      address = tokenInfo.extensions.isNative ? agaveTokens.wrapperToken.address : address
+
       const marketFound = agaveMarketsData?.find(({ tokenAddress }) =>
         isSameAddress(address, tokenAddress),
       )
+
       if (!marketFound) {
         throw Error(`Market not found for token ${address}`)
       }
@@ -39,6 +53,9 @@ export const useMarketsData = (reserveTokensAddresses?: string[]) => {
   /* Returns the market size of a token. */
   const getMarketSize = useCallback(
     (tokenAddress: string) => {
+      const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+      tokenAddress = tokenInfo.extensions.isNative ? agaveTokens.wrapperToken.address : tokenAddress
+
       try {
         const marketData = getMarket(tokenAddress)
         const { availableLiquidity, totalVariableDebt } = marketData.reserveData
@@ -61,6 +78,9 @@ export const useMarketsData = (reserveTokensAddresses?: string[]) => {
 
   const getTotalBorrowed = useCallback(
     (tokenAddress: string) => {
+      const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+      tokenAddress = tokenInfo.extensions.isNative ? agaveTokens.wrapperToken.address : tokenAddress
+
       try {
         const marketData = getMarket(tokenAddress)
         const { totalStableDebt, totalVariableDebt } = marketData.reserveData
@@ -76,6 +96,9 @@ export const useMarketsData = (reserveTokensAddresses?: string[]) => {
 
   const getDepositAPY = useCallback(
     (tokenAddress: string) => {
+      const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+      tokenAddress = tokenInfo.extensions.isNative ? agaveTokens.wrapperToken.address : tokenAddress
+
       try {
         const marketData = getMarket(tokenAddress)
 
@@ -90,6 +113,9 @@ export const useMarketsData = (reserveTokensAddresses?: string[]) => {
 
   const getBorrowRate = useCallback(
     (tokenAddress: string) => {
+      const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+      tokenAddress = tokenInfo.extensions.isNative ? agaveTokens.wrapperToken.address : tokenAddress
+
       try {
         const marketData = getMarket(tokenAddress)
         const { stableBorrowRate, variableBorrowRate } = marketData.reserveData
@@ -111,6 +137,9 @@ export const useMarketsData = (reserveTokensAddresses?: string[]) => {
 
   const getIncentiveRate = useCallback(
     (tokenAddress: string, tokenType: AgaveProtocolTokenType) => {
+      const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+      tokenAddress = tokenInfo.extensions.isNative ? agaveTokens.wrapperToken.address : tokenAddress
+
       if (!rewardTokenData) {
         return ZERO_BN
       }

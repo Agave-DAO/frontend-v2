@@ -1,5 +1,6 @@
 import { Zero } from '@ethersproject/constants'
 
+import { agaveTokens } from '@/src/config/agaveTokens'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
@@ -12,6 +13,7 @@ export function useAccountBalance({
   accountAddress: string
   tokenAddress: string
 }) {
+  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const erc20 = useContractInstance(ERC20__factory, tokenAddress)
   const calls = [erc20.balanceOf] as const
 
@@ -21,6 +23,8 @@ export function useAccountBalance({
     `balanceOf-${tokenAddress}-${accountAddress}`,
     {
       refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
+      // when the tokenAddress is not a valid ERC20 contract, the balanceOf call will fail
+      fallbackData: tokenInfo.extensions.isNative ? [Zero] : undefined,
     },
   )
 

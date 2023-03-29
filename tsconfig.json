@@ -23,7 +23,8 @@
         "*"
       ]
     },
-    "incremental": true
+    "incremental": true,
+    "experimentalDecorators": true
   },
   "include": [
     "src/pages/**/*",

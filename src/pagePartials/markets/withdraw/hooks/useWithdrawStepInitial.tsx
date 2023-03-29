@@ -8,7 +8,7 @@ import { agaveTokens } from '@/src/config/agaveTokens'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
-import { useLocalStorage, usePersistedState } from '@/src/hooks/usePersistedState'
+import { usePersistedState } from '@/src/hooks/usePersistedState'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export function useWithdrawStepInitial({
@@ -19,20 +19,18 @@ export function useWithdrawStepInitial({
   tokenAddress: string
 }) {
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  const agTokenInfo = agaveTokens
-    .getRelatedTokensByAddress(tokenAddress)
-    .find(({ type }) => type === 'ag')
+  const isNativeToken = tokenInfo.extensions.isNative
+  tokenAddress = isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress
 
   const [minSafeHF] = usePersistedState('minSafeHF', MIN_SAFE_HEALTH_FACTOR.toNumber())
 
-  const { maxAmountGivenHealthFactor } = useNewHealthFactorCalculator(tokenInfo.address)
-
-  if (!agTokenInfo) {
-    throw Error(`AG Token not found for ${tokenInfo.symbol} (${tokenInfo.address})`)
-  }
-
+  const { maxAmountGivenHealthFactor } = useNewHealthFactorCalculator(tokenAddress)
   const { address: accountAddress } = useWeb3ConnectedApp()
-  const { balance } = useAccountBalance({ accountAddress, tokenAddress: agTokenInfo.address })
+  const agTokenInfo = agaveTokens.getProtocolTokenInfo(tokenAddress, 'ag')
+  const { balance: agTokenBalance } = useAccountBalance({
+    accountAddress,
+    tokenAddress: agTokenInfo.address,
+  })
 
   const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
   const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
@@ -41,7 +39,7 @@ export function useWithdrawStepInitial({
     tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(Zero)
 
   const maxSafeAmount = maxAmountGivenHealthFactor({
-    amount: balance,
+    amount: agTokenBalance,
     type: 'withdraw',
     targetValue: BigNumber.from(minSafeHF),
   })

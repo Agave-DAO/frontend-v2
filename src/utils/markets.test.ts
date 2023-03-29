@@ -14,6 +14,10 @@ jest.mock('@/public/reserveTokens.json', (): Pick<TokenListResponse, 'tokens'> =
         decimals: 18,
         chainId: 100,
         logoURI: `/coins/tt1.png`,
+        extensions: {
+          isNative: false,
+          isNativeWrapper: false,
+        },
       },
     ],
   }

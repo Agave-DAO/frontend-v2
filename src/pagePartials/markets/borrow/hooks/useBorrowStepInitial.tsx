@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
+import { isNative } from 'lodash'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { agaveTokens } from '@/src/config/agaveTokens'
@@ -21,18 +22,21 @@ export function useBorrowStepInitial({
   amount: string
   tokenAddress: string
 }) {
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const { address: accountAddress } = useWeb3ConnectedApp()
   const [minSafeHF] = usePersistedState('minSafeHF', MIN_SAFE_HEALTH_FACTOR.toNumber())
 
-  const marketData = useMarketsData([tokenAddress])
-  const market = marketData.getMarket(tokenAddress)
+  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+  const isNativeToken = tokenInfo.extensions.isNative
+  const marketAddress = isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress
+
+  const marketData = useMarketsData([marketAddress])
+  const market = marketData.getMarket(marketAddress)
   const { availableLiquidity } = market.reserveData ?? {}
 
   const [{ data: userAccountData }] = useGetUserAccountData(accountAddress)
   const availableToBorrowDAI = userAccountData?.[0].availableBorrowsETH
 
-  const [{ data: assetPricesInDAI }] = useGetAssetsPriceInDAI([tokenInfo.address])
+  const [{ data: assetPricesInDAI }] = useGetAssetsPriceInDAI([marketAddress])
   const tokenPrice = assetPricesInDAI?.[0]?.[0] ?? Zero
 
   const userMaxAvailable = tokenPrice.gt(Zero)
@@ -44,7 +48,7 @@ export function useBorrowStepInitial({
       ? availableLiquidity
       : userMaxAvailable
 
-  const { maxAmountGivenHealthFactor } = useNewHealthFactorCalculator(tokenInfo.address)
+  const { maxAmountGivenHealthFactor } = useNewHealthFactorCalculator(marketAddress)
 
   const maxSafeAmountToBorrow = maxAmountGivenHealthFactor({
     amount: maxToBorrow,

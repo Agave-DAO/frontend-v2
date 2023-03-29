@@ -15,10 +15,11 @@ const Tabs = styled(BaseTabs)`
 
 interface Props {
   activeTab?: DepositWithdrawTabs
+  onTokenSelect: (token: Token) => void
   token: Token | null
 }
 
-const DepositWithdrawBase: React.FC<Props> = ({ activeTab, token }) => {
+const DepositWithdrawBase: React.FC<Props> = ({ activeTab, onTokenSelect, token }) => {
   const [tab, setTab] = useState<DepositWithdrawTabs>(activeTab || 'deposit')
   const depositActive = tab === 'deposit'
   const withdrawActive = tab === 'withdraw'
@@ -34,8 +35,10 @@ const DepositWithdrawBase: React.FC<Props> = ({ activeTab, token }) => {
           Withdraw
         </Tab>
       </Tabs>
-      {depositActive && <Deposit tokenAddress={token.address} />}
-      {withdrawActive && token && <Withdraw tokenAddress={token.address} />}
+      {depositActive && <Deposit onTokenSelect={onTokenSelect} tokenAddress={token.address} />}
+      {withdrawActive && token && (
+        <Withdraw onTokenSelect={onTokenSelect} tokenAddress={token.address} />
+      )}
     </>
   ) : null
 }

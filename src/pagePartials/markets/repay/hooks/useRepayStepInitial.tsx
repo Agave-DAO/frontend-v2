@@ -19,19 +19,21 @@ export function useRepayStepInitial({
 }) {
   const currentBorrowMode = usePageModeParam()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+  const isNativeToken = tokenInfo.extensions.isNative
 
-  const { address: accountAddress } = useWeb3ConnectedApp()
-  const { balance: accountBalance } = useAccountBalance({ accountAddress, tokenAddress })
+  const { address: accountAddress, balance: accountBalance } = useWeb3ConnectedApp()
+  const { balance } = useAccountBalance({ accountAddress, tokenAddress })
 
-  const borrowInfo = useUserBorrowsByToken(tokenInfo.address).borrows.find(
-    ({ borrowMode }) => borrowMode === currentBorrowMode,
-  )
+  const borrowInfo = useUserBorrowsByToken(
+    isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress,
+  ).borrows.find(({ borrowMode }) => borrowMode === currentBorrowMode)
 
   // 0.05% extra to ensure sufficient coverage for interest accrued during the time between fetching and repaying
   const maxValueDebt = borrowInfo?.borrowedAmount.mul(10005).div(10000) || Zero
   const maxToRepay = useMemo(() => {
-    return maxValueDebt.gt(accountBalance) ? accountBalance : maxValueDebt
-  }, [maxValueDebt, accountBalance])
+    const availableBalance = isNativeToken ? accountBalance : balance
+    return maxValueDebt.gt(availableBalance) ? availableBalance : maxValueDebt
+  }, [isNativeToken, accountBalance, balance, maxValueDebt])
 
   const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
   const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()

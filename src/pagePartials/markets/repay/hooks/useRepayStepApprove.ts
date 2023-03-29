@@ -22,7 +22,7 @@ export const useRepayStepApprove = ({
   const approve = useCallback(async () => {
     const tx = await sendTx(() => erc20.approve(agaveLending.address, amount))
     const receipt = await tx.wait()
-    refetchAllowance()
+    await refetchAllowance()
     return receipt.transactionHash
   }, [sendTx, refetchAllowance, erc20, agaveLending.address, amount])
 

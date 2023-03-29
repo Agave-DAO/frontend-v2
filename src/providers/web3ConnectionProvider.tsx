@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react'
 
+import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcBatchProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { OnboardAPI, WalletState } from '@web3-onboard/core'
 import injectedModule from '@web3-onboard/injected-wallets'
@@ -16,6 +17,7 @@ import { init, useConnectWallet, useSetChain, useWallets } from '@web3-onboard/r
 import walletConnectModule from '@web3-onboard/walletconnect'
 import nullthrows from 'nullthrows'
 
+import { agaveTokens } from '@/src/config/agaveTokens'
 import { Chains, INITIAL_APP_CHAIN_ID, chainsConfig, getNetworkConfig } from '@/src/config/web3'
 import { appName } from '@/src/constants/common'
 import {
@@ -23,6 +25,7 @@ import {
   removeLocalStorageKey,
   setLocalStorageKey,
 } from '@/src/hooks/usePersistedState'
+import { toWei } from '@/src/utils/common'
 import { hexToNumber } from '@/src/utils/strings'
 import { ChainConfig, ChainsValues } from '@/types/chains'
 import { RequiredNonNull } from '@/types/utils'
@@ -86,7 +89,7 @@ declare type SetChainOptions = {
 export type Web3Context = {
   address: string | null
   appChainId: ChainsValues
-  balance?: Record<string, string> | null
+  balance?: BigNumber
   connectWallet: () => Promise<void> | null
   connectingWallet: boolean
   disconnectWallet: () => Promise<void> | null
@@ -203,7 +206,12 @@ export default function Web3ConnectionProvider({ children }: Props) {
   const value: Web3Context = {
     address,
     appChainId,
-    balance: wallet?.accounts[0].balance,
+    balance:
+      // as the balance is an object of the type { [nativeTokenSymbol: string]: string },
+      // to make it agnostic to the token symbol, we get the first value of the object
+      wallet?.accounts[0].balance && Object.values(wallet?.accounts[0].balance).length
+        ? toWei(Object.values(wallet.accounts[0].balance)[0], agaveTokens.nativeToken.decimals)
+        : undefined,
     connectWallet: handleConnectWallet,
     connectingWallet,
     disconnectWallet: handleDisconnectWallet,
