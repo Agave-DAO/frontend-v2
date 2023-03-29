@@ -1,25 +1,37 @@
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import styled from 'styled-components'
 
 import { BigNumber } from 'ethers'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
-import { TxButtonStyled } from '@/src/components/buttons/txButton'
-import { BaseCard } from '@/src/components/common/BaseCard'
+import TxButton from '@/src/components/buttons/txButton'
+import { StepAuxiliaryAction } from '@/src/components/common/StepAuxiliaryAction'
+import {
+  Rows as BaseRows,
+  Button,
+  ButtonWrapper,
+  Row,
+  RowKey,
+  RowValueBig,
+  StepsCard,
+} from '@/src/components/common/StepsCard'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
-import { SimpleGrid } from '@/src/components/layout/SimpleGrid'
+import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
+import { StepForm } from '@/src/pagePartials/markets/stepper/Stepper'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { NumberType } from '@/src/utils/format'
 import { ERC20__factory, StakedToken__factory } from '@/types/generated/typechain'
 
-export const UserStakeActionCard = withGenericSuspense(() => {
+const Rows = styled(BaseRows)`
+  margin-bottom: 16px;
+`
+
+export const UserStakeActionCard: React.FC = withGenericSuspense(({ ...restProps }) => {
   const { address } = useWeb3ConnectedApp()
   const {
     amountAvailableToStake: userAmountAvailableToStake,
@@ -52,24 +64,28 @@ export const UserStakeActionCard = withGenericSuspense(() => {
     )
   }, [tokenInputStatus, value, isStakeLoading, isApproveLoading])
 
-  const ApproveButton = () => {
-    // if user approved an amount, but it's less than the amount they want to stake, then the user needs to reset the approval, or stake the amount they already approved
-    const resetRequired =
-      !approvedAmount.isZero() && BigNumber.from(value || ZERO_BN).gt(approvedAmount)
+  /**
+   * User approved an amount, but it's less than the amount they want to stake,
+   * then the user needs to reset the approval, or stake the amount they
+   * already approved
+   */
+  const resetRequired = useMemo(
+    () => !approvedAmount.isZero() && BigNumber.from(value || ZERO_BN).gt(approvedAmount),
+    [approvedAmount, value],
+  )
 
-    // if user has approved an amount, and it's greater than or equal to the amount they want to stake, then they don't need to approve again
-    const isApproved = !approvedAmount.isZero() && approvedAmount.gte(value || ZERO_BN)
+  /**
+   * User has approved an amount, and it's greater than or equal to the amount
+   * they want to stake, then they don't need to approve again
+   */
+  const isApproved = useMemo(
+    () => !approvedAmount.isZero() && approvedAmount.gte(value || ZERO_BN),
+    [approvedAmount, value],
+  )
 
-    let buttonText = 'Approve AGVE to continue'
-    if (resetRequired) {
-      buttonText = 'Reset approve'
-    }
-    if (isApproved) {
-      buttonText = 'Approved'
-    }
-
+  const ApproveButton: React.FC = ({ ...restProps }) => {
     return (
-      <TxButtonStyled
+      <TxButton
         disabled={disableSubmit || isApproved}
         onFail={() => setIsApproveLoading(false)}
         onMined={async () => {
@@ -77,20 +93,20 @@ export const UserStakeActionCard = withGenericSuspense(() => {
           setIsApproveLoading(false)
         }}
         onSend={() => setIsApproveLoading(true)}
-        style={{ width: '100%', margin: '10px 0' }}
         tx={() => {
           setIsApproveLoading(true)
           return stakedToken.approve(stakingContract.address, resetRequired ? ZERO_BN : value)
         }}
+        {...restProps}
       >
-        {buttonText}
-      </TxButtonStyled>
+        {resetRequired ? 'Reset approve' : isApproved ? 'Approved' : 'Approve AGVE to continue'}
+      </TxButton>
     )
   }
 
-  const StakeButton = () => (
+  const StakeButton: React.FC = ({ ...restProps }) => (
     <>
-      <TxButtonStyled
+      <TxButton
         disabled={disableSubmit || approvedAmount.lt(value || ZERO_BN)}
         onFail={() => setIsStakeLoading(false)}
         onMined={async () => {
@@ -100,66 +116,67 @@ export const UserStakeActionCard = withGenericSuspense(() => {
           setValue('')
         }}
         onSend={() => setIsStakeLoading(true)}
-        style={{ width: '100%', margin: '10px 0' }}
         tx={() => {
           setIsStakeLoading(true)
           return stakingContract.stake(address, value)
         }}
+        {...restProps}
       >
-        <SimpleGrid style={{ alignItems: 'center' }}>
-          Stake AGVE
-          {isCooldownActive && (
-            <Tooltip
-              content="You have an active cooldown. The time period will be affected by the new amount you
-            stake."
-            />
-          )}
-        </SimpleGrid>
-      </TxButtonStyled>
+        Stake
+      </TxButton>
+      {isCooldownActive && (
+        <>
+          You have an active cooldown. The time period will be affected by the new amount you stake.
+        </>
+      )}
     </>
   )
 
   return (
-    <BaseCard>
-      <SimpleGrid>
-        <p>Amount to stake:</p>
-        <ButtonPrimary onClick={() => setValue(userAmountAvailableToStake.toString())}>
-          Use Max
-        </ButtonPrimary>
-      </SimpleGrid>
-      <SimpleGrid>
-        <p>available to stake:</p>
-        <h2>
-          <Amount
-            decimals={18}
-            numberType={NumberType.TokenTx}
-            symbol="AGVE"
-            symbolPosition="after"
-            value={userAmountAvailableToStake}
-          />
-        </h2>
-      </SimpleGrid>
-      <TokenInput
-        decimals={18}
-        maxValue={userAmountAvailableToStake.toString()}
-        setStatus={setTokenInputStatus}
-        setStatusText={setTokenInputStatusText}
-        setValue={setValue}
-        status={tokenInputStatus}
-        statusText={tokenInputStatusText}
-        symbol={'AGVE'}
-        value={value}
+    <StepsCard {...restProps}>
+      <StepAuxiliaryAction
+        button={{
+          text: 'Use max',
+          onClick: () => setValue(userAmountAvailableToStake.toString()),
+          variant: 'regular',
+        }}
+        title={'Amount to stake'}
       />
-      {!BigNumber.from(value || '0').isZero() ? (
-        <>
-          <ApproveButton />
-          <StakeButton />
-        </>
-      ) : (
-        <ButtonPrimary disabled style={{ width: '100%', margin: '10px 0' }}>
-          Enter an amount
-        </ButtonPrimary>
-      )}
-    </BaseCard>
+      <Rows>
+        <Row>
+          <RowKey>Available to stake</RowKey>
+          <RowValueBig>
+            <TokenIcon dimensions={18} symbol="AGVE" />
+            <Amount decimals={18} symbol="" value={userAmountAvailableToStake} />
+          </RowValueBig>
+        </Row>
+      </Rows>
+      <StepForm>
+        <TokenInput
+          decimals={18}
+          maxValue={userAmountAvailableToStake.toString()}
+          setStatus={setTokenInputStatus}
+          setStatusText={setTokenInputStatusText}
+          setValue={setValue}
+          status={tokenInputStatus}
+          statusText={tokenInputStatusText}
+          symbol={'AGVE'}
+          value={value}
+        />
+        <ButtonWrapper>
+          {BigNumber.from(value || '0').isZero() ? (
+            <Button disabled>Enter an amount</Button>
+          ) : (
+            <>
+              {resetRequired || !isApproved ? (
+                <Button as={ApproveButton} />
+              ) : (
+                <Button as={StakeButton} />
+              )}
+            </>
+          )}
+        </ButtonWrapper>
+      </StepForm>
+    </StepsCard>
   )
 })

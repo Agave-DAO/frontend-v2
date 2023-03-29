@@ -11,6 +11,7 @@ type Props = {
   children: React.ReactNode
   fallback?: JSX.Element
 }
+
 function DefaultFallback(): JSX.Element {
   return <Loading />
 }
@@ -30,6 +31,7 @@ export default function SafeSuspense({
     </ErrorBoundary>
   )
 }
+
 export function withGenericSuspense<TProps>(
   Component: ComponentType<TProps>,
   fallback?: FC<TProps>,

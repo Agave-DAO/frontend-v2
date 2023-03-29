@@ -1,48 +1,60 @@
 import { useState } from 'react'
 
-import { TxButtonStyled } from '@/src/components/buttons/txButton'
-import { BaseCard } from '@/src/components/common/BaseCard'
+import TxButton from '@/src/components/buttons/txButton'
+import { InnerCard } from '@/src/components/common/InnerCard'
+import { Button } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { AgaveTotal } from '@/src/components/token/AgaveTotal'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { NumberType } from '@/src/utils/format'
 import { StakedToken__factory } from '@/types/generated/typechain'
 
-export const UserStakeClaimCard = withGenericSuspense(() => {
+export const UserStakeClaimCard: React.FC = withGenericSuspense(({ ...restProps }) => {
   const { address } = useWeb3ConnectedApp()
   const { amountAvailableToClaim: userAmountAvailableToClaim, refetchAllStakeData } =
     useStakeInformation()
   const [isClaimLoading, setIsClaimLoading] = useState(false)
-
   const { claimRewards } = useContractInstance(StakedToken__factory, 'StakedToken')
-
   const submitDisabled = userAmountAvailableToClaim.isZero() || isClaimLoading
 
+  const ClaimButton: React.FC = ({ ...restProps }) => (
+    <TxButton
+      disabled={submitDisabled}
+      onFail={() => {
+        setIsClaimLoading(false)
+      }}
+      onMined={async () => {
+        await refetchAllStakeData()
+        setIsClaimLoading(false)
+      }}
+      tx={() => {
+        setIsClaimLoading(true)
+        return claimRewards(address, userAmountAvailableToClaim)
+      }}
+      {...restProps}
+    >
+      Claim
+    </TxButton>
+  )
+
   return (
-    <BaseCard style={{ flexDirection: 'column' }}>
-      <p>Amount claimable:</p>
-      <h2>
-        <Amount decimals={18} numberType={NumberType.TokenTx} value={userAmountAvailableToClaim} />
-      </h2>
-      <TxButtonStyled
-        disabled={submitDisabled}
-        onFail={() => {
-          setIsClaimLoading(false)
-        }}
-        onMined={async () => {
-          await refetchAllStakeData()
-          setIsClaimLoading(false)
-        }}
-        style={{ width: '100%' }}
-        tx={() => {
-          setIsClaimLoading(true)
-          return claimRewards(address, userAmountAvailableToClaim)
-        }}
-      >
-        Claim
-      </TxButtonStyled>
-    </BaseCard>
+    <InnerCard {...restProps}>
+      <AgaveTotal
+        agave={
+          <Amount
+            decimals={18}
+            numberType={NumberType.TokenTx}
+            symbol=""
+            value={userAmountAvailableToClaim}
+          />
+        }
+        title="Claimable Agave"
+        usd={'$0.00'}
+      />
+      <Button as={ClaimButton} />
+    </InnerCard>
   )
 })

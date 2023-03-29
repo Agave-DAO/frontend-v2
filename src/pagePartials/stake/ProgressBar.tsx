@@ -5,27 +5,59 @@ import { Cooldown } from './Cooldown'
 import { calculatePercentageTimePassedBetweenDates } from '@/src/utils/common'
 import { useInterval } from '@/src/utils/useInterval'
 
-const ProgressBarStyled = styled.div`
-  width: 100%;
-  height: 10px;
-  background-color: #e0e0e0;
-  border-radius: 5px;
+const Bar = styled.div`
+  background-color: ${({ theme: { colors } }) => colors.secondary};
+  border-radius: 8px;
+  border: 5px solid ${({ theme: { colors } }) => colors.secondary};
+  margin: 0 0 24px;
   overflow: hidden;
-  margin: 10px 0;
+  width: 100%;
+`
 
-  .progress-bar__bar {
-    height: 100%;
-    background-color: #00bfa5;
-    transition: width 0.5s ease;
+const Progress = styled.div<{ progress?: number }>`
+  background-color: ${({ theme: { colors } }) => colors.primary};
+  border-radius: 6px;
+  height: 5px;
+  width: ${({ progress }) => progress || 0}%;
+  width: 50%;
+`
+
+const TimeWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 24px;
+  width: 100%;
+
+  &:last-child {
+    margin: 0;
   }
 `
 
-// a component that shows a progress bar with the percentage of the time passed between two dates and it is updated every minute
-export const ProgressBar = ({ end, start }: { start: Date; end: Date }) => {
+const Text = styled.span`
+  color: ${({ theme: { colors } }) => colors.textColor};
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    font-size: 1.6rem;
+  }
+`
+
+/**
+ * Shows a progress bar with the percentage of the time passed between two dates
+ *  and it's updated every minute.
+ */
+export const ProgressBar: React.FC<{ start: Date; end: Date; label: string }> = ({
+  end,
+  label,
+  start,
+}) => {
   const [progress, setProgress] = useState(
     calculatePercentageTimePassedBetweenDates(start, end, new Date()),
   )
-
   useInterval(
     () => setProgress(calculatePercentageTimePassedBetweenDates(start, end, new Date())),
     1000 * 60,
@@ -33,10 +65,13 @@ export const ProgressBar = ({ end, start }: { start: Date; end: Date }) => {
 
   return (
     <>
-      <ProgressBarStyled>
-        <div className="progress-bar__bar" style={{ width: `${progress}%` }} />
-      </ProgressBarStyled>
-      active for: <Cooldown targetDate={end} />
+      <Bar>
+        <Progress progress={progress} />
+      </Bar>
+      <TimeWrapper>
+        <Text>{label}</Text>
+        <Cooldown targetDate={end} />
+      </TimeWrapper>
     </>
   )
 }

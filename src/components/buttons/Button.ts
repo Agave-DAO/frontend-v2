@@ -16,7 +16,7 @@ export const ActiveButtonCSS = css`
   }
 `
 
-interface ButtonProps {
+export interface ButtonProps {
   borderRadiusVariant?: 'fullyRounded' | 'round' | 'square'
 }
 

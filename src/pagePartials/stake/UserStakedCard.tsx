@@ -1,16 +1,58 @@
 import { useState } from 'react'
+import styled from 'styled-components'
 
-import { TxButtonStyled } from '@/src/components/buttons/txButton'
-import { BaseCard } from '@/src/components/common/BaseCard'
+import TxButton from '@/src/components/buttons/txButton'
+import { InnerCard } from '@/src/components/common/InnerCard'
+import { Button } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { AgaveTotal } from '@/src/components/token/AgaveTotal'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { ProgressBar } from '@/src/pagePartials/stake/ProgressBar'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { StakedToken__factory } from '@/types/generated/typechain'
 
-export const UserStakedCard = withGenericSuspense(() => {
+const Staked = styled.div``
+
+const StakeActionCard = styled.div`
+  align-items: flex-start;
+  background-color: ${({ theme: { colors } }) => colors.secondary50};
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px 16px;
+`
+
+const CoolingDown = styled(StakeActionCard)``
+
+const Unstake = styled(StakeActionCard)``
+
+const Title = styled.h1`
+  color: ${({ theme: { colors } }) => colors.textColor};
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 8px;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    font-size: 1.8rem;
+  }
+`
+
+const Text = styled.p`
+  color: ${({ theme: { colors } }) => colors.textColor};
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 24px;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    font-size: 1.6rem;
+  }
+`
+
+export const UserStakedCard: React.FC = withGenericSuspense(({ ...restProps }) => {
   const { address } = useWeb3ConnectedApp()
   const {
     activateCooldownFrom: activateCooldownFrom,
@@ -30,11 +72,11 @@ export const UserStakedCard = withGenericSuspense(() => {
 
   const { cooldown, redeem } = useContractInstance(StakedToken__factory, 'StakedToken')
 
-  const ActivateCooldownButton = () => {
+  const ActivateCooldownButton: React.FC = ({ ...restProps }) => {
     const submitDisabled = isActivateCooldownLoading || userAmountStaked.isZero()
 
     return (
-      <TxButtonStyled
+      <TxButton
         disabled={submitDisabled}
         onFail={() => {
           setIsActivateCooldownLoading(false)
@@ -43,22 +85,22 @@ export const UserStakedCard = withGenericSuspense(() => {
           await refetchAllStakeData()
           setIsActivateCooldownLoading(false)
         }}
-        style={{ width: '100%' }}
         tx={() => {
           setIsActivateCooldownLoading(true)
           return cooldown()
         }}
+        {...restProps}
       >
         Activate cooldown
-      </TxButtonStyled>
+      </TxButton>
     )
   }
 
-  const WithdrawFundsButton = () => {
+  const WithdrawFundsButton: React.FC = ({ ...restProps }) => {
     const submitDisabled = isWithdrawFundsLoading
 
     return (
-      <TxButtonStyled
+      <TxButton
         disabled={submitDisabled}
         onFail={() => {
           setIsWithdrawFundsLoading(false)
@@ -67,48 +109,50 @@ export const UserStakedCard = withGenericSuspense(() => {
           await refetchAllStakeData()
           setIsWithdrawFundsLoading(false)
         }}
-        style={{ width: '100%' }}
         tx={() => {
           setIsWithdrawFundsLoading(true)
           return redeem(address, userAmountStaked)
         }}
+        {...restProps}
       >
         Withdraw
-      </TxButtonStyled>
+      </TxButton>
     )
   }
 
   return (
-    <BaseCard style={{ flexDirection: 'column' }}>
-      <p>Amount staked:</p>
-      <h2>
-        <Amount symbol="AGVE" symbolPosition="after" value={userAmountStaked} />
-      </h2>
-
+    <InnerCard {...restProps}>
+      <Staked>
+        <AgaveTotal
+          agave={<Amount decimals={18} symbol="" value={userAmountStaked} />}
+          title="Agave staked"
+          usd={'$0.00'}
+        />
+        {!isCooldownActive && <Button as={ActivateCooldownButton} />}
+      </Staked>
       {showInitialCooldown && activateCooldownFrom && (
-        <div>
-          <h3>Cooling down</h3>
-          <p>Your tokens will be unlocked when the cooldown process is finished.</p>
-          <ProgressBar end={userActivateCooldownReady} key={address} start={activateCooldownFrom} />
-        </div>
+        <CoolingDown>
+          <Title>Cooling down</Title>
+          <Text>Your tokens will be unlocked when the cooldown process is finished.</Text>
+          <ProgressBar
+            end={userActivateCooldownReady}
+            label="Unlocking in"
+            start={activateCooldownFrom}
+          />
+        </CoolingDown>
       )}
-
       {showUnstakeWindowCooldown && userActivateCooldownReady && (
-        <>
-          <div>
-            <h3>Unstake window</h3>
-            <p>You are able to withdraw within the time frame of the unstake window.</p>
-            <ProgressBar
-              end={userActivateCooldownTo}
-              key={`progress-${address}`}
-              start={userActivateCooldownReady}
-            />
-          </div>
-          <WithdrawFundsButton />
-        </>
+        <Unstake>
+          <Title>Unstake window</Title>
+          <Text>You are able to withdraw within the time frame of the unstake window.</Text>
+          <ProgressBar
+            end={userActivateCooldownTo}
+            label="Active for"
+            start={userActivateCooldownReady}
+          />
+          <Button as={WithdrawFundsButton} />
+        </Unstake>
       )}
-
-      {!isCooldownActive && <ActivateCooldownButton />}
-    </BaseCard>
+    </InnerCard>
   )
 })

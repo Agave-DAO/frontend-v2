@@ -6,14 +6,17 @@ import { darken } from 'polished'
 const error = '#F4387C'
 const errorDark = darken(0.1, error)
 const success = '#33dd33'
+
 const primary = '#019D8B'
-const primary10 = '#019D8B1A'
+const primary10 = `${primary}1A`
+const primary30 = `${primary}4D`
 const primaryLight = '#40B390'
 const primaryDarkened = darken(0.05, primary)
 
 const secondary = '#122C34'
 const secondary20 = `${secondary}33`
 const secondary30 = `${secondary}4D`
+const secondary50 = `${secondary}80`
 
 const tertiary = '#BCF298'
 const tertiary0 = `${tertiary}00`
@@ -200,11 +203,13 @@ export const dark = {
     overlay50: overlay50,
     overlay: overlay,
     primary10: primary10,
+    primary30: primary30,
     primary: primary,
     primaryDarkened: primaryDarkened,
     primaryLight: primaryLight,
     secondary20: secondary20,
     secondary30: secondary30,
+    secondary50: secondary50,
     secondary: secondary,
     success: success,
     tertiary0: tertiary0,

@@ -3,8 +3,10 @@ import styled from 'styled-components'
 
 import { ContractReceipt, ContractTransaction } from '@ethersproject/contracts'
 
-import { ButtonCSS, ButtonPrimaryCSS } from '@/src/components/buttons/Button'
+import { ButtonCSS, ButtonPrimaryCSS, ButtonProps } from '@/src/components/buttons/Button'
 import useTransaction from '@/src/hooks/useTransaction'
+
+const Button = styled.button<{ borderRadiusVariant?: ButtonProps }>``
 
 interface TxButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   onFail?: (error: unknown) => void
@@ -22,7 +24,6 @@ const TxButton: React.FC<TxButtonProps> = ({
   ...restProps
 }) => {
   const sendTx = useTransaction()
-
   const txHandler = useCallback(async () => {
     try {
       const transaction = await sendTx(tx)
@@ -37,9 +38,9 @@ const TxButton: React.FC<TxButtonProps> = ({
   }, [onFail, onMined, onSend, sendTx, tx])
 
   return (
-    <button onClick={txHandler} type="button" {...restProps}>
+    <Button onClick={txHandler} type="button" {...restProps}>
       {children}
-    </button>
+    </Button>
   )
 }
 
