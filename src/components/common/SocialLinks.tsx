@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    background: ${({ theme: { colors } }) => colors.darkBackground04};
+    background: ${({ theme: { colors } }) => colors.black40};
     border-radius: 16px;
     height: 42px;
     padding: 0 16px;
@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   }
 `
 
-const SocialTitle = styled.div`
+const Title = styled.div`
   color: ${({ theme: { colors } }) => colors.textColor};
   flex-shrink: 0;
   font-size: 1.4rem;
@@ -37,15 +37,15 @@ const SocialTitle = styled.div`
   }
 `
 
-SocialTitle.defaultProps = {
+Title.defaultProps = {
   className: 'socialTitle',
 }
 
-const SocialLink = styled.a`
+const Link = styled.a`
   --size: 26px;
 
   align-items: center;
-  background-color: ${({ theme: { colors } }) => colors.darkGray};
+  background-color: ${({ theme: { colors } }) => colors.black};
   border-radius: 4px;
   display: flex;
   flex-shrink: 0;
@@ -55,11 +55,15 @@ const SocialLink = styled.a`
   transition: background-color 0.15s linear;
   width: var(--size);
 
+  .fill {
+    transition: fill 0.3s linear;
+  }
+
   &:hover {
     background-color: #fff;
 
     .fill {
-      fill: ${({ theme: { colors } }) => colors.darkGray};
+      fill: ${({ theme: { colors } }) => colors.black};
     }
   }
 
@@ -68,12 +72,12 @@ const SocialLink = styled.a`
   }
 `
 
-SocialLink.defaultProps = {
+Link.defaultProps = {
   className: 'socialLink',
 }
 
 export const SocialLinks: React.FC = (props) => {
-  const socialLinks = [
+  const links = [
     {
       href: 'https://t.me/Agave1Hive',
       icon: <Telegram />,
@@ -89,20 +93,15 @@ export const SocialLinks: React.FC = (props) => {
       icon: <Twitter />,
       title: 'Agave Twitter',
     },
-    // {
-    //   href: 'https://agavefinance.medium.com/',
-    //   icon: <Medium />,
-    //   title: 'Agave Medium',
-    // },
   ]
 
   return (
     <Wrapper {...props}>
-      <SocialTitle>Our community</SocialTitle>
-      {socialLinks.map(({ href, icon, title }, index) => (
-        <SocialLink href={href} key={index} target="_blank" title={title}>
+      <Title>Our community</Title>
+      {links.map(({ href, icon, title }, index) => (
+        <Link href={href} key={index} target="_blank" title={title}>
           {icon}
-        </SocialLink>
+        </Link>
       ))}
     </Wrapper>
   )

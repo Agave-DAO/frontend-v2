@@ -25,6 +25,8 @@ const tertiary30 = `${tertiary}4d`
 const black = '#0D2026'
 const black05 = `${black}0D`
 const black20 = `${black}33`
+const black40 = `${black}66`
+const black60 = `${black}99`
 const black50 = `${black}80`
 
 const overlay = '#11171C'
@@ -44,12 +46,11 @@ const mainDark450 = `${mainDark4}80`
 const white05 = 'rgba(255, 255, 255, 0.05)'
 const white50 = 'rgba(255, 255, 255, 0.5)'
 const white60 = 'rgba(255, 255, 255, 0.6)'
+const white80 = 'rgba(255, 255, 255, 0.9)'
 
 const textColor = '#fff'
 const textColor50 = white50
 const textColor60 = white60
-
-const borderColor = 'rgba(250, 250, 250, 0.2)'
 
 const lightestGray = '#F0F4F4'
 const lighterGray = '#D1DDDC'
@@ -80,6 +81,8 @@ const dropdownColor = '#767676'
 const dropdownColorHover = '#363636'
 const dropdownBackgroundColorHover = 'rgba(0, 0, 0, 0.1)'
 const dropdownBorderColor = '#EFEFEF'
+
+const borderColor = '#B3C7C480'
 
 export const dark = {
   body: {
@@ -173,7 +176,9 @@ export const dark = {
     accent: accent,
     black05: black05,
     black20: black20,
+    black40: black40,
     black50: black50,
+    black60: black60,
     black: black,
     borderColor: borderColor,
     componentBackgroundColor: componentBackgroundColor,
@@ -221,6 +226,7 @@ export const dark = {
     white05: white05,
     white50: white50,
     white60: white60,
+    white80: white80,
   },
   dropdown: {
     background: dropdownBackground,

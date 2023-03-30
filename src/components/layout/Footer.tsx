@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 
+import { DevelopedBy } from '@/src/components/assets/DevelopedBy'
 import { Logo } from '@/src/components/common/Logo'
 import { SocialLinks } from '@/src/components/common/SocialLinks'
 import { InnerContainer } from '@/src/components/helpers/InnerContainer'
@@ -10,6 +11,7 @@ const Wrapper = styled(InnerContainer)`
   color: ${({ theme }) => theme.colors.textColor};
   flex-direction: row;
   flex-shrink: 0;
+  flex-wrap: wrap;
   justify-content: center;
   margin-top: auto;
   padding-bottom: 40px;
@@ -75,6 +77,22 @@ const Link = styled.a`
   }
 `
 
+const DevelopedByWrapper = styled.div`
+  border-top: 1px solid ${({ theme: { colors } }) => colors.mainDark4};
+  display: flex;
+  justify-content: center;
+  margin: 24px 0 0 0;
+  padding: 24px 0 0 0;
+  width: 100%;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    border-top: none;
+    justify-content: flex-end;
+    margin-top: 0;
+    padding-top: 32px;
+  }
+`
+
 export const Footer: React.FC = (props) => {
   return (
     <Wrapper as="footer" {...props}>
@@ -89,6 +107,11 @@ export const Footer: React.FC = (props) => {
         </Links>
         <SocialLinks />
       </EndContent>
+      <DevelopedByWrapper>
+        <a href="https://bootnode.dev" rel="noreferrer" target="_blank">
+          <DevelopedBy />
+        </a>
+      </DevelopedByWrapper>
     </Wrapper>
   )
 }

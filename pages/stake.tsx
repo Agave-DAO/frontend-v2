@@ -1,10 +1,12 @@
 import { NextPage } from 'next'
 import styled from 'styled-components'
 
+import { Faq } from '@/src/components/faq/Faq'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
 import { BaseParagraph as Paragraph } from '@/src/components/text/BaseParagraph'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
+import { stakeFAQ } from '@/src/constants/stakeFAQ'
 import { FundsInSafetyModule } from '@/src/pagePartials/stake/FundsInSafetyModule'
 import { StakeInformationCard } from '@/src/pagePartials/stake/StakeInformationCard'
 import { UserStakeActionCard } from '@/src/pagePartials/stake/UserStakeActionCard'
@@ -24,10 +26,11 @@ const Funds = styled(FundsInSafetyModule)`
 `
 
 const BigContainer = styled(OuterContainer)`
-  margin-bottom: 64px;
+  padding-bottom: 100px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     margin-bottom: 48px;
+    padding-bottom: 40px;
   }
 `
 
@@ -70,6 +73,7 @@ const Stake: NextPage = () => {
           </BigContainer>
         </>
       </RequiredConnection>
+      <Faq data={stakeFAQ} title="Staking Frequently Asked Questions" />
     </>
   )
 }
