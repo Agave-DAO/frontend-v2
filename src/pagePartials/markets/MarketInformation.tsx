@@ -9,6 +9,8 @@ import { Percentage } from '@/src/components/helpers/Percentage'
 import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { useGetReserveLimits } from '@/src/hooks/queries/useGetReserveLimits'
+import { TokenCapValue } from '@/src/pagePartials/markets/TokenCapValue'
 
 const Title = styled(InnerTitle)`
   margin-bottom: 32px;
@@ -17,6 +19,9 @@ const Title = styled(InnerTitle)`
 export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
   const { getMarket } = useMarketsData([tokenAddress])
   const { assetData, priceData } = getMarket(tokenAddress)
+  const {
+    data: { borrowLimit, depositLimit },
+  } = useGetReserveLimits(tokenAddress)
 
   const usedAsCollateral = assetData.usageAsCollateralEnabled ? assetData.ltv.gt(Zero) : false
 
@@ -62,11 +67,15 @@ export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
         </Row>
         <Row variant="dark">
           <RowKey>Deposit Cap</RowKey>
-          <RowValue>$270.93M</RowValue>
+          <RowValue>
+            <TokenCapValue limit={depositLimit} priceData={priceData} tokenAddress={tokenAddress} />
+          </RowValue>
         </Row>
         <Row>
           <RowKey>Borrow Cap</RowKey>
-          <RowValue>$270.93M</RowValue>
+          <RowValue>
+            <TokenCapValue limit={borrowLimit} priceData={priceData} tokenAddress={tokenAddress} />
+          </RowValue>
         </Row>
         <Row variant="dark">
           <RowKey>

@@ -1,9 +1,6 @@
 import styled from 'styled-components'
 
-import { BigNumber } from 'ethers'
-
 import { ActionButton } from '@/src/components/buttons/ActionButton'
-import { HealthFactor } from '@/src/components/common/HealthFactor'
 import { InnerCard } from '@/src/components/common/InnerCard'
 import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
 import { EmphasizedRowValue, Row, RowKey, RowValue, Rows } from '@/src/components/common/Rows'
@@ -14,12 +11,10 @@ import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { Loading } from '@/src/components/loading/Loading'
 import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDepositsInformationByToken } from '@/src/hooks/presentation/useUserDepositsInformationByToken'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { toWei } from '@/src/utils/common'
 
 const UserDepositsImp: React.FC<{
   tokenAddress: string
@@ -49,19 +44,6 @@ const UserDepositsImp: React.FC<{
           <EmphasizedRowValue>
             <Amount decimals={decimals} symbol="" value={depositedAmount} />
           </EmphasizedRowValue>
-        </RowValue>
-      </Row>
-      <Row variant="dark">
-        <RowKey>
-          Health factor <Tooltip content="Some text here!" />
-        </RowKey>
-        <RowValue>
-          <HealthFactor
-            badgeVariant="light"
-            size="sm"
-            value={toWei(BigNumber.from(50), 16)}
-            variant="dark"
-          />
         </RowValue>
       </Row>
     </Rows>
