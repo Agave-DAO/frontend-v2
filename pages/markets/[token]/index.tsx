@@ -56,8 +56,7 @@ const UserConnectedActions: React.FC<{
   tokenAddress: string
   userAddress: string
   tokenSymbol: string
-}> = ({ tokenAddress, tokenSymbol, userAddress }) => {
-  const router = useRouter()
+}> = ({ tokenAddress, userAddress }) => {
   const { userHasBorrows } = useUserBorrowsInformationByToken({
     tokenAddress,
     userAddress,
@@ -68,14 +67,6 @@ const UserConnectedActions: React.FC<{
     {
       text: 'Withdraw',
       onClick: () => openDepositWithdrawModal(tokenAddress, 'withdraw'),
-    },
-    {
-      text: 'Swap',
-      onClick: () => router.push(`/swap/${tokenSymbol}`),
-    },
-    {
-      text: 'Strategies',
-      onClick: () => router.push(`/strategies/${tokenSymbol}`),
     },
   ]
 

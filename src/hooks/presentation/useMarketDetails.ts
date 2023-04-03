@@ -8,7 +8,7 @@ import { fromWei } from '@/src/utils/common'
 
 export const useMarketDetails = (tokenAddress: string) => {
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  const marketData = useMarketsData([tokenAddress])
+  const marketData = useMarketsData()
   const market = marketData.getMarket(tokenAddress)
 
   const liquidity = {

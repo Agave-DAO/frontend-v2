@@ -37,7 +37,7 @@ export function useUserBorrowsInformationByToken({
 }): MyInformationUserBorrows {
   const { borrows, totalBorrowed, totalBorrowedInDAI } = useUserBorrowsByToken(tokenAddress)
   const [{ data }] = useGetUserAccountData(userAddress)
-  const marketData = useMarketsData([tokenAddress])
+  const marketData = useMarketsData()
   const market = marketData.getMarket(tokenAddress)
   const userAccountData = data?.[0]
 

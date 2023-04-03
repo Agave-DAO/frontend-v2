@@ -17,7 +17,7 @@ const Title = styled(InnerTitle)`
 `
 
 export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
-  const { getMarket } = useMarketsData([tokenAddress])
+  const { getMarket } = useMarketsData()
   const { assetData, priceData } = getMarket(tokenAddress)
   const {
     data: { borrowLimit, depositLimit },

@@ -21,7 +21,7 @@ export const ReserveRates: React.FC<{ tokenAddress: string }> = ({
   tokenAddress,
   ...restProps
 }) => {
-  const marketData = useMarketsData([tokenAddress])
+  const marketData = useMarketsData()
 
   return (
     <Wrapper {...restProps}>

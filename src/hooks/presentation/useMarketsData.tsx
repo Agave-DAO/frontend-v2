@@ -12,11 +12,8 @@ import { getIncentiveRate as calculateIncentiveRate, getPriceShares } from '@/sr
  * Returns the AgaveMarketData for a given array of reserve tokens addresses.
  * @param {String} reserveTokensAddresses
  */
-export const useMarketsData = (reserveTokensAddresses?: string[]) => {
-  /* If reserveTokensAddresses is empty, then it will return the address of all the reserve tokens. */
-  const marketAddresses = !reserveTokensAddresses?.length
-    ? agaveTokens.reserveTokens.map(({ address }) => address)
-    : reserveTokensAddresses
+export const useMarketsData = () => {
+  const marketAddresses = agaveTokens.reserveTokens.map(({ address }) => address)
 
   const agaveMarketsData = useGetMarketsData(
     marketAddresses.map((address) => {
@@ -169,7 +166,7 @@ export const useMarketsData = (reserveTokensAddresses?: string[]) => {
         return calculateIncentiveRate({
           emissionPerSeconds,
           tokenSupply,
-          priceShares: getPriceShares(rewardTokenData),
+          priceShares: rewardTokenData ? getPriceShares(rewardTokenData) : ZERO_BN,
           tokenAddress,
           tokenPrice,
         })

@@ -34,9 +34,7 @@ export const DepositInfo: React.FC<{ token: Token }> = ({ token, ...restProps })
   const depositedAmount = useUserDepositsByToken(token.address)?.depositedAmount || ZERO_BN
   const depositedAmountInDAI =
     useUserDepositsByToken(token.address)?.depositedAmountInDAI || ZERO_BN
-
-  const { agaveMarketsData, getDepositAPY } = useMarketsData([token.address])
-
+  const { agaveMarketsData, getDepositAPY } = useMarketsData()
   const depositAPY = useMemo(() => getDepositAPY(token.address), [getDepositAPY, token.address])
 
   const healthFactor = useMemo(() => userData?.[0].healthFactor || ZERO_BN, [userData])

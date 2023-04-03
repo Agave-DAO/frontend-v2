@@ -46,7 +46,7 @@ const chainsForOnboard = Object.values(chainsConfig).map(
     id: chainIdHex,
     label: name,
     token,
-    rpcUrl,
+    rpcUrl: rpcUrl[0],
   }),
 )
 
@@ -105,6 +105,7 @@ export type Web3Context = {
   walletChainId: number | null
   web3Provider: Web3Provider | null
   batchProvider: JsonRpcBatchProvider
+  batchProviderFallback: JsonRpcBatchProvider
 }
 
 export type Web3Connected = RequiredNonNull<Web3Context>
@@ -137,12 +138,16 @@ export default function Web3ConnectionProvider({ children }: Props) {
   const isWalletNetworkSupported = chains.some(({ id }) => id === connectedChain?.id)
 
   const readOnlyAppProvider = useMemo(
-    () => new JsonRpcProvider(getNetworkConfig(appChainId)?.rpcUrl, appChainId),
+    () => new JsonRpcProvider(getNetworkConfig(appChainId)?.rpcUrl[0], appChainId),
     [appChainId],
   )
 
   const batchProvider = useMemo(
-    () => new JsonRpcBatchProvider(getNetworkConfig(appChainId)?.rpcUrl, appChainId),
+    () => new JsonRpcBatchProvider(getNetworkConfig(appChainId)?.rpcUrl[0], appChainId),
+    [appChainId],
+  )
+  const batchProviderFallback = useMemo(
+    () => new JsonRpcBatchProvider(getNetworkConfig(appChainId)?.rpcUrl[1], appChainId),
     [appChainId],
   )
 
@@ -227,6 +232,7 @@ export default function Web3ConnectionProvider({ children }: Props) {
     walletChainId,
     web3Provider,
     batchProvider,
+    batchProviderFallback,
   }
 
   return <Web3ContextConnection.Provider value={value}>{children}</Web3ContextConnection.Provider>

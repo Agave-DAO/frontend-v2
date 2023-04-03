@@ -29,8 +29,8 @@ export function useBorrowStepInitial({
   const isNativeToken = tokenInfo.extensions.isNative
   const marketAddress = isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress
 
-  const marketData = useMarketsData([marketAddress])
-  const market = marketData.getMarket(marketAddress)
+  const marketData = useMarketsData()
+  const market = marketData.getMarket(tokenAddress)
   const { availableLiquidity } = market.reserveData ?? {}
 
   const [{ data: userAccountData }] = useGetUserAccountData(accountAddress)

@@ -25,7 +25,7 @@ export function useUserDepositsInformationByToken({
 }): MyInformationUserDeposits {
   const userDeposits = useUserDepositsByToken(tokenAddress)
   const { balance } = useAccountBalance({ accountAddress: userAddress, tokenAddress })
-  const marketData = useMarketsData([tokenAddress])
+  const marketData = useMarketsData()
   const market = marketData.getMarket(tokenAddress)
 
   if (!userDeposits || !market) {
