@@ -31,6 +31,11 @@ export const GlobalStyles = createGlobalStyle<{ theme: any }>`
     font-size: ${({ theme: { fonts } }) => fonts.defaultSize};
     min-height: 100vh;
     outline-color: ${({ theme: { colors } }) => colors.secondary};
+    overflow: hidden;
+
+    @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+      overflow: auto;
+    }
 
     &.modalOpen {
       height: 100vh;

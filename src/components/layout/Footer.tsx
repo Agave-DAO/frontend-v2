@@ -14,7 +14,7 @@ const Wrapper = styled(InnerContainer)`
   flex-wrap: wrap;
   justify-content: center;
   margin-top: auto;
-  padding-bottom: 40px;
+  padding-bottom: 120px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     justify-content: space-between;
@@ -24,6 +24,10 @@ const Wrapper = styled(InnerContainer)`
     padding-bottom: 65px;
   }
 `
+
+Wrapper.defaultProps = {
+  className: 'safari_only',
+}
 
 const FooterLogo = styled(Logo)`
   display: none;

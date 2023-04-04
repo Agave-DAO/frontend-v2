@@ -18,7 +18,7 @@ const Wrapper = styled.div<{ isConnected: boolean }>`
         min-height: 358px;
       }
 
-      @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+      @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.desktopStart}) {
         column-gap: 24px;
         display: grid;
         grid-template-columns: 1fr 2fr;
@@ -27,6 +27,9 @@ const Wrapper = styled.div<{ isConnected: boolean }>`
 `
 
 const WelcomeText = styled.div<{ isConnected: boolean }>`
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
   padding-top: 75px;
 
   ${({ isConnected }) =>
@@ -35,10 +38,13 @@ const WelcomeText = styled.div<{ isConnected: boolean }>`
       display: none;
     `}
 
-  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    align-items: center;
+    text-align: center;
+  }
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.desktopStart}) {
     display: flex;
-    flex-direction: column;
-    margin: 0 auto;
     max-width: 100%;
     padding-top: 0;
     width: 500px;
@@ -46,8 +52,10 @@ const WelcomeText = styled.div<{ isConnected: boolean }>`
     ${({ isConnected }) =>
       isConnected
         ? css`
+            align-items: flex-start;
             margin: auto;
             padding-left: 24px;
+            text-align: left;
             width: auto;
           `
         : css`
