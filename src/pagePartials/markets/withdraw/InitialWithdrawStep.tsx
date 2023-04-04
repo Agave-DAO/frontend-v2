@@ -11,8 +11,8 @@ import {
   RowValue,
   StepActionButton,
 } from '@/src/components/common/StepsCard'
+import { TabToggle } from '@/src/components/common/TabToggle'
 import { Amount } from '@/src/components/helpers/Amount'
-import { ToggleWrap } from '@/src/components/token/ToggleWrap'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
@@ -92,8 +92,8 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
   } = useWithdrawStepInitial({ amount, tokenAddress })
   const { openMinHealthConfigurationModal } = useModalsContext()
 
-  const onToggleWrap = (isWrapped: boolean) => {
-    onTokenSelect(isWrapped ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
+  const onToggleWrap = (isToggled: boolean) => {
+    onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
   }
 
   const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
@@ -109,8 +109,17 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
     ),
     title: 'Amount to withdraw',
     titleButton: { onClick: () => setAmount(maxToWithdraw.toString()), text: 'Use max' },
-    tokenWrapper: isNativeRelated ? (
-      <ToggleWrap isWrapped={tokenInfo.extensions.isNativeWrapper} onChange={onToggleWrap} />
+    toggles: isNativeRelated ? (
+      <TabToggle
+        isToggled={tokenInfo.extensions.isNativeWrapper}
+        onChange={onToggleWrap}
+        toggleOptions={{
+          toggledButton: 'WXDAI',
+          toggledText: 'Wrapped token',
+          untoggledButton: 'XDAI',
+          untoggledText: 'Unwrapped token',
+        }}
+      />
     ) : null,
   }
 

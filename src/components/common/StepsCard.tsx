@@ -26,11 +26,16 @@ const Link = styled.a`
 `
 
 export const StepsCard = styled.div`
+  --border-radius: 16px;
+  --padding-top: 32px;
+  --padding-horizontal: 8px;
+  --padding-bottom: 8px;
+
   background-color: ${({ theme: { colors } }) => colors.lightestGray};
-  border-radius: 16px;
+  border-radius: var(--border-radius);
   display: flex;
   flex-direction: column;
-  padding: 32px 8px 8px;
+  padding: var(--padding-top) var(--padding-horizontal) var(--padding-bottom);
   width: 100%;
 
   ${TextCSS}

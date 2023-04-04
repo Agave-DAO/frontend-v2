@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useMemo } from 'react'
+import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -11,8 +11,8 @@ import {
   RowValue,
   StepActionButton,
 } from '@/src/components/common/StepsCard'
+import { TabToggle } from '@/src/components/common/TabToggle'
 import { Amount } from '@/src/components/helpers/Amount'
-import { ToggleWrap } from '@/src/components/token/ToggleWrap'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
@@ -92,11 +92,16 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
   } = useRepayStepInitial({ amount, tokenAddress })
   const { openMinHealthConfigurationModal } = useModalsContext()
 
-  const onToggleWrap = (isWrapped: boolean) => {
-    onTokenSelect(isWrapped ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
+  const onToggleWrap = (isToggled: boolean) => {
+    onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
   }
 
   const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
+  const [APR, setAPR] = useState<'variable' | 'stable'>('variable')
+
+  const onToggleAPR = (isToggled: boolean) => {
+    setAPR(isToggled ? 'stable' : 'variable')
+  }
 
   const stepperProps = {
     info: (
@@ -109,9 +114,40 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
     ),
     title: 'Amount to repay',
     titleButton: { onClick: () => setAmount(maxToRepay.toString()), text: 'Use max' },
-    tokenWrapper: isNativeRelated ? (
-      <ToggleWrap isWrapped={tokenInfo.extensions.isNativeWrapper} onChange={onToggleWrap} />
-    ) : null,
+    toggles: (
+      <>
+        {isNativeRelated && (
+          <TabToggle
+            isToggled={tokenInfo.extensions.isNativeWrapper}
+            onChange={onToggleWrap}
+            toggleOptions={{
+              toggledButton: 'WXDAI',
+              toggledText: 'Wrapped token',
+              untoggledButton: 'XDAI',
+              untoggledText: 'Unwrapped token',
+            }}
+          />
+        )}
+        <TabToggle
+          isToggled={APR === 'stable'}
+          onChange={onToggleAPR}
+          toggleOptions={{
+            toggledButton: 'Stable',
+            toggledText: (
+              <>
+                Stable APR <b>0.1205%</b>
+              </>
+            ),
+            untoggledButton: 'Variable',
+            untoggledText: (
+              <>
+                Variable APR <b>0.4211%</b>
+              </>
+            ),
+          }}
+        />
+      </>
+    ),
   }
 
   return (
