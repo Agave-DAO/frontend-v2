@@ -191,6 +191,7 @@ export const dark = {
     darkGreen20: darkGreen20,
     darkGreen50: darkGreen50,
     darkGreen: darkGreen,
+    darkGreenDarkened: darkGreenDarkened,
     darkerGray: darkerGray,
     darkestGray: darkestGray,
     darkishGray: darkishGray,
@@ -282,11 +283,11 @@ export const dark = {
     borderColor: borderColor,
   },
   onBoard: {
-    backgroundColor: componentBackgroundColor,
+    backgroundColor: primary,
     color: textColor,
-    borderRadius: '5px',
-    borderColor: borderColor,
-    sidebarBackgroundColor: 'rgb(235, 235, 237)',
+    borderRadius: '16px',
+    borderColor: 'transparent',
+    sidebarBackgroundColor: secondary,
   },
   toast: {
     backgroundColor: componentBackgroundColor,

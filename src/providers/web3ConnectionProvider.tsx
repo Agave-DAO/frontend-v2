@@ -19,12 +19,12 @@ import nullthrows from 'nullthrows'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { Chains, INITIAL_APP_CHAIN_ID, chainsConfig, getNetworkConfig } from '@/src/config/web3'
-import { appName } from '@/src/constants/common'
 import {
   recoverLocalStorageKey,
   removeLocalStorageKey,
   setLocalStorageKey,
 } from '@/src/hooks/usePersistedState'
+import { ModalCSS } from '@/src/theme/onBoard'
 import { toWei } from '@/src/utils/common'
 import { hexToNumber } from '@/src/utils/strings'
 import { ChainConfig, ChainsValues } from '@/types/chains'
@@ -62,9 +62,10 @@ export function initOnboard() {
       enabled: false,
     },
     appMetadata: {
-      name: appName || '',
-      icon: '<svg><svg/>', // brand icon
-      description: 'Boontnode Web3 Frontend starter kit',
+      name: 'Agave - Liquidity Protocol',
+      icon: '<svg style="display: none" />', // brand icon
+      description:
+        'Earn interest on deposits and borrow assets thanks to Agave, a decentralized, non-custodial money market and lending protocol on Gnosis Chain',
       recommendedInjectedWallets: [{ name: 'MetaMask', url: 'https://metamask.io' }],
     },
     // Account center put an interactive menu in the UI to manage your account.
@@ -116,8 +117,23 @@ type Props = {
   children: ReactNode
 }
 
-//Initialize onboarding
+// Initialize onboarding
 initOnboard()
+
+/**
+ * This is a workaround (hacky shit) to add custom CSS to the onboard modal
+ */
+const setCSSStyles = () => {
+  const style = document.createElement('style')
+
+  style.innerHTML = ModalCSS
+
+  const onboardV2 = document.querySelector('onboard-v2')
+
+  if (onboardV2 && onboardV2.shadowRoot) {
+    onboardV2.shadowRoot.appendChild(style)
+  }
+}
 
 export default function Web3ConnectionProvider({ children }: Props) {
   const [{ connecting: connectingWallet, wallet }, connect, disconnect] = useConnectWallet()
@@ -207,6 +223,8 @@ export default function Web3ConnectionProvider({ children }: Props) {
       connect()
     }
   }
+
+  setCSSStyles()
 
   const value: Web3Context = {
     address,

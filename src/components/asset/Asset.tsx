@@ -6,9 +6,10 @@ import { BigNumber } from 'ethers'
 const Wrapper = styled.div`
   --padding-medium: 16px;
   --padding-xl: 24px;
+  --border-radius: 16px;
 
   background-color: rgba(1, 157, 139, 0.1);
-  border-radius: 16px;
+  border-radius: var(--border-radius);
   display: flex;
   flex-direction: column;
   height: 100%; // not super convinced about this...
@@ -16,6 +17,8 @@ const Wrapper = styled.div`
 
 export const Head = styled.div`
   background-color: rgba(1, 157, 139, 0.05);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
   column-gap: 16px;
   display: flex;
   padding: var(--padding-xl) var(--padding-medium);
