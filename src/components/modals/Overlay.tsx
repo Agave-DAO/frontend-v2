@@ -27,3 +27,9 @@ export const Overlay = styled.div`
   width: 100vw;
   z-index: 100;
 `
+
+Overlay.defaultProps = {
+  'aria-describedby': 'modalDescription',
+  'aria-labelledby': 'modalTitle',
+  className: 'modal',
+}

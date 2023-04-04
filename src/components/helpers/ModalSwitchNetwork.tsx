@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { ButtonPrimary } from '@/src/components/buttons/Button'
+import { ButtonDark } from '@/src/components/buttons/Button'
 import { Modal } from '@/src/components/modals/Modal'
 import { chainsConfig } from '@/src/config/web3'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
@@ -16,6 +16,12 @@ const NetworkButtons = styled.div`
   width: 100%;
 `
 
+const Button = styled(ButtonDark)`
+  height: 48px;
+  width: 100%;
+  font-weight: 600;
+`
+
 export const ModalSwitchNetwork: React.FC = ({ ...restProps }) => {
   const { pushNetwork, setAppChainId } = useWeb3Connection()
   const chainOptions = Object.values(chainsConfig)
@@ -24,7 +30,8 @@ export const ModalSwitchNetwork: React.FC = ({ ...restProps }) => {
     <Modal size="sm" title="Switch to a valid network" {...restProps}>
       <NetworkButtons>
         {chainOptions.map((item, index) => (
-          <ButtonPrimary
+          <Button
+            borderRadiusVariant="round"
             key={index}
             onClick={() => {
               setAppChainId(item.chainId)
@@ -32,7 +39,7 @@ export const ModalSwitchNetwork: React.FC = ({ ...restProps }) => {
             }}
           >
             {item.name}
-          </ButtonPrimary>
+          </Button>
         ))}
       </NetworkButtons>
     </Modal>
