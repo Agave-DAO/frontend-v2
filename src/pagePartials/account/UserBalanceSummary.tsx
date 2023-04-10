@@ -4,6 +4,7 @@ import { RewardPair } from '@/src/components/common/RewardPair'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
+import { ApproximateBalance, Rewards as RewardsTooltip } from '@/src/constants/tooltips'
 import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
@@ -132,14 +133,14 @@ export const UserBalanceSummary: React.FC = ({ ...restProps }) => {
         <Text>Approximate balance</Text>
         <AccountBalance>
           <Balance>{noDeposits ? '$0.00' : <Amount value={userDeposits} />}</Balance>
-          <Tooltip content="Some text here!">
+          <Tooltip content={ApproximateBalance}>
             <TooltipIcon />
           </Tooltip>
         </AccountBalance>
       </Row>
       <Row>
         <Text>
-          Rewards <Tooltip content="Some text here!" />
+          Rewards <Tooltip content={RewardsTooltip} />
         </Text>
         <Rewards>
           <RewardsBalance>{noRewards ? '$0.00' : <Amount value={userRewards} />}</RewardsBalance>

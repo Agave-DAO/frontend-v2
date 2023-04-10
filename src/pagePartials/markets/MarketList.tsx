@@ -11,7 +11,7 @@ import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
-import { formatAmount, fromWei } from '@/src/utils/common'
+import { formatAmount } from '@/src/utils/common'
 
 const Wrapper = styled.div`
   display: flex;
@@ -153,7 +153,7 @@ export const MarketList: React.FC = withGenericSuspense(
               const { symbol } = agaveTokens.getTokenByAddress(tokenAddress)
               return symbol.toUpperCase().indexOf(search.toUpperCase()) >= 0
             })
-            .map(({ priceData, tokenAddress }, index) => {
+            .map(({ tokenAddress }) => {
               const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
               const data = {
                 borrowBaseRate: {

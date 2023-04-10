@@ -1,6 +1,8 @@
 import React, { HTMLAttributes } from 'react'
 import styled from 'styled-components'
 
+import { renderToStaticMarkup } from 'react-dom/server'
+
 const Wrapper = styled.span`
   cursor: pointer;
 `
@@ -27,17 +29,14 @@ const TooltipIcon = styled(TooltipIconSVG)`
 `
 
 interface Props extends HTMLAttributes<HTMLSpanElement> {
-  content: string
+  content: React.ReactElement | string
 }
 
 export const Tooltip = ({ children, content, ...restProps }: Props) => {
+  const tooltipContent = typeof content === 'string' ? content : renderToStaticMarkup(content)
+
   return (
-    <Wrapper
-      data-multiline={true}
-      data-tooltip-content={content}
-      data-tooltip-id="mainTooltip"
-      {...restProps}
-    >
+    <Wrapper data-tooltip-html={tooltipContent} data-tooltip-id="mainTooltip" {...restProps}>
       {children ? children : <TooltipIcon />}
     </Wrapper>
   )

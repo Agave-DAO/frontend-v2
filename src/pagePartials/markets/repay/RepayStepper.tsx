@@ -4,7 +4,6 @@ import { HealthFactor } from '@/src/components/common/HealthFactor'
 import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useRepaySteps } from '@/src/pagePartials/markets/repay/hooks/useRepaySteps'
@@ -31,9 +30,7 @@ const RepayStepperInfo = ({ amount, tokenAddress }: RepayStepperInfoProps) => {
         Please verify them before submitting.
       </Text>
       <Row variant="dark">
-        <RowKey>
-          Amount <Tooltip content="Some text here!" />
-        </RowKey>
+        <RowKey>Amount</RowKey>
         <RowValueBig>
           <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
           <Amount

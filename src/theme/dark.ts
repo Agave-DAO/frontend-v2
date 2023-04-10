@@ -295,7 +295,7 @@ export const dark = {
     boxShadow: '0 0 10px rgba(255, 255, 255, 0.25)',
   },
   tooltip: {
-    backgroundColor: '#000',
-    textColor: '#fff',
+    backgroundColor: secondary,
+    textColor: textColor,
   },
 }

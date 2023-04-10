@@ -6,6 +6,10 @@ import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Loading } from '@/src/components/loading/Loading'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
+import {
+  CurrentLTV as CurrentLTVTooltip,
+  HealthFactor as HealthFactorTooltip,
+} from '@/src/constants/tooltips'
 import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
@@ -90,8 +94,15 @@ const EmptyContent = styled.div`
 export const UserAccountSummary: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const { address } = useWeb3ConnectedApp()
-    const { currentLTV, healthFactor, userBorrows, userCollateral, userDeposits } =
-      useUserAccountDetails(address)
+    const {
+      currentLTV,
+      currentLiquidationThreshold,
+      healthFactor,
+      maxLtv,
+      userBorrows,
+      userCollateral,
+      userDeposits,
+    } = useUserAccountDetails(address)
 
     return userDeposits.isZero() ? (
       <EmptyContent>
@@ -115,7 +126,20 @@ export const UserAccountSummary: React.FC = withGenericSuspense(
             </Value>
           </InfoRow>
           <InfoRow>
-            <Label>LTV</Label>
+            <Label>
+              LTV{' '}
+              <Tooltip
+                content={
+                  <CurrentLTVTooltip
+                    currentLTV={<Percentage decimals={18} value={currentLTV} />}
+                    liquidationThreshold={
+                      <Percentage decimals={18} value={currentLiquidationThreshold} />
+                    }
+                    maxLTV={<Percentage decimals={18} value={maxLtv} />}
+                  />
+                }
+              />
+            </Label>
             <Value>
               <Percentage decimals={18} value={currentLTV} />
             </Value>
@@ -123,7 +147,7 @@ export const UserAccountSummary: React.FC = withGenericSuspense(
         </Info>
         <HFWrapper>
           <Title>
-            Health status <Tooltip content="Some text here!" />
+            Health status <Tooltip content={HealthFactorTooltip} />
           </Title>
           <HealthFactor value={healthFactor} />
         </HFWrapper>

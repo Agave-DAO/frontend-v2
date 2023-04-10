@@ -10,6 +10,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { ZERO_BN } from '@/src/constants/bigNumber'
+import { HealthFactor as HealthFactorTooltip, MaximumLTV } from '@/src/constants/tooltips'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useUserDepositsByToken } from '@/src/hooks/presentation/useUserDepositsByToken'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
@@ -81,21 +82,19 @@ export const DepositInfo: React.FC<{ token: Token }> = ({ token, ...restProps })
           </Row>
           <Row variant="dark">
             <RowKey>
-              Max. LTV <Tooltip content="Some text here!" />
+              Max. LTV <Tooltip content={MaximumLTV} />
             </RowKey>
             <RowValueBig>
               <Percentage decimals={2} value={maxLTV} />
             </RowValueBig>
           </Row>
           <Row>
-            <RowKey>
-              Collateralizable <Tooltip content="Some text here!" />
-            </RowKey>
+            <RowKey>Collateralizable</RowKey>
             <RowValueBig>{collateralizable ? <Ok /> : 'No'}</RowValueBig>
           </Row>
           <Row variant="dark">
             <RowKey>
-              Health Factor <Tooltip content="Some text here!" />
+              Health Factor <Tooltip content={HealthFactorTooltip} />
             </RowKey>
             <RowValueBig>
               <HealthFactor badgeVariant="light" size="sm" value={healthFactor} variant="dark" />

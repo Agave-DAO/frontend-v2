@@ -73,7 +73,7 @@ export const MarketRowsCollapsable = styled(MarketRows)<{ isOpen?: boolean }>`
   ${({ isOpen }) =>
     isOpen
       ? css`
-          max-height: 90px;
+          max-height: 115px;
 
           > * {
             opacity: 1;

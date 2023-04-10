@@ -2,6 +2,8 @@ import { Row, RowKey, RowValueBig, Rows } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { Tooltip } from '@/src/components/tooltip/Tooltip'
+import { CooldownPeriod, UnstakeWindow } from '@/src/constants/tooltips'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { secondsToString } from '@/src/utils/common'
 
@@ -17,11 +19,15 @@ export const StakeInformationCard: React.FC = withGenericSuspense(({ ...restProp
         </RowValueBig>
       </Row>
       <Row variant="dark">
-        <RowKey>Cooldown period</RowKey>
+        <RowKey>
+          Cooldown period <Tooltip content={CooldownPeriod} />
+        </RowKey>
         <RowValueBig>{secondsToString(cooldownSeconds.toNumber())}</RowValueBig>
       </Row>
       <Row>
-        <RowKey>Unstake Window</RowKey>
+        <RowKey>
+          Unstake Window <Tooltip content={UnstakeWindow} />
+        </RowKey>
         <RowValueBig>{secondsToString(unstakeWindow.toNumber())}</RowValueBig>
       </Row>
       <Row variant="dark">

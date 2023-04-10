@@ -7,6 +7,7 @@ import { Row, RowKey, RowValueBig, Rows } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { ZERO_BN } from '@/src/constants/bigNumber'
+import { HealthFactor as HealthFactorTooltip } from '@/src/constants/tooltips'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useUserBorrowsByToken } from '@/src/hooks/presentation/useUserBorrowsByToken'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
@@ -69,7 +70,7 @@ export const RepayInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) =
           ))}
           <Row variant="dark">
             <RowKey>
-              Health Factor <Tooltip content="Some text here!" />
+              Health Factor <Tooltip content={HealthFactorTooltip} />
             </RowKey>
             <RowValueBig>
               <HealthFactor badgeVariant="light" size="sm" value={healthFactor} variant="dark" />

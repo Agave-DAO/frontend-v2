@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-export const InnerCard = styled.div`
+export const InnerCardCSS = css`
   --padding: 16px;
 
   background-color: ${({ theme: { colors } }) => colors.primary10};
@@ -15,7 +15,11 @@ export const InnerCard = styled.div`
   }
 `
 
-export const InnerCardDark = styled(InnerCard)`
+export const InnerCard = styled.div`
+  ${InnerCardCSS}
+`
+
+export const InnerCardDarkCSS = css`
   background-color: ${({ theme: { colors } }) => colors.secondary30};
   padding-left: 8px;
   padding-right: 8px;
@@ -24,4 +28,8 @@ export const InnerCardDark = styled(InnerCard)`
     padding-left: var(--padding);
     padding-right: var(--padding);
   }
+`
+
+export const InnerCardDark = styled(InnerCard)`
+  ${InnerCardDarkCSS}
 `

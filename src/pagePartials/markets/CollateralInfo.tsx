@@ -13,7 +13,6 @@ import {
 } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { chartColors } from '@/src/constants/common'
@@ -31,9 +30,7 @@ export const CollateralInfo: React.FC<{ variant?: RowVariant }> = ({ variant, ..
     <CollapsableRowsHandler
       toggle={
         <>
-          <RowKey>
-            Your collateral <Tooltip content="Some text here!" />
-          </RowKey>
+          <RowKey>Your collateral</RowKey>
           <RowValueBig>
             <Amount value={totalCollateral} />
           </RowValueBig>

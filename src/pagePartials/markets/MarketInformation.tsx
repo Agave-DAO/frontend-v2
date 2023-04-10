@@ -8,6 +8,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
+import { LiquidityPenalty, LiquidityThreshold, MaximumLTV } from '@/src/constants/tooltips'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useGetReserveLimits } from '@/src/hooks/queries/useGetReserveLimits'
 import { TokenCapValue } from '@/src/pagePartials/markets/TokenCapValue'
@@ -37,7 +38,7 @@ export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
         </Row>
         <Row variant="dark">
           <RowKey>
-            Maximum LTV <Tooltip content="Some text here!" />
+            Maximum LTV <Tooltip content={MaximumLTV} />
           </RowKey>
           <RowValue>
             <Percentage decimals={2} value={assetData.ltv} />
@@ -45,7 +46,7 @@ export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
         </Row>
         <Row>
           <RowKey>
-            Liquidity Threshold <Tooltip content="Some text here!" />
+            Liquidity Threshold <Tooltip content={LiquidityThreshold} />
           </RowKey>
           <RowValue>
             <Percentage decimals={2} value={assetData.liquidationThreshold} />
@@ -53,7 +54,7 @@ export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
         </Row>
         <Row variant="dark">
           <RowKey>
-            Liquidation Penalty <Tooltip content="Some text here!" />
+            Liquidation Penalty <Tooltip content={LiquidityPenalty} />
           </RowKey>
           <RowValue>
             <Percentage decimals={2} value={assetData.liquidationBonus.sub(10_000)} />
@@ -78,9 +79,7 @@ export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
           </RowValue>
         </Row>
         <Row variant="dark">
-          <RowKey>
-            Used as Collateral <Tooltip content="Some text here!" />
-          </RowKey>
+          <RowKey>Used as Collateral</RowKey>
           <RowValue>{usedAsCollateral ? <Ok /> : 'No'}</RowValue>
         </Row>
         <Row>

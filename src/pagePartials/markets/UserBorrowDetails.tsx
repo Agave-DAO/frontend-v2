@@ -15,6 +15,7 @@ import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
+import { HealthFactor as HealthFactorTooltip } from '@/src/constants/tooltips'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
@@ -56,16 +57,14 @@ const UserBorrowsImp = ({
       </Row>
       <Row>
         <RowKey>
-          Health factor <Tooltip content="Some text here!" />
+          Health factor <Tooltip content={HealthFactorTooltip} />
         </RowKey>
         <RowValue>
           <HealthFactor badgeVariant="light" size="sm" value={healthFactor} variant="dark" />
         </RowValue>
       </Row>
       <Row variant="dark">
-        <RowKey>
-          Loan to value <Tooltip content="Some text here!" />
-        </RowKey>
+        <RowKey>Loan to value</RowKey>
         <RowValue>
           <Percentage decimals={2} value={ltv} />
         </RowValue>
