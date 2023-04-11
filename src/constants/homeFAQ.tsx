@@ -47,7 +47,7 @@ export const homeFAQ = [
       <p>
         The ticker is <b>$AGVE</b> and the{' '}
         <a
-          href="https://blockscout.com/xdai/mainnet/address/0x3a97704a1b25F08aa230ae53B352e2e72ef52843"
+          href="https://gnosisscan.io/address/0x3a97704a1b25F08aa230ae53B352e2e72ef52843"
           rel="noreferrer"
           target="_blank"
         >
@@ -73,15 +73,18 @@ export const homeFAQ = [
   {
     title: 'Is there a website for Agave?',
     content: (
-      <p>
-        <a href="https://agavefinance.eth.limo/" rel="noreferrer" target="_blank">
-          https://agavefinance.eth.limo/
-        </a>
-        -{' '}
-        <a href="https://agave.finance/" rel="noreferrer" target="_blank">
-          https://agave.finance/
-        </a>
-      </p>
+      <ul>
+        <li>
+          <a href="https://agavefinance.eth.limo/" rel="noreferrer" target="_blank">
+            https://agavefinance.eth.limo/
+          </a>
+        </li>
+        <li>
+          <a href="https://agave.finance/" rel="noreferrer" target="_blank">
+            https://agave.finance/
+          </a>
+        </li>
+      </ul>
     ),
   },
   {
@@ -220,7 +223,15 @@ export const homeFAQ = [
     content: (
       <p>
         The best way to get help from a member of the 1Hive community is to land on the ⛈<b>help</b>{' '}
-        channel on Discord.
+        channel on{' '}
+        <a
+          href="https://discord.com/channels/816889381737725963/816889382850134027"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Discord
+        </a>
+        .
       </p>
     ),
   },

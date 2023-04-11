@@ -28,8 +28,8 @@ export const stakeFAQ = [
     title: 'What happens when I click on "Activate Cooldown?',
     content: (
       <p>
-        When you activate the cooldown period you'll have to wait 10 days before unstaking your
-        tokens. Then, you'll have 2 days to click "unstake" {'-->'} window closes.
+        Once 'Activate Cooldown' is clicked a 10 day window period will start. After the 10 days
+        pass, you'll have a 2 days claim window to withdraw your sweet <b>$AGVE</b> to your wallet.
       </p>
     ),
   },
@@ -44,7 +44,7 @@ export const stakeFAQ = [
   },
   {
     title: 'Do I still receive staking rewards during the cooldown period?',
-    content: <p>Yes! You receive staking rewards until you don't unstake your tokens.</p>,
+    content: <p>Yes! You'll receive staking rewards until you effectively unstake your tokens.</p>,
   },
   {
     title: 'Will it be possible to vote with stkAGVE too?',
