@@ -5,8 +5,8 @@ import { RowVariant } from '@/src/components/common/Rows'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 100vw;
-  width: 320px;
+  max-width: 320px;
+  width: auto;
 `
 
 const Text = styled.p`
@@ -75,8 +75,17 @@ export const ApproximateBalance = (
 export const Rewards = (
   <Wrapper>
     <Text>
-      Staking Agave in the safety module helps to secure the protocol in exchange for protocol
-      incentives (rewards).
+      Rewards in CPT tokens.
+      <br />
+      Click{' '}
+      <a
+        href="https://gnosis.symm.fi/#/pool/0x870bb2c024513b5c9a69894dcc65fb5c47e422f3000200000000000000000014"
+        rel="noreferrer"
+        target="_blank"
+      >
+        here
+      </a>{' '}
+      for more info.
     </Text>
   </Wrapper>
 )

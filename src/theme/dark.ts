@@ -13,6 +13,8 @@ const primary30 = `${primary}4D`
 const primaryLight = '#40B390'
 const primaryDarkened = darken(0.05, primary)
 
+const mainLight = '#92DE95'
+
 const secondary = '#122C34'
 const secondary20 = `${secondary}33`
 const secondary30 = `${secondary}4D`
@@ -206,6 +208,7 @@ export const dark = {
     mainDark440: mainDark440,
     mainDark450: mainDark450,
     mainDark4: mainDark4,
+    mainLight: mainLight,
     overlay50: overlay50,
     overlay: overlay,
     primary10: primary10,
