@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
-import { Icon as BaseIcon } from '@/src/components/asset/Asset'
 import { InnerCard } from '@/src/components/common/InnerCard'
 import { Rows as BaseRows, Row, RowKey, RowValue } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
@@ -32,10 +31,10 @@ const ChartWithIcon = styled.div<{ baseChartSize: number }>`
   }
 `
 
-const Icon = styled(BaseIcon)`
+const Icon = styled(TokenIcon)`
   --icon-size: 40px;
+  --image-size: calc(var(--icon-size) - 15px);
 
-  border-radius: 50%;
   height: var(--icon-size);
   left: 50%;
   position: absolute;
@@ -43,8 +42,14 @@ const Icon = styled(BaseIcon)`
   transform: translate(-50%, -50%);
   width: var(--icon-size);
 
+  .tokenIcon {
+    height: var(--image-size);
+    width: var(--image-size);
+  }
+
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     --icon-size: 77px;
+    --image-size: calc(var(--icon-size) - 30px);
   }
 `
 
@@ -211,9 +216,7 @@ const Chart: React.FC<{
             </Pie>
           </PieChart>
         </ResponsiveContainer>
-        <Icon symbol={tokenSymbol}>
-          <TokenIcon dimensions={40} symbol={tokenSymbol} />
-        </Icon>
+        <Icon dimensions={77} symbol={tokenSymbol} />
       </ChartWithIcon>
       <Legends>
         {data.map(({ title }, index) => (

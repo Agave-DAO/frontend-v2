@@ -4,19 +4,50 @@ import styled from 'styled-components'
 
 import { useTokenIcons } from '@/src/providers/tokenIconsProvider'
 
-const Placeholder = styled.div<{ dimensions: string }>`
+export const getIconBackgroundColor = (symbol?: string): string => {
+  const symbolLowerCase = symbol?.toLowerCase() as string
+
+  return symbolLowerCase === 'gno'
+    ? '#00193C'
+    : symbolLowerCase === 'weth'
+    ? '#000'
+    : symbolLowerCase === 'wxdai'
+    ? '#006268'
+    : symbolLowerCase === 'dai'
+    ? '#fbcc5f'
+    : symbolLowerCase === 'xdai'
+    ? '#006268'
+    : symbolLowerCase === 'usdc'
+    ? '#2775CA'
+    : symbolLowerCase === 'wbtc'
+    ? '#F09242'
+    : symbolLowerCase === 'usdt'
+    ? '#50AF95'
+    : symbolLowerCase === 'link'
+    ? '#2A5ADA'
+    : symbolLowerCase === 'fox'
+    ? '#131D27'
+    : symbolLowerCase === 'agve'
+    ? '#fff'
+    : '#019D8B'
+}
+
+const Wrapper = styled.div<{ dimensions: string; symbol: string }>`
   align-items: center;
-  background-color: #cacaca;
+  background-color: ${({ symbol }) => getIconBackgroundColor(symbol)};
   border-radius: 50%;
-  color: #000;
   display: flex;
-  font-size: 80%;
-  font-weight: 700;
   height: ${({ dimensions }) => dimensions}px;
   justify-content: center;
+  width: ${({ dimensions }) => dimensions}px;
+`
+
+const Placeholder = styled.div`
+  color: #fff;
+  font-size: 80%;
+  font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
-  width: ${({ dimensions }) => dimensions}px;
 `
 
 interface Props {
@@ -29,18 +60,20 @@ export const TokenIcon: React.FC<Props> = ({ dimensions = 18, symbol, ...restPro
   const [error, setError] = useState(false)
   const tokenImage = tokensBySymbol[symbol.toLowerCase()]?.logoURI
 
-  return tokenImage && !error ? (
-    <Image
-      alt={symbol}
-      className="tokenIcon"
-      height={dimensions}
-      onError={() => setError(true)}
-      src={tokenImage}
-      title={symbol}
-      width={dimensions}
-      {...restProps}
-    />
-  ) : (
-    <Placeholder dimensions={`${dimensions}`}>{symbol[0]}</Placeholder>
+  return (
+    <Wrapper dimensions={`${dimensions}`} symbol={symbol} title={symbol} {...restProps}>
+      {tokenImage && !error ? (
+        <Image
+          alt={symbol}
+          className="tokenIcon"
+          height={dimensions - 8}
+          onError={() => setError(true)}
+          src={tokenImage}
+          width={dimensions - 8}
+        />
+      ) : (
+        <Placeholder>{symbol[0]}</Placeholder>
+      )}
+    </Wrapper>
   )
 }

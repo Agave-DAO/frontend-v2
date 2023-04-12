@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import { BigNumber } from 'ethers'
 
+import { getIconBackgroundColor } from '@/src/components/token/TokenIcon'
+
 const Wrapper = styled.div`
   --padding-medium: 16px;
   --padding-xl: 24px;
@@ -28,31 +30,7 @@ export const Icon = styled.div<{ symbol?: string }>`
   --token-icon-size: 58px;
 
   align-items: center;
-  background-color: ${({ symbol, theme: { colors } }) => {
-    const symbolLowerCase = symbol?.toLowerCase() as string
-
-    return symbolLowerCase === 'gno'
-      ? '#00193C'
-      : symbolLowerCase === 'weth'
-      ? '#000'
-      : symbolLowerCase === 'wxdai'
-      ? '#006268'
-      : symbolLowerCase === 'dai'
-      ? '#fbcc5f'
-      : symbolLowerCase === 'xdai'
-      ? '#006268'
-      : symbolLowerCase === 'usdc'
-      ? '#2775CA'
-      : symbolLowerCase === 'wbtc'
-      ? '#F09242'
-      : symbolLowerCase === 'usdt'
-      ? '#50AF95'
-      : symbolLowerCase === 'link'
-      ? '#2A5ADA'
-      : symbolLowerCase === 'fox'
-      ? '#131D27'
-      : colors.primary
-  }};
+  background-color: ${({ symbol }) => getIconBackgroundColor(symbol)};
   border-radius: 16px;
   display: flex;
   flex-shrink: 0;
