@@ -19,7 +19,6 @@ const Progress = styled.div<{ progress?: number }>`
   border-radius: 6px;
   height: 5px;
   width: ${({ progress }) => progress || 0}%;
-  width: 50%;
 `
 
 const TimeWrapper = styled.div`
