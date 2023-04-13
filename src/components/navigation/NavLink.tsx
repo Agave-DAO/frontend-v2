@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { PropsWithChildren } from 'react'
 
 interface Props extends LinkProps {
-  href: string
   className?: string
 }
 

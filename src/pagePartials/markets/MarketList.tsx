@@ -2,11 +2,13 @@ import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Market } from '@/src/components/asset/Market'
-import { Magnifier as SVG } from '@/src/components/assets/Magnifier'
+import { Magnifier as BaseMagnifier } from '@/src/components/assets/Magnifier'
+import { NoResults } from '@/src/components/assets/NoResults'
+import { GenericError } from '@/src/components/common/GenericError'
 import { Textfield } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
-import { AssetsList } from '@/src/components/layout/AssetsList'
+import { AssetsList as BaseAssetList } from '@/src/components/layout/AssetsList'
 import { Loading } from '@/src/components/loading/Loading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
@@ -14,6 +16,8 @@ import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { formatAmount } from '@/src/utils/common'
 
 const Wrapper = styled.div`
+  --list-presentation-order: 2;
+
   display: flex;
   flex-direction: column;
 `
@@ -57,7 +61,7 @@ const SearchField = styled(Textfield)`
   z-index: 1;
 `
 
-const Magnifier = styled(SVG)`
+const Magnifier = styled(BaseMagnifier)`
   position: absolute;
   right: 16px;
   top: 50%;
@@ -110,26 +114,45 @@ const MarketSizeValue = styled.span`
   }
 `
 
+const AssetsList = styled(BaseAssetList)`
+  order: var(--list-presentation-order);
+`
+
+const Error = styled(GenericError)`
+  margin: 32px auto;
+  order: var(--list-presentation-order);
+`
+
 export const MarketList: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const { agaveMarketsData, getBorrowRate, getDepositAPY, getIncentiveRate, getMarketSize } =
       useMarketsData()
     const [search, setSearch] = useState('')
-    const markets = agaveMarketsData
-      ? agaveMarketsData.filter(({ assetData: { isFrozen } }) => !isFrozen)
-      : undefined
+    const workingMarkets = useMemo(
+      () => agaveMarketsData?.filter(({ assetData: { isFrozen } }) => !isFrozen),
+      [agaveMarketsData],
+    )
+    // pretty shitty search filter (improve when possible)
+    const filteredMarkets = useMemo(
+      () =>
+        workingMarkets?.filter(({ tokenAddress }) => {
+          const { symbol } = agaveTokens.getTokenByAddress(tokenAddress)
+          return symbol.toUpperCase().indexOf(search.toUpperCase()) >= 0
+        }),
+      [search, workingMarkets],
+    )
     const totalMarketSize = useMemo(
       () =>
-        markets
-          ? markets.reduce(
+        workingMarkets
+          ? workingMarkets.reduce(
               (currentTotal, { tokenAddress }) => currentTotal.add(getMarketSize(tokenAddress).usd),
               ZERO_BN,
             )
           : undefined,
-      [getMarketSize, markets],
+      [getMarketSize, workingMarkets],
     )
 
-    return markets ? (
+    return workingMarkets ? (
       <Wrapper {...restProps}>
         <WelcomeText>Move cryptocurrency from your wallet and start earning interest.</WelcomeText>
         <SearchWrapper>
@@ -146,14 +169,9 @@ export const MarketList: React.FC = withGenericSuspense(
             <MarketSizeValue>{formatAmount(totalMarketSize)}</MarketSizeValue>
           </MarketSize>
         )}
-        <AssetsList>
-          {markets
-            // pretty shitty search filter (improve when possible)
-            .filter(({ tokenAddress }) => {
-              const { symbol } = agaveTokens.getTokenByAddress(tokenAddress)
-              return symbol.toUpperCase().indexOf(search.toUpperCase()) >= 0
-            })
-            .map(({ tokenAddress }) => {
+        {filteredMarkets?.length ? (
+          <AssetsList>
+            {filteredMarkets.map(({ tokenAddress }) => {
               const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
               const data = {
                 borrowBaseRate: {
@@ -203,10 +221,23 @@ export const MarketList: React.FC = withGenericSuspense(
                 />
               )
             })}
-        </AssetsList>
+          </AssetsList>
+        ) : (
+          <Error
+            icon={<NoResults />}
+            text={
+              <>
+                No assets found related to your search.
+                <br />
+                Try again with a different asset name, symbol, or address.
+              </>
+            }
+            title={`No search results for '${search}'`}
+          />
+        )}
       </Wrapper>
     ) : (
-      <>There was an error retrieving data...</>
+      <Error text="There was an error retrieving data..." />
     )
   },
   () => <Loading text="Fetching markets..." />,
