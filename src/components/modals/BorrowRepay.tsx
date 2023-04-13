@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { BorrowInfo } from '@/src/pagePartials/markets/BorrowInfo'
 import { RepayInfo } from '@/src/pagePartials/markets/RepayInfo'
 import { Borrow } from '@/src/pagePartials/markets/borrow/Borrow'
@@ -16,11 +17,19 @@ const Tabs = styled(BaseTabs)`
 
 interface Props {
   activeTab?: BorrowRepayTabs
+  interestRateMode: InterestRateMode
+  onInterestRateSelect: (mode: InterestRateMode) => void
   onTokenSelect: (token: Token) => void
   token: Token | null
 }
 
-const BorrowRepayBase: React.FC<Props> = ({ activeTab, onTokenSelect, token }) => {
+const BorrowRepayBase: React.FC<Props> = ({
+  activeTab,
+  interestRateMode,
+  onInterestRateSelect,
+  onTokenSelect,
+  token,
+}) => {
   const [tab, setTab] = useState<BorrowRepayTabs>(activeTab || 'borrow')
   const borrowActive = tab === 'borrow'
   const repayActive = tab === 'repay'
@@ -37,8 +46,22 @@ const BorrowRepayBase: React.FC<Props> = ({ activeTab, onTokenSelect, token }) =
           Repay
         </Tab>
       </Tabs>
-      {borrowActive && <Borrow onTokenSelect={onTokenSelect} tokenAddress={token.address} />}
-      {repayActive && <Repay onTokenSelect={onTokenSelect} tokenAddress={token.address} />}
+      {borrowActive && (
+        <Borrow
+          interestRateMode={interestRateMode}
+          onInterestRateSelect={onInterestRateSelect}
+          onTokenSelect={onTokenSelect}
+          tokenAddress={token.address}
+        />
+      )}
+      {repayActive && (
+        <Repay
+          interestRateMode={interestRateMode}
+          onInterestRateSelect={onInterestRateSelect}
+          onTokenSelect={onTokenSelect}
+          tokenAddress={token.address}
+        />
+      )}
     </>
   ) : null
 }

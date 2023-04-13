@@ -6,6 +6,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useBorrowSteps } from '@/src/pagePartials/markets/borrow/hooks/useBorrowSteps'
 import { Steps } from '@/src/pagePartials/markets/stepper'
 
@@ -52,13 +53,20 @@ const BorrowStepperInfo = ({ amount, tokenAddress }: BorrowStepperInfoProps) => 
 interface BorrowStepperProps {
   amount: string
   cancel: () => void
+  interestRateMode: InterestRateMode
   tokenAddress: string
 }
 
-export const BorrowStepper = ({ amount, cancel, tokenAddress }: BorrowStepperProps) => {
+export const BorrowStepper = ({
+  amount,
+  cancel,
+  interestRateMode,
+  tokenAddress,
+}: BorrowStepperProps) => {
   const depositSteps = useBorrowSteps({
-    tokenAddress,
     amount,
+    interestRateMode,
+    tokenAddress,
   })
 
   const params = {

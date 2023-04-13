@@ -2,6 +2,7 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 
 import { BorrowRepayModal, DepositWithdrawModal } from '@/src/components/modals/ActionsModal'
 import { MinHealthConfigurationModal } from '@/src/components/modals/MinHealthConfigurationModal'
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { getTokenInfo } from '@/src/utils/getTokenInfo'
 import { BorrowRepayTabs, DepositWithdrawTabs, Modals } from '@/types/modal'
 
@@ -12,6 +13,7 @@ const ModalsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [currentModal, setCurrentModal] = useState<{
     activeTab?: DepositWithdrawTabs | BorrowRepayTabs
     modalName: Modals
+    mode?: InterestRateMode
     tokenAddress: string
   } | null>(null)
   const bodyDiv = document.getElementById('body') as HTMLElement
@@ -38,11 +40,20 @@ const ModalsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
-  const openBorrowRepayModal = (tokenAddress: string, activeTab?: BorrowRepayTabs) => {
+  const openBorrowRepayModal = ({
+    activeTab,
+    mode,
+    tokenAddress,
+  }: {
+    activeTab?: BorrowRepayTabs
+    mode?: InterestRateMode
+    tokenAddress: string
+  }) => {
     setCurrentModal({
-      modalName: 'borrowRepay',
-      tokenAddress,
       activeTab,
+      modalName: 'borrowRepay',
+      mode,
+      tokenAddress,
     })
   }
 
@@ -67,6 +78,7 @@ const ModalsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
       {token && currentModal?.modalName === 'borrowRepay' && (
         <BorrowRepayModal
           activeTab={currentModal?.activeTab as BorrowRepayTabs}
+          mode={currentModal?.mode ?? InterestRateMode.variable}
           onClose={closeModal}
           token={token}
         />

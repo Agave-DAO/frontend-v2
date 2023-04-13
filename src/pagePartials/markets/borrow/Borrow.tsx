@@ -1,13 +1,18 @@
 import { useState } from 'react'
 
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { BorrowStepper } from '@/src/pagePartials/markets/borrow/BorrowStepper'
 import { InitialBorrowStep } from '@/src/pagePartials/markets/borrow/InitialBorrowStep'
 import { Token } from '@/types/token'
 
 export function Borrow({
+  interestRateMode,
+  onInterestRateSelect,
   onTokenSelect,
   tokenAddress,
 }: {
+  interestRateMode: InterestRateMode
+  onInterestRateSelect: (mode: InterestRateMode) => void
   onTokenSelect: (token: Token) => void
   tokenAddress: string
 }) {
@@ -19,7 +24,9 @@ export function Borrow({
       {step === 'initial' && (
         <InitialBorrowStep
           amount={amount}
+          interestRateMode={interestRateMode}
           nextStep={() => setStep('tx')}
+          onInterestRateSelect={onInterestRateSelect}
           onTokenSelect={onTokenSelect}
           setAmount={setAmount}
           tokenAddress={tokenAddress}
@@ -29,6 +36,7 @@ export function Borrow({
         <BorrowStepper
           amount={amount}
           cancel={() => setStep('initial')}
+          interestRateMode={interestRateMode}
           tokenAddress={tokenAddress}
         />
       )}

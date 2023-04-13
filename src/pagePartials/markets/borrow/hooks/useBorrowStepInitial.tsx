@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
-import { isNative } from 'lodash'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { agaveTokens } from '@/src/config/agaveTokens'
@@ -11,7 +10,7 @@ import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
-import { useLocalStorage, usePersistedState } from '@/src/hooks/usePersistedState'
+import { usePersistedState } from '@/src/hooks/usePersistedState'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { toWei } from '@/src/utils/common'
 
@@ -32,6 +31,7 @@ export function useBorrowStepInitial({
   const marketData = useMarketsData()
   const market = marketData.getMarket(tokenAddress)
   const { availableLiquidity } = market.reserveData ?? {}
+  const { stableBorrowRateEnabled = false } = market.assetData ?? {}
 
   const [{ data: userAccountData }] = useGetUserAccountData(accountAddress)
   const availableToBorrowDAI = userAccountData?.[0].availableBorrowsETH
@@ -56,6 +56,11 @@ export function useBorrowStepInitial({
     targetValue: BigNumber.from(minSafeHF),
   })
 
+  const borrowStableAPR = marketData.getBorrowRate(tokenAddress).stable
+  const borrowVariableAPR = marketData
+    .getBorrowRate(tokenAddress)
+    .variable.sub(marketData.getIncentiveRate(tokenAddress, 'variableDebt'))
+
   const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
   const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
 
@@ -63,12 +68,15 @@ export function useBorrowStepInitial({
     tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(Zero)
 
   return {
-    tokenInfo,
+    borrowStableAPR,
+    borrowVariableAPR,
+    disableSubmit,
+    isStableBorrowRateEnabled: tokenInfo.extensions.isNative ? false : stableBorrowRateEnabled,
     maxToBorrow: maxSafeAmountToBorrow,
     setTokenInputStatus,
     setTokenInputStatusText,
+    tokenInfo,
     tokenInputStatus,
     tokenInputStatusText,
-    disableSubmit,
   }
 }

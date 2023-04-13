@@ -52,6 +52,7 @@ const Text = styled.span`
 `
 
 export const TabToggle: React.FC<{
+  disabled?: boolean
   isToggled?: boolean
   onChange?: (isToggled: boolean) => void
   toggleOptions: {
@@ -60,23 +61,37 @@ export const TabToggle: React.FC<{
     untoggledButton: string | React.ReactNode
     untoggledText: string | React.ReactNode
   }
-}> = ({ isToggled, onChange, toggleOptions }) => {
+}> = ({ disabled = false, isToggled, onChange, toggleOptions }) => {
   const [toggled, setToggled] = useState<boolean>(isToggled ?? false)
   const { toggledButton, toggledText, untoggledButton, untoggledText } = toggleOptions
 
   useEffect(() => {
-    if (onChange) {
+    if (!disabled && onChange) {
       onChange(toggled)
     }
-  }, [onChange, toggled])
+  }, [disabled, onChange, toggled])
+
+  useEffect(() => {
+    if (isToggled !== undefined) {
+      setToggled((prevState) => (prevState !== isToggled ? isToggled : prevState))
+    }
+  }, [isToggled])
 
   return (
     <>
       <Buttons>
-        <Button isActive={!toggled} onClick={() => (!toggled ? undefined : setToggled(false))}>
+        <Button
+          disabled={disabled}
+          isActive={!toggled}
+          onClick={() => (!toggled ? undefined : setToggled(false))}
+        >
           {untoggledButton}
         </Button>
-        <Button isActive={toggled} onClick={() => (toggled ? undefined : setToggled(true))}>
+        <Button
+          disabled={disabled}
+          isActive={toggled}
+          onClick={() => (toggled ? undefined : setToggled(true))}
+        >
           {toggledButton}
         </Button>
       </Buttons>

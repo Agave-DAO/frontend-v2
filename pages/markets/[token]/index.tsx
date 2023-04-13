@@ -66,21 +66,23 @@ const UserConnectedActions: React.FC<{
   const items = [
     {
       text: 'Withdraw',
-      onClick: () => openDepositWithdrawModal(tokenAddress, 'withdraw'),
+      onClick: () => openDepositWithdrawModal({ activeTab: 'withdraw', tokenAddress }),
     },
   ]
 
   if (userHasBorrows) {
     items.push({
       text: 'Repay',
-      onClick: () => openBorrowRepayModal(tokenAddress, 'repay'),
+      onClick: () => openBorrowRepayModal({ activeTab: 'repay', tokenAddress }),
     })
   }
 
   return (
     <>
       <MoreActionsDropdown items={items} size="md" variant="neutral" />
-      <ButtonDark onClick={() => openBorrowRepayModal(tokenAddress, 'borrow')}>Borrow</ButtonDark>
+      <ButtonDark onClick={() => openBorrowRepayModal({ activeTab: 'borrow', tokenAddress })}>
+        Borrow
+      </ButtonDark>
       <ButtonPrimary onClick={() => openDepositWithdrawModal(tokenAddress, 'deposit')}>
         Deposit
       </ButtonPrimary>

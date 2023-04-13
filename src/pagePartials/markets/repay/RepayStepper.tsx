@@ -6,6 +6,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useRepaySteps } from '@/src/pagePartials/markets/repay/hooks/useRepaySteps'
 import { Steps } from '@/src/pagePartials/markets/stepper'
 
@@ -53,13 +54,20 @@ const RepayStepperInfo = ({ amount, tokenAddress }: RepayStepperInfoProps) => {
 interface RepayStepperProps {
   amount: string
   cancel: () => void
+  interestRateMode: InterestRateMode
   tokenAddress: string
 }
 
-export const RepayStepper = ({ amount, cancel, tokenAddress }: RepayStepperProps) => {
+export const RepayStepper = ({
+  amount,
+  cancel,
+  interestRateMode,
+  tokenAddress,
+}: RepayStepperProps) => {
   const depositSteps = useRepaySteps({
-    tokenAddress,
     amount,
+    interestRateMode,
+    tokenAddress,
   })
 
   const params = {

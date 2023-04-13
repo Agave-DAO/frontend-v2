@@ -11,6 +11,7 @@ import { DepositWithdraw } from '@/src/components/modals/DepositWithdraw'
 import { Header } from '@/src/components/modals/Header'
 import { Overlay } from '@/src/components/modals/Overlay'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { BorrowRepayTabs, DepositWithdrawTabs } from '@/types/modal'
 import { Token } from '@/types/token'
 
@@ -50,16 +51,6 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 interface ActionsModalProps extends Props {
   onTokenSelect: (token: Token | null) => void
   symbol: string
-}
-
-interface DepositWithdrawModalProps extends Props {
-  activeTab?: DepositWithdrawTabs
-  token: Token | null
-}
-
-interface BorrowRepayModalProps extends Props {
-  activeTab?: BorrowRepayTabs
-  token: Token | null
 }
 
 export const ActionsModal: React.FC<ActionsModalProps> = ({
@@ -123,6 +114,11 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
   )
 }
 
+interface DepositWithdrawModalProps extends Props {
+  activeTab?: DepositWithdrawTabs
+  token: Token | null
+}
+
 export const DepositWithdrawModal: React.FC<DepositWithdrawModalProps> = ({
   activeTab,
   token,
@@ -140,19 +136,37 @@ export const DepositWithdrawModal: React.FC<DepositWithdrawModalProps> = ({
   )
 }
 
+interface BorrowRepayModalProps extends Props {
+  activeTab?: BorrowRepayTabs
+  mode: InterestRateMode
+  token: Token | null
+}
+
 export const BorrowRepayModal: React.FC<BorrowRepayModalProps> = ({
   activeTab,
+  mode,
   token,
   ...restProps
 }) => {
   const [currentToken, setCurrentToken] = useState<Token | null>(token)
+  const [interestRateMode, setInterestRateMode] = useState<InterestRateMode>(() => mode)
   const onTokenSelect = (token: Token | null) => {
     setCurrentToken(token)
   }
 
+  const onInterestRateSelect = (mode: InterestRateMode) => {
+    setInterestRateMode(mode)
+  }
+
   return (
     <ActionsModal onTokenSelect={onTokenSelect} symbol={currentToken?.symbol || ''} {...restProps}>
-      <BorrowRepay activeTab={activeTab} onTokenSelect={onTokenSelect} token={currentToken} />
+      <BorrowRepay
+        activeTab={activeTab}
+        interestRateMode={interestRateMode}
+        onInterestRateSelect={onInterestRateSelect}
+        onTokenSelect={onTokenSelect}
+        token={currentToken}
+      />
     </ActionsModal>
   )
 }

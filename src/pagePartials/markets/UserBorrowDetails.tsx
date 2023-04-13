@@ -128,12 +128,14 @@ export const UserBorrowDetails = withGenericSuspense(
           <ActionsWrapper>
             <ActionButton
               disabled={!userHasBorrows}
-              onClick={() => openBorrowRepayModal(tokenAddress, 'repay')}
+              onClick={() => openBorrowRepayModal({ activeTab: 'repay', tokenAddress })}
               variant="dark"
             >
               Repay
             </ActionButton>
-            <ActionButton onClick={() => openBorrowRepayModal(tokenAddress, 'borrow')}>
+            <ActionButton
+              onClick={() => openBorrowRepayModal({ activeTab: 'borrow', tokenAddress })}
+            >
               Borrow
             </ActionButton>
           </ActionsWrapper>

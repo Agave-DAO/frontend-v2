@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -13,10 +13,12 @@ import {
 } from '@/src/components/common/StepsCard'
 import { TabToggle } from '@/src/components/common/TabToggle'
 import { Amount } from '@/src/components/helpers/Amount'
+import { Percentage } from '@/src/components/helpers/Percentage'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useBorrowStepInitial } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useModalsContext } from '@/src/providers/modalsProvider'
@@ -68,7 +70,9 @@ const InitialBorrowStepInfo: React.FC<InitialBorrowStepInfoProps> = ({
 
 interface InitialBorrowStepProps {
   amount: string
+  interestRateMode: InterestRateMode
   nextStep: () => void
+  onInterestRateSelect: (mode: InterestRateMode) => void
   onTokenSelect: (token: Token) => void
   setAmount: Dispatch<SetStateAction<string>>
   tokenAddress: string
@@ -76,13 +80,18 @@ interface InitialBorrowStepProps {
 
 export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
   amount,
+  interestRateMode,
   nextStep,
+  onInterestRateSelect,
   onTokenSelect,
   setAmount,
   tokenAddress,
 }) => {
   const {
+    borrowStableAPR,
+    borrowVariableAPR,
     disableSubmit,
+    isStableBorrowRateEnabled,
     maxToBorrow,
     setTokenInputStatus,
     setTokenInputStatusText,
@@ -92,16 +101,17 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
   } = useBorrowStepInitial({ amount, tokenAddress })
   const { openMinHealthConfigurationModal } = useModalsContext()
 
+  const onToggleInterestRateMode = (isToggled: boolean) => {
+    onInterestRateSelect(isToggled ? InterestRateMode.stable : InterestRateMode.variable)
+  }
+
   const onToggleWrap = (isToggled: boolean) => {
     onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
+    !isToggled && // means we are using the native token
+      onToggleInterestRateMode(false) // so we need to set the interest rate mode to variable
   }
 
   const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
-  const [APR, setAPR] = useState<'variable' | 'stable'>('variable')
-
-  const onToggleAPR = (isToggled: boolean) => {
-    setAPR(isToggled ? 'stable' : 'variable')
-  }
 
   const stepperProps = {
     info: (
@@ -129,19 +139,26 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
           />
         )}
         <TabToggle
-          isToggled={APR === 'stable'}
-          onChange={onToggleAPR}
+          disabled={!isStableBorrowRateEnabled}
+          isToggled={interestRateMode === InterestRateMode.stable}
+          onChange={onToggleInterestRateMode}
           toggleOptions={{
             toggledButton: 'Stable',
             toggledText: (
               <>
-                Stable APR <b>0.1205%</b>
+                Stable APR{' '}
+                <b>
+                  <Percentage decimals={25} value={borrowStableAPR} />
+                </b>
               </>
             ),
             untoggledButton: 'Variable',
             untoggledText: (
               <>
-                Variable APR <b>0.4211%</b>
+                Variable APR{' '}
+                <b>
+                  <Percentage decimals={25} value={borrowVariableAPR} />
+                </b>
               </>
             ),
           }}

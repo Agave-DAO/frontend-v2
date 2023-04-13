@@ -51,12 +51,26 @@ const UserBorrowsList = withGenericSuspense(
               >
                 <ActionsWrapper>
                   <ActionButton
-                    onClick={() => openBorrowRepayModal(assetAddress, 'repay')}
+                    onClick={() =>
+                      openBorrowRepayModal({
+                        activeTab: 'repay',
+                        mode: borrowMode,
+                        tokenAddress: assetAddress,
+                      })
+                    }
                     variant="dark"
                   >
                     Repay
                   </ActionButton>
-                  <ActionButton onClick={() => openBorrowRepayModal(assetAddress, 'borrow')}>
+                  <ActionButton
+                    onClick={() =>
+                      openBorrowRepayModal({
+                        activeTab: 'borrow',
+                        mode: borrowMode,
+                        tokenAddress: assetAddress,
+                      })
+                    }
+                  >
                     Borrow
                   </ActionButton>
                 </ActionsWrapper>

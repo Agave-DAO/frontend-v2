@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
-import { usePageModeParam } from '@/src/hooks/presentation/usePageModeParam'
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesData'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
@@ -12,12 +12,13 @@ import { AgaveLending__factory, WETHGateway__factory } from '@/types/generated/t
 
 export const useRepayStepRepay = ({
   amount,
+  interestRateMode,
   tokenAddress,
 }: {
   amount: string
+  interestRateMode: InterestRateMode
   tokenAddress: string
 }) => {
-  const interestRateMode = usePageModeParam()
   const { address: userAddress } = useWeb3ConnectedApp()
   const nativeGateway = useContractInstance(WETHGateway__factory, 'WETHGateway')
   const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
