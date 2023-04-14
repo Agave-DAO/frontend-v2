@@ -35,12 +35,12 @@ export const BorrowInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) 
   const { address } = useWeb3ConnectedApp()
   const [{ data: userData }] = useGetUserAccountData(address)
   const { totalBorrowed, totalBorrowedInDAI } = useUserBorrowsByToken(token?.address)
-  const { agaveMarketsData, getBorrowRate, getIncentiveRate } = useMarketsData()
+  const { liquidity } = useMarketDetails(token.address)
+  const { getBorrowRate, getIncentiveRate } = useMarketsData()
   const variableAPR = getBorrowRate(token.address).variable
   const stableAPR = getBorrowRate(token.address).stable
   const incentiveAPR = getIncentiveRate(token.address, 'variableDebt')
   const healthFactor = userData?.[0].healthFactor || ZERO_BN
-  const availableLiquidity = agaveMarketsData?.[0].reserveData.availableLiquidity || ZERO_BN
   const utilizationRate = useMarketDetails(token.address)?.utilizationRate || 0
 
   return (
@@ -66,7 +66,7 @@ export const BorrowInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) 
                 decimals={token.decimals}
                 symbol={token.symbol}
                 symbolPosition="after"
-                value={availableLiquidity}
+                value={liquidity.wei}
               />
             </RowValueBig>
           </Row>
