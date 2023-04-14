@@ -66,6 +66,7 @@ const Title = styled.h1`
   line-height: 1.2;
   margin: 0 0 8px;
   text-align: center;
+  word-break: break-word;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     font-size: 2.2rem;
@@ -80,6 +81,7 @@ const Text = styled.p`
   line-height: 1.5;
   margin: 0;
   text-align: center;
+  word-break: break-word;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     font-size: 1.6rem;

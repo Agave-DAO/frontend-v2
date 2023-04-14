@@ -1,10 +1,10 @@
-import { HTMLAttributes, useState } from 'react'
+import { ChangeEvent, HTMLAttributes, createRef, useCallback, useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 
 import { Range } from '@/src/components/form/Range'
 import Modal from '@/src/components/modals/BaseModal'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
-import { useLocalStorage, usePersistedState } from '@/src/hooks/usePersistedState'
+import { usePersistedState } from '@/src/hooks/usePersistedState'
 
 const openAnimation = keyframes`
   0% {
@@ -39,6 +39,7 @@ const Inner = styled.div`
   flex-grow: 1;
   margin: 0 auto;
   max-width: 100%;
+  outline: none;
   width: ${({ theme: { layout } }) => layout.maxWidth};
 `
 
@@ -47,7 +48,7 @@ const enterFromTop = keyframes`
     top: calc(var(--height) * -1);
   }
   100% {
-    top: 0;
+    top: 50%;
   }
 `
 
@@ -84,16 +85,17 @@ const Contents = styled.div`
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     --height: 210px;
 
+    animation-duration: 0.35s;
     animation-name: ${enterFromTop};
-    border-radius: 0 0 16px 16px;
+    border-radius: 16px;
     bottom: auto;
     flex-direction: column;
     justify-content: center;
     left: 50%;
     max-width: 100%;
     row-gap: 32px;
-    top: 0;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
     width: 525px;
   }
 `
@@ -119,8 +121,8 @@ const CloseButton = styled.button`
   }
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    bottom: calc(var(--size) / -2);
-    top: auto;
+    right: calc(var(--size) / -2);
+    top: calc(var(--size) / -2);
   }
 `
 
@@ -189,7 +191,7 @@ const RangeSlider = ({
   onChange: (value: string) => void
   value: number
 }) => {
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     onChange(value)
   }
@@ -209,13 +211,34 @@ export const MinHealthConfigurationModal: React.FC<Props> = ({
 }) => {
   const [currentMSHF, setMSHF] = usePersistedState('minSafeHF', MIN_SAFE_HEALTH_FACTOR.toNumber())
   const parsedMSHF = currentMSHF ? currentMSHF / 1000 : MIN_SAFE_HEALTH_FACTOR.toNumber() / 1000
-
+  const node = createRef<HTMLDivElement>()
   const [localMSHF, setLocalMSHF] = useState(parsedMSHF)
 
-  const handleCloseAndSave = () => {
+  const handleCloseAndSave = useCallback(() => {
     setMSHF(Number(localMSHF) * 1000)
     onClose()
-  }
+  }, [localMSHF, onClose, setMSHF])
+
+  useEffect(() => {
+    const close = (e: { key: string }) => {
+      if (e.key === 'Escape') {
+        handleCloseAndSave()
+      }
+    }
+    window.addEventListener('keyup', close)
+
+    return () => window.removeEventListener('keyup', close)
+  }, [handleCloseAndSave])
+
+  useEffect(() => {
+    /**
+     * Focus on the modal when it opens
+     * this is to allow the user to close the modal with the escape key
+     */
+    if (node && node.current) {
+      node.current.focus()
+    }
+  }, [node])
 
   return (
     <Modal>
@@ -226,9 +249,10 @@ export const MinHealthConfigurationModal: React.FC<Props> = ({
             handleCloseAndSave()
           }
         }}
+        tabIndex={-1}
         {...restProps}
       >
-        <Inner>
+        <Inner ref={node} tabIndex={-1}>
           <Contents
             onClick={(e) => {
               e.stopPropagation()

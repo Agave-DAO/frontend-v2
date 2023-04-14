@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react'
 import styled, { css } from 'styled-components'
 
 const SlideTrackCSS = css`
@@ -96,7 +97,7 @@ const Wrapper = styled.div<{ progress?: number }>`
 export const Range: React.FC<{
   max: number
   min: number
-  onChange: (event: any) => void
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
   step: number
   value: number
 }> = ({ ...props }) => {

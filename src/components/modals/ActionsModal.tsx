@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
+import { HTMLAttributes, createRef, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { ButtonMini } from '@/src/components/buttons/Button'
@@ -68,16 +68,20 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
     onClose()
   }, [onClose, router, symbol])
 
-  useEffect(() => {
-    const close = (e: { key: string }) => {
+  const close = useCallback(
+    (e: { key: string }) => {
       if (e.key === 'Escape') {
         onClose()
       }
-    }
+    },
+    [onClose],
+  )
+
+  useEffect(() => {
     window.addEventListener('keyup', close)
 
     return () => window.removeEventListener('keyup', close)
-  }, [onClose])
+  }, [close, onClose])
 
   return (
     <Modal>
@@ -85,7 +89,20 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
         aria-describedby="modalDescription"
         aria-labelledby="modalTitle"
         className="modal"
-        onClick={closeOnBackgroundClick ? onClose : undefined}
+        onBlur={() => {
+          /**
+           * Remove event listener on blur to prevent multiple "close modal" event listeners
+           * if the user opens another modal while this one is open
+           */
+          window.removeEventListener('keyup', close)
+        }}
+        onClick={(e) => {
+          e.stopPropagation()
+          if (closeOnBackgroundClick) {
+            onClose()
+          }
+        }}
+        tabIndex={-1}
         {...restProps}
       >
         <RequiredConnection>
