@@ -28,13 +28,13 @@ export const contracts = {
   },
   AaveProtocolDataProvider: {
     address: {
-      [Chains.gnosis]: '0x24dCbd376Db23e4771375092344f5CbEA3541FC0',
+      [Chains.gnosis]: '0xE6729389DEa76D47b5BcB0bA5c080821c3B51329',
     },
     abi: AaveProtocolDataProvider,
   },
   AaveOracle: {
     address: {
-      [Chains.gnosis]: '0x64cE22B5bA4175002AC5B6CCE3570432cA363c29',
+      [Chains.gnosis]: '0x062B9D1D3F5357Ef399948067E93B81F4B85db7a',
     },
     abi: AaveOracle,
   },

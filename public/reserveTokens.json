@@ -95,6 +95,18 @@
         "isNative": false,
         "isNativeWrapper": false
       }
+    },
+    {
+      "symbol": "EURe",
+      "name": " Monerium EUR emoney",
+      "address": "0xcB444e90D8198415266c6a2724b7900fb12FC56E",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/eure.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
     }
   ]
 }

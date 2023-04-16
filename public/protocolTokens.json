@@ -63,6 +63,14 @@
       "stableDebt": "0xb067fad853d099edd9c86483682e7d947b7983e5",
       "strategy": "",
       "oracle": ""
+    },
+    "0xcB444e90D8198415266c6a2724b7900fb12FC56E": {
+      "symbol": "EURe",
+      "ag": "0xEB20B07a9abE765252E6b45e8292b12CB553CcA6",
+      "variableDebt": "0xA4a45B550897dD5d8a44c68DBD245C5934EbAcd9",
+      "stableDebt": "0x78A69aFc50E7705Ad4588cB57cF8D27B29161e51",
+      "strategy": "",
+      "oracle": ""
     }
   }
 }

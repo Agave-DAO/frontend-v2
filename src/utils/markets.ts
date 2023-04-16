@@ -42,7 +42,9 @@ export const getIncentiveRate = ({
   /* Converting the token supply to DAI. */
   const totalSupplyInDaiWei = fromWei(tokenSupply.mul(tokenPrice), decimals)
 
-  const APYPerYear = priceShares.mul(emissionPerYear).div(totalSupplyInDaiWei)
+  const APYPerYear = !totalSupplyInDaiWei.isZero()
+    ? priceShares.mul(emissionPerYear).div(totalSupplyInDaiWei)
+    : ZERO_BN
 
   // TODO mul the result to convert percentValue ??
   return APYPerYear.mul(10 ** 11)
