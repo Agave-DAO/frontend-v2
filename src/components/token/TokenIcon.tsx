@@ -58,9 +58,11 @@ interface Props {
 }
 
 export const TokenIcon: React.FC<Props> = ({ dimensions = 18, symbol, ...restProps }) => {
-  const { tokensBySymbol } = useTokenIcons()
+  const tokens = useTokenIcons()
   const [error, setError] = useState(false)
-  const tokenImage = tokensBySymbol[symbol.toLowerCase()]?.logoURI
+  const tokenImage = tokens.find(
+    (token) => token.symbol.toLowerCase() === symbol.toLowerCase(),
+  )?.logoURI
 
   return (
     <Wrapper dimensions={`${dimensions}`} symbol={symbol} title={symbol} {...restProps}>

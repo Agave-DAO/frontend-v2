@@ -1,98 +1,29 @@
 import { FC, PropsWithChildren, createContext, useContext } from 'react'
 
 import isEmpty from 'lodash/isEmpty'
-import useSWR from 'swr'
 
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
-import { TokensLists } from '@/src/config/web3'
-import {
-  Token,
-  TokenListResponse,
-  TokensByAddress,
-  TokensByNetwork,
-  TokensBySymbol,
-} from '@/types/token'
-import { isFulfilled } from '@/types/utils'
-
-type TokenListQueryReturn = {
-  tokens: Token[]
-  tokensByAddress: TokensByAddress
-  tokensBySymbol: TokensBySymbol
-  tokensByNetwork: TokensByNetwork
-}
-
-const useTokenListQuery = () => {
-  return useSWR(['token-list'], async () => {
-    const tokenListPromises = Object.values(TokensLists).map(async (url) => fetch(url))
-
-    const fulfilledResults = await Promise.allSettled(tokenListPromises).then((results) =>
-      results.filter(isFulfilled),
-    )
-    const tokenLists: TokenListResponse[] = await Promise.all(
-      fulfilledResults.map((fulfilledResult) => {
-        if (!fulfilledResult.value.ok) {
-          return Promise.resolve({ tokens: [] })
-        }
-        return fulfilledResult.value.json()
-      }),
-    )
-    const tokenList = tokenLists.flatMap((tokenList) => tokenList.tokens)
-
-    const { tokens, tokensByAddress, tokensByNetwork, tokensBySymbol } = tokenList.reduce(
-      (acc: TokenListQueryReturn, token) => {
-        const address = token.address.toLowerCase()
-
-        if (acc.tokensByAddress[address]) {
-          return acc
-        }
-
-        acc.tokens.push(token)
-        acc.tokensByAddress[address] = token
-        acc.tokensBySymbol[token.symbol.toLowerCase()] = token
-
-        if (!acc.tokensByNetwork[token.chainId]) {
-          acc.tokensByNetwork[token.chainId] = [token]
-        } else {
-          acc.tokensByNetwork[token.chainId].push(token)
-        }
-
-        return acc
-      },
-      {
-        tokens: [],
-        tokensByAddress: {},
-        tokensBySymbol: {},
-        tokensByNetwork: {},
-      },
-    )
-    return {
-      tokens: tokens.sort((a, b) => a.symbol.localeCompare(b.symbol)),
-      tokensByAddress,
-      tokensBySymbol,
-      tokensByNetwork,
-    }
-  })
-}
+import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const TokenIconsContext = createContext<TokenListQueryReturn>({} as any)
+const TokenIconsContext = createContext<TokenWithType[]>([] as any)
 
 export const TokenIconsContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { data } = useTokenListQuery()
+  const tokens = agaveTokens.allTokens
 
-  if (!data) {
+  if (!tokens) {
     return null
   }
 
-  return <TokenIconsContext.Provider value={data}>{children}</TokenIconsContext.Provider>
+  return <TokenIconsContext.Provider value={tokens}>{children}</TokenIconsContext.Provider>
 }
 
 export default withGenericSuspense(TokenIconsContextProvider)
 
-export function useTokenIcons(): TokenListQueryReturn {
+export function useTokenIcons(): TokenWithType[] {
   const context = useContext(TokenIconsContext)
   if (context === undefined || isEmpty(context)) {
     throw new Error('useWeb3Connection must be used within a Web3ConnectionProvider')
   }
-  return useContext<TokenListQueryReturn>(TokenIconsContext)
+  return useContext<TokenWithType[]>(TokenIconsContext)
 }

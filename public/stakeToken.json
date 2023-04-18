@@ -1,0 +1,16 @@
+{
+  "tokens": [
+    {
+      "symbol": "AGVE",
+      "name": "Agave",
+      "address": "0x3a97704a1b25F08aa230ae53B352e2e72ef52843",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/agve.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
+    }
+  ]
+}

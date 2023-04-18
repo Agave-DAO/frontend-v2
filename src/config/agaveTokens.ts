@@ -1,6 +1,7 @@
 import nativeToken from '@/public/nativeToken.json'
 import protocolTokens from '@/public/protocolTokens.json'
 import reserveTokens from '@/public/reserveTokens.json'
+import stakeToken from '@/public/stakeToken.json'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 import { memoize } from '@/src/utils/memoize'
 import { Token } from '@/types/token'
@@ -17,7 +18,13 @@ export type AgaveProtocolTokens = {
   }
 }
 
-export type AgaveProtocolTokenType = 'ag' | 'variableDebt' | 'stableDebt' | 'reserve' | 'native'
+export type AgaveProtocolTokenType =
+  | 'ag'
+  | 'variableDebt'
+  | 'stableDebt'
+  | 'reserve'
+  | 'native'
+  | 'stake'
 
 export type TokenWithType = Token & { type: AgaveProtocolTokenType }
 
@@ -40,6 +47,7 @@ export interface IDAgaveTokens {
 
 class AgaveTokens implements IDAgaveTokens {
   private _nativeToken: Token = nativeToken.tokens[0]
+  private _stakeToken: Token = stakeToken.tokens[0]
   private _reserveTokens: Token[] = reserveTokens.tokens
   private _protocolTokens: AgaveProtocolTokens = protocolTokens.protocolTokens
   private _protocolName = 'Agave'
@@ -52,6 +60,10 @@ class AgaveTokens implements IDAgaveTokens {
 
   get nativeToken() {
     return this._nativeToken
+  }
+
+  get stakeToken() {
+    return this._stakeToken
   }
 
   @memoize()
@@ -78,6 +90,10 @@ class AgaveTokens implements IDAgaveTokens {
   @memoize()
   get allTokens(): TokenWithType[] {
     return [
+      {
+        ...this.stakeToken,
+        type: 'stake',
+      },
       {
         ...this.nativeToken,
         type: 'native',

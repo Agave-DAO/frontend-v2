@@ -18,6 +18,7 @@ const ModalsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
   } | null>(null)
   const bodyDiv = document.getElementById('body') as HTMLElement
   const token = currentModal?.tokenAddress ? getTokenInfo(currentModal?.tokenAddress) : null
+
   const openModalClass = 'modalOpen'
   const [showMinHealthConfiguration, setShowMinHealthConfiguration] = useState<boolean | null>(null)
   const someModalIsOpen = currentModal || showMinHealthConfiguration
@@ -32,7 +33,13 @@ const ModalsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
   }, [bodyDiv, someModalIsOpen])
 
-  const openDepositWithdrawModal = (tokenAddress: string, activeTab?: DepositWithdrawTabs) => {
+  const openDepositWithdrawModal = ({
+    activeTab,
+    tokenAddress,
+  }: {
+    tokenAddress: string
+    activeTab?: DepositWithdrawTabs
+  }) => {
     setCurrentModal({
       modalName: 'depositWithdraw',
       tokenAddress,

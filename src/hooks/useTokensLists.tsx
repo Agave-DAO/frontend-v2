@@ -1,42 +1,51 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
+import { AgaveProtocolTokenType, TokenWithType } from '@/src/config/agaveTokens'
 import { useTokenIcons } from '@/src/providers/tokenIconsProvider'
-import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { Token } from '@/types/token'
 
-export const useTokensLists = (onChange?: (token: Token | null) => void) => {
-  const { appChainId } = useWeb3Connection()
+export const useTokensLists = (
+  types?: AgaveProtocolTokenType[], // combine multiple token types to filter the list.
+  onChange?: (token: Token | null) => void,
+) => {
   const [token, setToken] = useState<Token | null>()
-  const { tokensByNetwork } = useTokenIcons()
-  const tokens = useMemo(() => tokensByNetwork[appChainId] || [], [appChainId, tokensByNetwork])
-  const [tokensList, setTokensList] = useState(tokens)
-  const [searchString, setSearchString] = useState('')
+  const tokens = useTokenIcons()
 
-  const onSelectToken = (token: Token | null) => {
+  const [searchString, setSearchString] = useState<string>('')
+
+  const filteredTokensByType = useMemo(
+    () => (types ? tokens.filter(({ type }) => types.includes(type)) : tokens),
+    [tokens, types],
+  )
+
+  const [tokensList, setTokensList] = useState(filteredTokensByType)
+
+  const onSelectToken = (token: TokenWithType | null) => {
     setToken(token)
-
-    if (typeof onChange !== 'undefined') {
-      onChange(token)
-    }
+    onChange?.(token)
   }
 
-  useEffect(() => {
-    if (searchString.length === 0) {
-      setTokensList(tokens)
-    } else {
-      setTokensList(
-        tokens.filter(
-          (item) => item.symbol.toLowerCase().indexOf(searchString.toLowerCase()) !== -1,
-        ),
-      )
-    }
-  }, [tokens, searchString])
+  const onSearch = useCallback(
+    (searchString: string) => {
+      setSearchString(searchString)
+      if (searchString.length === 0) {
+        setTokensList(filteredTokensByType)
+      } else {
+        setTokensList(
+          filteredTokensByType.filter(
+            (item) => item.symbol.toLowerCase().indexOf(searchString.toLowerCase()) !== -1,
+          ),
+        )
+      }
+    },
+    [filteredTokensByType],
+  )
 
   return {
     token,
     tokensList,
     onSelectToken,
+    onSearch,
     searchString,
-    setSearchString,
   }
 }

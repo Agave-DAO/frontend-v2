@@ -40,7 +40,8 @@ const UserDepositsList = withGenericSuspense(
             const items = [
               {
                 text: 'Withdraw',
-                onClick: () => openDepositWithdrawModal(assetAddress, 'withdraw'),
+                onClick: () =>
+                  openDepositWithdrawModal({ tokenAddress: assetAddress, activeTab: 'withdraw' }),
               },
             ]
 
@@ -64,7 +65,14 @@ const UserDepositsList = withGenericSuspense(
               >
                 <ActionsWrapper>
                   <MoreActionsDropdown items={items} size="lg" />
-                  <ActionButton onClick={() => openDepositWithdrawModal(assetAddress, 'deposit')}>
+                  <ActionButton
+                    onClick={() =>
+                      openDepositWithdrawModal({
+                        tokenAddress: assetAddress,
+                        activeTab: 'deposit',
+                      })
+                    }
+                  >
                     Deposit
                   </ActionButton>
                 </ActionsWrapper>

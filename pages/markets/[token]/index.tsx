@@ -83,7 +83,9 @@ const UserConnectedActions: React.FC<{
       <ButtonDark onClick={() => openBorrowRepayModal({ activeTab: 'borrow', tokenAddress })}>
         Borrow
       </ButtonDark>
-      <ButtonPrimary onClick={() => openDepositWithdrawModal(tokenAddress, 'deposit')}>
+      <ButtonPrimary
+        onClick={() => openDepositWithdrawModal({ tokenAddress, activeTab: 'deposit' })}
+      >
         Deposit
       </ButtonPrimary>
     </>

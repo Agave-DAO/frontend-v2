@@ -82,7 +82,7 @@ export const UserDepositDetails = withGenericSuspense(
     const items = [
       {
         text: 'Withdraw',
-        onClick: () => openDepositWithdrawModal(tokenAddress, 'withdraw'),
+        onClick: () => openDepositWithdrawModal({ tokenAddress, action: 'withdraw' }),
       },
     ]
 
@@ -106,7 +106,14 @@ export const UserDepositDetails = withGenericSuspense(
           <Bottom>
             <ActionsWrapper>
               <MoreActionsDropdown disabled={!userHasDeposits} items={items} size="lg" />
-              <ActionButton onClick={() => openDepositWithdrawModal(tokenAddress, 'deposit')}>
+              <ActionButton
+                onClick={() =>
+                  openDepositWithdrawModal({
+                    tokenAddress,
+                    action: 'deposit',
+                  })
+                }
+              >
                 Deposit
               </ActionButton>
             </ActionsWrapper>
