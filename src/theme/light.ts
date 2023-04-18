@@ -21,14 +21,6 @@ export const light = {
     backgroundImage:
       'linear-gradient(80deg,rgba(17,10,10,0.2) 15%,rgba(92,33,52,0.2) 33%,rgba(6,75,141,0.2) 65%,rgba(13,2,2,0.1) 98%)',
   },
-  buttonDropdown: {
-    backgroundColor: '#fff',
-    backgroundColorHover: darkGrayDarkened,
-    borderColor: borderColor,
-    borderColorHover: borderColor,
-    color: textColor,
-    colorHover: textColor,
-  },
   buttonPrimary: {
     backgroundColor: '#fff',
     backgroundColorHover: darkGrayDarkened,

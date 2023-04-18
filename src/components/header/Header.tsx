@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { ButtonGradient } from '@/src/components/buttons/Button'
+import { ButtonGradient } from '@/src/components/buttons/ButtonGradient'
 import { Logo as BaseLogo } from '@/src/components/common/Logo'
 // Disabled (for now)
 // import { SwitchThemeButton } from '@/src/components/header/SwitchThemeButton'

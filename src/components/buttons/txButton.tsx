@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { ContractReceipt, ContractTransaction } from '@ethersproject/contracts'
 
-import { ButtonCSS, ButtonPrimaryCSS, ButtonProps } from '@/src/components/buttons/Button'
+import { ButtonCSS, ButtonProps, buttonVariantCSS } from '@/src/components/buttons/Button'
 import useTransaction from '@/src/hooks/useTransaction'
 
 const Button = styled.button<{ borderRadiusVariant?: ButtonProps }>``
@@ -46,7 +46,7 @@ const TxButton: React.FC<TxButtonProps> = ({
 
 export const TxButtonStyled = styled(TxButton)`
   ${ButtonCSS}
-  ${ButtonPrimaryCSS}
+  ${({ theme: { buttonPrimary } }) => buttonVariantCSS(buttonPrimary)}
 `
 
 TxButtonStyled.defaultProps = {

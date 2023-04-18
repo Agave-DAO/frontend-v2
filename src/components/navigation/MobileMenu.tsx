@@ -2,7 +2,7 @@ import { DOMAttributes } from 'react'
 import styled, { css } from 'styled-components'
 
 import { LogoMini } from '@/src/components/assets/LogoMini'
-import { ButtonConnect } from '@/src/components/buttons/Button'
+import { ButtonConnect } from '@/src/components/buttons/ButtonConnect'
 import { MobileMenuButton } from '@/src/components/buttons/MobileMenuButton'
 import { SocialLinks } from '@/src/components/common/SocialLinks'
 import { UserDropdown as BaseUserDropdown } from '@/src/components/header/UserDropdown'

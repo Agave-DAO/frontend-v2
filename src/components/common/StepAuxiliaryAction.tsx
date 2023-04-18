@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { ButtonMini } from '@/src/components/buttons/Button'
+import { ButtonMini } from '@/src/components/buttons/ButtonMini'
 
 const Wrapper = styled.div`
   align-items: center;

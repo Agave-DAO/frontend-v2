@@ -6,6 +6,7 @@ import {
   ButtonDark as BaseButtonDark,
   ButtonLight as BaseButtonLight,
   ButtonPrimary as BaseButtonPrimary,
+  ButtonUltraLight as BaseButtonUltraLight,
 } from '@/src/components/buttons/Button'
 
 export const ButtonCSS = css`
@@ -72,13 +73,34 @@ const ButtonLight = styled(BaseButtonLight)`
   }
 `
 
+const ButtonUltraLight = styled(BaseButtonUltraLight)`
+  svg > path,
+  &:disabled:hover svg > path {
+    fill: ${({ theme: { buttonUltraLight } }) => buttonUltraLight.color};
+  }
+
+  &:hover {
+    svg > path {
+      fill: ${({ theme: { buttonUltraLight } }) => buttonUltraLight.colorHover};
+    }
+  }
+`
+
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'dark' | 'light'
+  variant?: 'primary' | 'dark' | 'light' | 'ultraLight'
 }
 
 export const ActionButton: React.FC<Props> = ({ children, variant = 'primary', ...restProps }) => (
   <Wrapper
-    as={variant === 'light' ? ButtonLight : variant === 'dark' ? ButtonDark : ButtonPrimary}
+    as={
+      variant === 'light'
+        ? ButtonLight
+        : variant === 'dark'
+        ? ButtonDark
+        : variant === 'ultraLight'
+        ? ButtonUltraLight
+        : ButtonPrimary
+    }
     {...restProps}
   >
     {children} <ChevronRight />

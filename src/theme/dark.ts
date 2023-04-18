@@ -91,14 +91,6 @@ export const dark = {
     backgroundColor: black,
     backgroundImage: mainBodyGradient,
   },
-  buttonDropdown: {
-    backgroundColor: black,
-    backgroundColorHover: darkGrayDarkened,
-    borderColor: borderColor,
-    borderColorHover: borderColor,
-    color: textColor,
-    colorHover: textColor,
-  },
   buttonConnect: {
     color: black,
     colorHover: black,
@@ -148,6 +140,14 @@ export const dark = {
     borderColorHover: 'transparent',
     color: darkestGray,
     colorHover: darkestGray,
+  },
+  buttonUltraLight: {
+    backgroundColor: '#fff',
+    backgroundColorHover: primary,
+    borderColor: '#fff',
+    borderColorHover: primary,
+    color: primary,
+    colorHover: '#fff',
   },
   buttonMini: {
     color: '#fff',

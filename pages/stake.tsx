@@ -1,6 +1,7 @@
 import { NextPage } from 'next'
 import styled from 'styled-components'
 
+import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { Faq } from '@/src/components/faq/Faq'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
@@ -14,6 +15,9 @@ import { UserStakeClaimCard } from '@/src/pagePartials/stake/UserStakeClaimCard'
 import { UserStakedCard } from '@/src/pagePartials/stake/UserStakedCard'
 
 const Title = styled(BaseTitle)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 23px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
@@ -54,10 +58,22 @@ const StakeClaim = styled(UserStakeClaimCard)`
   }
 `
 
+const Button = styled(ActionButton)`
+  cursor: pointer;
+`
+
 const Stake: NextPage = () => {
   return (
     <>
-      <Title>Staking</Title>
+      <Title>
+        Staking
+        <Button
+          onClick={() => window.open('https://swap.cow.fi/#/100/swap/XDAI/AGVE', '_blank')}
+          variant="ultraLight"
+        >
+          Buy <b>AGVE</b>
+        </Button>
+      </Title>
       <Paragraph>
         Staking Agave in the Safety Module helps to secure the protocol in exchange for protocol
         incentives

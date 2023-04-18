@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
-import { HTMLAttributes, createRef, useCallback, useEffect, useState } from 'react'
+import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { ButtonMini } from '@/src/components/buttons/Button'
+import { ButtonMini } from '@/src/components/buttons/ButtonMini'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import Modal from '@/src/components/modals/BaseModal'
 import { Body } from '@/src/components/modals/Body'

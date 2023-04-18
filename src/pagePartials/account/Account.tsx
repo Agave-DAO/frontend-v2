@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-import { ButtonConnect } from '@/src/components/buttons/Button'
+import { ButtonConnect } from '@/src/components/buttons/ButtonConnect'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { UserAccountSummary } from '@/src/pagePartials/account/UserAccountSummary'
 import UserBalanceSummary from '@/src/pagePartials/account/UserBalanceSummary'
