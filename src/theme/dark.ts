@@ -117,6 +117,14 @@ export const dark = {
     color: textColor,
     colorHover: textColor,
   },
+  buttonDarker: {
+    backgroundColor: mainDark4,
+    backgroundColorHover: mainDark3,
+    borderColor: 'transparent',
+    borderColorHover: 'transparent',
+    color: textColor,
+    colorHover: textColor,
+  },
   buttonPrimaryDark: {
     backgroundColor: mainDark3,
     backgroundColorHover: mainDark4,

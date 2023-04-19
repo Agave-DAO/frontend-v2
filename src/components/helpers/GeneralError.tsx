@@ -4,7 +4,7 @@ import { FallbackProps } from 'react-error-boundary'
 
 import { Alert } from '@/src/components/assets/Alert'
 import { ButtonPrimary } from '@/src/components/buttons/Button'
-import { GenericError } from '@/src/components/common/GenericError'
+import { GenericError } from '@/src/components/helpers/GenericError'
 
 const Button = styled(ButtonPrimary)`
   margin: 0 auto;

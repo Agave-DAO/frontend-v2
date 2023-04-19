@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import Link from 'next/link'
 
-import { GenericError } from '@/src/components/common/GenericError'
+import { GenericError } from '@/src/components/helpers/GenericError'
 
 const Error404: NextPage = () => {
   return (
