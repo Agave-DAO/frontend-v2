@@ -6,6 +6,7 @@ import { InnerCard } from '@/src/components/common/InnerCard'
 import { Button } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { AgaveTotal } from '@/src/components/token/AgaveTotal'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
@@ -52,107 +53,111 @@ const Text = styled.p`
   }
 `
 
-export const UserStakedCard: React.FC = withGenericSuspense(({ ...restProps }) => {
-  const { address } = useWeb3ConnectedApp()
-  const {
-    activateCooldownFrom: activateCooldownFrom,
-    activateCooldownReady: userActivateCooldownReady,
-    activateCooldownTo: userActivateCooldownTo,
-    amountStaked: userAmountStaked,
-    isCooldownActive,
-    isInUnstakeWindow,
-    refetchAllStakeData,
-  } = useStakeInformation()
+export const UserStakedCard: React.FC = withGenericSuspense(
+  ({ ...restProps }) => {
+    const { address } = useWeb3ConnectedApp()
+    const {
+      activateCooldownFrom: activateCooldownFrom,
+      activateCooldownReady: userActivateCooldownReady,
+      activateCooldownTo: userActivateCooldownTo,
+      amountStaked: userAmountStaked,
+      isCooldownActive,
+      isInUnstakeWindow,
+      refetchAllStakeData,
+    } = useStakeInformation()
 
-  const [isActivateCooldownLoading, setIsActivateCooldownLoading] = useState(false)
-  const [isWithdrawFundsLoading, setIsWithdrawFundsLoading] = useState(false)
+    const [isActivateCooldownLoading, setIsActivateCooldownLoading] = useState(false)
+    const [isWithdrawFundsLoading, setIsWithdrawFundsLoading] = useState(false)
 
-  const showInitialCooldown = isCooldownActive && !isInUnstakeWindow && !!userActivateCooldownReady
-  const showUnstakeWindowCooldown = isInUnstakeWindow && !!userActivateCooldownTo
+    const showInitialCooldown =
+      isCooldownActive && !isInUnstakeWindow && !!userActivateCooldownReady
+    const showUnstakeWindowCooldown = isInUnstakeWindow && !!userActivateCooldownTo
 
-  const { cooldown, redeem } = useContractInstance(StakedToken__factory, 'StakedToken')
+    const { cooldown, redeem } = useContractInstance(StakedToken__factory, 'StakedToken')
 
-  const ActivateCooldownButton: React.FC = ({ ...restProps }) => {
-    const submitDisabled = isActivateCooldownLoading || userAmountStaked.isZero()
+    const ActivateCooldownButton: React.FC = ({ ...restProps }) => {
+      const submitDisabled = isActivateCooldownLoading || userAmountStaked.isZero()
+
+      return (
+        <TxButton
+          disabled={submitDisabled}
+          onFail={() => {
+            setIsActivateCooldownLoading(false)
+          }}
+          onMined={async () => {
+            await refetchAllStakeData()
+            setIsActivateCooldownLoading(false)
+          }}
+          tx={() => {
+            setIsActivateCooldownLoading(true)
+            return cooldown()
+          }}
+          {...restProps}
+        >
+          Activate cooldown
+        </TxButton>
+      )
+    }
+
+    const WithdrawFundsButton: React.FC = ({ ...restProps }) => {
+      const submitDisabled = isWithdrawFundsLoading
+
+      return (
+        <TxButton
+          disabled={submitDisabled}
+          onFail={() => {
+            setIsWithdrawFundsLoading(false)
+          }}
+          onMined={async () => {
+            await refetchAllStakeData()
+            setIsWithdrawFundsLoading(false)
+          }}
+          tx={() => {
+            setIsWithdrawFundsLoading(true)
+            return redeem(address, userAmountStaked)
+          }}
+          {...restProps}
+        >
+          Withdraw
+        </TxButton>
+      )
+    }
 
     return (
-      <TxButton
-        disabled={submitDisabled}
-        onFail={() => {
-          setIsActivateCooldownLoading(false)
-        }}
-        onMined={async () => {
-          await refetchAllStakeData()
-          setIsActivateCooldownLoading(false)
-        }}
-        tx={() => {
-          setIsActivateCooldownLoading(true)
-          return cooldown()
-        }}
-        {...restProps}
-      >
-        Activate cooldown
-      </TxButton>
-    )
-  }
-
-  const WithdrawFundsButton: React.FC = ({ ...restProps }) => {
-    const submitDisabled = isWithdrawFundsLoading
-
-    return (
-      <TxButton
-        disabled={submitDisabled}
-        onFail={() => {
-          setIsWithdrawFundsLoading(false)
-        }}
-        onMined={async () => {
-          await refetchAllStakeData()
-          setIsWithdrawFundsLoading(false)
-        }}
-        tx={() => {
-          setIsWithdrawFundsLoading(true)
-          return redeem(address, userAmountStaked)
-        }}
-        {...restProps}
-      >
-        Withdraw
-      </TxButton>
-    )
-  }
-
-  return (
-    <InnerCard {...restProps}>
-      <Staked>
-        <AgaveTotal
-          agave={<Amount decimals={18} symbol="" value={userAmountStaked} />}
-          title="Agave staked"
-          usd={'$0.00'}
-        />
-        {!isCooldownActive && <Button as={ActivateCooldownButton} />}
-      </Staked>
-      {showInitialCooldown && activateCooldownFrom && (
-        <CoolingDown>
-          <Title>Cooling down</Title>
-          <Text>Your tokens will be unlocked when the cooldown process is finished.</Text>
-          <ProgressBar
-            end={userActivateCooldownReady}
-            label="Unlocking in"
-            start={activateCooldownFrom}
+      <InnerCard title="asasd" {...restProps}>
+        <Staked>
+          <AgaveTotal
+            agave={<Amount decimals={18} symbol="" value={userAmountStaked} />}
+            title="Agave staked"
+            usd={'$0.00'}
           />
-        </CoolingDown>
-      )}
-      {showUnstakeWindowCooldown && userActivateCooldownReady && (
-        <Unstake>
-          <Title>Unstake window</Title>
-          <Text>You are able to withdraw within the time frame of the unstake window.</Text>
-          <ProgressBar
-            end={userActivateCooldownTo}
-            label="Active for"
-            start={userActivateCooldownReady}
-          />
-          <Button as={WithdrawFundsButton} />
-        </Unstake>
-      )}
-    </InnerCard>
-  )
-})
+          {!isCooldownActive && <Button as={ActivateCooldownButton} />}
+        </Staked>
+        {showInitialCooldown && activateCooldownFrom && (
+          <CoolingDown>
+            <Title>Cooling down</Title>
+            <Text>Your tokens will be unlocked when the cooldown process is finished.</Text>
+            <ProgressBar
+              end={userActivateCooldownReady}
+              label="Unlocking in"
+              start={activateCooldownFrom}
+            />
+          </CoolingDown>
+        )}
+        {showUnstakeWindowCooldown && userActivateCooldownReady && (
+          <Unstake>
+            <Title>Unstake window</Title>
+            <Text>You are able to withdraw within the time frame of the unstake window.</Text>
+            <ProgressBar
+              end={userActivateCooldownTo}
+              label="Active for"
+              start={userActivateCooldownReady}
+            />
+            <Button as={WithdrawFundsButton} />
+          </Unstake>
+        )}
+      </InnerCard>
+    )
+  },
+  ({ ...restProps }) => <SkeletonLoading style={{ height: '190px' }} {...restProps} />,
+)

@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 
 const Wrapper = styled.div`
@@ -28,15 +29,18 @@ const Value = styled.p`
   margin: 0;
 `
 
-export const FundsInSafetyModule: React.FC = withGenericSuspense(({ ...restProps }) => {
-  const { totalStaked } = useStakeInformation()
+export const FundsInSafetyModule: React.FC = withGenericSuspense(
+  ({ ...restProps }) => {
+    const { totalStaked } = useStakeInformation()
 
-  return (
-    <Wrapper {...restProps}>
-      <Title>Funds in the Safety Module</Title>
-      <Value>
-        <Amount decimals={18} symbol="AGVE" symbolPosition="after" value={totalStaked} />
-      </Value>
-    </Wrapper>
-  )
-})
+    return (
+      <Wrapper {...restProps}>
+        <Title>Funds in the Safety Module</Title>
+        <Value>
+          <Amount decimals={18} symbol="AGVE" symbolPosition="after" value={totalStaked} />
+        </Value>
+      </Wrapper>
+    )
+  },
+  ({ ...restProps }) => <SkeletonLoading style={{ height: '90px' }} {...restProps} />,
+)

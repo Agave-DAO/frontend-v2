@@ -5,13 +5,13 @@ import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { AssetsList } from '@/src/components/layout/AssetsList'
-import { Loading } from '@/src/components/loading/Loading'
+import { MyAssetSkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { InterestRateMode, useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 
-const UserBorrowsList = withGenericSuspense(
-  () => {
+export const UserBorrows: React.FC = withGenericSuspense(
+  ({ ...restProps }) => {
     const userBorrows = useUserBorrows()
     const { openBorrowRepayModal } = useModalsContext()
 
@@ -25,7 +25,7 @@ const UserBorrowsList = withGenericSuspense(
         title="Nothing borrowed yet"
       />
     ) : (
-      <>
+      <AssetsList {...restProps}>
         {userBorrows.map(
           ({ assetAddress, borrowMode, borrowRate, borrowedAmount, borrowedAmountInDAI }) => {
             const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
@@ -78,16 +78,14 @@ const UserBorrowsList = withGenericSuspense(
             )
           },
         )}
-      </>
+      </AssetsList>
     )
   },
-  () => <Loading text="Fetching user borrows..." />,
-)
-
-export const UserBorrows = () => {
-  return (
-    <AssetsList>
-      <UserBorrowsList />
+  ({ ...restProps }) => (
+    <AssetsList {...restProps}>
+      {Array.from({ length: 4 }).map((item, index) => (
+        <MyAssetSkeletonLoading key={`borrow_${index}`} />
+      ))}
     </AssetsList>
-  )
-}
+  ),
+)

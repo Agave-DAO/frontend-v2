@@ -9,7 +9,7 @@ import { Textfield } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { AssetsList as BaseAssetList } from '@/src/components/layout/AssetsList'
-import { Loading } from '@/src/components/loading/Loading'
+import { MarketSkeletonLoading, SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
@@ -240,5 +240,27 @@ export const MarketList: React.FC = withGenericSuspense(
       <Error text="There was an error retrieving data..." />
     )
   },
-  () => <Loading text="Fetching markets..." />,
+  ({ ...restProps }) => (
+    <Wrapper {...restProps}>
+      <WelcomeText>Move cryptocurrency from your wallet and start earning interest.</WelcomeText>
+      <SearchWrapper>
+        <SearchField disabled placeholder="Search asset" type="search" />
+        <Magnifier />
+      </SearchWrapper>
+      <SkeletonLoading
+        style={{
+          height: '53px',
+          borderRadius: '60px',
+          order: 2,
+          margin: '0 auto 24px',
+          width: '294px',
+        }}
+      />
+      <AssetsList>
+        {Array.from({ length: 6 }).map((item, index) => (
+          <MarketSkeletonLoading key={`market_${index}`} />
+        ))}
+      </AssetsList>
+    </Wrapper>
+  ),
 )

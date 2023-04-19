@@ -6,6 +6,7 @@ import { ButtonDark, ButtonPrimary } from '@/src/components/buttons/Button'
 import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
 import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
@@ -108,43 +109,105 @@ const Rates = styled(ReserveRates)`
   }
 `
 
-const MarketDetails: React.FC = () => {
-  const tokenInfo = useMarketByURLParam()
-  const { address: tokenAddress, symbol: tokenSymbol } = useMemo(() => tokenInfo, [tokenInfo])
-  const { address: userAddress, connectWallet, isWalletConnected } = useWeb3Connection()
-  const router = useRouter()
+const MarketDetails: React.FC = withGenericSuspense(
+  () => {
+    const tokenInfo = useMarketByURLParam()
+    const { address: tokenAddress, symbol: tokenSymbol } = useMemo(() => tokenInfo, [tokenInfo])
+    const { address: userAddress, connectWallet, isWalletConnected } = useWeb3Connection()
+    const router = useRouter()
 
-  const onChange = (token: Token | null) => {
-    router.push(`/markets/${token?.symbol}`, undefined, {
-      shallow: true,
-      scroll: false,
-    })
-  }
+    const onChange = (token: Token | null) => {
+      router.push(`/markets/${token?.symbol}`, undefined, {
+        shallow: true,
+        scroll: false,
+      })
+    }
 
-  return (
+    return (
+      <>
+        <ActionsWrapper>
+          <TokenDropdown activeTokenSymbol={tokenSymbol} onChange={onChange} />
+          <Buttons>
+            {isWalletConnected && userAddress ? (
+              <UserConnectedActions
+                tokenAddress={tokenAddress}
+                tokenSymbol={tokenSymbol}
+                userAddress={userAddress}
+              />
+            ) : (
+              <ButtonPrimary onClick={connectWallet}>Connect wallet</ButtonPrimary>
+            )}
+          </Buttons>
+        </ActionsWrapper>
+        <OuterContainer>
+          <Status tokenAddress={tokenAddress} />
+          <Rates tokenAddress={tokenAddress} />
+          <MarketInformation tokenAddress={tokenAddress} />
+          <UserInformation tokenAddress={tokenAddress} />
+        </OuterContainer>
+      </>
+    )
+  },
+  () => (
     <>
       <ActionsWrapper>
-        <TokenDropdown activeTokenSymbol={tokenSymbol} onChange={onChange} />
-        <Buttons>
-          {isWalletConnected && userAddress ? (
-            <UserConnectedActions
-              tokenAddress={tokenAddress}
-              tokenSymbol={tokenSymbol}
-              userAddress={userAddress}
-            />
-          ) : (
-            <ButtonPrimary onClick={connectWallet}>Connect wallet</ButtonPrimary>
-          )}
-        </Buttons>
+        <SkeletonLoading
+          style={{
+            minWidth: '0',
+            maxWidth: '58px',
+            width: '58px',
+            height: '58px',
+            borderRadius: '16px',
+          }}
+        />
+        <SkeletonLoading style={{ maxWidth: '360px', height: '54px', borderRadius: '80px' }} />
       </ActionsWrapper>
       <OuterContainer>
-        <Status tokenAddress={tokenAddress} />
-        <Rates tokenAddress={tokenAddress} />
-        <MarketInformation tokenAddress={tokenAddress} />
-        <UserInformation tokenAddress={tokenAddress} />
+        <SkeletonLoading
+          style={{
+            borderRadius: '16px',
+            marginBottom: '40px',
+            padding: '24px 16px 16px',
+          }}
+        >
+          <SkeletonLoading
+            animate={false}
+            style={{
+              borderRadius: '50%',
+              height: '200px',
+              margin: '56px auto 32px',
+              width: '200px',
+            }}
+          />
+          <div style={{ display: 'grid', rowGap: '6px' }}>
+            {Array.from({ length: 2 }).map((item, index) => (
+              <SkeletonLoading
+                animate={false}
+                key={`list_${index}`}
+                style={{ height: '53px', borderRadius: '6px' }}
+              />
+            ))}
+          </div>
+        </SkeletonLoading>
+        <SkeletonLoading
+          style={{
+            borderRadius: '16px',
+            padding: '16px',
+          }}
+        >
+          <div style={{ display: 'grid', rowGap: '6px' }}>
+            {Array.from({ length: 3 }).map((item, index) => (
+              <SkeletonLoading
+                animate={false}
+                key={`list_${index}`}
+                style={{ height: '53px', borderRadius: '6px' }}
+              />
+            ))}
+          </div>
+        </SkeletonLoading>
       </OuterContainer>
     </>
-  )
-}
+  ),
+)
 
-export default withGenericSuspense(MarketDetails)
+export default MarketDetails

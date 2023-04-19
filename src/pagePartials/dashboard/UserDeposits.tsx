@@ -6,13 +6,13 @@ import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { AssetsList } from '@/src/components/layout/AssetsList'
-import { Loading } from '@/src/components/loading/Loading'
+import { MyAssetSkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 
-const UserDepositsList = withGenericSuspense(
-  () => {
+export const UserDeposits: React.FC = withGenericSuspense(
+  ({ ...restProps }) => {
     const userDeposits = useUserDeposits()
     const { openDepositWithdrawModal } = useModalsContext()
 
@@ -26,7 +26,7 @@ const UserDepositsList = withGenericSuspense(
         title="Nothing deposited yet"
       />
     ) : (
-      <>
+      <AssetsList {...restProps}>
         {userDeposits.map(
           ({
             asCollateral,
@@ -80,16 +80,14 @@ const UserDepositsList = withGenericSuspense(
             )
           },
         )}
-      </>
+      </AssetsList>
     )
   },
-  () => <Loading text="Fetching user deposits..." />,
-)
-
-export const UserDeposits = () => {
-  return (
-    <AssetsList>
-      <UserDepositsList />
+  ({ ...restProps }) => (
+    <AssetsList {...restProps}>
+      {Array.from({ length: 4 }).map((item, index) => (
+        <MyAssetSkeletonLoading key={`deposit_${index}`} />
+      ))}
     </AssetsList>
-  )
-}
+  ),
+)

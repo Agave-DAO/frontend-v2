@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { RewardPair } from '@/src/components/common/RewardPair'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { ApproximateBalance, Rewards as RewardsTooltip } from '@/src/constants/tooltips'
 import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
@@ -121,34 +122,52 @@ const RewardsBalance = styled.div`
   }
 `
 
-export const UserBalanceSummary: React.FC = ({ ...restProps }) => {
-  const { address: userAddress } = useWeb3ConnectedApp()
-  const { userDeposits, userRewards } = useUserAccountDetails(userAddress)
-  const noRewards = userRewards.isZero()
-  const noDeposits = userDeposits.isZero()
+export const UserBalanceSummary: React.FC = withGenericSuspense(
+  ({ ...restProps }) => {
+    const { address: userAddress } = useWeb3ConnectedApp()
+    const { userDeposits, userRewards } = useUserAccountDetails(userAddress)
+    const noRewards = userRewards.isZero()
+    const noDeposits = userDeposits.isZero()
 
-  return (
+    return (
+      <Wrapper {...restProps}>
+        <Row>
+          <Text>Approximate balance</Text>
+          <AccountBalance>
+            <Balance>{noDeposits ? '$0.00' : <Amount value={userDeposits} />}</Balance>
+            <Tooltip content={ApproximateBalance}>
+              <TooltipIcon />
+            </Tooltip>
+          </AccountBalance>
+        </Row>
+        <Row>
+          <Text>
+            Rewards <Tooltip content={RewardsTooltip} />
+          </Text>
+          <Rewards>
+            <RewardsBalance>{noRewards ? '$0.00' : <Amount value={userRewards} />}</RewardsBalance>
+            <RewardPair size={18} />
+          </Rewards>
+        </Row>
+      </Wrapper>
+    )
+  },
+  ({ ...restProps }) => (
     <Wrapper {...restProps}>
       <Row>
-        <Text>Approximate balance</Text>
-        <AccountBalance>
-          <Balance>{noDeposits ? '$0.00' : <Amount value={userDeposits} />}</Balance>
-          <Tooltip content={ApproximateBalance}>
-            <TooltipIcon />
-          </Tooltip>
-        </AccountBalance>
+        <Text>
+          <SkeletonLoading style={{ height: '17px' }} />
+        </Text>
+        <SkeletonLoading style={{ borderRadius: '60px', height: '60px', width: '190px' }} />
       </Row>
       <Row>
         <Text>
-          Rewards <Tooltip content={RewardsTooltip} />
+          <SkeletonLoading style={{ height: '17px' }} />
         </Text>
-        <Rewards>
-          <RewardsBalance>{noRewards ? '$0.00' : <Amount value={userRewards} />}</RewardsBalance>
-          <RewardPair size={18} />
-        </Rewards>
+        <SkeletonLoading style={{ borderRadius: '40px', height: '40px', width: '150px' }} />
       </Row>
     </Wrapper>
-  )
-}
+  ),
+)
 
-export default withGenericSuspense(UserBalanceSummary)
+export default UserBalanceSummary

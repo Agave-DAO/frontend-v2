@@ -4,7 +4,7 @@ import { HealthFactor } from '@/src/components/common/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
-import { Loading } from '@/src/components/loading/Loading'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import {
   CurrentLTV as CurrentLTVTooltip,
@@ -154,5 +154,21 @@ export const UserAccountSummary: React.FC = withGenericSuspense(
       </Wrapper>
     )
   },
-  () => <Loading text="Fetching user account details..." />,
+  ({ ...restProps }) => (
+    <Wrapper {...restProps}>
+      <Info>
+        {Array.from({ length: 3 }).map((item, index) => (
+          <InfoRow key={`row_${index}`}>
+            <SkeletonLoading />
+          </InfoRow>
+        ))}
+      </Info>
+      <HFWrapper>
+        <Title>
+          <SkeletonLoading style={{ height: '17px' }} />
+        </Title>
+        <SkeletonLoading style={{ height: '22px' }} />
+      </HFWrapper>
+    </Wrapper>
+  ),
 )

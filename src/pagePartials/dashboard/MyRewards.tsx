@@ -6,6 +6,7 @@ import { ActionButton, ButtonCSS } from '@/src/components/buttons/ActionButton'
 import { ButtonDark as BaseButtonDark } from '@/src/components/buttons/Button'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { useClaimRewards } from '@/src/hooks/mutations/useClaimRewards'
 import { useUserRewards } from '@/src/hooks/presentation/useUserRewards'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
@@ -99,42 +100,45 @@ const ButtonDark = styled(BaseButtonDark)`
   ${ButtonCSS}
 `
 
-export const MyRewards: React.FC = withGenericSuspense(({ ...restProps }) => {
-  const { address: userAddress } = useWeb3ConnectedApp()
-  const { rewardsBalance, totalValue, unclaimedRewardsFormatted } = useUserRewards(userAddress)
+export const MyRewards: React.FC = withGenericSuspense(
+  ({ ...restProps }) => {
+    const { address: userAddress } = useWeb3ConnectedApp()
+    const { rewardsBalance, totalValue, unclaimedRewardsFormatted } = useUserRewards(userAddress)
 
-  const noRewards = rewardsBalance.isZero()
-  const claimRewards = useClaimRewards(userAddress)
+    const noRewards = rewardsBalance.isZero()
+    const claimRewards = useClaimRewards(userAddress)
 
-  return (
-    <Wrapper {...restProps}>
-      <Info>
-        <Label>Rewards</Label>
-        <Reward>
-          <RewardValue>{noRewards ? '0.00' : unclaimedRewardsFormatted}</RewardValue>
-          <Percentage>
-            40%
-            <AGAVEMini size={18} />
-          </Percentage>
-          <Percentage>
-            60%
-            <GNOMini size={18} />
-          </Percentage>
-        </Reward>
-        <RewardUSD>{noRewards ? '$0.00' : <Amount value={fromWei(totalValue)} />}</RewardUSD>
-      </Info>
-      <Buttons>
-        <ButtonDark
-          as="a"
-          href="https://gnosis.symm.fi/#/pool/0x870bb2c024513b5c9a69894dcc65fb5c47e422f3000200000000000000000014"
-          target="_blank"
-        >
-          Info
-        </ButtonDark>
-        <ActionButton disabled={noRewards} onClick={claimRewards} variant="light">
-          Claim
-        </ActionButton>
-      </Buttons>
-    </Wrapper>
-  )
-})
+    return (
+      <Wrapper {...restProps}>
+        <Info>
+          <Label>Rewards</Label>
+          <Reward>
+            <RewardValue>{noRewards ? '0.00' : unclaimedRewardsFormatted}</RewardValue>
+            <Percentage>
+              40%
+              <AGAVEMini size={18} />
+            </Percentage>
+            <Percentage>
+              60%
+              <GNOMini size={18} />
+            </Percentage>
+          </Reward>
+          <RewardUSD>{noRewards ? '$0.00' : <Amount value={fromWei(totalValue)} />}</RewardUSD>
+        </Info>
+        <Buttons>
+          <ButtonDark
+            as="a"
+            href="https://gnosis.symm.fi/#/pool/0x870bb2c024513b5c9a69894dcc65fb5c47e422f3000200000000000000000014"
+            target="_blank"
+          >
+            Info
+          </ButtonDark>
+          <ActionButton disabled={noRewards} onClick={claimRewards} variant="light">
+            Claim
+          </ActionButton>
+        </Buttons>
+      </Wrapper>
+    )
+  },
+  () => <SkeletonLoading style={{ height: '118px' }} />,
+)

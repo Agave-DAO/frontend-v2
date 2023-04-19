@@ -2,6 +2,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
 import { DepositInfo } from '@/src/pagePartials/markets/DepositInfo'
 import { Deposit } from '@/src/pagePartials/markets/deposit/Deposit'
@@ -19,28 +20,56 @@ interface Props {
   token: Token | null
 }
 
-const DepositWithdrawBase: React.FC<Props> = ({ activeTab, onTokenSelect, token }) => {
-  const [tab, setTab] = useState<DepositWithdrawTabs>(activeTab || 'deposit')
-  const depositActive = tab === 'deposit'
-  const withdrawActive = tab === 'withdraw'
+export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
+  ({ activeTab, onTokenSelect, token }) => {
+    const [tab, setTab] = useState<DepositWithdrawTabs>(activeTab || 'deposit')
+    const depositActive = tab === 'deposit'
+    const withdrawActive = tab === 'withdraw'
 
-  return token ? (
+    return token ? (
+      <>
+        <DepositInfo token={token} />
+        <Tabs>
+          <Tab isActive={tab === 'deposit'} onClick={() => setTab('deposit')}>
+            Deposit
+          </Tab>
+          <Tab isActive={tab === 'withdraw'} onClick={() => setTab('withdraw')}>
+            Withdraw
+          </Tab>
+        </Tabs>
+        {depositActive && <Deposit onTokenSelect={onTokenSelect} tokenAddress={token.address} />}
+        {withdrawActive && token && (
+          <Withdraw onTokenSelect={onTokenSelect} tokenAddress={token.address} />
+        )}
+      </>
+    ) : null
+  },
+  () => (
     <>
-      <DepositInfo token={token} />
-      <Tabs>
-        <Tab isActive={tab === 'deposit'} onClick={() => setTab('deposit')}>
-          Deposit
-        </Tab>
-        <Tab isActive={tab === 'withdraw'} onClick={() => setTab('withdraw')}>
-          Withdraw
-        </Tab>
-      </Tabs>
-      {depositActive && <Deposit onTokenSelect={onTokenSelect} tokenAddress={token.address} />}
-      {withdrawActive && token && (
-        <Withdraw onTokenSelect={onTokenSelect} tokenAddress={token.address} />
-      )}
+      <SkeletonLoading style={{ height: '48px', margin: '0 0 44px' }} />
+      <SkeletonLoading
+        style={{
+          borderRadius: '16px',
+          padding: '16px',
+        }}
+      >
+        <div style={{ display: 'grid', rowGap: '6px' }}>
+          {Array.from({ length: 6 }).map((item, index) => (
+            <SkeletonLoading
+              animate={false}
+              key={`list_${index}`}
+              style={{ height: '53px', borderRadius: '6px' }}
+            />
+          ))}
+        </div>
+      </SkeletonLoading>
+      <Tabs style={{ height: '89px', maxWidth: 'none', width: '244px' }} />
+      <SkeletonLoading
+        style={{
+          borderRadius: '16px',
+          height: '200px',
+        }}
+      />
     </>
-  ) : null
-}
-
-export const DepositWithdraw = withGenericSuspense(DepositWithdrawBase)
+  ),
+)

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { BorrowInfo } from '@/src/pagePartials/markets/BorrowInfo'
@@ -23,47 +24,69 @@ interface Props {
   token: Token | null
 }
 
-const BorrowRepayBase: React.FC<Props> = ({
-  activeTab,
-  interestRateMode,
-  onInterestRateSelect,
-  onTokenSelect,
-  token,
-}) => {
-  const [tab, setTab] = useState<BorrowRepayTabs>(activeTab || 'borrow')
-  const borrowActive = tab === 'borrow'
-  const repayActive = tab === 'repay'
+export const BorrowRepay: React.FC<Props> = withGenericSuspense(
+  ({ activeTab, interestRateMode, onInterestRateSelect, onTokenSelect, token }) => {
+    const [tab, setTab] = useState<BorrowRepayTabs>(activeTab || 'borrow')
+    const borrowActive = tab === 'borrow'
+    const repayActive = tab === 'repay'
 
-  return token ? (
+    return token ? (
+      <>
+        {borrowActive && <BorrowInfo token={token} />}
+        {repayActive && <RepayInfo token={token} />}
+        <Tabs>
+          <Tab isActive={tab === 'borrow'} onClick={() => setTab('borrow')}>
+            Borrow
+          </Tab>
+          <Tab isActive={tab === 'repay'} onClick={() => setTab('repay')}>
+            Repay
+          </Tab>
+        </Tabs>
+        {borrowActive && (
+          <Borrow
+            interestRateMode={interestRateMode}
+            onInterestRateSelect={onInterestRateSelect}
+            onTokenSelect={onTokenSelect}
+            tokenAddress={token.address}
+          />
+        )}
+        {repayActive && (
+          <Repay
+            interestRateMode={interestRateMode}
+            onInterestRateSelect={onInterestRateSelect}
+            onTokenSelect={onTokenSelect}
+            tokenAddress={token.address}
+          />
+        )}
+      </>
+    ) : null
+  },
+  () => (
     <>
-      {borrowActive && <BorrowInfo token={token} />}
-      {repayActive && <RepayInfo token={token} />}
-      <Tabs>
-        <Tab isActive={tab === 'borrow'} onClick={() => setTab('borrow')}>
-          Borrow
-        </Tab>
-        <Tab isActive={tab === 'repay'} onClick={() => setTab('repay')}>
-          Repay
-        </Tab>
-      </Tabs>
-      {borrowActive && (
-        <Borrow
-          interestRateMode={interestRateMode}
-          onInterestRateSelect={onInterestRateSelect}
-          onTokenSelect={onTokenSelect}
-          tokenAddress={token.address}
-        />
-      )}
-      {repayActive && (
-        <Repay
-          interestRateMode={interestRateMode}
-          onInterestRateSelect={onInterestRateSelect}
-          onTokenSelect={onTokenSelect}
-          tokenAddress={token.address}
-        />
-      )}
+      <SkeletonLoading style={{ height: '48px', margin: '0 0 44px' }} />
+      <SkeletonLoading
+        style={{
+          borderRadius: '16px',
+          padding: '16px',
+        }}
+      >
+        <div style={{ display: 'grid', rowGap: '6px' }}>
+          {Array.from({ length: 6 }).map((item, index) => (
+            <SkeletonLoading
+              animate={false}
+              key={`list_${index}`}
+              style={{ height: '53px', borderRadius: '6px' }}
+            />
+          ))}
+        </div>
+      </SkeletonLoading>
+      <Tabs style={{ height: '89px', maxWidth: 'none', width: '244px' }} />
+      <SkeletonLoading
+        style={{
+          borderRadius: '16px',
+          height: '200px',
+        }}
+      />
     </>
-  ) : null
-}
-
-export const BorrowRepay = withGenericSuspense(BorrowRepayBase)
+  ),
+)
