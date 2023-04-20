@@ -16,9 +16,7 @@ import {
 } from '@/src/components/token/TokenInputTextfield'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
-import { fromWei } from '@/src/utils/common'
-import { formatAmount } from '@/src/utils/common'
-import { NumberType } from '@/src/utils/format'
+import { formatAmount, fromWei } from '@/src/utils/common'
 
 const Wrapper = styled.div<{ status?: TextfieldStatus | undefined }>`
   align-items: center;
@@ -60,39 +58,11 @@ interface Props extends TokenInputProps {
   status?: TextfieldStatus | undefined
   statusText?: string | undefined
   symbol: string
-  address?: string
   delay?: number
+  usdPrice?: BigNumber
 }
 
-const USDPrice = withGenericSuspense(
-  ({
-    amount,
-    decimals,
-    tokenAddress,
-  }: {
-    tokenAddress: string
-    amount: string
-    decimals: number
-  }) => {
-    const [{ data: currentPrice }] = useGetAssetsPriceInDAI([tokenAddress])
-
-    const amountInDai = useMemo(() => {
-      if (currentPrice?.[0][0] instanceof BigNumber) {
-        return fromWei(BigNumber.from(amount || 0).mul(currentPrice?.[0][0]), decimals)
-      }
-      return ZERO_BN
-    }, [amount, currentPrice, decimals])
-
-    return (
-      <USDValue>
-        <Amount value={amountInDai} />
-      </USDValue>
-    )
-  },
-)
-
 export const TokenInput: React.FC<Props> = ({
-  address,
   decimals,
   delay = 500,
   disabled,
@@ -103,6 +73,7 @@ export const TokenInput: React.FC<Props> = ({
   status,
   statusText,
   symbol,
+  usdPrice,
   value,
   ...restProps
 }) => {
@@ -135,10 +106,11 @@ export const TokenInput: React.FC<Props> = ({
         }}
         value={localValue}
       />
-      {address && isAddress(address) ? (
-        <USDPrice amount={value} decimals={decimals} tokenAddress={address} />
-      ) : (
-        <USDValue />
+
+      {usdPrice && (
+        <USDValue>
+          <Amount value={fromWei(usdPrice.mul(localValue || '0'))} />
+        </USDValue>
       )}
       {statusText && <FormStatus status={status}>{statusText}</FormStatus>}
     </Wrapper>

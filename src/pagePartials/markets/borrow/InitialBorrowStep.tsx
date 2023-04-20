@@ -17,6 +17,7 @@ import { Percentage } from '@/src/components/helpers/Percentage'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useBorrowStepInitial } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepInitial'
@@ -99,6 +100,7 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
     tokenInputStatus,
     tokenInputStatusText,
   } = useBorrowStepInitial({ amount, tokenAddress })
+  const market = useMarketsData().getMarket(tokenAddress)
   const { openMinHealthConfigurationModal } = useModalsContext()
 
   const onToggleInterestRateMode = (isToggled: boolean) => {
@@ -170,7 +172,6 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
   return (
     <Stepper {...stepperProps}>
       <TokenInput
-        address={isNativeRelated ? agaveTokens.wrapperToken.address : tokenAddress}
         decimals={tokenInfo.decimals}
         maxValue={maxToBorrow.toString()}
         setStatus={setTokenInputStatus}
@@ -179,6 +180,7 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
         status={tokenInputStatus}
         statusText={tokenInputStatusText}
         symbol={tokenInfo.symbol}
+        usdPrice={market.priceData}
         value={amount}
       />
       <ButtonWrapper>

@@ -16,6 +16,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useWithdrawStepInitial } from '@/src/pagePartials/markets/withdraw/hooks/useWithdrawStepInitial'
@@ -91,6 +92,7 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
     tokenInputStatusText,
   } = useWithdrawStepInitial({ amount, tokenAddress })
   const { openMinHealthConfigurationModal } = useModalsContext()
+  const market = useMarketsData().getMarket(tokenAddress)
 
   const onToggleWrap = (isToggled: boolean) => {
     onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
@@ -126,7 +128,6 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
   return (
     <Stepper {...stepperProps}>
       <TokenInput
-        address={isNativeRelated ? agaveTokens.wrapperToken.address : tokenAddress}
         decimals={tokenInfo.decimals}
         maxValue={maxToWithdraw.toString()}
         setStatus={setTokenInputStatus}
@@ -135,6 +136,7 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
         status={tokenInputStatus}
         statusText={tokenInputStatusText}
         symbol={tokenInfo.symbol}
+        usdPrice={market.priceData}
         value={amount}
       />
       <ButtonWrapper>

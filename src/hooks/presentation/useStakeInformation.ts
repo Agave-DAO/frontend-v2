@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { WeiPerEther } from '@ethersproject/constants'
 
+import { useGetStakingAgvePrice } from '../queries/useGetStakingAgvePrice'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
 import {
@@ -43,6 +44,7 @@ export const useStakeInformation = () => {
   const { data: amountAvailableToClaim, refetch: refetchUserAmountAvailableToClaim } =
     useGetUserAmountAvailableToClaim()
   const { data: userStakeCooldown, refetch: refetchUserStakeCooldown } = useGetUserStakeCooldown()
+  const agvePriceInUSD = useGetStakingAgvePrice()
 
   const yieldPerSecond = emissionPerSecond.mul(amountStaked).div(WeiPerEther)
   const yieldPerMonth = yieldPerSecond.mul(MONTH_IN_SECONDS)
@@ -120,6 +122,7 @@ export const useStakeInformation = () => {
     totalStaked,
     cooldownSeconds,
     unstakeWindow,
+    agvePrice: agvePriceInUSD,
     refetchAllStakeData,
   }
 }

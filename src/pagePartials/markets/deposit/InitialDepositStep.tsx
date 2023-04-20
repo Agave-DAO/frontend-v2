@@ -17,6 +17,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useDepositStepInitial } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
@@ -97,6 +98,7 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
     tokenInputStatusText,
   } = useDepositStepInitial({ amount, tokenAddress })
   const { openMinHealthConfigurationModal } = useModalsContext()
+  const market = useMarketsData().getMarket(tokenAddress)
 
   const onToggleWrap = (isToggled: boolean) => {
     onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
@@ -135,7 +137,6 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
   return (
     <Stepper {...wizardProps}>
       <TokenInput
-        address={isNativeRelated ? agaveTokens.wrapperToken.address : tokenAddress}
         decimals={tokenInfo.decimals}
         maxValue={balance.toString()}
         setStatus={setTokenInputStatus}
@@ -144,6 +145,7 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
         status={tokenInputStatus}
         statusText={tokenInputStatusText}
         symbol={tokenInfo.symbol}
+        usdPrice={market.priceData}
         value={amount}
       />
       <ButtonWrapper>

@@ -16,6 +16,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useRepayStepInitial } from '@/src/pagePartials/markets/repay/hooks/useRepayStepInitial'
@@ -97,6 +98,7 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
     tokenInputStatusText,
   } = useRepayStepInitial({ amount, interestRateMode, tokenAddress })
   const { openMinHealthConfigurationModal } = useModalsContext()
+  const market = useMarketsData().getMarket(tokenAddress)
 
   const onToggleInterestRateMode = (isToggled: boolean) => {
     onInterestRateSelect(isToggled ? InterestRateMode.stable : InterestRateMode.variable)
@@ -153,7 +155,6 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
   return (
     <Stepper {...stepperProps}>
       <TokenInput
-        address={isNativeRelated ? agaveTokens.wrapperToken.address : tokenAddress}
         decimals={tokenInfo.decimals}
         maxValue={maxToRepay.toString()}
         setStatus={setTokenInputStatus}
@@ -162,6 +163,7 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
         status={tokenInputStatus}
         statusText={tokenInputStatusText}
         symbol={tokenInfo.symbol}
+        usdPrice={market.priceData}
         value={amount}
       />
       <ButtonWrapper>
