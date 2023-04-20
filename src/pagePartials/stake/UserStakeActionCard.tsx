@@ -36,6 +36,7 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const { address } = useWeb3ConnectedApp()
     const {
+      agvePrice,
       amountAvailableToStake: userAmountAvailableToStake,
       isCooldownActive,
       refetchAllStakeData,
@@ -164,6 +165,7 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
             status={tokenInputStatus}
             statusText={tokenInputStatusText}
             symbol={'AGVE'}
+            usdPrice={agvePrice}
             value={value}
           />
           <ButtonWrapper>

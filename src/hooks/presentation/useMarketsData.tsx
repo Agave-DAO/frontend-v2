@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 
+import { useGetStakingAgvePrice } from '../queries/useGetStakingAgvePrice'
 import { AgaveProtocolTokenType, agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useGetMarketsData } from '@/src/hooks/queries/useGetMarketsData'

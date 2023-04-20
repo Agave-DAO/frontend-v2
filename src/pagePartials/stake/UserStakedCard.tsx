@@ -8,10 +8,12 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { AgaveTotal } from '@/src/components/token/AgaveTotal'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { ProgressBar } from '@/src/pagePartials/stake/ProgressBar'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { fromWei } from '@/src/utils/common'
 import { StakedToken__factory } from '@/types/generated/typechain'
 
 const Staked = styled.div``
@@ -60,6 +62,7 @@ export const UserStakedCard: React.FC = withGenericSuspense(
       activateCooldownFrom: activateCooldownFrom,
       activateCooldownReady: userActivateCooldownReady,
       activateCooldownTo: userActivateCooldownTo,
+      agvePrice,
       amountStaked: userAmountStaked,
       isCooldownActive,
       isInUnstakeWindow,
@@ -124,12 +127,12 @@ export const UserStakedCard: React.FC = withGenericSuspense(
     }
 
     return (
-      <InnerCard title="asasd" {...restProps}>
+      <InnerCard {...restProps}>
         <Staked>
           <AgaveTotal
             agave={<Amount decimals={18} symbol="" value={userAmountStaked} />}
             title="Agave staked"
-            usd={'$0.00'}
+            usd={<Amount value={fromWei((agvePrice || ZERO_BN).mul(userAmountStaked))} />}
           />
           {!isCooldownActive && <Button as={ActivateCooldownButton} />}
         </Staked>
