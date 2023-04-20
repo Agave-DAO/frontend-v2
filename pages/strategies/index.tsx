@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { VaultsList } from '@/src/pagePartials/strategy/vaults/VaultsList'
+import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
 const Title = styled(BaseTitle)`
   margin-top: 23px;
@@ -14,11 +15,13 @@ const Title = styled(BaseTitle)`
 `
 
 const Strategies: NextPage = () => {
+  const { openVaultModal } = useVaultModalContext()
+
   return (
     <>
       <Title hasExtraControls>
         Strategies
-        <ActionButton onClick={() => console.log('clicked')} variant="ultraLight">
+        <ActionButton onClick={() => openVaultModal()} variant="ultraLight">
           Create new vault
         </ActionButton>
       </Title>

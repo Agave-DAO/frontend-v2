@@ -21,6 +21,7 @@ import MinHealthConfigurationModalProvider from '@/src/providers/minHealthConfig
 import ThemeProvider from '@/src/providers/themeProvider'
 import TokenActionsModalProvider from '@/src/providers/tokenActionsModalProvider'
 import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
+import VaultModalProvider from '@/src/providers/vaultModalProvider'
 
 import 'sanitize.css'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -93,11 +94,15 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                   <TokenIconsProvider>
                     <MinHealthConfigurationModalProvider>
                       <TokenActionsModalProvider>
-                        <Header />
-                        <Scroll>
-                          <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
-                          <Footer />
-                        </Scroll>
+                        <VaultModalProvider>
+                          <Header />
+                          <Scroll>
+                            <Container as="main">
+                              {getLayout(<Component {...pageProps} />)}
+                            </Container>
+                            <Footer />
+                          </Scroll>
+                        </VaultModalProvider>
                       </TokenActionsModalProvider>
                     </MinHealthConfigurationModalProvider>
                   </TokenIconsProvider>

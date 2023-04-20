@@ -29,7 +29,7 @@ interface Props extends ModalProps {
   symbol: string
 }
 
-export const ActionsModal: React.FC<Props> = ({
+const ActionsModal: React.FC<Props> = ({
   children,
   onClose,
   onTokenSelect,
