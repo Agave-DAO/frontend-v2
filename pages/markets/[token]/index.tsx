@@ -14,7 +14,7 @@ import { MarketInformation } from '@/src/pagePartials/markets/MarketInformation'
 import { ReserveRates } from '@/src/pagePartials/markets/ReserveRates'
 import { ReserveStatus } from '@/src/pagePartials/markets/ReserveStatus'
 import { UserInformation } from '@/src/pagePartials/markets/UserInformation'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { Token } from '@/types/token'
 
@@ -62,7 +62,7 @@ const UserConnectedActions: React.FC<{
     tokenAddress,
     userAddress,
   })
-  const { openBorrowRepayModal, openDepositWithdrawModal } = useModalsContext()
+  const { openBorrowRepayModal, openDepositWithdrawModal } = useTokenActionsModalsContext()
 
   const items = [
     {

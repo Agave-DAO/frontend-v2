@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -21,7 +21,7 @@ import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHea
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useRepayStepInitial } from '@/src/pagePartials/markets/repay/hooks/useRepayStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useMinHealthConfigurationModalContext } from '@/src/providers/minHealthConfigurationModalProvider'
 import { NumberType } from '@/src/utils/format'
 import { Token } from '@/types/token'
 
@@ -97,7 +97,7 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
     tokenInputStatus,
     tokenInputStatusText,
   } = useRepayStepInitial({ amount, interestRateMode, tokenAddress })
-  const { openMinHealthConfigurationModal } = useModalsContext()
+  const { openMinHealthConfigurationModal } = useMinHealthConfigurationModalContext()
   const market = useMarketsData().getMarket(tokenAddress)
 
   const onToggleInterestRateMode = (isToggled: boolean) => {

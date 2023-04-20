@@ -1,11 +1,17 @@
 import styled from 'styled-components'
 
 import { ButtonDark } from '@/src/components/buttons/Button'
-import { Modal } from '@/src/components/modals/Modal'
+import { Modal as BaseModal } from '@/src/components/modals/Modal'
 import { BaseParagraph } from '@/src/components/text/BaseParagraph'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { chainsConfig } from '@/src/config/web3'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
+
+const Modal = styled(BaseModal)`
+  .close {
+    display: none;
+  }
+`
 
 const Title = styled(BaseTitle)`
   text-align: center;
@@ -38,12 +44,17 @@ const Button = styled(ButtonDark)`
   width: 100%;
 `
 
-export const SwitchNetworkModal: React.FC = ({ ...restProps }) => {
+export const SwitchNetworkModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   const { pushNetwork, setAppChainId } = useWeb3Connection()
   const chainOptions = Object.values(chainsConfig)
 
   return (
-    <Modal {...restProps}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        return true
+      }}
+    >
       <Title>Wrong network</Title>
       <Paragraph>Please select a valid network from the list.</Paragraph>
       <NetworkButtons>

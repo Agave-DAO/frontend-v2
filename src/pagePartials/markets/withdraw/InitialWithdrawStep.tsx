@@ -20,7 +20,7 @@ import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useWithdrawStepInitial } from '@/src/pagePartials/markets/withdraw/hooks/useWithdrawStepInitial'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useMinHealthConfigurationModalContext } from '@/src/providers/minHealthConfigurationModalProvider'
 import { NumberType } from '@/src/utils/format'
 import { Token } from '@/types/token'
 
@@ -91,7 +91,7 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
     tokenInputStatus,
     tokenInputStatusText,
   } = useWithdrawStepInitial({ amount, tokenAddress })
-  const { openMinHealthConfigurationModal } = useModalsContext()
+  const { openMinHealthConfigurationModal } = useMinHealthConfigurationModalContext()
   const market = useMarketsData().getMarket(tokenAddress)
 
   const onToggleWrap = (isToggled: boolean) => {

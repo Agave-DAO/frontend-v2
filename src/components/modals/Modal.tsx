@@ -28,31 +28,50 @@ Contents.defaultProps = {
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   closeOnBackgroundClick?: boolean
-  onClose?: () => void
+  isOpen: boolean
+  onClose: () => void
 }
 
 export const Modal: React.FC<Props> = ({
   children,
   closeOnBackgroundClick = false,
+  isOpen,
   onClose,
   ...restProps
 }) => {
-  const close = useCallback(
+  const bodyDiv = document.getElementById('body') as HTMLElement
+  const openModalClass = 'modalOpen'
+
+  const closeModal = useCallback(() => {
+    onClose()
+    if (bodyDiv) {
+      bodyDiv.classList.remove(openModalClass)
+    }
+  }, [onClose, bodyDiv])
+
+  const closeOnESC = useCallback(
     (e: { key: string }) => {
-      if (e.key === 'Escape' && onClose) {
-        onClose()
+      if (e.key === 'Escape') {
+        closeModal()
       }
     },
-    [onClose],
+    [closeModal],
   )
 
   useEffect(() => {
-    window.addEventListener('keyup', close)
+    if (bodyDiv && isOpen) {
+      bodyDiv.classList.add(openModalClass)
+    } else if (bodyDiv && !isOpen) {
+      bodyDiv.classList.remove(openModalClass)
+    }
+  }, [bodyDiv, isOpen])
 
-    return () => window.removeEventListener('keyup', close)
-  }, [close, onClose])
+  useEffect(() => {
+    window.addEventListener('keyup', closeOnESC)
+    return () => window.removeEventListener('keyup', closeOnESC)
+  }, [closeOnESC])
 
-  return (
+  return isOpen ? (
     <ModalPortal>
       <Overlay
         onBlur={() => {
@@ -60,18 +79,21 @@ export const Modal: React.FC<Props> = ({
            * Remove event listener on blur to prevent multiple "close modal" event listeners
            * if the user opens another modal while this one is open
            */
-          window.removeEventListener('keyup', close)
+          window.removeEventListener('keyup', closeOnESC)
         }}
         onClick={(e) => {
           e.stopPropagation()
-          if (closeOnBackgroundClick && onClose) {
-            onClose()
+          if (closeOnBackgroundClick) {
+            closeModal()
           }
+        }}
+        onFocus={() => {
+          window.addEventListener('keyup', closeOnESC)
         }}
         {...restProps}
       >
         <Inner>
-          <Header onClose={onClose} />
+          <Header onClose={closeModal} />
           <Body
             onClick={(e) => {
               e.stopPropagation()
@@ -82,5 +104,5 @@ export const Modal: React.FC<Props> = ({
         </Inner>
       </Overlay>
     </ModalPortal>
-  )
+  ) : null
 }

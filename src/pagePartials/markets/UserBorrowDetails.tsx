@@ -17,7 +17,7 @@ import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { HealthFactor as HealthFactorTooltip } from '@/src/constants/tooltips'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const UserBorrowsImp = ({
@@ -107,7 +107,7 @@ export const UserBorrowDetails = withGenericSuspense(
       tokenAddress,
       userAddress,
     })
-    const { openBorrowRepayModal } = useModalsContext()
+    const { openBorrowRepayModal } = useTokenActionsModalsContext()
 
     return (
       <Wrapper {...restProps}>

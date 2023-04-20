@@ -9,12 +9,12 @@ import { AssetsList } from '@/src/components/layout/AssetsList'
 import { MyAssetSkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 
 export const UserDeposits: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const userDeposits = useUserDeposits()
-    const { openDepositWithdrawModal } = useModalsContext()
+    const { openDepositWithdrawModal } = useTokenActionsModalsContext()
 
     return !userDeposits.length ? (
       <EmptyContent

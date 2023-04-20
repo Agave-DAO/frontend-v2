@@ -8,12 +8,12 @@ import { AssetsList } from '@/src/components/layout/AssetsList'
 import { MyAssetSkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { InterestRateMode, useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 
 export const UserBorrows: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const userBorrows = useUserBorrows()
-    const { openBorrowRepayModal } = useModalsContext()
+    const { openBorrowRepayModal } = useTokenActionsModalsContext()
 
     return !userBorrows.length ? (
       <EmptyContent
