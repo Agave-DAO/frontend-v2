@@ -29,7 +29,11 @@ const Close = styled(BaseClose)`
   }
 `
 
-export const Header: React.FC<{ onClose: () => void }> = ({ onClose, ...restProps }) => (
+Close.defaultProps = {
+  tabIndex: -1,
+}
+
+export const Header: React.FC<{ onClose?: () => void }> = ({ onClose, ...restProps }) => (
   <Wrapper
     onClick={(e) => {
       e.stopPropagation()
@@ -37,6 +41,6 @@ export const Header: React.FC<{ onClose: () => void }> = ({ onClose, ...restProp
     {...restProps}
   >
     <Logo />
-    <Close onClick={onClose} tabIndex={-1} />
+    {onClose && <Close onClick={onClose} />}
   </Wrapper>
 )

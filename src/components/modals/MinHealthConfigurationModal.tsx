@@ -2,7 +2,7 @@ import { ChangeEvent, HTMLAttributes, createRef, useCallback, useEffect, useStat
 import styled, { keyframes } from 'styled-components'
 
 import { Range } from '@/src/components/form/Range'
-import Modal from '@/src/components/modals/BaseModal'
+import Modal from '@/src/components/modals/ModalPortal'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { usePersistedState } from '@/src/hooks/usePersistedState'
 

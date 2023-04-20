@@ -1,10 +1,10 @@
-import { ModalSwitchNetwork } from '@/src/components/helpers/ModalSwitchNetwork'
+import { SwitchNetworkModal } from '@/src/components/modals/SwitchNetworkModal'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
 export const WrongNetwork: React.FC = () => {
   const { isWalletConnected, isWalletNetworkSupported } = useWeb3Connection()
 
-  return isWalletConnected && !isWalletNetworkSupported ? <ModalSwitchNetwork /> : null
+  return isWalletConnected && !isWalletNetworkSupported ? <SwitchNetworkModal /> : null
 }
 
 export default WrongNetwork
