@@ -11,12 +11,12 @@ const Wrapper = styled.div`
   width: 100%;
 `
 
-const Title = styled.h3`
+export const Title = styled.h3`
+  color: ${({ theme: { colors } }) => colors.darkestGray};
   font-size: 1.8rem;
   font-weight: 700;
   line-height: 1.2;
   margin: 0;
-  color: ${({ theme: { colors } }) => colors.darkestGray};
 `
 
 type ButtonVariants = 'dark' | 'regular' | 'danger' | undefined

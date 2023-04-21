@@ -269,6 +269,21 @@ export const dark = {
       color: textColor50,
     },
   },
+  textFieldLight: {
+    backgroundColor: lighterGray,
+    borderColor: 'transparent',
+    color: secondary,
+    errorColor: error,
+    successColor: success,
+    active: {
+      backgroundColor: lighterGray,
+      borderColor: 'transparent',
+      color: secondary,
+    },
+    placeholder: {
+      color: secondary50,
+    },
+  },
   header: {
     backgroundColor: 'transparent',
     color: textColor,
