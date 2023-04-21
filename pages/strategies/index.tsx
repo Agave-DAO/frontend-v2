@@ -15,13 +15,13 @@ const Title = styled(BaseTitle)`
 `
 
 const Strategies: NextPage = () => {
-  const { openVaultModal } = useVaultModalContext()
+  const { openCreateVaultModal } = useVaultModalContext()
 
   return (
     <>
       <Title hasExtraControls>
         Strategies
-        <ActionButton onClick={() => openVaultModal()} variant="ultraLight">
+        <ActionButton onClick={() => openCreateVaultModal()} variant="ultraLight">
           Create new vault
         </ActionButton>
       </Title>

@@ -1,3 +1,4 @@
+import Link, { LinkProps } from 'next/link'
 import React, { ButtonHTMLAttributes } from 'react'
 import styled from 'styled-components'
 
@@ -36,11 +37,19 @@ export const ButtonGoTo: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = ({ 
   </Wrapper>
 )
 
+const NavLink = styled(Link)`
+  text-decoration: none;
+`
+
+interface AGoToItemProps extends LinkProps {
+  className?: string
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const AGoTo = React.forwardRef(function CustomComponent(props, ref) {
+export const AGoTo: React.FC<AGoToItemProps> = ({ className, href }) => {
   return (
-    <Wrapper as="a" {...props}>
+    <Wrapper as={NavLink} className={className} href={href}>
       <ChevronRight />
     </Wrapper>
   )
-})
+}

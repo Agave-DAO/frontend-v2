@@ -12,7 +12,7 @@ const VaultModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const values = {
     isOpen: showModal,
     closeModal,
-    openVaultModal: () => setShowModal(true),
+    openCreateVaultModal: () => setShowModal(true),
   }
 
   return (

@@ -6,7 +6,7 @@ const Strategy: NextPage = () => {
 
   const { strategyName } = router.query
 
-  return <>Strategy name: {strategyName}</>
+  return <>Vault name: Vault {strategyName}</>
 }
 
 export default Strategy

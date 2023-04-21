@@ -2,12 +2,14 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
+import { List, ListNavigationItem } from '@/src/components/common/List'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
 const Wrapper = styled.div`
   display: grid;
-  row-gap: 16ßßpx;
+  row-gap: 16px;
 `
 
 const Empty = styled(EmptyContent)`
@@ -41,12 +43,19 @@ const Buttons = styled.div`
 export const VaultsList: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const [vaults, setVaults] = useState<Array<number>>([])
+    const { openCreateVaultModal } = useVaultModalContext()
 
     return vaults.length ? (
       <Wrapper {...restProps}>
-        {vaults.map((vault, index) => (
-          <div key={index}>item {vault}</div>
-        ))}
+        <List>
+          {vaults.map((vault, index) => (
+            <ListNavigationItem
+              href={`/strategies/${vault}`}
+              key={index}
+              title={`Vault ${vault}`}
+            ></ListNavigationItem>
+          ))}
+        </List>
       </Wrapper>
     ) : (
       <Empty
@@ -61,7 +70,16 @@ export const VaultsList: React.FC = withGenericSuspense(
               <ActionButton onClick={() => console.log('clicked')} variant="darker">
                 Learn more
               </ActionButton>
-              <ActionButton onClick={() => setVaults([...vaults, 0, 1, 2, 3, 4])}>
+              <ActionButton
+                onClick={() => {
+                  openCreateVaultModal()
+
+                  // delete this after vault creation is implemented
+                  setTimeout(() => {
+                    setVaults([...vaults, 0, 1, 2, 3, 4])
+                  }, 500)
+                }}
+              >
                 Create vault
               </ActionButton>
             </Buttons>
