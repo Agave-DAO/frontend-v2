@@ -3,13 +3,13 @@ import { Dispatch, SetStateAction, useMemo } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import {
+  ActionButton,
   Button,
   ButtonWrapper,
   Row,
   RowKey,
   RowValue,
-  StepActionButton,
-} from '@/src/components/card/StepsCard'
+} from '@/src/components/card/FormCard'
 import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
@@ -187,9 +187,9 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
         <Button disabled={disableSubmit} onClick={nextStep}>
           Borrow
         </Button>
-        <StepActionButton onClick={openMinHealthConfigurationModal}>
+        <ActionButton onClick={openMinHealthConfigurationModal}>
           Min health factor configuration
-        </StepActionButton>
+        </ActionButton>
       </ButtonWrapper>
     </Stepper>
   )

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
-import { Button, ButtonWrapper, StepsCard } from '@/src/components/card/StepsCard'
+import { Button, ButtonWrapper, FormCard } from '@/src/components/card/FormCard'
 import { Textfield } from '@/src/components/form/Textfield'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
@@ -83,12 +83,12 @@ export const VaultModal: React.FC<Props> = ({ vaultAddress, ...restProps }) => {
               title="Information"
             />
           )}
-          <StepsCard>
+          <FormCard>
             <FormTitle>{editVault ? 'Rename vault' : 'Create new vault'}</FormTitle>
             <Label>Name</Label>
             <Textfield value={editVault ? vaultAddress : ''} variant="light" />
             <Buttons>{editVault ? <Button>Rename</Button> : <Button>Create</Button>}</Buttons>
-          </StepsCard>
+          </FormCard>
         </>
       </RequiredConnection>
     </Modal>

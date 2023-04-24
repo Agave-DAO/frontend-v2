@@ -3,14 +3,14 @@ import { Dispatch, SetStateAction, useMemo } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import {
+  ActionButton,
   Button,
   ButtonWrapper,
   Row,
   RowKey,
   RowValue,
-  StepActionButton,
   Text,
-} from '@/src/components/card/StepsCard'
+} from '@/src/components/card/FormCard'
 import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TabToggle } from '@/src/components/tabs/TabToggle'
@@ -152,9 +152,9 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
         <Button disabled={disableSubmit} onClick={nextStep}>
           Deposit
         </Button>
-        <StepActionButton onClick={openMinHealthConfigurationModal}>
+        <ActionButton onClick={openMinHealthConfigurationModal}>
           Min health factor configuration
-        </StepActionButton>
+        </ActionButton>
       </ButtonWrapper>
     </Stepper>
   )

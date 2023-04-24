@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
-import { Rows as BaseRows, StepsCard } from '@/src/components/card/StepsCard'
+import { Rows as BaseRows, FormCard } from '@/src/components/card/FormCard'
 import { ButtonType, StepAuxiliaryAction } from '@/src/components/step/StepAuxiliaryAction'
 
 const TogglesWrapper = styled.div`
@@ -46,10 +46,10 @@ export const Stepper: React.FC<Props> = ({
   toggles,
   ...restProps
 }) => (
-  <StepsCard {...restProps}>
+  <FormCard {...restProps}>
     {toggles && <TogglesWrapper>{toggles}</TogglesWrapper>}
     <StepAuxiliaryAction button={titleButton} title={title} />
     <Rows>{info}</Rows>
     <StepForm>{children}</StepForm>
-  </StepsCard>
+  </FormCard>
 )

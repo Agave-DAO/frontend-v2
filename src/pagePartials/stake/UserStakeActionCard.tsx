@@ -8,11 +8,11 @@ import {
   Rows as BaseRows,
   Button,
   ButtonWrapper,
+  FormCard,
   Row,
   RowKey,
   RowValueBig,
-  StepsCard,
-} from '@/src/components/card/StepsCard'
+} from '@/src/components/card/FormCard'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
@@ -137,7 +137,7 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
     )
 
     return (
-      <StepsCard {...restProps}>
+      <FormCard {...restProps}>
         <StepAuxiliaryAction
           button={{
             text: 'Use max',
@@ -182,7 +182,7 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
             )}
           </ButtonWrapper>
         </StepForm>
-      </StepsCard>
+      </FormCard>
     )
   },
   ({ ...restProps }) => <SkeletonLoading style={{ height: '311px' }} {...restProps} />,

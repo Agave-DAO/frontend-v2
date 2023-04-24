@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/card/StepsCard'
+import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/card/FormCard'
 import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
