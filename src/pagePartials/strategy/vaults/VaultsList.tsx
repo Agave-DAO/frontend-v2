@@ -67,7 +67,15 @@ export const VaultsList: React.FC = withGenericSuspense(
             <br />
             <br />
             <Buttons>
-              <ActionButton onClick={() => console.log('clicked')} variant="darker">
+              <ActionButton
+                onClick={() =>
+                  window.open(
+                    'https://agavedev.notion.site/agavedev/Agave-Docs-a0cb462422b941d89a6dc646cdb1bdf8',
+                    '_blank',
+                  )
+                }
+                variant="darker"
+              >
                 Learn more
               </ActionButton>
               <ActionButton
