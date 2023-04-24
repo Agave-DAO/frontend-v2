@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { Icon } from '@/src/components/asset/Asset'
 import { ChevronDown } from '@/src/components/assets/ChevronDown'
-import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/common/Dropdown'
+import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/dropdown/Dropdown'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'

@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
-import { InnerCard } from '@/src/components/common/InnerCard'
-import { RewardPair } from '@/src/components/common/RewardPair'
+import { InnerCard } from '@/src/components/card/InnerCard'
 import {
   CollapsableRow,
   CollapsableRowKey,
@@ -13,6 +12,7 @@ import {
   Rows,
 } from '@/src/components/common/Rows'
 import { Percentage } from '@/src/components/helpers/Percentage'
+import { RewardPair } from '@/src/components/token/RewardPair'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 
 const Wrapper = styled(InnerCard)``

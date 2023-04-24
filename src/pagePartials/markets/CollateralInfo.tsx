@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 
-import { LegendColor } from '@/src/components/common/LegendColor'
-import { MiniChart } from '@/src/components/common/MiniChart'
+import { LegendColor } from '@/src/components/charts/LegendColor'
+import { MiniChart } from '@/src/components/charts/MiniChart'
 import {
   CollapsableRow,
   CollapsableRowValue,

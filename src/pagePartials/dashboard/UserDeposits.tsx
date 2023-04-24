@@ -1,6 +1,6 @@
 import { UserAsset } from '@/src/components/asset/UserAsset'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
-import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
+import { MoreActionsDropdown } from '@/src/components/dropdown/MoreActionsDropdown'
 import { Amount } from '@/src/components/helpers/Amount'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'

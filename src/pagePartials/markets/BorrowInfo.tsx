@@ -1,9 +1,6 @@
 import styled from 'styled-components'
 
-import { AssetInfo } from '@/src/components/common/AssetInfo'
-import { HealthFactor } from '@/src/components/common/HealthFactor'
-import { InnerCardDark } from '@/src/components/common/InnerCard'
-import { RewardPair } from '@/src/components/common/RewardPair'
+import { InnerCardDark } from '@/src/components/card/InnerCard'
 import {
   CollapsableRow,
   CollapsableRowKey,
@@ -14,8 +11,10 @@ import {
   RowValueBig,
   Rows,
 } from '@/src/components/common/Rows'
+import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
+import { RewardPair } from '@/src/components/token/RewardPair'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { HealthFactor as HealthFactorTooltip } from '@/src/constants/tooltips'
@@ -23,6 +22,7 @@ import { useMarketDetails } from '@/src/hooks/presentation/useMarketDetails'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useUserBorrowsByToken } from '@/src/hooks/presentation/useUserBorrowsByToken'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
+import { AssetInfo } from '@/src/pagePartials/markets/AssetInfo'
 import { CollateralInfo } from '@/src/pagePartials/markets/CollateralInfo'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { Token } from '@/types/token'

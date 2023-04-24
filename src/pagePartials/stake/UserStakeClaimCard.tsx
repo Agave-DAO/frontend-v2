@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 import TxButton from '@/src/components/buttons/txButton'
-import { InnerCard } from '@/src/components/common/InnerCard'
-import { Button } from '@/src/components/common/StepsCard'
+import { InnerCard } from '@/src/components/card/InnerCard'
+import { Button } from '@/src/components/card/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'

@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { BigNumber } from 'ethers'
 
 import TxButton from '@/src/components/buttons/txButton'
-import { StepAuxiliaryAction } from '@/src/components/common/StepAuxiliaryAction'
 import {
   Rows as BaseRows,
   Button,
@@ -13,11 +12,12 @@ import {
   RowKey,
   RowValueBig,
   StepsCard,
-} from '@/src/components/common/StepsCard'
+} from '@/src/components/card/StepsCard'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
+import { StepAuxiliaryAction } from '@/src/components/step/StepAuxiliaryAction'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { ZERO_BN } from '@/src/constants/bigNumber'

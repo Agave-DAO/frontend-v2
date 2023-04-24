@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
-import { ButtonType, StepAuxiliaryAction } from '@/src/components/common/StepAuxiliaryAction'
-import { Rows as BaseRows, StepsCard } from '@/src/components/common/StepsCard'
+import { Rows as BaseRows, StepsCard } from '@/src/components/card/StepsCard'
+import { ButtonType, StepAuxiliaryAction } from '@/src/components/step/StepAuxiliaryAction'
 
 const TogglesWrapper = styled.div`
   align-items: center;

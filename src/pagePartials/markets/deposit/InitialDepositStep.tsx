@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { HealthFactor } from '@/src/components/common/HealthFactor'
 import {
   Button,
   ButtonWrapper,
@@ -11,9 +10,10 @@ import {
   RowValue,
   StepActionButton,
   Text,
-} from '@/src/components/common/StepsCard'
-import { TabToggle } from '@/src/components/common/TabToggle'
+} from '@/src/components/card/StepsCard'
+import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
+import { TabToggle } from '@/src/components/tabs/TabToggle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'

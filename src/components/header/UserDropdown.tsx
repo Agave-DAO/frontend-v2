@@ -6,7 +6,7 @@ import {
   Dropdown as BaseDropdown,
   DropdownPosition,
   ItemProps,
-} from '@/src/components/common/Dropdown'
+} from '@/src/components/dropdown/Dropdown'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { truncateStringInTheMiddle } from '@/src/utils/strings'
 

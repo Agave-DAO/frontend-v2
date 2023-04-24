@@ -2,12 +2,12 @@ import { useMemo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
-import { Title as BaseFormTitle } from '@/src/components/common/StepAuxiliaryAction'
-import { Button, ButtonWrapper, StepsCard } from '@/src/components/common/StepsCard'
+import { Button, ButtonWrapper, StepsCard } from '@/src/components/card/StepsCard'
 import { Textfield } from '@/src/components/form/Textfield'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
+import { Title as BaseFormTitle } from '@/src/components/step/StepAuxiliaryAction'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 
 const Title = styled(BaseTitle)`

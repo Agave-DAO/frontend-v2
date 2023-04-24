@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { HealthFactor } from '@/src/components/common/HealthFactor'
+import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'

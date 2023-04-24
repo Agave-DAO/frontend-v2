@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { Button, ButtonWrapper, StepActionText } from '@/src/components/common/StepsCard'
+import { Button, ButtonWrapper, StepActionText } from '@/src/components/card/StepsCard'
 import { Step } from '@/src/pagePartials/markets/stepper/types'
 
 const Wrapper = styled(ButtonWrapper)``

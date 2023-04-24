@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 import { MoreActionsButton, Size, Variant } from '@/src/components/buttons/MoreActionsButton'
-import { Dropdown, DropdownItem, Props as DropdownProps } from '@/src/components/common/Dropdown'
+import { Dropdown, DropdownItem, Props as DropdownProps } from '@/src/components/dropdown/Dropdown'
 
 export const Wrapper = styled.div``
 

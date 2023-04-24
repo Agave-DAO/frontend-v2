@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { BaseCard } from '@/src/components/common/BaseCard'
+import { BaseCard } from '@/src/components/card/BaseCard'
 import { Checkbox } from '@/src/components/form/Checkbox'
 import { Radiobutton } from '@/src/components/form/Radiobutton'
 import { Textfield } from '@/src/components/form/Textfield'

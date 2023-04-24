@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { HealthFactor } from '@/src/components/common/HealthFactor'
-import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/common/StepsCard'
+import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/card/StepsCard'
+import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'

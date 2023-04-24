@@ -10,7 +10,7 @@ import {
   MarketRowsCollapsable,
 } from '@/src/components/asset/MarketCell'
 import { ButtonToggleInfo } from '@/src/components/buttons/ButtonToggleInfo'
-import { RewardPair } from '@/src/components/common/RewardPair'
+import { RewardPair } from '@/src/components/token/RewardPair'
 
 const MarketCellPlaceholder = styled(MarketCellWrapper)``
 

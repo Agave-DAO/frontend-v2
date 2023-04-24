@@ -3,7 +3,7 @@ import { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import type { NextPageWithLayout } from '@/pages/_app'
-import { BaseCard } from '@/src/components/common/BaseCard'
+import { BaseCard } from '@/src/components/card/BaseCard'
 import { SidebarLayout } from '@/src/components/layout/SidebarLayout'
 import { BaseParagraph } from '@/src/components/text/BaseParagraph'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
