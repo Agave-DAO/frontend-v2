@@ -15,6 +15,7 @@ const Wrapper = styled(InnerContainer)`
   justify-content: center;
   margin-top: auto;
   padding-bottom: 120px;
+  padding-top: 40px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     justify-content: space-between;

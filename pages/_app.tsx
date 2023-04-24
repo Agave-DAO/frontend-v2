@@ -49,7 +49,6 @@ const Scroll = styled.div`
 const Container = styled(InnerContainer)`
   flex-grow: 1;
   overflow: hidden;
-  padding-bottom: 40px;
   padding-top: 25px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.desktopStart}) {
