@@ -21,8 +21,8 @@ export const formatAmount = (
 ): string => {
   const number = FixedNumber.fromValue(value, decimals, 'fixed256x27').toUnsafeFloat()
   return symbol
-    ? `${symbolPosition === 'before' ? `${symbol} ` : ''}${formatNumber(number, numberType)}${
-        symbolPosition === 'after' ? ` ${symbol}` : ''
+    ? `${symbolPosition === 'before' ? `${symbol}` : ''}${formatNumber(number, numberType)}${
+        symbolPosition === 'after' ? `${symbol}` : ''
       }`
     : `${formatNumber(number, numberType)}`
 }

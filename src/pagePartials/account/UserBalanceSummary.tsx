@@ -35,7 +35,7 @@ const Wrapper = styled.div`
     background-image: ${({ theme: { colors } }) => colors.greenGradientLight};
     box-shadow: 0 100px 80px rgba(0, 0, 0, 0.15), 0 38.5185px 25.4815px rgba(0, 0, 0, 0.0911111),
       0 8.14815px 6.51852px rgba(0, 0, 0, 0.0588889);
-    padding: 40px 24px;
+    padding: 40px 20px;
     border-radius: 24px;
     min-width: 0;
   }
@@ -72,12 +72,13 @@ const AccountBalance = styled.div`
   align-items: center;
   background: #fff;
   border-radius: 60px;
-  column-gap: 10px;
+  column-gap: 8px;
   display: flex;
   height: 60px;
   justify-content: space-between;
   min-width: 160px;
-  padding: 0 24px;
+  padding: 0 20px;
+  max-width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     height: 75px;
@@ -90,9 +91,10 @@ const Balance = styled.div`
   font-size: 3.2rem;
   font-weight: 700;
   line-height: 1.2;
+  white-space: nowrap;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    font-size: 4.2rem;
+    font-size: 3.8rem;
   }
 `
 
