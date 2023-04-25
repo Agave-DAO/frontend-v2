@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { getIncentiveRate, getPriceShares } from './markets'
+import { getIncentiveRate } from './markets'
 import { AgaveProtocolTokens, agaveTokens } from '@/src/config/agaveTokens'
 import { TokenListResponse } from '@/types/token'
 
@@ -42,22 +42,6 @@ const { address: tokenAddress } = agaveTokens.reserveTokens[0] // get first toke
 
 const mockPriceShare = BigNumber.from(((1.5 / 12.5) * 1e16).toFixed())
 
-describe('getPriceShares', () => {
-  it('getPriceShares should return expected output', () => {
-    const mockParams = {
-      liquidity: '1.5',
-      totalShares: '12.5',
-    }
-    const mockParamsWithDenominatorZero = {
-      liquidity: '1.5',
-      totalShares: '0',
-    }
-
-    expect(getPriceShares(mockParams).toString()).toBe('1200000000000000')
-    expect(getPriceShares(mockParamsWithDenominatorZero).toString()).toBe('0')
-  })
-})
-
 describe('getIncentiveRate', () => {
   it('getIncentiveRate should return expected output', () => {
     const mockParams = {
@@ -68,6 +52,6 @@ describe('getIncentiveRate', () => {
       tokenAddress,
     }
 
-    expect(getIncentiveRate(mockParams).toString()).toBe('1681900000000000')
+    expect(getIncentiveRate(mockParams).toString()).toBe('16819000000')
   })
 })

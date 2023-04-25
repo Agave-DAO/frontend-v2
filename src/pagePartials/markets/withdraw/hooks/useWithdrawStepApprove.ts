@@ -30,7 +30,7 @@ export const useWithdrawStepApprove = ({
     asset: isNativeToken ? agTokenInfo.address : tokenAddress,
   }
 
-  const erc20 = useContractInstance(ERC20__factory, params.asset)
+  const erc20 = useContractInstance(ERC20__factory, params.asset, true)
   const sendTx = useTransaction()
 
   const { refetchAllowance: refetchTokenAllowance } = useGetERC20Allowance(

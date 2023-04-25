@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { formatPercentage } from '@/src/utils/common'
 

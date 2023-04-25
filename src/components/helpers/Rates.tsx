@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { SimpleGrid } from '@/src/components/layout/SimpleGrid'

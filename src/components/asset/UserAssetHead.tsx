@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { AsCollateral } from '@/src/components/asset/AsCollateral'
 import { Head, HeadContents, Icon } from '@/src/components/asset/Asset'

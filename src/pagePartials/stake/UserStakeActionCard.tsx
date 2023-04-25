@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import TxButton from '@/src/components/buttons/txButton'
 import { StepAuxiliaryAction } from '@/src/components/common/StepAuxiliaryAction'
@@ -20,6 +20,7 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
+import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
@@ -40,11 +41,12 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
       amountAvailableToStake: userAmountAvailableToStake,
       isCooldownActive,
       refetchAllStakeData,
-      stakedTokenAddress,
     } = useStakeInformation()
 
-    const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken')
-    const stakedToken = useContractInstance(ERC20__factory, stakedTokenAddress)
+    const stakedTokenAddress = agaveTokens.stakeToken.address
+
+    const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken', true)
+    const stakedToken = useContractInstance(ERC20__factory, agaveTokens.stakeToken.address, true)
 
     const { approvedAmount, refetchAllowance } = useGetERC20Allowance(
       stakedTokenAddress,

@@ -14,7 +14,7 @@ export const useDepositStepApprove = ({
   tokenAddress: string
 }) => {
   const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
-  const erc20 = useContractInstance(ERC20__factory, tokenAddress)
+  const erc20 = useContractInstance(ERC20__factory, tokenAddress, true)
   const sendTx = useTransaction()
   const { refetchAllowance } = useGetERC20Allowance(tokenAddress, agaveLending.address)
 

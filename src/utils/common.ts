@@ -1,5 +1,5 @@
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
-import { parseUnits } from 'ethers/lib/utils'
+import { parseUnits } from '@ethersproject/units'
 
 import { NumberType, formatNumber } from './format'
 import { MAX_HEALTH_FACTOR_VALUE_TO_RENDER, NATIVE_DECIMALS } from '@/src/constants/common'

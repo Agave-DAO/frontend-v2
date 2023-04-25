@@ -1,5 +1,5 @@
+import { isAddress } from '@ethersproject/address'
 import { JsonRpcSigner } from '@ethersproject/providers'
-import { isAddress } from 'ethers/lib/utils'
 import nullthrows from 'nullthrows'
 
 import { ContractsKeys, contracts, isKnownContract } from '@/src/contracts/contracts'
@@ -14,9 +14,12 @@ type AppFactories = GetFactories<ObjectValues<typeof typechainImports>>
 export const useContractInstance = <F extends AppFactories, RT extends ReturnType<F['connect']>>(
   contractFactory: F,
   contractKey: ContractsKeys | string,
+  useSigner = false,
 ) => {
   const { appChainId, readOnlyAppProvider, web3Provider } = useWeb3Connection()
-  const signer = web3Provider?.getSigner() || readOnlyAppProvider
+
+  const signer = useSigner ? web3Provider?.getSigner() || readOnlyAppProvider : readOnlyAppProvider
+
   let address: string
   if (isKnownContract(contractKey)) {
     address = contracts[contractKey].address[appChainId]

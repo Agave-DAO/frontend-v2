@@ -29,7 +29,7 @@ export const useBorrowStepDelegate = ({
     asset: variableDebtTokenAddress,
   }
 
-  const variableDebtToken = useContractInstance(VariableDebtToken__factory, params.asset)
+  const variableDebtToken = useContractInstance(VariableDebtToken__factory, params.asset, true)
   const sendTx = useTransaction()
 
   const { refetchAllowance } = useGetVariableDebtBorrowAllowance(params.asset, params.spender)
