@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { SymbolPosition, formatAmount } from '@/src/utils/common'
 import { NumberType } from '@/src/utils/format'

@@ -1,22 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { isAddress } from '@ethersproject/address'
-import { BigNumber } from 'ethers'
-import { debounce } from 'lodash'
+import { BigNumber } from '@ethersproject/bignumber'
+import debounce from 'lodash/debounce'
 
 import { FormStatus as BaseFormStatus } from '@/src/components/form/FormStatus'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
-import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import {
   Props as TokenInputProps,
   TokenInputTextfield,
 } from '@/src/components/token/TokenInputTextfield'
-import { ZERO_BN } from '@/src/constants/bigNumber'
-import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
-import { formatAmount, fromWei } from '@/src/utils/common'
+import { fromWei } from '@/src/utils/common'
 
 const Wrapper = styled.div<{ status?: TextfieldStatus | undefined }>`
   align-items: center;
@@ -109,7 +105,7 @@ export const TokenInput: React.FC<Props> = ({
 
       {usdPrice && (
         <USDValue>
-          <Amount value={fromWei(usdPrice.mul(localValue || '0'))} />
+          <Amount value={fromWei(usdPrice.mul(localValue || '0'), decimals)} />
         </USDValue>
       )}
       {statusText && <FormStatus status={status}>{statusText}</FormStatus>}

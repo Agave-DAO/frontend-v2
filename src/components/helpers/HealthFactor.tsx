@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { SymbolPosition, formatHealthFactor } from '@/src/utils/common'
 

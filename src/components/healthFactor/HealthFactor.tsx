@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import { HealthFactor as HFHelper } from '@/src/components/helpers/HealthFactor'
 import { formatHealthFactor } from '@/src/utils/common'

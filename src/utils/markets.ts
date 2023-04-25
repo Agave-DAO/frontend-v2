@@ -4,20 +4,6 @@ import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { fromWei } from '@/src/utils/common'
 
-/**
- * Calculates priceShare (liquidity / totalShares) and convert it to a BigNumber value.
- */
-export const getPriceShares = (rewardData: { liquidity: string; totalShares: string }) => {
-  const { liquidity, totalShares } = rewardData
-  const [numerator, denominator] = [parseFloat(liquidity), parseFloat(totalShares)]
-
-  if (denominator === 0) {
-    return ZERO_BN
-  }
-
-  return BigNumber.from(((numerator / denominator) * 1e16).toFixed())
-}
-
 export const getIncentiveRate = ({
   emissionPerSeconds,
   priceShares,
@@ -46,6 +32,6 @@ export const getIncentiveRate = ({
     ? priceShares.mul(emissionPerYear).div(totalSupplyInDaiWei)
     : ZERO_BN
 
-  // TODO mul the result to convert percentValue ??
-  return APYPerYear.mul(10 ** 11)
+  // TODO mul the result to convert percentValue with 25 decimals
+  return APYPerYear.mul(10 ** 6)
 }

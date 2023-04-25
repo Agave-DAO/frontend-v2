@@ -1,5 +1,5 @@
 {
   "100": {
-    "symmetric-v1": "https://api.thegraph.com/subgraphs/name/centfinance/symmetricv1gnosis"
+    "symmetric-v1": "https://api.thegraph.com/subgraphs/name/centfinance/symmetric-v2-gnosis"
   }
 }
