@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Asset, Body, Head } from '@/src/components/asset/Asset'
@@ -10,6 +10,7 @@ import { EmphasizedRowValue, Row, RowKey, Rows } from '@/src/components/common/R
 import { MoreActionsDropdown } from '@/src/components/dropdown/MoreActionsDropdown'
 import { GoToExplorer } from '@/src/components/helpers/GoToExplorer'
 import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
+import { ButtonTab, ButtonTabs } from '@/src/components/tabs/ButtonTabs'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { CollateralSwap, Long, Short } from '@/src/pagePartials/strategy/strategies/StrategyItem'
@@ -21,6 +22,7 @@ const Title = styled(BaseTitle)`
 `
 
 const VaultInfo = styled(Asset)`
+  height: auto;
   margin: 0 0 32px;
 `
 
@@ -48,6 +50,27 @@ const Strategy: NextPage = () => {
   ]
   const tokenSymbol = 'usdc'
   const tokenIcon = <TokenIcon dimensions={18} symbol={tokenSymbol} />
+  const [activeTab, setActiveTab] = useState<'positions' | 'history' | 'newStrategy'>('positions')
+  const tabs = useMemo(
+    () => [
+      {
+        text: 'Positions',
+        onClick: () => setActiveTab('positions'),
+        isActive: activeTab === 'positions',
+      },
+      {
+        text: 'History',
+        onClick: () => setActiveTab('history'),
+        isActive: activeTab === 'history',
+      },
+      {
+        text: 'New Strategy',
+        onClick: () => setActiveTab('newStrategy'),
+        isActive: activeTab === 'newStrategy',
+      },
+    ],
+    [activeTab],
+  )
 
   const createPosition = () => {
     // delete this after vault creation is implemented
@@ -98,10 +121,16 @@ const Strategy: NextPage = () => {
       </VaultInfo>
       {positions.length ? (
         <>
-          <div>tabs</div>
-          <div>tab 1</div>
-          <div>tab 2</div>
-          <div>{strategyCreationItems}</div>
+          <ButtonTabs>
+            {tabs.map(({ isActive, onClick, text }, index) => (
+              <ButtonTab isActive={isActive} key={`button_tab_${index}`} onClick={onClick}>
+                {text}
+              </ButtonTab>
+            ))}
+          </ButtonTabs>
+          {activeTab === 'positions' && <>Positions list</>}
+          {activeTab === 'history' && <>History list</>}
+          {activeTab === 'newStrategy' && <>{strategyCreationItems}</>}
         </>
       ) : (
         <>
