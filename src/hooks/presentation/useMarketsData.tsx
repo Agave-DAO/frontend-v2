@@ -7,7 +7,7 @@ import { useGetMarketsData } from '@/src/hooks/queries/useGetMarketsData'
 import { useGetRewardTokenData } from '@/src/hooks/queries/useGetRewardTokenData'
 import { fromWei } from '@/src/utils/common'
 import { isSameAddress } from '@/src/utils/isSameAddress'
-import { getIncentiveRate as calculateIncentiveRate, getPriceShares } from '@/src/utils/markets'
+import { getIncentiveRate as calculateIncentiveRate } from '@/src/utils/markets'
 
 /**
  * Returns the AgaveMarketData for a given array of reserve tokens addresses.
@@ -27,7 +27,8 @@ export const useMarketsData = () => {
       return address
     }),
   )
-  const rewardTokenData = useGetRewardTokenData()?.pools[0]
+
+  const rewardTokenData = useGetRewardTokenData()
 
   /* Get the market data for a given token address. */
   const getMarket = useCallback(
@@ -138,7 +139,7 @@ export const useMarketsData = () => {
       const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
       tokenAddress = tokenInfo.extensions.isNative ? agaveTokens.wrapperToken.address : tokenAddress
 
-      if (!rewardTokenData) {
+      if (!rewardTokenData?.priceShares) {
         return ZERO_BN
       }
 
@@ -167,7 +168,7 @@ export const useMarketsData = () => {
         return calculateIncentiveRate({
           emissionPerSeconds,
           tokenSupply,
-          priceShares: rewardTokenData ? getPriceShares(rewardTokenData) : ZERO_BN,
+          priceShares: rewardTokenData.priceShares,
           tokenAddress,
           tokenPrice,
         })
