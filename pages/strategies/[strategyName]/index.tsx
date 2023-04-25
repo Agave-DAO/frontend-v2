@@ -41,7 +41,7 @@ const Strategy: NextPage = () => {
   const items = [
     {
       text: 'Edit name',
-      onClick: () => openCreateVaultModal(strategyName),
+      onClick: () => openCreateVaultModal(getStrategyAddress),
     },
     {
       text: 'Withdraw',
