@@ -15,9 +15,6 @@ import { UserStakeClaimCard } from '@/src/pagePartials/stake/UserStakeClaimCard'
 import { UserStakedCard } from '@/src/pagePartials/stake/UserStakedCard'
 
 const Title = styled(BaseTitle)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-top: 23px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
@@ -58,21 +55,17 @@ const StakeClaim = styled(UserStakeClaimCard)`
   }
 `
 
-const Button = styled(ActionButton)`
-  cursor: pointer;
-`
-
 const Stake: NextPage = () => {
   return (
     <>
-      <Title>
+      <Title hasExtraControls>
         Staking
-        <Button
+        <ActionButton
           onClick={() => window.open('https://swap.cow.fi/#/100/swap/XDAI/AGVE', '_blank')}
           variant="ultraLight"
         >
           Buy <b>AGVE</b>
-        </Button>
+        </ActionButton>
       </Title>
       <Paragraph>
         Staking Agave in the Safety Module helps to secure the protocol in exchange for protocol

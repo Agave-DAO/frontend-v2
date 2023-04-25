@@ -1,15 +1,37 @@
 import styled from 'styled-components'
 
 import { ButtonDark } from '@/src/components/buttons/Button'
-import { Modal } from '@/src/components/modals/Modal'
+import { Modal as BaseModal } from '@/src/components/modals/Modal'
+import { BaseParagraph } from '@/src/components/text/BaseParagraph'
+import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { chainsConfig } from '@/src/config/web3'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
+
+const Modal = styled(BaseModal)`
+  .close {
+    display: none;
+  }
+`
+
+const Title = styled(BaseTitle)`
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+`
+
+const Paragraph = styled(BaseParagraph)`
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+`
 
 const NetworkButtons = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin: 0 auto;
+  max-width: 400px;
   min-height: 200px;
   padding: 0 20px;
   row-gap: 10px;
@@ -17,17 +39,24 @@ const NetworkButtons = styled.div`
 `
 
 const Button = styled(ButtonDark)`
+  font-weight: 600;
   height: 48px;
   width: 100%;
-  font-weight: 600;
 `
 
-export const ModalSwitchNetwork: React.FC = ({ ...restProps }) => {
+export const SwitchNetworkModal: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
   const { pushNetwork, setAppChainId } = useWeb3Connection()
   const chainOptions = Object.values(chainsConfig)
 
   return (
-    <Modal size="sm" title="Switch to a valid network" {...restProps}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        return true
+      }}
+    >
+      <Title>Wrong network</Title>
+      <Paragraph>Please select a valid network from the list.</Paragraph>
       <NetworkButtons>
         {chainOptions.map((item, index) => (
           <Button

@@ -14,3 +14,7 @@ export const Body = styled.div`
     padding: 56px 95px;
   }
 `
+
+Body.defaultProps = {
+  role: 'dialog',
+}

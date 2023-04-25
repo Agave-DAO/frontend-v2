@@ -29,6 +29,10 @@ const Close = styled(BaseClose)`
   }
 `
 
+Close.defaultProps = {
+  tabIndex: -1,
+}
+
 export const Header: React.FC<{ onClose: () => void }> = ({ onClose, ...restProps }) => (
   <Wrapper
     onClick={(e) => {
@@ -37,6 +41,6 @@ export const Header: React.FC<{ onClose: () => void }> = ({ onClose, ...restProp
     {...restProps}
   >
     <Logo />
-    <Close onClick={onClose} tabIndex={-1} />
+    <Close onClick={onClose} />
   </Wrapper>
 )

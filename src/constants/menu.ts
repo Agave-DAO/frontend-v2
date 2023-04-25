@@ -7,4 +7,8 @@ export const sections = [
     href: '/stake',
     section: 'Stake',
   },
+  {
+    href: '/strategies',
+    section: 'Strategies',
+  },
 ] as const

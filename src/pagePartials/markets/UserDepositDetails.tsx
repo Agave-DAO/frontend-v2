@@ -13,7 +13,7 @@ import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDepositsInformationByToken } from '@/src/hooks/presentation/useUserDepositsInformationByToken'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const UserDepositsImp: React.FC<{
@@ -77,7 +77,7 @@ export const UserDepositDetails = withGenericSuspense(
       tokenAddress,
       userAddress,
     })
-    const { openDepositWithdrawModal } = useModalsContext()
+    const { openDepositWithdrawModal } = useTokenActionsModalsContext()
 
     const items = [
       {

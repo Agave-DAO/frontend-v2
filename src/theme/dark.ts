@@ -117,6 +117,14 @@ export const dark = {
     color: textColor,
     colorHover: textColor,
   },
+  buttonDarker: {
+    backgroundColor: mainDark4,
+    backgroundColorHover: mainDark3,
+    borderColor: 'transparent',
+    borderColorHover: 'transparent',
+    color: textColor,
+    colorHover: textColor,
+  },
   buttonPrimaryDark: {
     backgroundColor: mainDark3,
     backgroundColorHover: mainDark4,
@@ -259,6 +267,21 @@ export const dark = {
     },
     placeholder: {
       color: textColor50,
+    },
+  },
+  textFieldLight: {
+    backgroundColor: lighterGray,
+    borderColor: 'transparent',
+    color: secondary,
+    errorColor: error,
+    successColor: success,
+    active: {
+      backgroundColor: lighterGray,
+      borderColor: 'transparent',
+      color: secondary,
+    },
+    placeholder: {
+      color: secondary50,
     },
   },
   header: {

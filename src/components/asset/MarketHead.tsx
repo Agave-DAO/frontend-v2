@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import styled from 'styled-components'
 
 import { Head, HeadContents, Icon } from '@/src/components/asset/Asset'
@@ -35,9 +34,7 @@ export const MarketHead: React.FC<Props> = ({
         <AssetTitle>Market Size</AssetTitle>
         <AssetValue tokenValue={tokenValue} usdValue={usdValue} />
       </HeadContents>
-      <Link href={href} legacyBehavior passHref>
-        <AGoTo />
-      </Link>
+      <AGoTo href={href} />
     </Head>
   )
 }

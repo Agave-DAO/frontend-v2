@@ -1,35 +1,16 @@
 import { useRouter } from 'next/router'
-import { HTMLAttributes, useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 import { ButtonMini } from '@/src/components/buttons/ButtonMini'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
-import Modal from '@/src/components/modals/BaseModal'
-import { Body } from '@/src/components/modals/Body'
 import { BorrowRepay } from '@/src/components/modals/BorrowRepay'
 import { DepositWithdraw } from '@/src/components/modals/DepositWithdraw'
-import { Header } from '@/src/components/modals/Header'
-import { Overlay } from '@/src/components/modals/Overlay'
+import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { BorrowRepayTabs, DepositWithdrawTabs } from '@/types/modal'
 import { Token } from '@/types/token'
-
-const Inner = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  margin: 0 auto;
-  max-width: 100%;
-  width: ${({ theme: { layout } }) => layout.maxWidth};
-`
-
-const Contents = styled.div`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-`
 
 const ActionsWrapper = styled.div`
   align-items: center;
@@ -43,19 +24,13 @@ const ActionsWrapper = styled.div`
   }
 `
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
-  closeOnBackgroundClick?: boolean
-  onClose: () => void
-}
-
-interface ActionsModalProps extends Props {
+interface Props extends ModalProps {
   onTokenSelect: (token: Token | null) => void
   symbol: string
 }
 
-export const ActionsModal: React.FC<ActionsModalProps> = ({
+const ActionsModal: React.FC<Props> = ({
   children,
-  closeOnBackgroundClick = false,
   onClose,
   onTokenSelect,
   symbol,
@@ -65,73 +40,30 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
 
   const closeModalAndGo = useCallback(() => {
     router.push(`/markets/${symbol}`)
-    onClose()
+
+    if (onClose) {
+      onClose()
+    }
   }, [onClose, router, symbol])
 
-  const close = useCallback(
-    (e: { key: string }) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    },
-    [onClose],
-  )
-
-  useEffect(() => {
-    window.addEventListener('keyup', close)
-
-    return () => window.removeEventListener('keyup', close)
-  }, [close, onClose])
-
   return (
-    <Modal>
-      <Overlay
-        aria-describedby="modalDescription"
-        aria-labelledby="modalTitle"
-        className="modal"
-        onBlur={() => {
-          /**
-           * Remove event listener on blur to prevent multiple "close modal" event listeners
-           * if the user opens another modal while this one is open
-           */
-          window.removeEventListener('keyup', close)
-        }}
-        onClick={(e) => {
-          e.stopPropagation()
-          if (closeOnBackgroundClick) {
-            onClose()
-          }
-        }}
-        tabIndex={-1}
-        {...restProps}
-      >
-        <RequiredConnection>
-          <Inner>
-            <Header onClose={onClose} />
-            <Body
-              onClick={(e) => {
-                e.stopPropagation()
-              }}
-              role="dialog"
-            >
-              <Contents id="modalDescription">
-                <ActionsWrapper>
-                  <TokenDropdown activeTokenSymbol={symbol} onChange={onTokenSelect} />
-                  <ButtonMini onClick={closeModalAndGo} variant="dark">
-                    More Info
-                  </ButtonMini>
-                </ActionsWrapper>
-                {children}
-              </Contents>
-            </Body>
-          </Inner>
-        </RequiredConnection>
-      </Overlay>
+    <Modal onClose={onClose} {...restProps}>
+      <RequiredConnection>
+        <>
+          <ActionsWrapper>
+            <TokenDropdown activeTokenSymbol={symbol} onChange={onTokenSelect} />
+            <ButtonMini onClick={closeModalAndGo} variant="dark">
+              More Info
+            </ButtonMini>
+          </ActionsWrapper>
+          {children}
+        </>
+      </RequiredConnection>
     </Modal>
   )
 }
 
-interface DepositWithdrawModalProps extends Props {
+interface DepositWithdrawModalProps extends ModalProps {
   activeTab?: DepositWithdrawTabs
   token: Token | null
 }
@@ -153,7 +85,7 @@ export const DepositWithdrawModal: React.FC<DepositWithdrawModalProps> = ({
   )
 }
 
-interface BorrowRepayModalProps extends Props {
+interface BorrowRepayModalProps extends ModalProps {
   activeTab?: BorrowRepayTabs
   mode: InterestRateMode
   token: Token | null

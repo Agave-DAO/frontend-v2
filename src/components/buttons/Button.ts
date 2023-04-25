@@ -107,6 +107,10 @@ export const ButtonDark = styled(BaseButton)`
   ${({ theme: { buttonDark } }) => buttonVariantCSS(buttonDark)}
 `
 
+export const ButtonDarker = styled(BaseButton)`
+  ${({ theme: { buttonDarker } }) => buttonVariantCSS(buttonDarker)}
+`
+
 export const ButtonLight = styled(BaseButton)`
   ${({ theme: { buttonLight } }) => buttonVariantCSS(buttonLight)}
 `

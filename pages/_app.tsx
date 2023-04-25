@@ -17,9 +17,11 @@ import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { Head } from '@/src/pagePartials/index/Head'
 import { TransactionNotificationProvider } from '@/src/providers/TransactionNotificationProvider'
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
-import ModalsProvider from '@/src/providers/modalsProvider'
+import MinHealthConfigurationModalProvider from '@/src/providers/minHealthConfigurationModalProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
+import TokenActionsModalProvider from '@/src/providers/tokenActionsModalProvider'
 import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
+import VaultModalProvider from '@/src/providers/vaultModalProvider'
 
 import 'sanitize.css'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -90,13 +92,19 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               <TransactionNotificationProvider>
                 <CookiesWarningProvider>
                   <TokenIconsProvider>
-                    <ModalsProvider>
-                      <Header />
-                      <Scroll>
-                        <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
-                        <Footer />
-                      </Scroll>
-                    </ModalsProvider>
+                    <MinHealthConfigurationModalProvider>
+                      <TokenActionsModalProvider>
+                        <VaultModalProvider>
+                          <Header />
+                          <Scroll>
+                            <Container as="main">
+                              {getLayout(<Component {...pageProps} />)}
+                            </Container>
+                            <Footer />
+                          </Scroll>
+                        </VaultModalProvider>
+                      </TokenActionsModalProvider>
+                    </MinHealthConfigurationModalProvider>
                   </TokenIconsProvider>
                 </CookiesWarningProvider>
               </TransactionNotificationProvider>

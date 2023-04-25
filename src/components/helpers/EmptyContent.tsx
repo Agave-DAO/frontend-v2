@@ -17,15 +17,15 @@ export const Title = styled.h1`
   color: ${({ theme: { colors } }) => colors.textColor};
   font-size: 1.6rem;
   font-weight: 700;
-  line-height: 1.2rem;
+  line-height: 1.2;
   margin: 0 0 8px;
 `
 
-export const Text = styled.p`
+export const Text = styled.div`
   color: ${({ theme: { colors } }) => colors.textColor};
   font-size: 1.4rem;
   font-weight: 400;
-  line-height: 1.5rem;
+  line-height: 1.5;
   margin: 0;
 `
 
@@ -34,7 +34,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     text: string
     href: string
   }
-  text: string
+  text: string | React.ReactNode
   title: string
 }
 

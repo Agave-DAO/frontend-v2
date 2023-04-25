@@ -22,7 +22,7 @@ import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHea
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useBorrowStepInitial } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useMinHealthConfigurationModalContext } from '@/src/providers/minHealthConfigurationModalProvider'
 import { NumberType } from '@/src/utils/format'
 import { Token } from '@/types/token'
 
@@ -101,7 +101,7 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
     tokenInputStatusText,
   } = useBorrowStepInitial({ amount, tokenAddress })
   const market = useMarketsData().getMarket(tokenAddress)
-  const { openMinHealthConfigurationModal } = useModalsContext()
+  const { openMinHealthConfigurationModal } = useMinHealthConfigurationModalContext()
 
   const onToggleInterestRateMode = (isToggled: boolean) => {
     onInterestRateSelect(isToggled ? InterestRateMode.stable : InterestRateMode.variable)

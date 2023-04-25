@@ -2,7 +2,7 @@ import { ChangeEvent, HTMLAttributes, createRef, useCallback, useEffect, useStat
 import styled, { keyframes } from 'styled-components'
 
 import { Range } from '@/src/components/form/Range'
-import Modal from '@/src/components/modals/BaseModal'
+import ModalPortal from '@/src/components/modals/ModalPortal'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { usePersistedState } from '@/src/hooks/usePersistedState'
 
@@ -200,15 +200,10 @@ const RangeSlider = ({
 }
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
-  closeOnBackgroundClick?: boolean
   onClose: () => void
 }
 
-export const MinHealthConfigurationModal: React.FC<Props> = ({
-  closeOnBackgroundClick = true,
-  onClose,
-  ...restProps
-}) => {
+export const MinHealthConfigurationModal: React.FC<Props> = ({ onClose, ...restProps }) => {
   const [currentMSHF, setMSHF] = usePersistedState('minSafeHF', MIN_SAFE_HEALTH_FACTOR.toNumber())
   const parsedMSHF = currentMSHF ? currentMSHF / 1000 : MIN_SAFE_HEALTH_FACTOR.toNumber() / 1000
   const node = createRef<HTMLDivElement>()
@@ -241,13 +236,10 @@ export const MinHealthConfigurationModal: React.FC<Props> = ({
   }, [node])
 
   return (
-    <Modal>
+    <ModalPortal>
       <Wrapper
         onClick={(e) => {
           e.stopPropagation()
-          if (closeOnBackgroundClick) {
-            handleCloseAndSave()
-          }
         }}
         tabIndex={-1}
         {...restProps}
@@ -276,6 +268,6 @@ export const MinHealthConfigurationModal: React.FC<Props> = ({
           </Contents>
         </Inner>
       </Wrapper>
-    </Modal>
+    </ModalPortal>
   )
 }

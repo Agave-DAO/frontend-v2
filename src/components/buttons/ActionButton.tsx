@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { ChevronRight } from '@/src/components/assets/ChevronRight'
 import {
   ButtonDark as BaseButtonDark,
+  ButtonDarker as BaseButtonDarker,
   ButtonLight as BaseButtonLight,
   ButtonPrimary as BaseButtonPrimary,
   ButtonUltraLight as BaseButtonUltraLight,
@@ -60,6 +61,19 @@ const ButtonDark = styled(BaseButtonDark)`
   }
 `
 
+const ButtonDarker = styled(BaseButtonDarker)`
+  svg > path,
+  &:disabled:hover svg > path {
+    fill: ${({ theme: { buttonDarker } }) => buttonDarker.color};
+  }
+
+  &:hover {
+    svg > path {
+      fill: ${({ theme: { buttonDarker } }) => buttonDarker.colorHover};
+    }
+  }
+`
+
 const ButtonLight = styled(BaseButtonLight)`
   svg > path,
   &:disabled:hover svg > path {
@@ -87,7 +101,7 @@ const ButtonUltraLight = styled(BaseButtonUltraLight)`
 `
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'dark' | 'light' | 'ultraLight'
+  variant?: 'primary' | 'dark' | 'darker' | 'light' | 'ultraLight'
 }
 
 export const ActionButton: React.FC<Props> = ({ children, variant = 'primary', ...restProps }) => (
@@ -97,12 +111,14 @@ export const ActionButton: React.FC<Props> = ({ children, variant = 'primary', .
         ? ButtonLight
         : variant === 'dark'
         ? ButtonDark
+        : variant === 'darker'
+        ? ButtonDarker
         : variant === 'ultraLight'
         ? ButtonUltraLight
         : ButtonPrimary
     }
     {...restProps}
   >
-    {children} <ChevronRight />
+    <span>{children}</span> <ChevronRight />
   </Wrapper>
 )
