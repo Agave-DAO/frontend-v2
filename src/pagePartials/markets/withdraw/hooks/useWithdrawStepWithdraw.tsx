@@ -17,8 +17,8 @@ export const useWithdrawStepWithdraw = ({
   tokenAddress: string
 }) => {
   const { address: userAddress } = useWeb3ConnectedApp()
-  const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
-  const WXDAIGateway = useContractInstance(WETHGateway__factory, 'WETHGateway')
+  const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool', true)
+  const WXDAIGateway = useContractInstance(WETHGateway__factory, 'WETHGateway', true)
   const sendTx = useTransaction()
   const { mutate: refetchUserReservesData } = useGetUserReservesData()
   const [, refetchUserAccountData] = useGetUserAccountData(userAddress)

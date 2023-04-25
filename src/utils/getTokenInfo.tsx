@@ -1,4 +1,4 @@
-import { isAddress } from 'ethers/lib/utils'
+import { isAddress } from '@ethersproject/address'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
 

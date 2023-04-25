@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { BigNumber } from '@ethersproject/bignumber'
 import { BigNumberInput } from 'big-number-input'
-import { BigNumber } from 'ethers/lib/ethers'
 
 import { TextfieldProps, TextfieldStatus } from '@/src/components/form/Textfield'
 

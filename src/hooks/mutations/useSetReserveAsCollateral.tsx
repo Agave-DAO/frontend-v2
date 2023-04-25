@@ -5,7 +5,7 @@ import useTransaction from '@/src/hooks/useTransaction'
 import { AgaveLending__factory } from '@/types/generated/typechain'
 
 export const useSetReserveAsCollateral = () => {
-  const contract = useContractInstance(AgaveLending__factory, 'AgaveLendingPool')
+  const contract = useContractInstance(AgaveLending__factory, 'AgaveLendingPool', true)
   const txSender = useTransaction()
 
   return useCallback(
