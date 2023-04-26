@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
-import { RewardPair } from '@/src/components/common/RewardPair'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
+import { RewardPair } from '@/src/components/token/RewardPair'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { ApproximateBalance, Rewards as RewardsTooltip } from '@/src/constants/tooltips'
 import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'

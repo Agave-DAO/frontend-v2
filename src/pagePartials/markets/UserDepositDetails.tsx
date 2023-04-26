@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
-import { InnerCard } from '@/src/components/common/InnerCard'
-import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
+import { InnerCard } from '@/src/components/card/InnerCard'
 import { EmphasizedRowValue, Row, RowKey, RowValue, Rows } from '@/src/components/common/Rows'
+import { MoreActionsDropdown } from '@/src/components/dropdown/MoreActionsDropdown'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Text as ECText, Title as ECTitle } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'

@@ -7,10 +7,10 @@ import styled from 'styled-components'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
 import { SWRConfig } from 'swr'
 
+import { Footer } from '@/src/components/footer/Footer'
 import { Header } from '@/src/components/header/Header'
 import { InnerContainer } from '@/src/components/helpers/InnerContainer'
 import SafeSuspense from '@/src/components/helpers/SafeSuspense'
-import { Footer } from '@/src/components/layout/Footer'
 import Toast from '@/src/components/toast/Toast'
 import TooltipConfig from '@/src/components/tooltip/TooltipConfig'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
@@ -49,7 +49,6 @@ const Scroll = styled.div`
 const Container = styled(InnerContainer)`
   flex-grow: 1;
   overflow: hidden;
-  padding-bottom: 40px;
   padding-top: 25px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.desktopStart}) {

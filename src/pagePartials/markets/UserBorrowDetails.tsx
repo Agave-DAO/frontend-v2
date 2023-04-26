@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
-import { HealthFactor } from '@/src/components/common/HealthFactor'
-import { InnerCard } from '@/src/components/common/InnerCard'
+import { InnerCard } from '@/src/components/card/InnerCard'
 import { EmphasizedRowValue, Row, RowKey, RowValue, Rows } from '@/src/components/common/Rows'
+import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Text as ECText, Title as ECTitle } from '@/src/components/helpers/EmptyContent'
 import { Percentage } from '@/src/components/helpers/Percentage'

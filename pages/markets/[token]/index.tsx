@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ButtonDark, ButtonPrimary } from '@/src/components/buttons/Button'
-import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
+import { MoreActionsDropdown } from '@/src/components/dropdown/MoreActionsDropdown'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'

@@ -4,20 +4,20 @@ import styled from 'styled-components'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import TxButton from '@/src/components/buttons/txButton'
-import { StepAuxiliaryAction } from '@/src/components/common/StepAuxiliaryAction'
 import {
   Rows as BaseRows,
   Button,
   ButtonWrapper,
+  FormCard,
   Row,
   RowKey,
   RowValueBig,
-  StepsCard,
-} from '@/src/components/common/StepsCard'
+} from '@/src/components/card/FormCard'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
+import { StepAuxiliaryAction } from '@/src/components/step/StepAuxiliaryAction'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { agaveTokens } from '@/src/config/agaveTokens'
@@ -139,7 +139,7 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
     )
 
     return (
-      <StepsCard {...restProps}>
+      <FormCard {...restProps}>
         <StepAuxiliaryAction
           button={{
             text: 'Use max',
@@ -184,7 +184,7 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
             )}
           </ButtonWrapper>
         </StepForm>
-      </StepsCard>
+      </FormCard>
     )
   },
   ({ ...restProps }) => <SkeletonLoading style={{ height: '311px' }} {...restProps} />,

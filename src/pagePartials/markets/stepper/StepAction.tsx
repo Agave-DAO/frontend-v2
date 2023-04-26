@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { Button, ButtonWrapper, StepActionText } from '@/src/components/common/StepsCard'
+import { ActionText, Button, ButtonWrapper } from '@/src/components/card/FormCard'
 import { Step } from '@/src/pagePartials/markets/stepper/types'
 
 const Wrapper = styled(ButtonWrapper)``
@@ -11,7 +11,7 @@ export const StepAction = ({ actionText, description, mainAction, status }: Step
       <Button disabled={status === 'processing'} onClick={mainAction}>
         {actionText}
       </Button>
-      <StepActionText>{description}</StepActionText>
+      <ActionText>{description}</ActionText>
     </Wrapper>
   )
 }

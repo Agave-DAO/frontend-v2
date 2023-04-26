@@ -25,7 +25,7 @@ const Link = styled.a`
   text-decoration: none;
 `
 
-export const StepsCard = styled.div`
+export const FormCard = styled.div`
   --border-radius: 16px;
   --padding-top: 32px;
   --padding-horizontal: 8px;
@@ -137,7 +137,7 @@ export const Button = styled(ButtonPrimary)`
   }
 `
 
-export const StepActionText = styled.span`
+export const ActionText = styled.span`
   ${TextCSS}
 
   a {
@@ -150,7 +150,7 @@ export const StepActionText = styled.span`
   }
 `
 
-export const StepActionButton = styled.button`
+export const ActionButton = styled.button`
   ${TextCSS}
   align-items: center;
   background: none;

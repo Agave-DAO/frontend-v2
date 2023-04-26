@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
 import { DevelopedBy } from '@/src/components/assets/DevelopedBy'
-import { Logo } from '@/src/components/common/Logo'
-import { SocialLinks } from '@/src/components/common/SocialLinks'
+import { SocialLinks } from '@/src/components/footer/SocialLinks'
+import { Logo } from '@/src/components/header/Logo'
 import { InnerContainer } from '@/src/components/helpers/InnerContainer'
 import { links } from '@/src/constants/links'
 
@@ -15,6 +15,7 @@ const Wrapper = styled(InnerContainer)`
   justify-content: center;
   margin-top: auto;
   padding-bottom: 120px;
+  padding-top: 40px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     justify-content: space-between;
