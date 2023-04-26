@@ -6,14 +6,13 @@ import styled from 'styled-components'
 import { Asset, Body, Head } from '@/src/components/asset/Asset'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { List } from '@/src/components/common/List'
-import { EmphasizedRowValue, Row, RowKey, Rows } from '@/src/components/common/Rows'
 import { MoreActionsDropdown } from '@/src/components/dropdown/MoreActionsDropdown'
 import { GoToExplorer } from '@/src/components/helpers/GoToExplorer'
 import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { ButtonTab, ButtonTabs } from '@/src/components/tabs/ButtonTabs'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
-import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { CollateralSwap, Long, Short } from '@/src/pagePartials/strategy/strategies/StrategyItem'
+import { VaultInfo } from '@/src/pagePartials/strategy/vaults/VaultInfo'
 import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
 const Title = styled(BaseTitle)`
@@ -21,7 +20,7 @@ const Title = styled(BaseTitle)`
   text-transform: capitalize;
 `
 
-const VaultInfo = styled(Asset)`
+const VaultDetails = styled(Asset)`
   height: auto;
   margin: 0 0 32px;
 `
@@ -48,8 +47,6 @@ const Strategy: NextPage = () => {
       onClick: () => console.log('withdraw'),
     },
   ]
-  const tokenSymbol = 'usdc'
-  const tokenIcon = <TokenIcon dimensions={18} symbol={tokenSymbol} />
   const [activeTab, setActiveTab] = useState<'positions' | 'history' | 'newStrategy'>('positions')
   const tabs = useMemo(
     () => [
@@ -93,24 +90,9 @@ const Strategy: NextPage = () => {
         <span>Vault {strategyName}</span>
         <GoToExplorer address={getStrategyAddress} text="Vault" />
       </Title>
-      <VaultInfo>
+      <VaultDetails>
         <Head>
-          <Rows>
-            <Row variant="dark">
-              <RowKey>Your Vault balance</RowKey>
-              <EmphasizedRowValue>
-                {tokenIcon}
-                1,000.00
-              </EmphasizedRowValue>
-            </Row>
-            <Row>
-              <RowKey>Value locked</RowKey>
-              <EmphasizedRowValue>
-                {tokenIcon}
-                100.00
-              </EmphasizedRowValue>
-            </Row>
-          </Rows>
+          <VaultInfo />
         </Head>
         <Body>
           <ActionsWrapper>
@@ -118,7 +100,7 @@ const Strategy: NextPage = () => {
             <ActionButton onClick={() => console.log('Deposit')}>Deposit</ActionButton>
           </ActionsWrapper>
         </Body>
-      </VaultInfo>
+      </VaultDetails>
       {positions.length ? (
         <>
           <ButtonTabs>
