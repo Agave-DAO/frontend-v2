@@ -42,24 +42,27 @@ const useUserAllAssetsData = () => {
     const liquidationThreshold = marketData?.assetData.liquidationThreshold
     const tokenInfo = agaveTokens.getTokenByAddress(marketData.tokenAddress)
 
-    /* Calculating the total amount of collateral the user has deposited for a given asset. */
-    const totalUserCollateralForAssetInDAI = userDeposits
-      .filter(({ assetAddress }) => isSameAddress(assetAddress, marketData.tokenAddress))
-      .reduce((acc, next) => acc.add(next.depositedAmountInDAI), ZERO_BN)
-
     /* Calculating the total amount of DAI the user has borrowed for a given asset. */
     const totalUserBorrowedForAssetInDAI = userBorrows
       .filter(({ assetAddress }) => isSameAddress(assetAddress, marketData.tokenAddress))
       .reduce((acc, next) => acc.add(next.borrowedAmountInDAI), ZERO_BN)
 
-    /* Calculating the total amount of DAI the user can borrow for a given asset. */
-    const collateralBorrowCapacity = ltv.mul(totalUserCollateralForAssetInDAI).div(10000)
+    let collateralBorrowCapacity = ZERO_BN
+    let collateralMaxCapacity = ZERO_BN
 
-    /* Calculating the total amount of DAI the user can borrow for a given asset. */
-    const collateralMaxCapacity = liquidationThreshold
-      .mul(totalUserCollateralForAssetInDAI)
-      .div(10000)
+    // calculate colalteral values if asset is enabled as collateral.
+    if (marketData.assetData.usageAsCollateralEnabled) {
+      /* Calculating the total amount of collateral the user has deposited for a given asset. */
+      const totalUserCollateralForAssetInDAI = userDeposits
+        .filter(({ assetAddress }) => isSameAddress(assetAddress, marketData.tokenAddress))
+        .reduce((acc, next) => acc.add(next.depositedAmountInDAI), ZERO_BN)
 
+      /* Calculating the total amount of DAI the user can borrow for a given asset. */
+      collateralBorrowCapacity = ltv.mul(totalUserCollateralForAssetInDAI).div(10000)
+
+      /* Calculating the total amount of DAI the user can borrow for a given asset. */
+      collateralMaxCapacity = liquidationThreshold.mul(totalUserCollateralForAssetInDAI).div(10000)
+    }
     return {
       borrowingEnabled: marketData.assetData.borrowingEnabled,
       liquidationThreshold: marketData.assetData.liquidationThreshold, // liquidation threshold is stored as a 4 decimal number
@@ -79,11 +82,11 @@ const useUserAllAssetsData = () => {
     [userAssetsData],
   )
 
-  // calculate total borrows value if borrowing is enabled
+  // calculate total borrows value
   const totalBorrowsValue = useMemo(
     () =>
       userAssetsData?.reduce(
-        (acc, next) => (next.borrowingEnabled ? acc.add(next.totalUserBorrowedForAssetInDAI) : acc),
+        (acc, next) => acc.add(next.totalUserBorrowedForAssetInDAI),
         ZERO_BN,
       ) || ZERO_BN,
     [userAssetsData],
@@ -125,10 +128,12 @@ function newHealthFactorGivenAssetsData({
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
 
   // Collateral Calculations
-  const changeCollateralMaxCapacity = fromWei(
-    userAssetData.liquidationThreshold.mul(amount).mul(userAssetData.assetPrice),
-    tokenInfo.decimals + 4, // sum 4 decimals of liquidation threshold
-  )
+  const changeCollateralMaxCapacity = collateral
+    ? fromWei(
+        userAssetData.liquidationThreshold.mul(amount).mul(userAssetData.assetPrice),
+        tokenInfo.decimals + 4, // sum 4 decimals of liquidation threshold
+      )
+    : ZERO_BN
 
   const newTotalCollateralMaxCapacity = increase
     ? totalCollateralMaxCapacity.add(changeCollateralMaxCapacity)
@@ -226,7 +231,6 @@ export function useNewHealthFactorCalculator(marketAddress: string) {
   const newHealthFactor = useCallback(
     ({ amount, type }: { amount: BigNumber; type: ActionType }): BigNumber => {
       if (!userAssetData) return ZERO_BN
-
       return newHealthFactorGivenAssetsData({
         amount,
         tokenAddress: marketAddress,
