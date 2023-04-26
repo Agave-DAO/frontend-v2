@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 
-export const AssetsList = styled.div`
+export const AssetsList = styled.div<{ maxWidth?: string }>`
   display: grid;
   gap: 16px;
   grid-template-columns: 1fr;
   margin: 0 auto;
-  max-width: 952px;
+  max-width: ${({ maxWidth }) => maxWidth};
   width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
@@ -13,3 +13,7 @@ export const AssetsList = styled.div`
     grid-template-columns: 1fr 1fr;
   }
 `
+
+AssetsList.defaultProps = {
+  maxWidth: '952px',
+}
