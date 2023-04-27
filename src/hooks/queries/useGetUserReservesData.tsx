@@ -1,8 +1,8 @@
 import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import useSWR from 'swr'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { contracts } from '@/src/contracts/contracts'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { ChainsValues } from '@/types/chains'
 import { AaveProtocolDataProvider__factory } from '@/types/generated/typechain'
@@ -30,6 +30,7 @@ const fetchUserReserveData = async (
  */
 export const useGetUserReservesData = () => {
   const { address, appChainId, batchProvider } = useWeb3Connection()
+  const agaveTokens = useAgaveTokens()
 
   return useSWR(address ? [`user-reserves-data`, address] : null, async () => {
     if (!address) {

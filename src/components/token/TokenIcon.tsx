@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { useTokenIcons } from '@/src/providers/tokenIconsProvider'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 export const getIconBackgroundColor = (symbol?: string): string => {
   const symbolLowerCase = symbol?.toLowerCase() as string
@@ -58,7 +58,7 @@ interface Props {
 }
 
 export const TokenIcon: React.FC<Props> = ({ dimensions = 18, symbol, ...restProps }) => {
-  const tokens = useTokenIcons()
+  const tokens = useAgaveTokens().allTokens
   const [error, setError] = useState(false)
   const tokenImage = tokens.find(
     (token) => token.symbol.toLowerCase() === symbol.toLowerCase(),

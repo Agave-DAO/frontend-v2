@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesData'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { fromWei } from '@/src/utils/common'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 
@@ -34,6 +34,7 @@ export type UserBorrow = {
  */
 export const useUserBorrows = () => {
   const { data: userReservesData } = useGetUserReservesData()
+  const agaveTokens = useAgaveTokens()
 
   const { agaveMarketsData, getBorrowRate, getIncentiveRate } = useMarketsData()
 

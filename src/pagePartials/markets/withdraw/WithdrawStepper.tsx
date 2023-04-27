@@ -4,10 +4,10 @@ import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/card/
 import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { Steps } from '@/src/pagePartials/markets/stepper'
 import { useWithdrawSteps } from '@/src/pagePartials/markets/withdraw/hooks/useWithdrawSteps'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 interface WithdrawStepperInfoProps {
   amount: string
@@ -15,7 +15,7 @@ interface WithdrawStepperInfoProps {
 }
 
 const WithdrawStepperInfo = ({ amount, tokenAddress }: WithdrawStepperInfoProps) => {
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+  const tokenInfo = useAgaveTokens().getTokenByAddress(tokenAddress)
 
   const newHealthFactor = useNewHealthFactorCalculator(tokenAddress).newHealthFactor({
     amount: BigNumber.from(amount),

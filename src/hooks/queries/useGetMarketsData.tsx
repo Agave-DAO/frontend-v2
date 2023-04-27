@@ -5,9 +5,10 @@ import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import toast from 'react-hot-toast'
 import useSWR from 'swr'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
+import { IDAgaveTokens } from '@/src/config/agaveTokens'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { contracts } from '@/src/contracts/contracts'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 import { ChainsValues } from '@/types/chains'
@@ -98,16 +99,11 @@ const fetchAssetIncentiveData = async (
   tokenAddress: string,
   provider: JsonRpcBatchProvider,
   chainId: ChainsValues,
+  relatedTokens: {
+    agToken: string
+    variableDebtToken: string
+  },
 ) => {
-  const relatedTokens = agaveTokens.getRelatedTokensByAddress(tokenAddress)
-
-  const agToken = relatedTokens.find(({ type }) => type === 'ag')
-  const variableDebtToken = relatedTokens.find(({ type }) => type === 'variableDebt')
-
-  if (!agToken || !variableDebtToken) {
-    throw Error('Error on getting agToken/variableDebtToken')
-  }
-
   const contract = BaseIncentivesController__factory.connect(
     contracts.BaseIncentivesController.address[chainId],
     provider,
@@ -115,8 +111,8 @@ const fetchAssetIncentiveData = async (
 
   try {
     const [agTokenIncentiveData, variableDebtIncentiveData] = await Promise.all([
-      contract.getAssetData(agToken.address),
-      contract.getAssetData(variableDebtToken.address),
+      contract.getAssetData(relatedTokens.agToken),
+      contract.getAssetData(relatedTokens.variableDebtToken),
     ])
 
     return {
@@ -136,22 +132,39 @@ const fetchAssetIncentiveData = async (
  * Takes an array of token addresses, and returns an object with AgaveMarketData for each token
  */
 const fetchAgaveMarketsData = async ({
+  agaveTokens,
   chainId,
   provider,
-  reserveTokensAddresses,
 }: {
   chainId: ChainsValues
   provider: JsonRpcBatchProvider
-  reserveTokensAddresses: string[]
+  agaveTokens: IDAgaveTokens
 }) => {
   const reserveDataPromises: ReturnType<typeof fetchReserveData>[] = []
   const assetDataPromises: ReturnType<typeof fetchAssetConfigurationData>[] = []
   const incentiveDataPromises: ReturnType<typeof fetchAssetIncentiveData>[] = []
 
-  reserveTokensAddresses.forEach(async (tokenAddress) => {
-    reserveDataPromises.push(fetchReserveData(tokenAddress, provider, chainId))
-    assetDataPromises.push(fetchAssetConfigurationData(tokenAddress, provider, chainId))
-    incentiveDataPromises.push(fetchAssetIncentiveData(tokenAddress, provider, chainId))
+  const reserveTokens = agaveTokens.reserveTokens
+  const reserveTokensAddresses = reserveTokens.map((token) => token.address)
+
+  reserveTokens.forEach(async (token) => {
+    reserveDataPromises.push(fetchReserveData(token.address, provider, chainId))
+    assetDataPromises.push(fetchAssetConfigurationData(token.address, provider, chainId))
+
+    const relatedTokens = agaveTokens.getRelatedTokensByAddress(token.address)
+    const agToken = relatedTokens.find((item) => item.type === 'ag')?.address
+    const variableDebtToken = relatedTokens.find((item) => item.type === 'variableDebt')?.address
+
+    if (!agToken || !variableDebtToken) {
+      throw new Error(`Incetive tokens not found for reserve token ${token.address}}`)
+    }
+
+    incentiveDataPromises.push(
+      fetchAssetIncentiveData(token.address, provider, chainId, {
+        agToken,
+        variableDebtToken,
+      }),
+    )
   })
 
   const rawResults = await Promise.allSettled([
@@ -185,16 +198,17 @@ const fetchAgaveMarketsData = async ({
 
 // TODO warning with the number of batch calls.
 // If the array of token is too big, we can split the tokens array into smaller chunks (such as pagination)
-export const useGetMarketsData = (reserveTokensAddresses: string[]) => {
+export const useGetMarketsData = () => {
   const { appChainId, batchProvider, batchProviderFallback } = useWeb3Connection()
+  const agaveTokens = useAgaveTokens()
   const [toastDisplayed, setToastDisplayed] = useState(false)
 
   // Simple cacheKey to get the cache data in other uses.
   const { data, isLoading } = useSWR(
-    ['agave-tokens-data', reserveTokensAddresses],
-    async ([, tokens]) => {
+    ['agave-tokens-data', agaveTokens.reserveTokens],
+    async () => {
       const result = await fetchAgaveMarketsData({
-        reserveTokensAddresses: tokens,
+        agaveTokens,
         provider: batchProvider,
         chainId: appChainId,
       })
@@ -203,7 +217,7 @@ export const useGetMarketsData = (reserveTokensAddresses: string[]) => {
       }
 
       const fallbackResult = await fetchAgaveMarketsData({
-        reserveTokensAddresses: tokens,
+        agaveTokens,
         provider: batchProviderFallback,
         chainId: appChainId,
       })

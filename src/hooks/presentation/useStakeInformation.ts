@@ -19,6 +19,7 @@ const YEAR_IN_SECONDS = 60 * 60 * 24 * 365
 /**
  * This hook is used to get all the information needed to display the stake page
  * @returns
+ * stakedTokenAddress: Address of the staked token
  * isCooldownActive: Boolean that indicates if the user has activated the cooldown
  * isInUnstakeWindow: Boolean that indicates if the user is in the unstake window
  * userActivateCooldownFrom: Date when the user activated the cooldown
@@ -34,7 +35,7 @@ const YEAR_IN_SECONDS = 60 * 60 * 24 * 365
  */
 export const useStakeInformation = () => {
   const {
-    data: { cooldownSeconds, emissionPerSecond, totalStaked, unstakeWindow },
+    data: { cooldownSeconds, emissionPerSecond, stakedTokenAddress, totalStaked, unstakeWindow },
     refetch: refetchStakeData,
   } = useGetStakeTokenData()
   const { data: amountStaked, refetch: refetchUserAmountStaked } = useGetUserAmountInStake()
@@ -109,6 +110,7 @@ export const useStakeInformation = () => {
   return {
     isCooldownActive: activeCooldown.gt(0),
     isInUnstakeWindow,
+    stakedTokenAddress,
     activateCooldownFrom,
     activateCooldownTo,
     activateCooldownReady,

@@ -13,11 +13,11 @@ import {
 } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { chartColors } from '@/src/constants/common'
 import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
 import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { toNumber } from '@/src/utils/common'
 
@@ -25,6 +25,7 @@ export const CollateralInfo: React.FC<{ variant?: RowVariant }> = ({ variant, ..
   const { address } = useWeb3ConnectedApp()
   const depositsAsCollateral = useUserDeposits().filter((deposit) => deposit.asCollateral)
   const totalCollateral = useUserAccountDetails(address)?.userCollateral || ZERO_BN
+  const agaveTokens = useAgaveTokens()
 
   return (
     <CollapsableRowsHandler

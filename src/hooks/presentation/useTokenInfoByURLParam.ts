@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router'
 
-import { getTokenInfo } from '@/src/utils/getTokenInfo'
+import { useTokenInfo } from '@/src/hooks/useTokenInfo'
+import { Token } from '@/types/token'
 
 export const useMarketByURLParam = () => {
   const { query } = useRouter()
   const token = query.token as string
 
-  return getTokenInfo(token)
+  return useTokenInfo(token) as Token
 }

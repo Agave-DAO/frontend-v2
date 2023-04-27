@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { contracts } from '@/src/contracts/contracts'
 import { useGetVariableDebtBorrowAllowance } from '@/src/hooks/queries/useGetVariableDebtBorrowAllowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { VariableDebtToken__factory } from '@/types/generated/typechain'
 
@@ -17,6 +17,7 @@ export const useBorrowStepDelegate = ({
   tokenAddress: string
 }) => {
   const { appChainId } = useWeb3ConnectedApp()
+  const agaveTokens = useAgaveTokens()
   const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
   const variableDebtTokenAddress = agaveTokens.getProtocolTokenInfo(
     agaveTokens.wrapperToken.address,

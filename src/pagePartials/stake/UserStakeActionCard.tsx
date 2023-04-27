@@ -20,7 +20,6 @@ import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { StepAuxiliaryAction } from '@/src/components/step/StepAuxiliaryAction'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
@@ -41,12 +40,11 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
       amountAvailableToStake: userAmountAvailableToStake,
       isCooldownActive,
       refetchAllStakeData,
+      stakedTokenAddress,
     } = useStakeInformation()
 
-    const stakedTokenAddress = agaveTokens.stakeToken.address
-
     const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken', true)
-    const stakedToken = useContractInstance(ERC20__factory, agaveTokens.stakeToken.address, true)
+    const stakedToken = useContractInstance(ERC20__factory, stakedTokenAddress, true)
 
     const { approvedAmount, refetchAllowance } = useGetERC20Allowance(
       stakedTokenAddress,

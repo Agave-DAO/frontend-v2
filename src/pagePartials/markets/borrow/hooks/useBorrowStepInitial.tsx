@@ -4,13 +4,13 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 import { usePersistedState } from '@/src/hooks/usePersistedState'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { toWei } from '@/src/utils/common'
 
@@ -23,7 +23,7 @@ export function useBorrowStepInitial({
 }) {
   const { address: accountAddress } = useWeb3ConnectedApp()
   const [minSafeHF] = usePersistedState('minSafeHF', MIN_SAFE_HEALTH_FACTOR.toNumber())
-
+  const agaveTokens = useAgaveTokens()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const isNativeToken = tokenInfo.extensions.isNative
   const marketAddress = isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress

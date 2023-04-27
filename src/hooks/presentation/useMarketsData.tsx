@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 
-import { useGetStakingAgvePrice } from '../queries/useGetStakingAgvePrice'
-import { AgaveProtocolTokenType, agaveTokens } from '@/src/config/agaveTokens'
+import { AgaveProtocolTokenType } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useGetMarketsData } from '@/src/hooks/queries/useGetMarketsData'
 import { useGetRewardTokenData } from '@/src/hooks/queries/useGetRewardTokenData'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { fromWei } from '@/src/utils/common'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 import { getIncentiveRate as calculateIncentiveRate } from '@/src/utils/markets'
@@ -14,19 +14,9 @@ import { getIncentiveRate as calculateIncentiveRate } from '@/src/utils/markets'
  * @param {String} reserveTokensAddresses
  */
 export const useMarketsData = () => {
-  const marketAddresses = agaveTokens.reserveTokens.map(({ address }) => address)
+  const agaveTokens = useAgaveTokens()
 
-  const agaveMarketsData = useGetMarketsData(
-    marketAddresses.map((address) => {
-      const tokenInfo = agaveTokens.getTokenByAddress(address)
-
-      if (tokenInfo.extensions.isNative) {
-        return agaveTokens.wrapperToken.address
-      }
-
-      return address
-    }),
-  )
+  const agaveMarketsData = useGetMarketsData()
 
   const rewardTokenData = useGetRewardTokenData()
 
@@ -46,7 +36,7 @@ export const useMarketsData = () => {
 
       return marketFound
     },
-    [agaveMarketsData],
+    [agaveMarketsData, agaveTokens],
   )
 
   /* Returns the market size of a token. */
@@ -72,7 +62,7 @@ export const useMarketsData = () => {
         return { usd: ZERO_BN, wei: ZERO_BN }
       }
     },
-    [getMarket],
+    [agaveTokens, getMarket],
   )
 
   const getTotalBorrowed = useCallback(
@@ -90,7 +80,7 @@ export const useMarketsData = () => {
         return ZERO_BN
       }
     },
-    [getMarket],
+    [agaveTokens, getMarket],
   )
 
   const getDepositAPY = useCallback(
@@ -107,7 +97,7 @@ export const useMarketsData = () => {
         return ZERO_BN
       }
     },
-    [getMarket],
+    [agaveTokens, getMarket],
   )
 
   const getBorrowRate = useCallback(
@@ -131,7 +121,7 @@ export const useMarketsData = () => {
         }
       }
     },
-    [getMarket],
+    [agaveTokens, getMarket],
   )
 
   const getIncentiveRate = useCallback(
@@ -169,7 +159,7 @@ export const useMarketsData = () => {
           emissionPerSeconds,
           tokenSupply,
           priceShares: rewardTokenData.priceShares,
-          tokenAddress,
+          decimals: tokenInfo.decimals,
           tokenPrice,
         })
       } catch (e) {
@@ -177,7 +167,7 @@ export const useMarketsData = () => {
         return ZERO_BN
       }
     },
-    [getMarket, rewardTokenData],
+    [agaveTokens, getMarket, rewardTokenData],
   )
 
   return {
