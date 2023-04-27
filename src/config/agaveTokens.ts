@@ -37,11 +37,14 @@ export interface IDAgaveTokens {
   wrapperToken: Token
   reserveTokens: Token[]
   protocolTokens: AgaveProtocolTokens
+  stakeToken: Token
   allTokens: TokenWithType[]
   allIncentivesTokens: TokenWithType[]
   getRelatedTokensByAddress: (tokenAddress: string) => TokenInfo[]
   getTokenByAddress: (tokenAddress: string) => TokenWithType
-  getTokenByFieldAndValue: (fieldAndValue: ValidLookupFields) => TokenWithType | undefined
+  getTokenByFieldAndValue: (
+    fieldAndValue: Partial<RequiredFieldsOnly<Token>>,
+  ) => TokenWithType | undefined
   getProtocolTokenInfo: (reserveAddress: string, type: AgaveProtocolTokenType) => Token
 }
 

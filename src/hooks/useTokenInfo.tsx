@@ -1,6 +1,6 @@
 import { isAddress } from '@ethersproject/address'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 /**
  * A helper function that may not last long.
@@ -10,7 +10,13 @@ import { agaveTokens } from '@/src/config/agaveTokens'
  * If nothing is found, it throws an error.
  * @param token
  */
-export function getTokenInfo(token: string) {
+export function useTokenInfo(token?: string) {
+  const agaveTokens = useAgaveTokens()
+
+  if (!token) {
+    return
+  }
+
   if (isAddress(token)) {
     return agaveTokens.getTokenByAddress(token)
   }

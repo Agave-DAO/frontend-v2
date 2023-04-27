@@ -16,11 +16,11 @@ import TooltipConfig from '@/src/components/tooltip/TooltipConfig'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { Head } from '@/src/pagePartials/index/Head'
 import { TransactionNotificationProvider } from '@/src/providers/TransactionNotificationProvider'
+import AgaveTokensProvider from '@/src/providers/agaveTokensProvider'
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
 import MinHealthConfigurationModalProvider from '@/src/providers/minHealthConfigurationModalProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
 import TokenActionsModalProvider from '@/src/providers/tokenActionsModalProvider'
-import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
 import VaultModalProvider from '@/src/providers/vaultModalProvider'
 
 import 'sanitize.css'
@@ -90,7 +90,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
             <SafeSuspense>
               <TransactionNotificationProvider>
                 <CookiesWarningProvider>
-                  <TokenIconsProvider>
+                  <AgaveTokensProvider>
                     <MinHealthConfigurationModalProvider>
                       <TokenActionsModalProvider>
                         <VaultModalProvider>
@@ -104,7 +104,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                         </VaultModalProvider>
                       </TokenActionsModalProvider>
                     </MinHealthConfigurationModalProvider>
-                  </TokenIconsProvider>
+                  </AgaveTokensProvider>
                 </CookiesWarningProvider>
               </TransactionNotificationProvider>
             </SafeSuspense>

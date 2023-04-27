@@ -260,10 +260,15 @@ export const MinHealthConfigurationModal: React.FC<Props> = ({ onClose, ...restP
               <RangeSlider
                 max={10}
                 min={1}
-                onChange={(v) => setLocalMSHF(Number(v))}
+                onChange={(v) => {
+                  if (Number(v) === 1) {
+                    return setLocalMSHF(1.01) // set to 1.01 to avoid 1.0
+                  }
+                  setLocalMSHF(Number(v))
+                }}
                 value={localMSHF}
               />
-              <RangeValue>{localMSHF}</RangeValue>
+              <RangeValue>{localMSHF < 1.1 ? 1 : localMSHF}</RangeValue>
             </RangeWrapper>
           </Contents>
         </Inner>

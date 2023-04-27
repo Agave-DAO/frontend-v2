@@ -5,9 +5,9 @@ import { ZERO_BN } from '@/src/constants/bigNumber'
 import { fromWei } from '@/src/utils/common'
 
 export const getIncentiveRate = ({
+  decimals,
   emissionPerSeconds,
   priceShares,
-  tokenAddress,
   tokenPrice,
   tokenSupply,
 }: {
@@ -15,11 +15,8 @@ export const getIncentiveRate = ({
   emissionPerSeconds: BigNumber
   priceShares: BigNumber
   tokenPrice: BigNumber
-  tokenAddress: string
+  decimals: number
 }) => {
-  // get tokenDecimals by tokenAddress
-  const { decimals } = agaveTokens.getTokenByAddress(tokenAddress)
-
   const SECONDS_PER_YEAR = 31536000
 
   /* Converting the emission per second to emission per year. */

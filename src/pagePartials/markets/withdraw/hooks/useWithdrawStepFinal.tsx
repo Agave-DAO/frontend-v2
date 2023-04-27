@@ -2,8 +2,8 @@ import { useRouter } from 'next/router'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 import { formatAmount } from '@/src/utils/common'
 
@@ -15,7 +15,7 @@ export const useWithdrawStepFinal = ({
   tokenAddress: string
 }) => {
   const router = useRouter()
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+  const tokenInfo = useAgaveTokens().getTokenByAddress(tokenAddress)
   const formattedAmount = formatAmount(
     BigNumber.from(amount),
     tokenInfo.decimals,

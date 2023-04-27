@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 
 import { AgaveProtocolTokenType, TokenWithType } from '@/src/config/agaveTokens'
-import { useTokenIcons } from '@/src/providers/tokenIconsProvider'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { Token } from '@/types/token'
 
 export const useTokensLists = (
@@ -9,7 +9,7 @@ export const useTokensLists = (
   onChange?: (token: Token | null) => void,
 ) => {
   const [token, setToken] = useState<Token | null>()
-  const tokens = useTokenIcons()
+  const tokens = useAgaveTokens().allTokens
 
   const [searchString, setSearchString] = useState<string>('')
 

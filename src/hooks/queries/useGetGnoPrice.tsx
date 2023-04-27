@@ -1,9 +1,10 @@
 import { Zero } from '@ethersproject/constants'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 export const useGetGnoPrice = () => {
+  const agaveTokens = useAgaveTokens()
   const gnoAddress = agaveTokens.getTokenByFieldAndValue({ symbol: 'GNO' })?.address
 
   if (!gnoAddress) {

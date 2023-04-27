@@ -1,8 +1,8 @@
-import { PropsWithChildren, createContext, useContext, useMemo, useState } from 'react'
+import { PropsWithChildren, createContext, useContext, useState } from 'react'
 
 import { BorrowRepayModal, DepositWithdrawModal } from '@/src/components/modals/ActionsModal'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
-import { getTokenInfo } from '@/src/utils/getTokenInfo'
+import { useTokenInfo } from '@/src/hooks/useTokenInfo'
 import { BorrowRepayTabs, DepositWithdrawTabs, Modals } from '@/types/modal'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,10 +15,7 @@ const TokenActionsModalContextProvider: React.FC<PropsWithChildren> = ({ childre
     mode?: InterestRateMode
     tokenAddress: string
   } | null>(null)
-  const token = useMemo(
-    () => (currentModal?.tokenAddress ? getTokenInfo(currentModal?.tokenAddress) : null),
-    [currentModal?.tokenAddress],
-  )
+  const token = useTokenInfo(currentModal?.tokenAddress)
   const closeModal = () => setCurrentModal(null)
 
   const openDepositWithdrawModal = ({

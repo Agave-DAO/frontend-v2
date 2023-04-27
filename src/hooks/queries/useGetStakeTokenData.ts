@@ -20,13 +20,14 @@ export const useGetStakeTokenData = () => {
 
   const stakedTokenContractCalls = [
     stakedTokenContract.totalSupply,
+    stakedTokenContract.STAKED_TOKEN,
     stakedTokenContract.COOLDOWN_SECONDS,
     stakedTokenContract.UNSTAKE_WINDOW,
   ] as const
 
   const [{ data: stakedTokenData }, refetchStakedTokenData] = useContractCall(
     stakedTokenContractCalls,
-    [[], [], []],
+    [[], [], [], []],
     `StakedToken-totalSupply`,
   )
 
@@ -46,6 +47,7 @@ export const useGetStakeTokenData = () => {
           totalStaked: Zero,
           cooldownSeconds: Zero,
           unstakeWindow: Zero,
+          stakedTokenAddress: '',
         },
         refetch: refetchStakedTokenData,
       }
@@ -54,8 +56,9 @@ export const useGetStakeTokenData = () => {
     const emissionPerSecond = totalStaked.gt(0)
       ? stakedTokenAssetInfo[0].emissionPerSecond.mul(WeiPerEther).div(totalStaked) // emissionPerSecond in wei per second
       : stakedTokenAssetInfo[0].emissionPerSecond
-    const cooldownSeconds = stakedTokenData[1]
-    const unstakeWindow = stakedTokenData[2]
+    const stakedTokenAddress = stakedTokenData[1]
+    const cooldownSeconds = stakedTokenData[2]
+    const unstakeWindow = stakedTokenData[3]
 
     return {
       data: {
@@ -63,6 +66,7 @@ export const useGetStakeTokenData = () => {
         totalStaked,
         cooldownSeconds,
         unstakeWindow,
+        stakedTokenAddress,
       },
       refetch: () => {
         refetchStakedTokenData()

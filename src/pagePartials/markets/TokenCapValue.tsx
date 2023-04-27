@@ -6,8 +6,8 @@ import { One } from '@ethersproject/constants'
 
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { fromWei } from '@/src/utils/common'
 import { NumberType } from '@/src/utils/format'
 
@@ -33,7 +33,7 @@ const FiatTokenAmount = styled.span`
  * @constructor
  */
 export const TokenCapValue = ({ limit, priceData, tokenAddress }: Props) => {
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+  const tokenInfo = useAgaveTokens().getTokenByAddress(tokenAddress)
 
   const { tokenAmount, usdAmount } = useMemo(() => {
     if (limit.eq(One)) {

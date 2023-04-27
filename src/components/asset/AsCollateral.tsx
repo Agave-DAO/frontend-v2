@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 import { ToggleSwitch } from '@/src/components/form/ToggleSwitch'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { useSetReserveAsCollateral } from '@/src/hooks/mutations/useSetReserveAsCollateral'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 export const AsCollateral: React.FC<{
   isActive: boolean
@@ -13,7 +13,7 @@ export const AsCollateral: React.FC<{
   const setReserveAsCollateral = useSetReserveAsCollateral()
 
   // Checking if the asset is WXDAI. If it is, then it's always collateral and the user can't change it.
-  const isAlwaysCollateral = agaveTokens.getTokenByAddress(assetAddress).symbol === 'WXDAI'
+  const isAlwaysCollateral = useAgaveTokens().getTokenByAddress(assetAddress).symbol === 'WXDAI'
 
   const toggleSwitchHandler = async () => {
     setChecked(!checked)

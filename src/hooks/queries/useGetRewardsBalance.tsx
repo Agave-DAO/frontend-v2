@@ -1,14 +1,15 @@
 import { AddressZero, Zero } from '@ethersproject/constants'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import {
   BaseIncentivesController,
   BaseIncentivesController__factory,
 } from '@/types/generated/typechain'
 
 export const useGetRewardsBalance = (userAddress: string = AddressZero) => {
+  const agaveTokens = useAgaveTokens()
   const assets = agaveTokens.allIncentivesTokens.map(({ address }) => address)
 
   const baseIncentivesController = useContractInstance(

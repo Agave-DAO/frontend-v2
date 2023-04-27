@@ -17,8 +17,8 @@ import { init, useConnectWallet, useSetChain, useWallets } from '@web3-onboard/r
 import walletConnectModule from '@web3-onboard/walletconnect'
 import nullthrows from 'nullthrows'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { Chains, INITIAL_APP_CHAIN_ID, chainsConfig, getNetworkConfig } from '@/src/config/web3'
+import { NATIVE_DECIMALS } from '@/src/constants/common'
 import {
   recoverLocalStorageKey,
   removeLocalStorageKey,
@@ -233,7 +233,7 @@ export default function Web3ConnectionProvider({ children }: Props) {
       // as the balance is an object of the type { [nativeTokenSymbol: string]: string },
       // to make it agnostic to the token symbol, we get the first value of the object
       wallet?.accounts[0].balance && Object.values(wallet?.accounts[0].balance).length
-        ? toWei(Object.values(wallet.accounts[0].balance)[0], agaveTokens.nativeToken.decimals)
+        ? toWei(Object.values(wallet.accounts[0].balance)[0], NATIVE_DECIMALS)
         : undefined,
     connectWallet: handleConnectWallet,
     connectingWallet,

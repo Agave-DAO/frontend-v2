@@ -5,7 +5,7 @@ import { AssetTitle } from '@/src/components/asset/AssetTitle'
 import { AssetValue, Props as AssetValueProps } from '@/src/components/asset/AssetValue'
 import { AGoTo as BaseAGoTo } from '@/src/components/buttons/ButtonGoTo'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { agaveTokens } from '@/src/config/agaveTokens'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 const AGoTo = styled(BaseAGoTo)`
   margin: auto;
@@ -23,7 +23,7 @@ export const MarketHead: React.FC<Props> = ({
   usdValue,
   ...restProps
 }) => {
-  const { symbol } = agaveTokens.getTokenByAddress(tokenAddress)
+  const { symbol } = useAgaveTokens().getTokenByAddress(tokenAddress)
 
   return (
     <Head {...restProps}>

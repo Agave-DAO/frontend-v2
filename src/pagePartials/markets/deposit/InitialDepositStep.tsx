@@ -16,11 +16,12 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { TabToggle } from '@/src/components/tabs/TabToggle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
+import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useDepositStepInitial } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useMinHealthConfigurationModalContext } from '@/src/providers/minHealthConfigurationModalProvider'
 import { NumberType } from '@/src/utils/format'
 import { Token } from '@/types/token'
@@ -98,6 +99,7 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
     tokenInputStatusText,
   } = useDepositStepInitial({ amount, tokenAddress })
   const { openMinHealthConfigurationModal } = useMinHealthConfigurationModalContext()
+  const agaveTokens = useAgaveTokens()
   const market = useMarketsData().getMarket(tokenAddress)
 
   const onToggleWrap = (isToggled: boolean) => {

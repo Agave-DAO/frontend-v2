@@ -10,9 +10,9 @@ import { GenericError } from '@/src/components/helpers/GenericError'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { AssetsList as BaseAssetList } from '@/src/components/layout/AssetsList'
 import { MarketSkeletonLoading, SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { formatAmount } from '@/src/utils/common'
 
 const Wrapper = styled.div`
@@ -128,6 +128,7 @@ export const MarketList: React.FC = withGenericSuspense(
     const { agaveMarketsData, getBorrowRate, getDepositAPY, getIncentiveRate, getMarketSize } =
       useMarketsData()
     const [search, setSearch] = useState('')
+    const agaveTokens = useAgaveTokens()
     const workingMarkets = useMemo(
       () => agaveMarketsData?.filter(({ assetData: { isFrozen } }) => !isFrozen),
       [agaveMarketsData],
@@ -139,7 +140,7 @@ export const MarketList: React.FC = withGenericSuspense(
           const { symbol } = agaveTokens.getTokenByAddress(tokenAddress)
           return symbol.toUpperCase().indexOf(search.toUpperCase()) >= 0
         }),
-      [search, workingMarkets],
+      [agaveTokens, search, workingMarkets],
     )
     const totalMarketSize = useMemo(
       () =>
