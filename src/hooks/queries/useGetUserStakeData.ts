@@ -1,6 +1,9 @@
+import { isAddress } from '@ethersproject/address'
 import { Zero } from '@ethersproject/constants'
+import useSWR from 'swr'
 
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
@@ -31,20 +34,21 @@ export const useGetUserAmountInStake = () => {
  */
 
 export const useGetUserAmountAvailableToStake = () => {
-  const { address } = useWeb3ConnectedApp()
-  const stakedTokenAddress = agaveTokens.stakeToken.address
+  const { address, readOnlyAppProvider } = useWeb3ConnectedApp()
+  const stakeData = useGetStakeTokenData().data
 
-  const stakedContract = useContractInstance(ERC20__factory, stakedTokenAddress)
-
-  const calls = [stakedContract.balanceOf] as const
-
-  const [{ data: userStakedAmount }, refetch] = useContractCall(
-    calls,
-    [[address]],
-    `StakedToken-balanceOf-${address}`,
+  const { data, mutate } = useSWR(
+    isAddress(stakeData.stakedTokenAddress)
+      ? `available-to-stake-${stakeData.stakedTokenAddress}-${address}`
+      : null,
+    async () => {
+      const erc20 = ERC20__factory.connect(stakeData.stakedTokenAddress, readOnlyAppProvider)
+      const balance = await erc20.balanceOf(address)
+      return balance
+    },
   )
 
-  return { data: userStakedAmount?.[0] ?? Zero, refetch }
+  return { data: data ?? Zero, refetch: mutate }
 }
 /**
  * @returns amount of AGAVE staked tokens that the user can claim.

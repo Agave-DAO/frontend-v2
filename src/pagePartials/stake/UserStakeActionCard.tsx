@@ -41,12 +41,11 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
       amountAvailableToStake: userAmountAvailableToStake,
       isCooldownActive,
       refetchAllStakeData,
+      stakedTokenAddress,
     } = useStakeInformation()
 
-    const stakedTokenAddress = agaveTokens.stakeToken.address
-
     const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken', true)
-    const stakedToken = useContractInstance(ERC20__factory, agaveTokens.stakeToken.address, true)
+    const stakedToken = useContractInstance(ERC20__factory, stakedTokenAddress, true)
 
     const { approvedAmount, refetchAllowance } = useGetERC20Allowance(
       stakedTokenAddress,
