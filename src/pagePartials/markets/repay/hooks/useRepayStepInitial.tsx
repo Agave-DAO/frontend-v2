@@ -5,6 +5,7 @@ import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { agaveTokens } from '@/src/config/agaveTokens'
+import { MINIMUM_NATIVE_RESERVE } from '@/src/constants/common'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useUserBorrowsByToken } from '@/src/hooks/presentation/useUserBorrowsByToken'
@@ -33,7 +34,7 @@ export function useRepayStepInitial({
   // 0.05% extra to ensure sufficient coverage for interest accrued during the time between fetching and repaying
   const maxValueDebt = borrowInfo?.borrowedAmount.mul(10005).div(10000) || Zero
   const maxToRepay = useMemo(() => {
-    const availableBalance = isNativeToken ? accountBalance : balance
+    const availableBalance = isNativeToken ? accountBalance.sub(MINIMUM_NATIVE_RESERVE) : balance
     return maxValueDebt.gt(availableBalance) ? availableBalance : maxValueDebt
   }, [isNativeToken, accountBalance, balance, maxValueDebt])
 
