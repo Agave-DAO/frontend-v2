@@ -1,13 +1,13 @@
 import { FixedNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { DISPLAY_DECIMALS } from '@/src/constants/common'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { fromWei } from '@/src/utils/common'
 
 export const useMarketDetails = (tokenAddress: string) => {
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+  const tokenInfo = useAgaveTokens().getTokenByAddress(tokenAddress)
   const marketData = useMarketsData()
   const market = marketData.getMarket(tokenAddress)
 

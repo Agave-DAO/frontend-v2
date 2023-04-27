@@ -2,7 +2,6 @@ import { isAddress } from '@ethersproject/address'
 import { Zero } from '@ethersproject/constants'
 import useSWR from 'swr'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'

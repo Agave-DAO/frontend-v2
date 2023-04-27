@@ -13,7 +13,7 @@ import { ButtonToggleInfo } from '@/src/components/buttons/ButtonToggleInfo'
 import { RewardPair } from '@/src/components/common/RewardPair'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { agaveTokens } from '@/src/config/agaveTokens'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 const Wrapper = styled(Head)`
   flex-wrap: wrap;
@@ -119,7 +119,7 @@ export const UserAssetHead: React.FC<Props> = ({
   useAsCollateral,
   ...restProps
 }) => {
-  const { symbol } = agaveTokens.getTokenByAddress(tokenAddress)
+  const { symbol } = useAgaveTokens().getTokenByAddress(tokenAddress)
   const [isOpen, setIsOpen] = useState(false)
 
   return (

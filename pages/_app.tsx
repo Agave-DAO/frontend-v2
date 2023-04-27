@@ -16,10 +16,10 @@ import TooltipConfig from '@/src/components/tooltip/TooltipConfig'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { Head } from '@/src/pagePartials/index/Head'
 import { TransactionNotificationProvider } from '@/src/providers/TransactionNotificationProvider'
+import AgaveTokensProvider from '@/src/providers/agaveTokensProvider'
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
 import ModalsProvider from '@/src/providers/modalsProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
-import TokenIconsProvider from '@/src/providers/tokenIconsProvider'
 
 import 'sanitize.css'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -89,7 +89,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
             <SafeSuspense>
               <TransactionNotificationProvider>
                 <CookiesWarningProvider>
-                  <TokenIconsProvider>
+                  <AgaveTokensProvider>
                     <ModalsProvider>
                       <Header />
                       <Scroll>
@@ -97,7 +97,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                         <Footer />
                       </Scroll>
                     </ModalsProvider>
-                  </TokenIconsProvider>
+                  </AgaveTokensProvider>
                 </CookiesWarningProvider>
               </TransactionNotificationProvider>
             </SafeSuspense>

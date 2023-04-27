@@ -16,12 +16,13 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
+import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useBorrowStepInitial } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 import { NumberType } from '@/src/utils/format'
 import { Token } from '@/types/token'
@@ -101,6 +102,7 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
     tokenInputStatusText,
   } = useBorrowStepInitial({ amount, tokenAddress })
   const market = useMarketsData().getMarket(tokenAddress)
+  const agaveTokens = useAgaveTokens()
   const { openMinHealthConfigurationModal } = useModalsContext()
 
   const onToggleInterestRateMode = (isToggled: boolean) => {

@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { ERC20__factory } from '@/types/generated/typechain'
 
@@ -16,6 +16,7 @@ export const useWithdrawStepApprove = ({
   amount: string
   tokenAddress: string
 }) => {
+  const agaveTokens = useAgaveTokens()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const agTokenInfo = agaveTokens.getProtocolTokenInfo(agaveTokens.wrapperToken.address, 'ag')
   const isNativeToken = tokenInfo.extensions.isNative

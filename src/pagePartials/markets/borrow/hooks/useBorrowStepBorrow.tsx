@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesData'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { AgaveLending__factory, WETHGateway__factory } from '@/types/generated/typechain'
 
@@ -20,7 +20,7 @@ export const useBorrowStepBorrow = ({
   tokenAddress: string
 }) => {
   const { address: userAddress } = useWeb3ConnectedApp()
-
+  const agaveTokens = useAgaveTokens()
   const wrappedNativeGateway = useContractInstance(WETHGateway__factory, 'WETHGateway', true)
   const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool', true)
   const sendTx = useTransaction()
@@ -47,6 +47,7 @@ export const useBorrowStepBorrow = ({
 
     return receipt.transactionHash
   }, [
+    agaveTokens,
     tokenAddress,
     refetchUserReservesData,
     refetchUserAccountData,

@@ -4,11 +4,11 @@ import { HealthFactor } from '@/src/components/common/HealthFactor'
 import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/common/StepsCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useBorrowSteps } from '@/src/pagePartials/markets/borrow/hooks/useBorrowSteps'
 import { Steps } from '@/src/pagePartials/markets/stepper'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 interface BorrowStepperInfoProps {
   amount: string
@@ -16,7 +16,7 @@ interface BorrowStepperInfoProps {
 }
 
 const BorrowStepperInfo = ({ amount, tokenAddress }: BorrowStepperInfoProps) => {
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+  const tokenInfo = useAgaveTokens().getTokenByAddress(tokenAddress)
   const newHealthFactor = useNewHealthFactorCalculator(tokenAddress).newHealthFactor({
     amount: BigNumber.from(amount),
     type: 'borrow',

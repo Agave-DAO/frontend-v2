@@ -15,11 +15,12 @@ import { TabToggle } from '@/src/components/common/TabToggle'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { TokenWithType, agaveTokens } from '@/src/config/agaveTokens'
+import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useWithdrawStepInitial } from '@/src/pagePartials/markets/withdraw/hooks/useWithdrawStepInitial'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 import { NumberType } from '@/src/utils/format'
 import { Token } from '@/types/token'
@@ -93,6 +94,7 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
   } = useWithdrawStepInitial({ amount, tokenAddress })
   const { openMinHealthConfigurationModal } = useModalsContext()
   const market = useMarketsData().getMarket(tokenAddress)
+  const agaveTokens = useAgaveTokens()
 
   const onToggleWrap = (isToggled: boolean) => {
     onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)

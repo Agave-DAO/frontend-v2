@@ -13,10 +13,10 @@ import { Loading } from '@/src/components/loading/Loading'
 import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { HealthFactor as HealthFactorTooltip } from '@/src/constants/tooltips'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
@@ -33,6 +33,7 @@ const UserBorrowsImp = ({
       tokenAddress,
       userAddress,
     })
+  const agaveTokens = useAgaveTokens()
   const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
 
   return userHasBorrows ? (

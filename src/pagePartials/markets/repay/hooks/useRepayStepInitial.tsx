@@ -4,12 +4,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { MINIMUM_NATIVE_RESERVE } from '@/src/constants/common'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useUserBorrowsByToken } from '@/src/hooks/presentation/useUserBorrowsByToken'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export function useRepayStepInitial({
@@ -21,6 +21,7 @@ export function useRepayStepInitial({
   interestRateMode: InterestRateMode
   tokenAddress: string
 }) {
+  const agaveTokens = useAgaveTokens()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const isNativeToken = tokenInfo.extensions.isNative
 

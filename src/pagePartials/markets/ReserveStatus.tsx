@@ -9,8 +9,8 @@ import { Rows as BaseRows, Row, RowKey, RowValue } from '@/src/components/common
 import { Amount } from '@/src/components/helpers/Amount'
 import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { useMarketDetails } from '@/src/hooks/presentation/useMarketDetails'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 const ChartWrapper = styled.div`
   position: relative;
@@ -255,10 +255,7 @@ export const ReserveStatus: React.FC<{ tokenAddress: string }> = ({
   tokenAddress,
   ...restProps
 }) => {
-  const { decimals, symbol } = useMemo(
-    () => agaveTokens.getTokenByAddress(tokenAddress),
-    [tokenAddress],
-  )
+  const { decimals, symbol } = useAgaveTokens().getTokenByAddress(tokenAddress)
   const { borrowed, liquidity, reserveSize, utilizationRate } = useMarketDetails(tokenAddress)
 
   return (

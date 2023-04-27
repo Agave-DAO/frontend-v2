@@ -4,11 +4,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { MINIMUM_NATIVE_RESERVE, MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
 import { usePersistedState } from '@/src/hooks/usePersistedState'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export function useDepositStepInitial({
@@ -18,6 +18,7 @@ export function useDepositStepInitial({
   amount: string
   tokenAddress: string
 }) {
+  const agaveTokens = useAgaveTokens()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const isNativeToken = tokenInfo.extensions.isNative
 

@@ -2,9 +2,9 @@ import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export const useWithdrawStepInitialIndex = ({
@@ -14,6 +14,7 @@ export const useWithdrawStepInitialIndex = ({
   amount: string
   tokenAddress: string
 }) => {
+  const agaveTokens = useAgaveTokens()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const isNativeToken = tokenInfo.extensions.isNative
 

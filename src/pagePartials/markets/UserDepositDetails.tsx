@@ -11,8 +11,8 @@ import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { Loading } from '@/src/components/loading/Loading'
 import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDepositsInformationByToken } from '@/src/hooks/presentation/useUserDepositsInformationByToken'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
@@ -24,7 +24,7 @@ const UserDepositsImp: React.FC<{
     tokenAddress,
     userAddress,
   })
-  const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
+  const { decimals, symbol } = useAgaveTokens().getTokenByAddress(tokenAddress)
 
   return userHasDeposits ? (
     <Rows {...restProps}>

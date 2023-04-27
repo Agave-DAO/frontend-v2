@@ -3,7 +3,7 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { BorrowRepayModal, DepositWithdrawModal } from '@/src/components/modals/ActionsModal'
 import { MinHealthConfigurationModal } from '@/src/components/modals/MinHealthConfigurationModal'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
-import { getTokenInfo } from '@/src/utils/getTokenInfo'
+import { useTokenInfo } from '@/src/hooks/useTokenInfo'
 import { BorrowRepayTabs, DepositWithdrawTabs, Modals } from '@/types/modal'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,7 +17,7 @@ const ModalsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     tokenAddress: string
   } | null>(null)
   const bodyDiv = document.getElementById('body') as HTMLElement
-  const token = currentModal?.tokenAddress ? getTokenInfo(currentModal?.tokenAddress) : null
+  const token = useTokenInfo(currentModal?.tokenAddress)
 
   const openModalClass = 'modalOpen'
   const [showMinHealthConfiguration, setShowMinHealthConfiguration] = useState<boolean | null>(null)

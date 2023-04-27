@@ -2,11 +2,12 @@ import { useCallback, useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { agaveTokens } from '@/src/config/agaveTokens'
+import { TokenWithType } from '@/src/config/agaveTokens'
 import { MAX_UINT_256, ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
 import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { fromWei } from '@/src/utils/common'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 
@@ -36,6 +37,7 @@ const useUserAllAssetsData = () => {
   const marketsData = useMarketsData().agaveMarketsData
   const userBorrows = useUserBorrows()
   const userDeposits = useUserDeposits()
+  const agaveTokens = useAgaveTokens()
 
   const userAssetsData: UserAssetData[] | undefined = marketsData?.map((marketData) => {
     const ltv = marketData?.assetData.ltv
@@ -109,14 +111,14 @@ const useUserAllAssetsData = () => {
  */
 function newHealthFactorGivenAssetsData({
   amount,
-  tokenAddress,
+  tokenInfo,
   totalBorrowsValue,
   totalCollateralMaxCapacity,
   type,
   userAssetData,
 }: {
   amount: BigNumber
-  tokenAddress: string
+  tokenInfo: TokenWithType
   totalBorrowsValue: BigNumber
   totalCollateralMaxCapacity: BigNumber
   type: ActionType
@@ -124,8 +126,6 @@ function newHealthFactorGivenAssetsData({
 }) {
   const collateral = type === 'deposit' || type === 'withdraw'
   const increase = type === 'deposit' || type === 'borrow'
-
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
 
   // Collateral Calculations
   const changeCollateralMaxCapacity = collateral
@@ -161,14 +161,14 @@ function newHealthFactorGivenAssetsData({
 export function maxChangeGivenHealthFactor({
   amount,
   targetValue,
-  tokenAddress,
+  tokenInfo,
   totalBorrowsValue,
   totalCollateralMaxCapacity,
   type,
   userAssetData,
 }: {
   amount: BigNumber
-  tokenAddress: string
+  tokenInfo: TokenWithType
   type: 'repay' | 'deposit' | 'withdraw' | 'borrow'
   targetValue: BigNumber
   totalBorrowsValue: BigNumber
@@ -180,8 +180,6 @@ export function maxChangeGivenHealthFactor({
   }
 
   if (amount.isZero()) return ZERO_BN
-
-  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
 
   const collateral = type === 'withdraw'
 
@@ -218,9 +216,14 @@ export function maxChangeGivenHealthFactor({
 }
 
 export function useNewHealthFactorCalculator(marketAddress: string) {
+  const agaveTokens = useAgaveTokens()
+
   marketAddress = agaveTokens.getTokenByAddress(marketAddress).extensions.isNative
     ? agaveTokens.wrapperToken.address
     : marketAddress
+
+  const tokenInfo = agaveTokens.getTokenByAddress(marketAddress)
+
   const { totalBorrowsValue, totalCollateralMaxCapacity, userAssetsData } = useUserAllAssetsData()
 
   const userAssetData = useMemo(
@@ -233,14 +236,14 @@ export function useNewHealthFactorCalculator(marketAddress: string) {
       if (!userAssetData) return ZERO_BN
       return newHealthFactorGivenAssetsData({
         amount,
-        tokenAddress: marketAddress,
+        tokenInfo,
         totalBorrowsValue,
         totalCollateralMaxCapacity,
         type,
         userAssetData,
       })
     },
-    [marketAddress, totalBorrowsValue, totalCollateralMaxCapacity, userAssetData],
+    [tokenInfo, totalBorrowsValue, totalCollateralMaxCapacity, userAssetData],
   )
 
   const maxAmountGivenHealthFactor = useCallback(
@@ -257,7 +260,7 @@ export function useNewHealthFactorCalculator(marketAddress: string) {
 
       return maxChangeGivenHealthFactor({
         amount,
-        tokenAddress: marketAddress,
+        tokenInfo,
         totalBorrowsValue,
         totalCollateralMaxCapacity,
         type,
@@ -265,7 +268,7 @@ export function useNewHealthFactorCalculator(marketAddress: string) {
         userAssetData,
       })
     },
-    [marketAddress, totalBorrowsValue, totalCollateralMaxCapacity, userAssetData],
+    [tokenInfo, totalBorrowsValue, totalCollateralMaxCapacity, userAssetData],
   )
 
   return { newHealthFactor, maxAmountGivenHealthFactor }

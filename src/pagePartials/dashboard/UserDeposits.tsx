@@ -7,14 +7,15 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { AssetsList } from '@/src/components/layout/AssetsList'
 import { MyAssetSkeletonLoading } from '@/src/components/loading/SkeletonLoading'
-import { agaveTokens } from '@/src/config/agaveTokens'
 import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useModalsContext } from '@/src/providers/modalsProvider'
 
 export const UserDeposits: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const userDeposits = useUserDeposits()
     const { openDepositWithdrawModal } = useModalsContext()
+    const agaveTokens = useAgaveTokens()
 
     return !userDeposits.length ? (
       <EmptyContent
