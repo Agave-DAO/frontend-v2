@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Icon } from '@/src/components/asset/Asset'
+import { Icon } from '@/src/components/asset/Icon'
 import { ChevronDown } from '@/src/components/assets/ChevronDown'
 import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/dropdown/Dropdown'
-import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useTokensLists } from '@/src/hooks/useTokensLists'
@@ -14,13 +13,6 @@ const Wrapper = styled.div`
   align-items: center;
   column-gap: 15px;
   display: flex;
-`
-
-const NoToken = styled.span`
-  color: #000;
-  font-size: 1.6rem;
-  font-weight: 700;
-  line-height: 1.2;
 `
 
 const Dropdown = styled(BaseDropdown)`
@@ -80,9 +72,7 @@ export const TokenDropdown: React.FC<{
 
   return (
     <Wrapper>
-      <Icon symbol={currentToken}>
-        {currentToken ? <TokenIcon dimensions={40} symbol={currentToken} /> : <NoToken>?</NoToken>}
-      </Icon>
+      {currentToken && <Icon dimensions={40} symbol={currentToken} />}
       <Dropdown
         dropdownButton={
           <Button>
