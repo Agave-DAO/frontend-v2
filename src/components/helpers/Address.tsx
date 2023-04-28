@@ -17,10 +17,12 @@ const Wrapper = styled.span`
 
 const ExternalLink = styled.a`
   color: ${({ theme: { colors } }) => colors.textColor};
-  text-decoration: underline;
+  font-size: inherit;
+  line-height: 1;
+  text-decoration: none;
 
   &:hover {
-    text-decoration: none;
+    text-decoration: underline;
   }
 
   &:active {

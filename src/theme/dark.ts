@@ -58,6 +58,7 @@ const textColor60 = white60
 
 const lightestGray = '#F0F4F4'
 const lighterGray = '#D1DDDC'
+const lightGray = '#B3C7C4'
 
 const gray = '#97B1AB'
 
@@ -215,6 +216,7 @@ export const dark = {
     gray: gray,
     greenGradientLight: greenGradientLight,
     greenGradientMedium: greenGradientMedium,
+    lightGray: lightGray,
     lighterGray: lighterGray,
     lightestGray: lightestGray,
     mainDark1: mainDark1,

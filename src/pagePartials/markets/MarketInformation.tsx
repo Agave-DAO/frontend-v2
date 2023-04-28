@@ -17,7 +17,7 @@ const Title = styled(InnerTitle)`
   margin-bottom: 32px;
 `
 
-export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
+export const MarketInformation = ({ tokenAddress }: { tokenAddress: string }) => {
   const { getMarket } = useMarketsData()
   const { assetData, priceData } = getMarket(tokenAddress)
   const {

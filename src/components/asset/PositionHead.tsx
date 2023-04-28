@@ -7,6 +7,10 @@ import { HeadInnerCollapsable } from '@/src/components/asset/HeadInnerCollapsabl
 import { Icon } from '@/src/components/asset/Icon'
 import { Swap } from '@/src/components/assets/Swap'
 import { ButtonToggleInfo } from '@/src/components/buttons/ButtonToggleInfo'
+import {
+  CollateralSwapDetails,
+  PositionDetails,
+} from '@/src/pagePartials/strategy/positions/PositionDetails'
 
 const iconDimensions = 36
 
@@ -15,6 +19,10 @@ const Wrapper = styled(Head)`
   column-gap: 4px;
   flex-wrap: wrap;
   padding-bottom: 16px;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    column-gap: 8px;
+  }
 `
 
 const Icons = styled.div`
@@ -38,6 +46,10 @@ const Value = styled.span`
   font-weight: 700;
   line-height: 1.2;
   text-transform: uppercase;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    font-size: 1.9rem;
+  }
 `
 
 const Badges = styled.div`
@@ -64,17 +76,20 @@ const Description = styled.div`
   font-size: 1.4rem;
   font-weight: 400;
   line-height: 1.2;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    font-size: 1.6rem;
+  }
 `
 
 const Collapsable = styled(HeadInnerCollapsable)`
-  --container-height: 165px;
+  --container-height: 'none';
 
   border: none;
 
   ${({ isOpen }) =>
     isOpen &&
     css`
-      margin-top: 16px;
       max-height: var(--container-height);
       padding-top: 16px;
 
@@ -84,19 +99,21 @@ const Collapsable = styled(HeadInnerCollapsable)`
     `}
 `
 
-export const PositionHead: React.FC = ({ ...restProps }) => {
-  const positionTokens = {
-    type: 'short',
-    status: 'open',
-    tokens: [
-      { symbol: 'usdc', value: '4,000.00' },
-      { symbol: 'xdai', value: '19,146,465.00' },
-    ],
-  }
+interface Props {
+  swapValue: string
+  positionTokens: any
+  limitPriceValue: string
+}
+
+export const PositionHead: React.FC<Props> = ({
+  limitPriceValue,
+  positionTokens,
+  swapValue,
+  ...restProps
+}) => {
   const { status, tokens, type } = positionTokens
+  const notCollateralSwap = type === 'long' || type === 'short'
   const [isOpen, setIsOpen] = useState(false)
-  const limitPriceValue = '<0.000001 WXDAI'
-  const swapValue = '1 USDC = 10.000034 XDAI'
 
   return (
     <Wrapper {...restProps}>
@@ -122,7 +139,7 @@ export const PositionHead: React.FC = ({ ...restProps }) => {
       </Badges>
       <Controls>
         <Description>
-          {(type === 'long' || type === 'short') && `Limit price: ${limitPriceValue}`}
+          {notCollateralSwap && `Limit price: ${limitPriceValue}`}
           {type === 'collateralSwap' && (
             <>
               {swapValue} <Swap />
@@ -131,7 +148,19 @@ export const PositionHead: React.FC = ({ ...restProps }) => {
         </Description>
         <ButtonToggleInfo isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
       </Controls>
-      <Collapsable isOpen={isOpen}>asdasd</Collapsable>
+      <Collapsable isOpen={isOpen}>
+        {status === 'open' ? (
+          notCollateralSwap ? (
+            <PositionDetails />
+          ) : (
+            <CollateralSwapDetails />
+          )
+        ) : notCollateralSwap ? (
+          <>position details history</>
+        ) : (
+          <>coll swap details history</>
+        )}
+      </Collapsable>
     </Wrapper>
   )
 }
