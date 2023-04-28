@@ -1,38 +1,69 @@
 import { useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { Head, HeadContents } from '@/src/components/asset/Asset'
+import { Head } from '@/src/components/asset/Asset'
 import { AssetBadge } from '@/src/components/asset/AssetBadge'
 import { HeadInnerCollapsable } from '@/src/components/asset/HeadInnerCollapsable'
 import { Icon } from '@/src/components/asset/Icon'
+import { Swap } from '@/src/components/assets/Swap'
 import { ButtonToggleInfo } from '@/src/components/buttons/ButtonToggleInfo'
 
 const iconDimensions = 36
 
 const Wrapper = styled(Head)`
+  align-items: center;
+  column-gap: 4px;
   flex-wrap: wrap;
   padding-bottom: 16px;
 `
 
 const Icons = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
 `
 
 const OverlappingIcon = styled(Icon)`
-  margin-left: -${iconDimensions / 2}px;
+  margin-left: -${(iconDimensions + 20) / 2}px;
+`
+
+const Values = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: auto 0;
+`
+
+const Value = styled.span`
+  color: ${({ theme: { colors } }) => colors.textColor};
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
 `
 
 const Badges = styled.div`
+  align-items: flex-end;
   display: flex;
   flex-direction: column;
+  margin-left: auto;
+  row-gap: 4px;
 `
 
 const Controls = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+  padding-top: 8px;
   width: 100%;
+`
+
+const Description = styled.div`
+  align-items: center;
+  color: ${({ theme: { colors } }) => colors.white60};
+  column-gap: 8px;
+  display: flex;
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.2;
 `
 
 const Collapsable = styled(HeadInnerCollapsable)`
@@ -54,25 +85,50 @@ const Collapsable = styled(HeadInnerCollapsable)`
 `
 
 export const PositionHead: React.FC = ({ ...restProps }) => {
-  const symbolPair = ['usdc', 'xdai']
+  const positionTokens = {
+    type: 'short',
+    status: 'open',
+    tokens: [
+      { symbol: 'usdc', value: '4,000.00' },
+      { symbol: 'xdai', value: '19,146,465.00' },
+    ],
+  }
+  const { status, tokens, type } = positionTokens
   const [isOpen, setIsOpen] = useState(false)
+  const limitPriceValue = '<0.000001 WXDAI'
+  const swapValue = '1 USDC = 10.000034 XDAI'
 
   return (
     <Wrapper {...restProps}>
       <Icons>
-        <Icon dimensions={iconDimensions} symbol={symbolPair[0]} />
-        <OverlappingIcon dimensions={iconDimensions} symbol={symbolPair[1]} />
+        <Icon dimensions={iconDimensions} symbol={tokens[0].symbol} />
+        <OverlappingIcon dimensions={iconDimensions} symbol={tokens[1].symbol} />
       </Icons>
-      <HeadContents>
-        <div>Value 1</div>
-        <div>Value 2</div>
-      </HeadContents>
+      <Values>
+        <Value>
+          {tokens[0].value} {tokens[0].symbol}
+        </Value>
+        <Value>
+          {tokens[1].value} {tokens[1].symbol}
+        </Value>
+      </Values>
       <Badges>
-        <AssetBadge>asd</AssetBadge>
-        <AssetBadge>fhdsdghf</AssetBadge>
+        <AssetBadge type={type as 'long' | 'short' | 'collateralSwap' | 'neutral' | undefined}>
+          {type === 'long' && 'Long'}
+          {type === 'short' && 'Short'}
+          {type === 'collateralSwap' && 'Coll. Swap'}
+        </AssetBadge>
+        <AssetBadge type={'neutral'}>{status}</AssetBadge>
       </Badges>
       <Controls>
-        <div>Limit whatever</div>
+        <Description>
+          {(type === 'long' || type === 'short') && `Limit price: ${limitPriceValue}`}
+          {type === 'collateralSwap' && (
+            <>
+              {swapValue} <Swap />
+            </>
+          )}
+        </Description>
         <ButtonToggleInfo isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
       </Controls>
       <Collapsable isOpen={isOpen}>asdasd</Collapsable>
