@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { DepositStepper } from '@/src/pagePartials/markets/deposit/DepositStepper'
 import { InitialDepositStep } from '@/src/pagePartials/markets/deposit/InitialDepositStep'
@@ -13,6 +13,11 @@ export const Deposit = ({
 }) => {
   const [amount, setAmount] = useState('0')
   const [step, setStep] = useState<'initial' | 'tx'>('initial')
+
+  useEffect(() => {
+    setStep('initial')
+    setAmount('0')
+  }, [tokenAddress])
 
   return (
     <>

@@ -42,10 +42,9 @@ export const CollateralInfo: React.FC<{ variant?: RowVariant }> = ({ variant, ..
     >
       <CollapsableRow>
         <MiniChart
-          data={depositsAsCollateral.map((deposit) => {
-            const token = agaveTokens.getTokenByAddress(deposit.assetAddress)
-            return { value: toNumber(deposit.depositedAmount, token.decimals) }
-          })}
+          data={depositsAsCollateral.map((deposit) => ({
+            value: toNumber(deposit.depositedAmountInDAI, 18),
+          }))}
         />
         <CollapsableRowsInner>
           {depositsAsCollateral.map((deposit, index) => {
@@ -60,6 +59,7 @@ export const CollateralInfo: React.FC<{ variant?: RowVariant }> = ({ variant, ..
                   </CollapsableRowValue>
                   <CollapsableRowValue style={{ marginLeft: 0 }}>
                     <Amount decimals={token.decimals} symbol="" value={deposit.depositedAmount} />
+                    &nbsp; (<Amount value={deposit.depositedAmountInDAI} />)
                     <TokenIcon dimensions={18} symbol={token.symbol} />
                   </CollapsableRowValue>
                 </CollapsableRow>

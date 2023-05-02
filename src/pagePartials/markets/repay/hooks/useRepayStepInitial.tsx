@@ -35,7 +35,8 @@ export function useRepayStepInitial({
   // 0.05% extra to ensure sufficient coverage for interest accrued during the time between fetching and repaying
   const maxValueDebt = borrowInfo?.borrowedAmount.mul(10005).div(10000) || Zero
   const maxToRepay = useMemo(() => {
-    const availableBalance = isNativeToken ? accountBalance.sub(MINIMUM_NATIVE_RESERVE) : balance
+    const availableBalance =
+      isNativeToken && accountBalance ? accountBalance.sub(MINIMUM_NATIVE_RESERVE) : balance
     return maxValueDebt.gt(availableBalance) ? availableBalance : maxValueDebt
   }, [isNativeToken, accountBalance, balance, maxValueDebt])
 
