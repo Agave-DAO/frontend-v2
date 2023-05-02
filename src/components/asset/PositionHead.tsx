@@ -8,6 +8,8 @@ import { Icon } from '@/src/components/asset/Icon'
 import { Swap } from '@/src/components/assets/Swap'
 import { ButtonToggleInfo } from '@/src/components/buttons/ButtonToggleInfo'
 import {
+  ClosedCollateralSwapDetails,
+  ClosedPositionDetails,
   CollateralSwapDetails,
   PositionDetails,
 } from '@/src/pagePartials/strategy/positions/PositionDetails'
@@ -100,17 +102,11 @@ const Collapsable = styled(HeadInnerCollapsable)`
 `
 
 interface Props {
-  swapValue: string
   positionTokens: any
-  limitPriceValue: string
+  value: string
 }
 
-export const PositionHead: React.FC<Props> = ({
-  limitPriceValue,
-  positionTokens,
-  swapValue,
-  ...restProps
-}) => {
+export const PositionHead: React.FC<Props> = ({ positionTokens, value, ...restProps }) => {
   const { status, tokens, type } = positionTokens
   const notCollateralSwap = type === 'long' || type === 'short'
   const [isOpen, setIsOpen] = useState(false)
@@ -139,10 +135,10 @@ export const PositionHead: React.FC<Props> = ({
       </Badges>
       <Controls>
         <Description>
-          {notCollateralSwap && `Limit price: ${limitPriceValue}`}
+          {notCollateralSwap && `Limit price: ${value}`}
           {type === 'collateralSwap' && (
             <>
-              {swapValue} <Swap />
+              {value} <Swap />
             </>
           )}
         </Description>
@@ -156,9 +152,9 @@ export const PositionHead: React.FC<Props> = ({
             <CollateralSwapDetails />
           )
         ) : notCollateralSwap ? (
-          <>position details history</>
+          <ClosedPositionDetails />
         ) : (
-          <>coll swap details history</>
+          <ClosedCollateralSwapDetails />
         )}
       </Collapsable>
     </Wrapper>

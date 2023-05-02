@@ -7,6 +7,7 @@ import { List } from '@/src/components/common/List'
 import { GoToExplorer } from '@/src/components/helpers/GoToExplorer'
 import { ButtonTab, ButtonTabs } from '@/src/components/tabs/ButtonTabs'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
+import { HistoryList } from '@/src/pagePartials/strategy/positions/HistoryList'
 import { PositionsList } from '@/src/pagePartials/strategy/positions/PositionsList'
 import { CollateralSwap, Long, Short } from '@/src/pagePartials/strategy/strategies/StrategyItem'
 import { VaultDetails as BaseVaultDetails } from '@/src/pagePartials/strategy/vaults/VaultDetails'
@@ -89,7 +90,7 @@ const Strategy: NextPage = () => {
             ))}
           </ButtonTabs>
           {showPositionsList && <PositionsList />}
-          {showHistoryList && <>History list</>}
+          {showHistoryList && <HistoryList />}
           {showNewStrategyList && <>{strategyCreationItems}</>}
         </>
       ) : (
