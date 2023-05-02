@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { InitialRepayStep } from '@/src/pagePartials/markets/repay/InitialRepayStep'
@@ -18,6 +18,11 @@ export function Repay({
 }) {
   const [amount, setAmount] = useState('0')
   const [step, setStep] = useState<'initial' | 'tx'>('initial')
+
+  useEffect(() => {
+    setStep('initial')
+    setAmount('0')
+  }, [tokenAddress])
 
   return (
     <>

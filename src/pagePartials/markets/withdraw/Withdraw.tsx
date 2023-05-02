@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { InitialWithdrawStep } from '@/src/pagePartials/markets/withdraw/InitialWithdrawStep'
 import { WithdrawStepper } from '@/src/pagePartials/markets/withdraw/WithdrawStepper'
@@ -13,6 +13,11 @@ export const Withdraw = ({
 }) => {
   const [amount, setAmount] = useState('0')
   const [step, setStep] = useState<'initial' | 'tx'>('initial')
+
+  useEffect(() => {
+    setStep('initial')
+    setAmount('0')
+  }, [tokenAddress])
 
   return (
     <>
