@@ -33,11 +33,7 @@ const BorrowStepperInfo = ({ amount, tokenAddress }: BorrowStepperInfoProps) => 
         <RowKey>Amount</RowKey>
         <RowValueBig>
           <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
-          <Amount
-            decimals={tokenInfo.decimals}
-            symbol={tokenInfo.symbol}
-            value={BigNumber.from(amount)}
-          />
+          <Amount decimals={tokenInfo.decimals} symbol="" value={BigNumber.from(amount)} />
         </RowValueBig>
       </Row>
       <Row variant="dark">

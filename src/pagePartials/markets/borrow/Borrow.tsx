@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { BorrowStepper } from '@/src/pagePartials/markets/borrow/BorrowStepper'
@@ -18,6 +18,11 @@ export function Borrow({
 }) {
   const [amount, setAmount] = useState('0')
   const [step, setStep] = useState<'initial' | 'tx'>('initial')
+
+  useEffect(() => {
+    setStep('initial')
+    setAmount('0')
+  }, [tokenAddress])
 
   return (
     <>
