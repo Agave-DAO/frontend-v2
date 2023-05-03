@@ -56,7 +56,7 @@ const CollateralSwapSVG = ({ ...restProps }) => (
 
 const Wrapper = styled(ListItem)`
   background-color: ${({ theme: { colors } }) => colors.mainDark4};
-  box-shadow: 0 51px 80px rgba(0, 0, 0, 0.17), 0 19.6444px 25.4815px rgba(0, 0, 0, 0.103259),
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.17), 0 19.6444px 25.4815px rgba(0, 0, 0, 0.103259),
     0 4.15556px 6.51852px rgba(0, 0, 0, 0.0667407);
 `
 

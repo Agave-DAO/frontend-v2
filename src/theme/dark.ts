@@ -4,6 +4,7 @@
 import { darken } from 'polished'
 
 const error = '#F4387C'
+const errorLight = `#FF8947`
 const errorDark = darken(0.1, error)
 const success = '#33dd33'
 
@@ -11,6 +12,7 @@ const primary = '#019D8B'
 const primary10 = `${primary}1A`
 const primary30 = `${primary}4D`
 const primaryLight = '#40B390'
+const primaryUltraLight = '#69C993'
 const primaryDarkened = darken(0.05, primary)
 
 const mainLight = '#92DE95'
@@ -56,6 +58,7 @@ const textColor60 = white60
 
 const lightestGray = '#F0F4F4'
 const lighterGray = '#D1DDDC'
+const lightGray = '#B3C7C4'
 
 const gray = '#97B1AB'
 
@@ -71,7 +74,9 @@ const darkBackground0 = `rgba(${darkBackground}, 0)`
 const darkBackground02 = `rgba(${darkBackground}, 0.2)`
 const darkBackground04 = `rgba(${darkBackground}, 0.4)`
 const darkBackground06 = `rgba(${darkBackground}, 0.6)`
+
 const accent = '#9BEFD7'
+const accentDark = '#68C7C1'
 
 const gradientLight = `linear-gradient(84.32deg, ${tertiary} 0%, ${primaryLight} 99.25%)`
 const mainBodyGradient = `radial-gradient(64.22% 34.97% at 0% 0%, ${tertiary30} 0%, ${tertiary0} 100%), linear-gradient(188.87deg, ${primary} 4.99%, ${secondary} 62.79%)`
@@ -184,6 +189,7 @@ export const dark = {
   },
   colors: {
     accent: accent,
+    accentDark: accentDark,
     black05: black05,
     black20: black20,
     black40: black40,
@@ -206,9 +212,11 @@ export const dark = {
     darkestGray: darkestGray,
     darkishGray: darkishGray,
     error: error,
+    errorLight: errorLight,
     gray: gray,
     greenGradientLight: greenGradientLight,
     greenGradientMedium: greenGradientMedium,
+    lightGray: lightGray,
     lighterGray: lighterGray,
     lightestGray: lightestGray,
     mainDark1: mainDark1,
@@ -224,6 +232,7 @@ export const dark = {
     primary: primary,
     primaryDarkened: primaryDarkened,
     primaryLight: primaryLight,
+    primaryUltraLight: primaryUltraLight,
     secondary20: secondary20,
     secondary30: secondary30,
     secondary50: secondary50,

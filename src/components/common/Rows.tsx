@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import { HTMLAttributes, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { CollapseToggle } from '@/src/components/assets/CollapseToggle'
@@ -131,7 +131,7 @@ export const CollapsableRowsHandler: React.FC<CollapsableRowsHandlerProps> = ({
   variant,
   ...restProps
 }) => {
-  const [isCollapsed, setIsCollapsed] = React.useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(true)
   const onToggle = () => {
     setIsCollapsed(!isCollapsed)
   }

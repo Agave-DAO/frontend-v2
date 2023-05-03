@@ -24,6 +24,7 @@ export const GlobalStyles = createGlobalStyle<{ theme: any }>`
   body {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
+    background-attachment: fixed;
     background-color: ${({ theme: { body } }) => body.backgroundColor};
     background-image: ${({ theme: { body } }) => body.backgroundImage};
     background-size: cover;

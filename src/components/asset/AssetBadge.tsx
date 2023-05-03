@@ -1,8 +1,22 @@
 import styled from 'styled-components'
 
-export const AssetBadge = styled.div`
+type Type = 'long' | 'short' | 'collateralSwap' | 'neutral' | undefined
+
+const getColor = (colors: any, type?: Type) => {
+  return type === 'long'
+    ? colors.primaryUltraLight
+    : type === 'short'
+    ? colors.errorLight
+    : type === 'collateralSwap'
+    ? colors.accentDark
+    : type === 'neutral'
+    ? colors.secondary
+    : colors.mainDark3
+}
+
+export const AssetBadge = styled.div<{ type?: Type }>`
   align-items: center;
-  background-color: ${({ theme: { colors } }) => colors.mainDark3};
+  background-color: ${({ theme: { colors }, type }) => getColor(colors, type)};
   border-radius: 6px;
   color: ${({ theme: { colors } }) => colors.textColor};
   display: flex;

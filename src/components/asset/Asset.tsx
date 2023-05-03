@@ -3,8 +3,6 @@ import styled from 'styled-components'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { getIconBackgroundColor } from '@/src/components/token/TokenIcon'
-
 const Wrapper = styled.div`
   --padding-medium: 16px;
   --padding-xl: 24px;
@@ -26,20 +24,6 @@ export const Head = styled.div`
   padding: var(--padding-xl) var(--padding-medium);
 `
 
-export const Icon = styled.div<{ symbol?: string }>`
-  --token-icon-size: 58px;
-
-  align-items: center;
-  background-color: ${({ symbol }) => getIconBackgroundColor(symbol)};
-  border-radius: 16px;
-  display: flex;
-  flex-shrink: 0;
-  height: var(--token-icon-size);
-  justify-content: center;
-  transition: background-color 0.25s linear;
-  width: var(--token-icon-size);
-`
-
 export const HeadContents = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,6 +33,9 @@ export const HeadContents = styled.div`
 `
 
 export const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   padding: var(--padding-medium);
 `
 
