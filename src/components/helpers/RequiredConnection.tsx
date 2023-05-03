@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { DOMAttributes, HTMLAttributes, ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { ButtonPrimary } from '@/src/components/buttons/Button'
@@ -26,9 +26,9 @@ const Text = styled.p`
   width: 100%;
 `
 
-type RequiredConnectionProps = {
-  children: ReactElement
-  minHeight?: number
+interface RequiredConnectionProps
+  extends DOMAttributes<HTMLDivElement>,
+    HTMLAttributes<HTMLDivElement> {
   isNotConnectedText?: string
   isWrongNetworkText?: string
 }
@@ -73,7 +73,7 @@ const RequiredConnection: React.FC<RequiredConnectionProps> = ({
       )}
     </Wrapper>
   ) : (
-    children
+    <>{children}</>
   )
 }
 
