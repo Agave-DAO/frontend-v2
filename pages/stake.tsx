@@ -14,6 +14,14 @@ import { UserStakeActionCard } from '@/src/pagePartials/stake/UserStakeActionCar
 import { UserStakeClaimCard } from '@/src/pagePartials/stake/UserStakeClaimCard'
 import { UserStakedCard } from '@/src/pagePartials/stake/UserStakedCard'
 
+const MandatoryConnection = styled(RequiredConnection)`
+  height: 300px;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    height: 500px;
+  }
+`
+
 const Title = styled(BaseTitle)`
   margin-top: 23px;
 
@@ -71,17 +79,15 @@ const Stake: NextPage = () => {
         Staking Agave in the Safety Module helps to secure the protocol in exchange for protocol
         incentives
       </Paragraph>
-      <RequiredConnection>
-        <>
-          <Funds />
-          <StakeForm />
-          <BigContainer>
-            <Staked />
-            <StakeClaim />
-            <StakeInformationCard />
-          </BigContainer>
-        </>
-      </RequiredConnection>
+      <MandatoryConnection>
+        <Funds />
+        <StakeForm />
+        <BigContainer>
+          <Staked />
+          <StakeClaim />
+          <StakeInformationCard />
+        </BigContainer>
+      </MandatoryConnection>
       <Faq data={stakeFAQ} title="Staking Frequently Asked Questions" />
     </>
   )

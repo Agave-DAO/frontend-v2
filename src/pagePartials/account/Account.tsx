@@ -1,7 +1,6 @@
 import styled, { css } from 'styled-components'
 
 import { ButtonConnect } from '@/src/components/buttons/ButtonConnect'
-import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { UserAccountSummary } from '@/src/pagePartials/account/UserAccountSummary'
 import UserBalanceSummary from '@/src/pagePartials/account/UserBalanceSummary'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
@@ -148,12 +147,10 @@ export const Account: React.FC = ({ ...restProps }) => {
         {!isConnected && <Button onClick={connectWallet}>Connect wallet</Button>}
       </WelcomeText>
       {isConnected && (
-        <RequiredConnection>
-          <UserInfo>
-            <UserBalanceSummary />
-            <UserAccountSummary />
-          </UserInfo>
-        </RequiredConnection>
+        <UserInfo>
+          <UserBalanceSummary />
+          <UserAccountSummary />
+        </UserInfo>
       )}
     </Wrapper>
   )
