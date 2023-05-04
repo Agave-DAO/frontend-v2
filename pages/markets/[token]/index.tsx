@@ -8,6 +8,7 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
+import { agaveTokens } from '@/src/config/agaveTokens'
 import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
 import { MarketInformation } from '@/src/pagePartials/markets/MarketInformation'
@@ -209,5 +210,41 @@ const MarketDetails: React.FC = withGenericSuspense(
     </>
   ),
 )
+
+// generate the actions html files for each market
+export async function getStaticPaths() {
+  // Get the list of markets
+  const markets = agaveTokens.reserveTokens
+
+  // Generate the paths for each market (symbol & address)
+  const paths = markets.flatMap(({ address, symbol }) => {
+    return [
+      { params: { token: symbol } },
+      { params: { token: symbol } },
+      { params: { token: symbol } },
+      { params: { token: symbol } },
+      { params: { token: address } },
+      { params: { token: address } },
+      { params: { token: address } },
+      { params: { token: address } },
+    ]
+  })
+
+  return { paths, fallback: true }
+}
+
+export async function getStaticProps({ params }: { params: { token: string; action: string } }) {
+  const { token } = params
+  const tokenExists = agaveTokens.reserveTokens.find(
+    (t) => t.symbol === token || t.address === token,
+  )
+
+  if (!tokenExists) {
+    return { notFound: true }
+  }
+
+  // Pass the market parameter to the component
+  return { props: { token: params.token } }
+}
 
 export default MarketDetails

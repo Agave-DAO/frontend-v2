@@ -84,7 +84,7 @@ export const NavRow: React.FC<
   const router = useRouter()
 
   return (
-    <HoverableRow columns={columns} onClick={() => router.push(href)}>
+    <HoverableRow columns={columns} onClick={() => router.push(href, undefined, { shallow: true })}>
       {children}
     </HoverableRow>
   )

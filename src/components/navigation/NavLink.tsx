@@ -18,7 +18,10 @@ export const NavLink: React.FC<PropsWithChildren<Props>> = ({
 
   return (
     <Link href={href} legacyBehavior passHref scroll={scroll} shallow={shallow}>
-      <a className={`${className} ${router.pathname === href && 'active'}`} {...restProps}>
+      <a
+        className={`${className || ''} ${router.pathname === href ? 'active' : ''}`}
+        {...restProps}
+      >
         {children}
       </a>
     </Link>

@@ -5,6 +5,7 @@
   "scripts": {
     "analyze": "ANALYZE=true yarn build",
     "build": "next build",
+    "export": "next export",
     "dev": "next dev",
     "lint": "next lint",
     "lint:fix": "eslint --fix \"./**/*.{js,jsx,ts,tsx}\"",
@@ -85,7 +86,7 @@
   },
   "engines": {
     "npm": ">=8.0.0",
-    "node": ">=16.8.0"
+    "node": ">=16.4.2"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

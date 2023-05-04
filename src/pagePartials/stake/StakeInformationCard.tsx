@@ -5,8 +5,8 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { ZERO_BN } from '@/src/constants/bigNumber'
-import { CooldownPeriod, UnstakeWindow } from '@/src/constants/tooltips'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
+import { CooldownPeriod, UnstakeWindow } from '@/src/pagePartials/common/tooltips'
 import { fromWei, secondsToString } from '@/src/utils/common'
 
 export const StakeInformationCard: React.FC = withGenericSuspense(({ ...restProps }) => {
