@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 
 import { Faq } from '@/src/components/faq/Faq'
 import { Tabs as BaseTabs, TabLink as Tab } from '@/src/components/tabs/Tabs'
-import { homeFAQ } from '@/src/constants/homeFAQ'
+import { homeFAQ } from '@/src/pagePartials/common/homeFAQ'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
 const Wrapper = styled.div<{ isConnected?: boolean }>`

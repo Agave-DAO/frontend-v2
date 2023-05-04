@@ -6,11 +6,11 @@ import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
+import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
 import {
   CurrentLTV as CurrentLTVTooltip,
   HealthFactor as HealthFactorTooltip,
-} from '@/src/constants/tooltips'
-import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
+} from '@/src/pagePartials/common/tooltips'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const Wrapper = styled.div`

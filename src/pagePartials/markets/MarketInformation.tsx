@@ -8,9 +8,13 @@ import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
-import { LiquidityPenalty, LiquidityThreshold, MaximumLTV } from '@/src/constants/tooltips'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useGetReserveLimits } from '@/src/hooks/queries/useGetReserveLimits'
+import {
+  LiquidityPenalty,
+  LiquidityThreshold,
+  MaximumLTV,
+} from '@/src/pagePartials/common/tooltips'
 import { TokenCapValue } from '@/src/pagePartials/markets/TokenCapValue'
 
 const Title = styled(InnerTitle)`

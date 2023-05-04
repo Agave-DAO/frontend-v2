@@ -7,12 +7,12 @@ import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
 import { BaseParagraph as Paragraph } from '@/src/components/text/BaseParagraph'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
-import { stakeFAQ } from '@/src/constants/stakeFAQ'
 import { FundsInSafetyModule } from '@/src/pagePartials/stake/FundsInSafetyModule'
 import { StakeInformationCard } from '@/src/pagePartials/stake/StakeInformationCard'
 import { UserStakeActionCard } from '@/src/pagePartials/stake/UserStakeActionCard'
 import { UserStakeClaimCard } from '@/src/pagePartials/stake/UserStakeClaimCard'
 import { UserStakedCard } from '@/src/pagePartials/stake/UserStakedCard'
+import { stakeFAQ } from '@/src/pagePartials/stake/stakeFAQ'
 
 const MandatoryConnection = styled(RequiredConnection)`
   height: 300px;
