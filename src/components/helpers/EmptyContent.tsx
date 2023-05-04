@@ -48,7 +48,11 @@ export const EmptyContent: React.FC<Props> = ({ link, text, title, ...restProps 
         {title && <Title>{title}</Title>}
         {text && <Text>{text}</Text>}
       </div>
-      {link && <ActionButton onClick={() => router.push(link.href)}>{link.text}</ActionButton>}
+      {link && (
+        <ActionButton onClick={() => router.push(link.href, undefined, { shallow: true })}>
+          {link.text}
+        </ActionButton>
+      )}
     </Wrapper>
   )
 }

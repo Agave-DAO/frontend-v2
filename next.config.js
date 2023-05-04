@@ -9,5 +9,6 @@ module.exports = withBundleAnalyzer({
   images: {
     // needed to be able to run `next export`
     unoptimized: true
-  }
+  },
+  trailingSlash: true,
 });

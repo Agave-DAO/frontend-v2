@@ -35,7 +35,7 @@ export const MarketHead: React.FC<Props> = ({
         <AssetTitle>Market Size</AssetTitle>
         <AssetValue tokenValue={tokenValue} usdValue={usdValue} />
       </HeadContents>
-      <Link href={href} legacyBehavior passHref>
+      <Link href={href} legacyBehavior passHref shallow>
         <AGoTo />
       </Link>
     </Head>
