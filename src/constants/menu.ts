@@ -2,6 +2,7 @@ export const sections = [
   {
     href: '/',
     section: 'All Markets',
+    hash: 'home-tabs',
   },
   {
     href: '/stake',
@@ -11,4 +12,4 @@ export const sections = [
     href: '/strategies',
     section: 'Strategies',
   },
-] as const
+] as { href: string; section: string; hash?: string }[]

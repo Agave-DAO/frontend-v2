@@ -53,7 +53,7 @@ export const HomeTabs: React.FC<HTMLAttributes<HTMLDivElement>> = ({ children, .
 
   return (
     <>
-      <Wrapper isConnected={isConnected} {...restProps}>
+      <Wrapper id="home-tabs" isConnected={isConnected} {...restProps}>
         {isConnected && (
           <Tabs>
             <Tab href="/" scroll={false} shallow>

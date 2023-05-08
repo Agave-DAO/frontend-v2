@@ -206,7 +206,7 @@ export const MarketList: React.FC = withGenericSuspense(
 
               return (
                 <Market
-                  href={`/markets/${symbol}`}
+                  href={`/markets/${symbol}#main`}
                   key={`market_${tokenAddress}`}
                   tokenAddress={tokenAddress}
                   tokenValue={

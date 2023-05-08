@@ -205,10 +205,18 @@ export const MobileMenu: React.FC<Props> = ({ isOpen, onClose, ...restProps }) =
             {!isWalletConnected && <Button onClick={connectWallet}>Connect wallet</Button>}
           </UserControls>
           <Menu onClick={onClose}>
-            {isWalletConnected && <NavLink href={'/my-account'}>My account</NavLink>}
-            {sections.map(({ href, section }) => {
+            {isWalletConnected && (
+              <NavLink href="/my-account#home-tabs" scroll={false}>
+                My account
+              </NavLink>
+            )}
+            {sections.map(({ hash, href, section }) => {
               return (
-                <NavLink href={href} key={`mobile_menu_item_${section}`}>
+                <NavLink
+                  href={`${href}#${hash ? `${hash}` : 'main'}`}
+                  key={`mobile_menu_item_${section}`}
+                  scroll={false}
+                >
                   {section}
                 </NavLink>
               )
