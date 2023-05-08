@@ -4,11 +4,11 @@ import styled from 'styled-components'
 
 import { ButtonMini } from '@/src/components/buttons/ButtonMini'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
-import { BorrowRepay } from '@/src/components/modals/BorrowRepay'
-import { DepositWithdraw } from '@/src/components/modals/DepositWithdraw'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
+import { BorrowRepay } from '@/src/pagePartials/markets/modals/BorrowRepay'
+import { DepositWithdraw } from '@/src/pagePartials/markets/modals/DepositWithdraw'
 import { BorrowRepayTabs, DepositWithdrawTabs } from '@/types/modal'
 import { Token } from '@/types/token'
 

@@ -1,6 +1,6 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
 
-import { VaultModal } from '@/src/components/modals/VaultModal'
+import { VaultModal } from '@/src/pagePartials/strategy/modals/VaultModal'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const VaultModalContext = createContext({} as any)

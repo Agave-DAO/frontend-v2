@@ -1,6 +1,6 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
 
-import { MinHealthConfigurationModal } from '@/src/components/modals/MinHealthConfigurationModal'
+import { MinHealthConfigurationModal } from '@/src/pagePartials/markets/modals/MinHealthConfigurationModal'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MinHealthConfigurationModalContext = createContext({} as any)
