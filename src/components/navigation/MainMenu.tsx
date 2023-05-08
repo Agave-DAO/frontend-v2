@@ -30,10 +30,18 @@ export const MainMenu: React.FC = ({ ...restProps }) => {
 
   return (
     <Wrapper {...restProps}>
-      {isConnected && <NavLink href="/my-account">My account</NavLink>}
-      {sections.map(({ href, section }) => {
+      {isConnected && (
+        <NavLink href="/my-account#home-tabs" scroll={false}>
+          My account
+        </NavLink>
+      )}
+      {sections.map(({ hash, href, section }) => {
         return (
-          <NavLink href={href} key={`main_menu_item_${section}`}>
+          <NavLink
+            href={`${href}${hash ? `#${hash}` : ''}`}
+            key={`main_menu_item_${section}`}
+            scroll={false}
+          >
             {section}
           </NavLink>
         )

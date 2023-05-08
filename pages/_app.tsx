@@ -56,6 +56,16 @@ const Container = styled(InnerContainer)`
   }
 `
 
+const MobileScrollTo = styled.div`
+  height: 0;
+  line-height: 0;
+  width: 0;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    display: none;
+  }
+`
+
 const Web3ConnectionProvider = dynamic(() => import('@/src/providers/web3ConnectionProvider'), {
   ssr: false,
 })
@@ -93,6 +103,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                     <ModalsProvider>
                       <Header />
                       <Scroll>
+                        <MobileScrollTo id="main" />
                         <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
                         <Footer />
                       </Scroll>

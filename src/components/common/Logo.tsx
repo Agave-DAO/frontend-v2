@@ -13,7 +13,7 @@ const HomeLink = styled.a`
 `
 
 export const Logo: React.FC = (props) => (
-  <Link href="/" legacyBehavior passHref>
+  <Link href="/#main" legacyBehavior passHref scroll={true}>
     <HomeLink {...props}>
       <LogoSVG />
     </HomeLink>
