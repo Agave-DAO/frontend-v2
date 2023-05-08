@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
 import { Rows as BaseRows, FormCard } from '@/src/components/card/FormCard'
-import { ButtonType, StepAuxiliaryAction } from '@/src/components/step/StepAuxiliaryAction'
+import { ButtonType, TitleWithAction } from '@/src/components/common/TitleWithAction'
 
 const TogglesWrapper = styled.div`
   align-items: center;
@@ -48,7 +48,7 @@ export const Stepper: React.FC<Props> = ({
 }) => (
   <FormCard {...restProps}>
     {toggles && <TogglesWrapper>{toggles}</TogglesWrapper>}
-    <StepAuxiliaryAction button={titleButton} title={title} />
+    <TitleWithAction button={titleButton} title={title} />
     <Rows>{info}</Rows>
     <StepForm>{children}</StepForm>
   </FormCard>

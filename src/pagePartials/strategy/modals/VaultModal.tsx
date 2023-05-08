@@ -3,11 +3,11 @@ import styled, { css } from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { Button, ButtonWrapper, FormCard } from '@/src/components/card/FormCard'
+import { Title as BaseFormTitle } from '@/src/components/common/TitleWithAction'
 import { Textfield } from '@/src/components/form/Textfield'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
-import { Title as BaseFormTitle } from '@/src/components/step/StepAuxiliaryAction'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { VaultInfo } from '@/src/pagePartials/strategy/vaults/VaultInfo'
 

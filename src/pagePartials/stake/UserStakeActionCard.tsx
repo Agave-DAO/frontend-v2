@@ -13,11 +13,11 @@ import {
   RowKey,
   RowValueBig,
 } from '@/src/components/card/FormCard'
+import { TitleWithAction } from '@/src/components/common/TitleWithAction'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
-import { StepAuxiliaryAction } from '@/src/components/step/StepAuxiliaryAction'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { ZERO_BN } from '@/src/constants/bigNumber'
@@ -138,7 +138,7 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
 
     return (
       <FormCard {...restProps}>
-        <StepAuxiliaryAction
+        <TitleWithAction
           button={{
             text: 'Use max',
             onClick: () => setValue(userAmountAvailableToStake.toString()),

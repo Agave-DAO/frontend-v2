@@ -14,7 +14,7 @@ const Wrapper = styled(Asset)`
 export const VaultDetails: React.FC = ({ ...restProps }) => {
   // this is obviously just a placeholder
   const getStrategyAddress = '0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb'
-  const { openCreateVaultModal } = useVaultModalContext()
+  const { openCreateVaultModal, openDepositWithdrawModal } = useVaultModalContext()
   const items = [
     {
       text: 'Edit name',
@@ -22,7 +22,7 @@ export const VaultDetails: React.FC = ({ ...restProps }) => {
     },
     {
       text: 'Withdraw',
-      onClick: () => console.log('withdraw'),
+      onClick: () => openDepositWithdrawModal('withdraw'),
     },
   ]
 
@@ -34,7 +34,7 @@ export const VaultDetails: React.FC = ({ ...restProps }) => {
       <Body>
         <ActionsWrapper>
           <MoreActionsDropdown items={items} size="lg" />
-          <ActionButton onClick={() => console.log('Deposit')}>Deposit</ActionButton>
+          <ActionButton onClick={() => openDepositWithdrawModal('deposit')}>Deposit</ActionButton>
         </ActionsWrapper>
       </Body>
     </Wrapper>
