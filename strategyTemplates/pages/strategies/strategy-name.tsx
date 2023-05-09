@@ -4,7 +4,7 @@ import { NextPage } from 'next'
 // yarn lint is not complaining about it
 // These comments will be deleted when the strategies are created
 // @ts-ignore
-import { StrategyNameContent } from '@/src/pagePartials/strategies/strategyName/StrategyNameContent'
+import { StrategyNameContent } from '@/src/pagePartials/strategy/strategies/strategyName/StrategyNameContent'
 
 const StrategyName: NextPage = () => {
   return <StrategyNameContent />
