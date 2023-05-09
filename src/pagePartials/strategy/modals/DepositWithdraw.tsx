@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
+import { BigNumber } from '@ethersproject/bignumber'
+
 import {
   Rows as BaseRows,
   Button,
@@ -11,14 +13,17 @@ import {
   RowValue,
 } from '@/src/components/card/FormCard'
 import { TitleWithAction } from '@/src/components/common/TitleWithAction'
+import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
+import { TokenInputDropdown } from '@/src/components/token/TokenInputDropdown'
 import { VaultInfo } from '@/src/pagePartials/strategy/vaults/VaultInfo'
 import { DepositWithdrawTabs } from '@/types/modal'
+import { Token } from '@/types/token'
 
 const Tabs = styled(BaseTabs)`
   margin: 32px auto;
@@ -37,6 +42,10 @@ const Rows = styled(BaseRows)`
   margin-bottom: 16px;
 `
 
+const Buttons = styled(ButtonWrapper)`
+  padding-top: 8px;
+`
+
 interface Props extends ModalProps {
   activeTab?: DepositWithdrawTabs
 }
@@ -46,6 +55,23 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
     const [tab, setTab] = useState<DepositWithdrawTabs>('deposit')
     const depositActive = tab === 'deposit'
     const withdrawActive = tab === 'withdraw'
+    const [value, setValue] = useState('0')
+    const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
+    const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
+    const [token, setToken] = useState<Token | null>({
+      symbol: 'USDC',
+      name: 'USD Coin',
+      address: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83',
+      decimals: 6,
+      chainId: 100,
+      logoURI: '/coins/usdc.svg',
+      extensions: {
+        isNative: false,
+        isNativeWrapper: false,
+      },
+      type: 'reserve',
+    })
+    const tokenSymbol = 'usdc'
 
     useEffect(() => {
       if (activeTab) {
@@ -62,6 +88,11 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
       console.log('deposit')
       onClose()
     }, [onClose])
+
+    const onDropdownChange = (token: Token | null) => {
+      setToken(token)
+      console.log('token', token)
+    }
 
     return (
       <Modal onClose={onClose} {...restProps}>
@@ -87,18 +118,31 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
               <Row>
                 <RowKey>Available</RowKey>
                 <RowValue>
-                  <TokenIcon dimensions={18} symbol={'usdc'} />
+                  <TokenIcon dimensions={18} symbol={tokenSymbol} />
                   1,000,000.00
                 </RowValue>
               </Row>
             </Rows>
-            <ButtonWrapper>
+            <TokenInputDropdown
+              decimals={18}
+              maxValue={'10000'}
+              onDropdownChange={onDropdownChange}
+              selectedToken={token}
+              setStatus={() => console.log('setStatus')}
+              setStatusText={() => console.log('setStatusText')}
+              setValue={setValue}
+              status={tokenInputStatus}
+              statusText={tokenInputStatusText}
+              usdPrice={BigNumber.from('1000000000000000000')}
+              value={value}
+            />
+            <Buttons>
               {depositActive ? (
                 <Button onClick={deposit}>Deposit</Button>
               ) : (
                 <Button onClick={withdraw}>Withdraw</Button>
               )}
-            </ButtonWrapper>
+            </Buttons>
           </FormCard>
         </RequiredConnection>
       </Modal>

@@ -14,6 +14,7 @@ const Textfield: any = styled.input<TextfieldProps>`
   flex-grow: 1;
   font-size: 1.8rem;
   font-weight: 700;
+  line-height: 1;
   outline: none;
   padding: 0;
 
