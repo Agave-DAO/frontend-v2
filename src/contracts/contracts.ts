@@ -5,6 +5,7 @@ import AgaveLendingPool from '@/src/contracts/abis/AgaveLending.json'
 import BaseIncentivesController from '@/src/contracts/abis/BaseIncentivesController.json'
 import ERC20 from '@/src/contracts/abis/ERC20.json'
 import StakedToken from '@/src/contracts/abis/StakedToken.json'
+import SwapperCoordinator from '@/src/contracts/abis/SwapperCoordinator.json'
 import WETHGateway from '@/src/contracts/abis/WETHGateway.json'
 
 export const contracts = {
@@ -61,6 +62,12 @@ export const contracts = {
       [Chains.gnosis]: '0x610525b415c1BFAeAB1a3fc3d85D87b92f048221',
     },
     abi: StakedToken,
+  },
+  SwapperCoordinator: {
+    address: {
+      [Chains.gnosis]: '0xdD494510e56347058703c277Ef770D3D9099ca42',
+    },
+    abi: SwapperCoordinator,
   },
 } as const
 

@@ -103,16 +103,12 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                   <AgaveTokensProvider>
                     <MinHealthConfigurationModalProvider>
                       <TokenActionsModalProvider>
-                        <VaultModalProvider>
-                          <Header />
-                          <Scroll>
-                            <MobileScrollTo id="main" />
-                            <Container as="main">
-                              {getLayout(<Component {...pageProps} />)}
-                            </Container>
-                            <Footer />
-                          </Scroll>
-                        </VaultModalProvider>
+                        <Header />
+                        <Scroll>
+                          <MobileScrollTo id="main" />
+                          <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
+                          <Footer />
+                        </Scroll>
                       </TokenActionsModalProvider>
                     </MinHealthConfigurationModalProvider>
                   </AgaveTokensProvider>

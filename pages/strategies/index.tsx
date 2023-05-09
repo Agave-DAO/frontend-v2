@@ -2,9 +2,11 @@ import { NextPage } from 'next'
 import styled from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
+import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { VaultsList } from '@/src/pagePartials/strategy/vaults/VaultsList'
-import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
+import VaultModalProvider, { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
 const Title = styled(BaseTitle)`
   margin-top: 23px;
@@ -14,7 +16,7 @@ const Title = styled(BaseTitle)`
   }
 `
 
-const Strategies: NextPage = () => {
+const StrategiesImpl = withGenericSuspense(() => {
   const { openCreateVaultModal } = useVaultModalContext()
 
   return (
@@ -27,6 +29,16 @@ const Strategies: NextPage = () => {
       </Title>
       <VaultsList />
     </>
+  )
+})
+
+const Strategies: NextPage = () => {
+  return (
+    <RequiredConnection>
+      <VaultModalProvider>
+        <StrategiesImpl />
+      </VaultModalProvider>
+    </RequiredConnection>
   )
 }
 

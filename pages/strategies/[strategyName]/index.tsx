@@ -11,6 +11,7 @@ import { HistoryList } from '@/src/pagePartials/strategy/positions/HistoryList'
 import { PositionsList } from '@/src/pagePartials/strategy/positions/PositionsList'
 import { CollateralSwap, Long, Short } from '@/src/pagePartials/strategy/strategies/StrategyItem'
 import { VaultDetails as BaseVaultDetails } from '@/src/pagePartials/strategy/vaults/VaultDetails'
+import VaultModalProvider from '@/src/providers/vaultModalProvider'
 
 const Title = styled(BaseTitle)`
   margin: 0 0 40px;
@@ -75,30 +76,32 @@ const Strategy: NextPage = () => {
 
   return (
     <>
-      <Title hasExtraControls>
-        <span>Vault {strategyName}</span>
-        <GoToExplorer address={getStrategyAddress} text="Vault" />
-      </Title>
-      <VaultDetails />
-      {positions.length ? (
-        <>
-          <ButtonTabs>
-            {tabs.map(({ isActive, onClick, text }, index) => (
-              <ButtonTab isActive={isActive} key={`button_tab_${index}`} onClick={onClick}>
-                {text}
-              </ButtonTab>
-            ))}
-          </ButtonTabs>
-          {showPositionsList && <PositionsList />}
-          {showHistoryList && <HistoryList />}
-          {showNewStrategyList && <>{strategyCreationItems}</>}
-        </>
-      ) : (
-        <>
-          <SubTitle>Create Strategy</SubTitle>
-          {strategyCreationItems}
-        </>
-      )}
+      <VaultModalProvider>
+        <Title hasExtraControls>
+          <span>Vault {strategyName}</span>
+          <GoToExplorer address={getStrategyAddress} text="Vault" />
+        </Title>
+        <VaultDetails />
+        {positions.length ? (
+          <>
+            <ButtonTabs>
+              {tabs.map(({ isActive, onClick, text }, index) => (
+                <ButtonTab isActive={isActive} key={`button_tab_${index}`} onClick={onClick}>
+                  {text}
+                </ButtonTab>
+              ))}
+            </ButtonTabs>
+            {showPositionsList && <PositionsList />}
+            {showHistoryList && <HistoryList />}
+            {showNewStrategyList && <>{strategyCreationItems}</>}
+          </>
+        ) : (
+          <>
+            <SubTitle>Create Strategy</SubTitle>
+            {strategyCreationItems}
+          </>
+        )}
+      </VaultModalProvider>
     </>
   )
 }
