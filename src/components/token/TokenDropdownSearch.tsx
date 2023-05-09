@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { DebounceInput } from 'react-debounce-input'
 
 import { ChevronDown } from '@/src/components/assets/ChevronDown'
+import { Magnifier } from '@/src/components/assets/Magnifier'
 import { BaseButton } from '@/src/components/buttons/Button'
 import {
   Dropdown,
@@ -15,17 +16,20 @@ import { useTokensLists } from '@/src/hooks/useTokensLists'
 import { Token } from '@/types/token'
 
 const Wrapper = styled(Dropdown)`
-  --inner-padding: 8px;
+  --inner-padding: 16px;
 
   .dropdownItems {
+    background-color: ${({ theme: { colors } }) => colors.almostWhite};
     max-height: 340px;
     overflow: auto;
+    padding: 0 1px;
+    width: 330px;
   }
 `
 
 const TextfieldContainer = styled.div<{ closeOnClick?: boolean }>`
-  background-color: ${({ theme }) => theme.dropdown.background};
-  border-bottom: 1px solid ${({ theme: { colors } }) => colors.borderColor};
+  background-color: ${({ theme: { colors } }) => colors.almostWhite};
+  border-bottom: 1px solid ${({ theme: { colors } }) => colors.lighterGray};
   padding: var(--inner-padding);
   position: sticky;
   top: 0;
@@ -34,9 +38,53 @@ const TextfieldContainer = styled.div<{ closeOnClick?: boolean }>`
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Textfield: any = styled(DebounceInput)`
+  background-color: ${({ theme: { colors } }) => colors.lightGrayUltra};
+  border-radius: var(--border-radius);
+  border: none;
+  color: ${({ theme: { colors } }) => colors.darkestGray};
+  flex-grow: 1;
   flex-shrink: 0;
+  font-size: 1.4rem;
+  font-weight: 400;
+  height: 49px;
   max-width: 100%;
-  width: auto;
+  padding-bottom: var(--padding);
+  padding-left: var(--padding);
+  padding-right: 40px;
+  padding-top: var(--padding);
+  position: relative;
+  width: 100%;
+  z-index: 1;
+
+  &::placeholder {
+    color: ${({ theme: { colors } }) => colors.darkGray};
+  }
+`
+
+const Item = styled(DropdownItem)`
+  border: none;
+  color: ${({ theme: { colors } }) => colors.darkestGray};
+  font-size: 1.4rem;
+  font-weight: 400;
+  height: 60px;
+  padding-left: var(--padding);
+  padding-right: var(--padding);
+
+  &:hover {
+    background-color: ${({ theme: { colors } }) => colors.lightGrayUltra};
+  }
+`
+
+const SearchIcon = styled(Magnifier)`
+  position: absolute;
+  right: calc(var(--padding) * 2);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+
+  path {
+    fill: ${({ theme: { colors } }) => colors.darkestGray};
+  }
 `
 
 const Value = styled.span`
@@ -54,9 +102,9 @@ const Chevron = styled(ChevronDown)`
 
 const NoResults = styled.div<{ closeOnClick?: boolean }>`
   align-items: center;
-  color: ${({ theme: { colors } }) => colors.textColor};
+  color: ${({ theme: { colors } }) => colors.secondary};
   display: flex;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 500;
   height: 80px;
   justify-content: center;
@@ -91,23 +139,30 @@ export const TokenDropdownSearch: React.FC<{
           <Textfield
             debounceTimeout={300}
             onChange={(e: { target: { value: string } }) => onSearch(e.target.value)}
-            placeholder="Search token..."
+            placeholder="Search asset..."
             type="search"
             value={searchString}
           />
+          <SearchIcon />
         </TextfieldContainer>,
         ...tokensList.map((item, index) => (
-          <DropdownItem
+          <Item
             key={index}
             onClick={() => {
               onSelectToken(item)
             }}
           >
-            <TokenIcon symbol={item.symbol} />
+            <TokenIcon dimensions={32} symbol={item.symbol} />
             {item.symbol}
-          </DropdownItem>
+          </Item>
         )),
-        tokensList.length === 0 ? <NoResults closeOnClick={false}>Not found.</NoResults> : <></>,
+        tokensList.length === 0 ? (
+          <NoResults closeOnClick={false}>
+            <strong>{searchString}</strong>&nbsp;not found.
+          </NoResults>
+        ) : (
+          <></>
+        ),
       ]}
       {...restProps}
     />

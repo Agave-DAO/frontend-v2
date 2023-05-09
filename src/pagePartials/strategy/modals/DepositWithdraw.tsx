@@ -39,7 +39,7 @@ const Info = styled(EmptyContent)`
 `
 
 const Rows = styled(BaseRows)`
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 `
 
 const Buttons = styled(ButtonWrapper)`
@@ -71,7 +71,6 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
       },
       type: 'reserve',
     })
-    const tokenSymbol = 'usdc'
 
     useEffect(() => {
       if (activeTab) {
@@ -118,7 +117,7 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
               <Row>
                 <RowKey>Available</RowKey>
                 <RowValue>
-                  <TokenIcon dimensions={18} symbol={tokenSymbol} />
+                  {token && <TokenIcon dimensions={18} symbol={token?.symbol} />}
                   1,000,000.00
                 </RowValue>
               </Row>

@@ -52,6 +52,8 @@ const white50 = 'rgba(255, 255, 255, 0.5)'
 const white60 = 'rgba(255, 255, 255, 0.6)'
 const white80 = 'rgba(255, 255, 255, 0.9)'
 
+const almostWhite = '#F0F8F7'
+
 const textColor = '#fff'
 const textColor50 = white50
 const textColor60 = white60
@@ -189,6 +191,7 @@ export const dark = {
     borderColor: borderColor,
   },
   colors: {
+    almostWhite: almostWhite,
     accent: accent,
     accentDark: accentDark,
     black05: black05,
@@ -218,7 +221,7 @@ export const dark = {
     greenGradientLight: greenGradientLight,
     greenGradientMedium: greenGradientMedium,
     lightGray: lightGray,
-    lightGrayUltraL: lightGrayUltra,
+    lightGrayUltra: lightGrayUltra,
     lighterGray: lighterGray,
     lightestGray: lightestGray,
     mainDark1: mainDark1,
