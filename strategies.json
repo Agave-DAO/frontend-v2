@@ -1,0 +1,9 @@
+{
+  "strategies": [
+    {
+      "slug": "collateral-swap",
+      "name": "Collateral Swap",
+      "type": "Action"
+    }
+  ]
+}
