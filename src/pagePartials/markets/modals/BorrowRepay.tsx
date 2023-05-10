@@ -35,10 +35,10 @@ export const BorrowRepay: React.FC<Props> = withGenericSuspense(
         {borrowActive && <BorrowInfo token={token} />}
         {repayActive && <RepayInfo token={token} />}
         <Tabs>
-          <Tab isActive={tab === 'borrow'} onClick={() => setTab('borrow')}>
+          <Tab isActive={borrowActive} onClick={() => setTab('borrow')}>
             Borrow
           </Tab>
-          <Tab isActive={tab === 'repay'} onClick={() => setTab('repay')}>
+          <Tab isActive={repayActive} onClick={() => setTab('repay')}>
             Repay
           </Tab>
         </Tabs>

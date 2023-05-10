@@ -1,8 +1,11 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
 
-import { BorrowRepayModal, DepositWithdrawModal } from '@/src/components/modals/ActionsModal'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useTokenInfo } from '@/src/hooks/useTokenInfo'
+import {
+  BorrowRepayModal,
+  DepositWithdrawModal,
+} from '@/src/pagePartials/markets/modals/ActionsModal'
 import { BorrowRepayTabs, DepositWithdrawTabs, Modals } from '@/types/modal'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

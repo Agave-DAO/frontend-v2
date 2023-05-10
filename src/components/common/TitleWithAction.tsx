@@ -27,7 +27,7 @@ export interface ButtonType {
   variant?: ButtonVariants
 }
 
-export const StepAuxiliaryAction: React.FC<{
+export const TitleWithAction: React.FC<{
   title: string
   button: ButtonType
 }> = ({ button, title, ...restProps }) => {

@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 import { Done } from '@/src/components/assets/Done'
 import { ExternalLink } from '@/src/components/card/FormCard'
-import { ButtonType } from '@/src/components/step/StepAuxiliaryAction'
+import { ButtonType } from '@/src/components/common/TitleWithAction'
 import { Step } from '@/src/pagePartials/markets/stepper/Step'
 import { StepAction } from '@/src/pagePartials/markets/stepper/StepAction'
 import { Stepper } from '@/src/pagePartials/markets/stepper/Stepper'

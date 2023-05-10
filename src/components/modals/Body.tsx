@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const Body = styled.div`
   display: flex;
   flex-grow: 1;
+  max-width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     background: linear-gradient(

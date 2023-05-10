@@ -30,10 +30,10 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
       <>
         <DepositInfo token={token} />
         <Tabs>
-          <Tab isActive={tab === 'deposit'} onClick={() => setTab('deposit')}>
+          <Tab isActive={depositActive} onClick={() => setTab('deposit')}>
             Deposit
           </Tab>
-          <Tab isActive={tab === 'withdraw'} onClick={() => setTab('withdraw')}>
+          <Tab isActive={withdrawActive} onClick={() => setTab('withdraw')}>
             Withdraw
           </Tab>
         </Tabs>
