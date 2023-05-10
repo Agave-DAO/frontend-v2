@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
-import { withGenericSuspense } from '../helpers/SafeSuspense'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { Button, ButtonWrapper, FormCard } from '@/src/components/card/FormCard'
 import { Title as BaseFormTitle } from '@/src/components/common/TitleWithAction'
-import { Textfield } from '@/src/components/form/Textfield'
+import { Formfield } from '@/src/components/form/Formfield'
+import { Textfield, TextfieldStatus } from '@/src/components/form/Textfield'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
+import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { useVaults } from '@/src/hooks/presentation/useVaults'
@@ -51,9 +52,12 @@ interface Props extends ModalProps {
   vaultAddress?: string
 }
 
+const MIN_VAULT_NAME_LENGTH = 3
+const MAX_VAULT_NAME_LENGTH = 30
+
 const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, ...restProps }) => {
   const editVault = useMemo(() => (vaultAddress !== undefined ? true : false), [vaultAddress])
-  const { createVault, refetchUserVaults } = useVaults()
+  const { createVault, refetchUserVaults, vaultNameExists } = useVaults()
   const [vaultName, setVaultName] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -63,17 +67,26 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, ...restProps }) =>
       const vault = await createVault(vaultName)
       setLoading(false)
       if (vault) {
-        refetchUserVaults()
+        await refetchUserVaults()
         setVaultName('')
         onClose()
       }
     }
   }
 
-  const disableSubmit = useMemo(
-    () => !vaultName || loading || vaultName.length < 3,
-    [vaultName, loading],
-  )
+  const error = useMemo(() => {
+    if (vaultName.length < MIN_VAULT_NAME_LENGTH) {
+      return 'Vault name must be at least 3 characters'
+    }
+    if (vaultName.length > MAX_VAULT_NAME_LENGTH) {
+      return 'Vault name must be less than 30 characters'
+    }
+    if (vaultNameExists(vaultName)) {
+      return 'Vault name already exists'
+    }
+  }, [vaultName, vaultNameExists])
+
+  const disableSubmit = useMemo(() => !vaultName || loading || !!error, [vaultName, loading, error])
 
   return (
     <Modal onClose={onClose} {...restProps}>
@@ -108,11 +121,18 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, ...restProps }) =>
         <FormCard>
           <FormTitle>{editVault ? 'Rename vault' : 'Create new vault'}</FormTitle>
           <Label>Name</Label>
-          <Textfield
-            onChange={(e) => setVaultName(e.currentTarget.value)}
-            value={vaultName}
-            variant="light"
+          <Formfield
+            formControl={
+              <Textfield
+                onChange={(e) => setVaultName(e.currentTarget.value)}
+                value={vaultName}
+                variant="light"
+              />
+            }
+            status={vaultName && error ? TextfieldStatus.error : undefined}
+            statusText={error}
           />
+
           <Buttons>
             <Button disabled={disableSubmit} onClick={saveAndClose}>
               {editVault ? 'Rename' : 'Create'}

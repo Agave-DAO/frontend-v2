@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+
 import { useCreateNewVault } from '@/src/hooks/mutations/useCreateNewVault'
 import { useGetUserVaults } from '@/src/hooks/queries/useGetUserVaults'
 
@@ -11,5 +13,13 @@ export const useVaults = () => {
   const { refetchUserVaults, vaultList } = useGetUserVaults()
   const createVault = useCreateNewVault()
 
-  return { vaultList, createVault, refetchUserVaults }
+  /* `const vaultNameExists` is a function that checks if a given `vaultName` already exists in the
+  `vaultList` array obtained from the `useGetUserVaults` */
+  const vaultNameExists = useCallback(
+    (vaultName: string) =>
+      vaultList?.some((vault) => vault.name.toLowerCase() === vaultName.toLowerCase()),
+    [vaultList],
+  )
+
+  return { vaultList, createVault, refetchUserVaults, vaultNameExists }
 }
