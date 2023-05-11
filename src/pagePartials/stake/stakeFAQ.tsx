@@ -3,24 +3,10 @@ export const stakeFAQ = [
     title: 'What is the cooldown period?',
     content: (
       <p>
-        The cooldown is how long you have to wait to withdraw a stake. It is a "safety module". The
-        idea is that you can't immediately withdraw your staked tokens, since you are staking to
-        protect from a shortfall event.
-      </p>
-    ),
-  },
-  {
-    title: 'What is a shortfall?',
-    content: (
-      <p>
-        <a
-          href="https://www.investopedia.com/terms/s/shortfall.asp"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Click here
-        </a>{' '}
-        for a definition of shortfall.
+        The cooldown is how long you have to wait to withdraw a stake. The idea is that you can't
+        immediately withdraw your staked tokens to guarantee you cannot attempt Governance abuse
+        without consequence. Additionally it aligns long-term holders by rewarding them for their
+        loyalty.
       </p>
     ),
   },
@@ -47,11 +33,12 @@ export const stakeFAQ = [
     content: <p>Yes! You'll receive staking rewards until you effectively unstake your tokens.</p>,
   },
   {
-    title: 'Will it be possible to vote with stkAGVE too?',
+    title: 'Is it possible to vote with stkAGVE too?',
     content: (
       <p>
         Yes. Through Snapshot Voting at the time of the Snapshot you can vote with your agave
-        holdings, both on your wallet and on the Safety Module.
+        holdings, both on your wallet and on the Staking Module. stkAGVE additionally, is
+        exclusively used as the bond that enforces the consensus to be executed.
       </p>
     ),
   },
