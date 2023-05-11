@@ -83,7 +83,8 @@ const Stake: NextPage = () => {
         </Button>
       </Title>
       <Paragraph>
-        Staking Agave in helps to secure the protocol Governance in exchange for protocol incentives
+        Staking Agave helps to secure the protocol's governance by incentivizing participants with
+        protocol rewards.
       </Paragraph>
       <MandatoryConnection>
         <Funds />
