@@ -115,11 +115,11 @@ export const MyRewards: React.FC = withGenericSuspense(
           <Reward>
             <RewardValue>{noRewards ? '0.00' : unclaimedRewardsFormatted}</RewardValue>
             <Percentage>
-              40%
+              50%
               <AGAVEMini size={18} />
             </Percentage>
             <Percentage>
-              60%
+              50%
               <GNOMini size={18} />
             </Percentage>
           </Reward>
