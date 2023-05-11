@@ -65,18 +65,26 @@ export const homeFAQ = [
           Total Supply: <b>100k</b>
         </li>
         <li>
-          Circulating Supply: <b>27,799k</b>
+          Treasury Supply:{' '}
+          <a href="https://gnosisscan.io/address/0xb4c575308221caa398e0dd2cdeb6b2f10d7b000a">
+            ~43% (non-circulating)
+          </a>
         </li>
       </ul>
     ),
   },
   {
-    title: 'Is there a website for Agave?',
+    title: 'How can i access Agave?',
     content: (
       <ul>
         <li>
           <a href="https://agavefinance.eth.limo/" rel="noreferrer" target="_blank">
             https://agavefinance.eth.limo/
+          </a>
+        </li>
+        <li>
+          <a href="ipns://agave.finance/" rel="noreferrer" target="_blank">
+            ipns://agave.finance/
           </a>
         </li>
         <li>
@@ -103,11 +111,17 @@ export const homeFAQ = [
     title: "Did Agave's Contract get Audited?",
     content: (
       <p>
-        Prior to launch, the audit of Agave's contracts has been completed by{' '}
-        <a href="https://chainsulting.de/" rel="noreferrer" target="_blank">
-          Chainsulting
+        Agave current Deployment got audited by Gnosis Auditing Team in December 2022.
+        <br></br>
+        Additionally an upgrade has been audited by{' '}
+        <a
+          href="https://drive.google.com/file/d/1qLQdjKGZSO6GR3M46sJEn6NB4U1xLU2B/view?usp=sharing"
+          rel="noreferrer"
+          target="_blank"
+        >
+          SUB7
         </a>{' '}
-        on May 1st.
+        executed in AGIP 8.
       </p>
     ),
   },
@@ -115,8 +129,12 @@ export const homeFAQ = [
     title: 'Can I contribute in some way?',
     content: (
       <p>
-        Your participation is always welcome. We've recently published a first list of open
-        bounties, and more will come in the future.
+        Your participation is always welcome. We'd love to meet you on our{' '}
+        <a href="https://discord.gg/Bsuqe76QPm" rel="noreferrer" target="_blank">
+          {' '}
+          Discord
+        </a>{' '}
+        server.
       </p>
     ),
   },
@@ -149,18 +167,6 @@ export const homeFAQ = [
     ),
   },
   {
-    title: 'Where can I track LP rewards?',
-    content: (
-      <p>
-        LP tracking can be found on{' '}
-        <a href="https://www.liquidityfolio.com/" rel="noreferrer" target="_blank">
-          Liquidityfolio
-        </a>
-        .
-      </p>
-    ),
-  },
-  {
     title: "How do I follow Agave's upcoming announcements?",
     content: (
       <>
@@ -168,17 +174,13 @@ export const homeFAQ = [
         <ul>
           <li>
             Agave Discord:{' '}
-            <a
-              href="https://discord.com/channels/816889381737725963/816889382850134027"
-              rel="noreferrer"
-              target="_blank"
-            >
+            <a href="https://discord.gg/Bsuqe76QPm" rel="noreferrer" target="_blank">
               Agave Discord
             </a>
           </li>
           <li>
             Telegram:{' '}
-            <a href="https://t.me/Agave1Hiv" rel="noreferrer" target="_blank">
+            <a href="https://t.me/Agave1Hive" rel="noreferrer" target="_blank">
               https://t.me/Agave1Hive
             </a>
           </li>
@@ -195,20 +197,6 @@ export const homeFAQ = [
             </a>
           </li>
           <li>
-            1Hive Discord:{' '}
-            <a href="https://discord.com/invite/xTZjbRjc8t" rel="noreferrer" target="_blank">
-              1Hive Discord 1Hive
-            </a>{' '}
-            -{' '}
-            <a
-              href="https://discord.com/channels/698287700834517064/813823983120023583"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Agave Channel
-            </a>
-          </li>
-          <li>
             Reddit:{' '}
             <a href="https://www.reddit.com/r/AGVE/" rel="noreferrer" target="_blank">
               https://www.reddit.com/r/AGVE/
@@ -222,13 +210,9 @@ export const homeFAQ = [
     title: 'My issue was not addressed in the FAQ. What can I do?',
     content: (
       <p>
-        The best way to get help from a member of the 1Hive community is to land on the ⛈<b>help</b>{' '}
-        channel on{' '}
-        <a
-          href="https://discord.com/channels/816889381737725963/816889382850134027"
-          rel="noreferrer"
-          target="_blank"
-        >
+        The best way to get help from a member of the Agave community is to ask in the{' '}
+        <b>support</b> channels on{' '}
+        <a href="https://discord.gg/Bsuqe76QPm" rel="noreferrer" target="_blank">
           Discord
         </a>
         .

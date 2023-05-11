@@ -21,7 +21,7 @@ export const useGetRewardTokenData = () => {
   const agvePrice = useGetStakingAgvePrice()
   const { gnoPrice } = useGetGnoPrice()
 
-  const gqlSymm = getSubgraphSdkByNetwork(appChainId, SubgraphName.SymmetricV1)
+  const gqlSymm = getSubgraphSdkByNetwork(appChainId, SubgraphName.BalancerV2)
 
   const { data: rewardTokenData } = gqlSymm.useSymmetricV2Pool(undefined, {})
 
@@ -31,7 +31,6 @@ export const useGetRewardTokenData = () => {
     }
 
     const { pool } = rewardTokenData
-
     if (!pool?.tokens) {
       return
     }

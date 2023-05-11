@@ -13,7 +13,7 @@ export const links = [
   },
   {
     text: 'Alvin',
-    href: 'https://agave.finance/alvin',
+    href: 'https://alvin.agave.finance',
   },
   {
     text: 'Bug Bounty',

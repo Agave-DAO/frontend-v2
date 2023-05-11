@@ -155,7 +155,7 @@ export const MarketList: React.FC = withGenericSuspense(
 
     return workingMarkets ? (
       <Wrapper {...restProps}>
-        <WelcomeText>Move cryptocurrency from your wallet and start earning interest.</WelcomeText>
+        <WelcomeText>Deposit a supported token and start earning interest.</WelcomeText>
         <SearchWrapper>
           <SearchField
             onChange={(e) => setSearch(e.target.value)}
@@ -243,7 +243,7 @@ export const MarketList: React.FC = withGenericSuspense(
   },
   ({ ...restProps }) => (
     <Wrapper {...restProps}>
-      <WelcomeText>Move cryptocurrency from your wallet and start earning interest.</WelcomeText>
+      <WelcomeText>Deposit a supported token and start earning interest.</WelcomeText>
       <SearchWrapper>
         <SearchField disabled placeholder="Search asset" type="search" />
         <Magnifier />
