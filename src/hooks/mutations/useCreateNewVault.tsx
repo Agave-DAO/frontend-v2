@@ -2,11 +2,11 @@ import { useCallback } from 'react'
 
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
-import { SwapperCoordinator__factory } from '@/types/generated/typechain'
+import { Swapper_Coordinator__factory } from '@/types/generated/typechain'
 
 export const useCreateNewVault = () => {
   const SwapperCoordinatorContract = useContractInstance(
-    SwapperCoordinator__factory,
+    Swapper_Coordinator__factory,
     'SwapperCoordinator',
     true,
   )

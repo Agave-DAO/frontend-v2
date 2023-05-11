@@ -4,15 +4,15 @@ import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import {
-  SwapperCoordinator,
-  SwapperCoordinator__factory,
-  SwapperUserProxyImplementation__factory,
+  Swapper_Coordinator,
+  Swapper_Coordinator__factory,
+  Swapper_UserProxyImplementation__factory,
 } from '@/types/generated/typechain'
 
 export const useGetUserVaults = () => {
   const { address, batchProvider } = useWeb3ConnectedApp()
   const SwapperCoordinatorContract = useContractInstance(
-    SwapperCoordinator__factory,
+    Swapper_Coordinator__factory,
     'SwapperCoordinator',
   )
 
@@ -20,7 +20,7 @@ export const useGetUserVaults = () => {
 
   // get user vault addresses
   const [{ data: vaultAddresses }, refetchUserVaultAddresses] = useContractCall<
-    SwapperCoordinator,
+    Swapper_Coordinator,
     typeof calls
   >(calls, [[address]], `vaultList-${address}`)
 
@@ -32,7 +32,7 @@ export const useGetUserVaults = () => {
     async ({ vaultAddresses }) => {
       const results = await Promise.all(
         vaultAddresses.map(async (vaultAddress) => {
-          const contract = SwapperUserProxyImplementation__factory.connect(
+          const contract = Swapper_UserProxyImplementation__factory.connect(
             vaultAddress,
             batchProvider,
           )

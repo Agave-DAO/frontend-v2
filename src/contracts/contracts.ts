@@ -5,7 +5,7 @@ import AgaveLendingPool from '@/src/contracts/abis/AgaveLending.json'
 import BaseIncentivesController from '@/src/contracts/abis/BaseIncentivesController.json'
 import ERC20 from '@/src/contracts/abis/ERC20.json'
 import StakedToken from '@/src/contracts/abis/StakedToken.json'
-import SwapperCoordinator from '@/src/contracts/abis/SwapperCoordinator.json'
+import SwapperCoordinator from '@/src/contracts/abis/Swapper_Coordinator.json'
 import WETHGateway from '@/src/contracts/abis/WETHGateway.json'
 
 export const contracts = {

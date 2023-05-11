@@ -2,11 +2,11 @@ import { useCallback } from 'react'
 
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
-import { SwapperUserProxyImplementation__factory } from '@/types/generated/typechain'
+import { Swapper_UserProxyImplementation__factory } from '@/types/generated/typechain'
 
 export const useEditVaultName = (vaultAddress: string) => {
   const SwapperProxyImplementationContract = useContractInstance(
-    SwapperUserProxyImplementation__factory,
+    Swapper_UserProxyImplementation__factory,
     vaultAddress,
   )
 
