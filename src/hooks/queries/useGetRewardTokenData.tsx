@@ -21,9 +21,9 @@ export const useGetRewardTokenData = () => {
   const agvePrice = useGetStakingAgvePrice()
   const { gnoPrice } = useGetGnoPrice()
 
-  const gqlSymm = getSubgraphSdkByNetwork(appChainId, SubgraphName.BalancerV2)
+  const gqlBalancer = getSubgraphSdkByNetwork(appChainId, SubgraphName.BalancerV2)
 
-  const { data: rewardTokenData } = gqlSymm.useSymmetricV2Pool(undefined, {})
+  const { data: rewardTokenData } = gqlBalancer.useBalancerV2Pool(undefined, {})
 
   const parsedData = useMemo(() => {
     if (!rewardTokenData || !agvePrice || !gnoPrice) {
@@ -39,7 +39,7 @@ export const useGetRewardTokenData = () => {
     const gnoPriceAsNumber = FixedNumber.fromValue(gnoPrice, 18).toUnsafeFloat()
     const totalSharesAsNumber = FixedNumber.from(pool.totalShares, 18).toUnsafeFloat()
 
-    /* Calculating the total liquidity size of the symmetric pool by iterating over the
+    /* Calculating the total liquidity size of the Balancer pool by iterating over the
     tokens in the pool and multiplying the balance of each token by its respective price (AGVE or
     GNO).
      */
