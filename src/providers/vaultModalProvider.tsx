@@ -1,7 +1,8 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
 
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { DepositWithdraw } from '@/src/pagePartials/strategy/modals/DepositWithdraw'
-import { VaultModal } from '@/src/pagePartials/strategy/modals/VaultModal'
+import VaultModal from '@/src/pagePartials/strategy/modals/VaultModal'
 import { DepositWithdrawTabs } from '@/types/modal'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,16 +30,18 @@ const VaultModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <VaultModalContext.Provider value={values}>
       {children}
-      <VaultModal
-        isOpen={showModal === 'vault'}
-        onClose={() => setShowModal(false)}
-        vaultAddress={vaultAddress}
-      />
-      <DepositWithdraw
-        activeTab={showModal === 'deposit' ? 'deposit' : 'withdraw'}
-        isOpen={showModal === 'deposit' || showModal === 'withdraw' ? true : false}
-        onClose={() => setShowModal(false)}
-      />
+      <RequiredConnection>
+        <VaultModal
+          isOpen={showModal === 'vault'}
+          onClose={() => setShowModal(false)}
+          vaultAddress={vaultAddress}
+        />
+        <DepositWithdraw
+          activeTab={showModal === 'deposit' ? 'deposit' : 'withdraw'}
+          isOpen={showModal === 'deposit' || showModal === 'withdraw' ? true : false}
+          onClose={() => setShowModal(false)}
+        />
+      </RequiredConnection>
     </VaultModalContext.Provider>
   )
 }

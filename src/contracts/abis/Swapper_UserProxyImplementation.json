@@ -1,0 +1,383 @@
+[
+  {
+    "inputs": [{ "internalType": "address", "name": "_coordinator", "type": "address" }],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "delegate", "type": "address" }
+    ],
+    "name": "DelegateIs",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "token", "type": "address" }],
+    "name": "DelegateTokenAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "token", "type": "address" }],
+    "name": "DelegateTokenRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes", "name": "orderUid", "type": "bytes" },
+      { "indexed": false, "internalType": "address", "name": "destroyer", "type": "address" },
+      { "indexed": true, "internalType": "bytes32", "name": "orderType", "type": "bytes32" }
+    ],
+    "name": "OrderCancelled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes", "name": "orderUid", "type": "bytes" },
+      {
+        "components": [
+          { "internalType": "address", "name": "creator", "type": "address" },
+          { "internalType": "address", "name": "tokenIn", "type": "address" },
+          { "internalType": "address", "name": "tokenOut", "type": "address" },
+          { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
+          { "internalType": "uint256", "name": "validTo", "type": "uint256" },
+          { "internalType": "address[]", "name": "beforeActionsTo", "type": "address[]" },
+          { "internalType": "bytes[]", "name": "beforeActionsData", "type": "bytes[]" },
+          { "internalType": "address[]", "name": "afterActionsTo", "type": "address[]" },
+          { "internalType": "bytes[]", "name": "afterActionsData", "type": "bytes[]" },
+          { "internalType": "bytes32", "name": "orderType", "type": "bytes32" }
+        ],
+        "indexed": false,
+        "internalType": "struct Swapper_UserProxyImplementation.Order",
+        "name": "order",
+        "type": "tuple"
+      }
+    ],
+    "name": "OrderCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes", "name": "orderUid", "type": "bytes" },
+      { "indexed": false, "internalType": "address", "name": "creator", "type": "address" },
+      { "indexed": true, "internalType": "bytes32", "name": "orderType", "type": "bytes32" }
+    ],
+    "name": "OrderExpired",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes", "name": "orderUid", "type": "bytes" },
+      {
+        "components": [
+          { "internalType": "address", "name": "creator", "type": "address" },
+          { "internalType": "address", "name": "tokenIn", "type": "address" },
+          { "internalType": "address", "name": "tokenOut", "type": "address" },
+          { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
+          { "internalType": "uint256", "name": "validTo", "type": "uint256" },
+          { "internalType": "address[]", "name": "beforeActionsTo", "type": "address[]" },
+          { "internalType": "bytes[]", "name": "beforeActionsData", "type": "bytes[]" },
+          { "internalType": "address[]", "name": "afterActionsTo", "type": "address[]" },
+          { "internalType": "bytes[]", "name": "afterActionsData", "type": "bytes[]" },
+          { "internalType": "bytes32", "name": "orderType", "type": "bytes32" }
+        ],
+        "indexed": false,
+        "internalType": "struct Swapper_UserProxyImplementation.Order",
+        "name": "order",
+        "type": "tuple"
+      }
+    ],
+    "name": "OrderSettled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "string", "name": "newName", "type": "string" }],
+    "name": "ProxyNameChanged",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "GPv2Settlement",
+    "outputs": [{ "internalType": "contract IGPv2Settlement", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "GPv2VaultRelay",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_newOwner", "type": "address" }],
+    "name": "TransferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "activeOrdersByUid",
+    "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "contract IERC20", "name": "sellToken", "type": "address" },
+          { "internalType": "contract IERC20", "name": "buyToken", "type": "address" },
+          { "internalType": "address", "name": "receiver", "type": "address" },
+          { "internalType": "uint256", "name": "sellAmount", "type": "uint256" },
+          { "internalType": "uint256", "name": "buyAmount", "type": "uint256" },
+          { "internalType": "uint32", "name": "validTo", "type": "uint32" },
+          { "internalType": "bytes32", "name": "appData", "type": "bytes32" },
+          { "internalType": "uint256", "name": "feeAmount", "type": "uint256" },
+          { "internalType": "bytes32", "name": "kind", "type": "bytes32" },
+          { "internalType": "bool", "name": "partiallyFillable", "type": "bool" },
+          { "internalType": "bytes32", "name": "sellTokenBalance", "type": "bytes32" },
+          { "internalType": "bytes32", "name": "buyTokenBalance", "type": "bytes32" }
+        ],
+        "internalType": "struct GPv2Order.Data",
+        "name": "order",
+        "type": "tuple"
+      },
+      { "internalType": "bytes", "name": "apiOrderUid", "type": "bytes" },
+      { "internalType": "address[]", "name": "beforeActionsTo", "type": "address[]" },
+      { "internalType": "bytes[]", "name": "beforeActionsData", "type": "bytes[]" },
+      { "internalType": "address[]", "name": "afterActionsTo", "type": "address[]" },
+      { "internalType": "bytes[]", "name": "afterActionsData", "type": "bytes[]" },
+      { "internalType": "bytes32", "name": "_orderType", "type": "bytes32" }
+    ],
+    "name": "addDelegateOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "delegatedToken", "type": "address" }],
+    "name": "addDelegatedToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "contract IERC20", "name": "sellToken", "type": "address" },
+          { "internalType": "contract IERC20", "name": "buyToken", "type": "address" },
+          { "internalType": "address", "name": "receiver", "type": "address" },
+          { "internalType": "uint256", "name": "sellAmount", "type": "uint256" },
+          { "internalType": "uint256", "name": "buyAmount", "type": "uint256" },
+          { "internalType": "uint32", "name": "validTo", "type": "uint32" },
+          { "internalType": "bytes32", "name": "appData", "type": "bytes32" },
+          { "internalType": "uint256", "name": "feeAmount", "type": "uint256" },
+          { "internalType": "bytes32", "name": "kind", "type": "bytes32" },
+          { "internalType": "bool", "name": "partiallyFillable", "type": "bool" },
+          { "internalType": "bytes32", "name": "sellTokenBalance", "type": "bytes32" },
+          { "internalType": "bytes32", "name": "buyTokenBalance", "type": "bytes32" }
+        ],
+        "internalType": "struct GPv2Order.Data",
+        "name": "order",
+        "type": "tuple"
+      },
+      { "internalType": "bytes", "name": "apiOrderUid", "type": "bytes" },
+      { "internalType": "address[]", "name": "beforeActionsTo", "type": "address[]" },
+      { "internalType": "bytes[]", "name": "beforeActionsData", "type": "bytes[]" },
+      { "internalType": "address[]", "name": "afterActionsTo", "type": "address[]" },
+      { "internalType": "bytes[]", "name": "afterActionsData", "type": "bytes[]" },
+      { "internalType": "bytes32", "name": "_orderType", "type": "bytes32" }
+    ],
+    "name": "addOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "afterSettlement",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "beforeSettlement",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "coordinator",
+    "outputs": [{ "internalType": "contract ICoordinator", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "delegate",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+    "name": "delegatedTokens",
+    "outputs": [{ "internalType": "bool", "name": "delegated", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes", "name": "orderUid", "type": "bytes" }],
+    "name": "getActiveOrderByUid",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "creator", "type": "address" },
+          { "internalType": "address", "name": "tokenIn", "type": "address" },
+          { "internalType": "address", "name": "tokenOut", "type": "address" },
+          { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
+          { "internalType": "uint256", "name": "validTo", "type": "uint256" },
+          { "internalType": "address[]", "name": "beforeActionsTo", "type": "address[]" },
+          { "internalType": "bytes[]", "name": "beforeActionsData", "type": "bytes[]" },
+          { "internalType": "address[]", "name": "afterActionsTo", "type": "address[]" },
+          { "internalType": "bytes[]", "name": "afterActionsData", "type": "bytes[]" },
+          { "internalType": "bytes32", "name": "orderType", "type": "bytes32" }
+        ],
+        "internalType": "struct Swapper_UserProxyImplementation.Order",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "tokenIn", "type": "address" }],
+    "name": "getActiveOrderUidsWithTokenIn",
+    "outputs": [{ "internalType": "bytes[]", "name": "", "type": "bytes[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "tokenOut", "type": "address" }],
+    "name": "getActiveOrderUidsWithTokenOut",
+    "outputs": [{ "internalType": "bytes[]", "name": "", "type": "bytes[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getActiveOrders",
+    "outputs": [{ "internalType": "bytes[]", "name": "", "type": "bytes[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "realOwner", "type": "address" },
+      { "internalType": "string", "name": "_proxyName", "type": "string" }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "orderCleanup",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes", "name": "orderUID", "type": "bytes" }],
+    "name": "orders",
+    "outputs": [
+      { "internalType": "address", "name": "creator", "type": "address" },
+      { "internalType": "address", "name": "tokenIn", "type": "address" },
+      { "internalType": "address", "name": "tokenOut", "type": "address" },
+      { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
+      { "internalType": "uint256", "name": "validTo", "type": "uint256" },
+      { "internalType": "bytes32", "name": "orderType", "type": "bytes32" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxyName",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "delegatedToken", "type": "address" }],
+    "name": "removeDelegatedToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes", "name": "orderUid", "type": "bytes" }],
+    "name": "removeOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newDelegate", "type": "address" }],
+    "name": "setDelegate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "_newName", "type": "string" }],
+    "name": "setProxyName",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

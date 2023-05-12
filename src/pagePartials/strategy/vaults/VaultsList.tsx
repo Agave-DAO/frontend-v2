@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import styled from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { List, ListNavigationItem } from '@/src/components/common/List'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { useVaults } from '@/src/hooks/presentation/useVaults'
 import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
 const Wrapper = styled.div`
@@ -42,17 +42,18 @@ const Buttons = styled.div`
 
 export const VaultsList: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
-    const [vaults, setVaults] = useState<Array<number>>([])
+    const { vaultList: vaults } = useVaults()
     const { openCreateVaultModal } = useVaultModalContext()
 
-    return vaults.length ? (
+    return vaults?.length ? (
       <Wrapper {...restProps}>
         <List>
           {vaults.map((vault, index) => (
             <ListNavigationItem
-              href={`/strategies/${vault}`}
+              // TODO: change to query param
+              href={`/strategies/${vault.vaultAddress}`}
               key={index}
-              title={`Vault ${vault}`}
+              title={`Vault ${vault.name}`}
             ></ListNavigationItem>
           ))}
         </List>
@@ -81,11 +82,6 @@ export const VaultsList: React.FC = withGenericSuspense(
               <ActionButton
                 onClick={() => {
                   openCreateVaultModal()
-
-                  // delete this after vault creation is implemented
-                  setTimeout(() => {
-                    setVaults([...vaults, 0, 1, 2, 3, 4])
-                  }, 500)
                 }}
               >
                 Create vault

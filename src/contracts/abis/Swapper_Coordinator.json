@@ -1,0 +1,305 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "settlementAddress", "type": "address" },
+      { "internalType": "address", "name": "relayAddress", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": false, "internalType": "address", "name": "proxy", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "index", "type": "uint256" },
+      { "indexed": false, "internalType": "string", "name": "proxyName", "type": "string" }
+    ],
+    "name": "GenerateUserProxy",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "GPv2Settlement",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "GPv2VaultRelay",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "KIND_SELL",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "UserProxyFactory",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "UserProxyImplementation",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "WagTokenAuthority",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
+    "name": "activeLoanAdd",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "user", "type": "address" },
+      { "internalType": "address", "name": "token", "type": "address" }
+    ],
+    "name": "activeLoanExists",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
+    "name": "activeLoanRemove",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "user", "type": "address" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "activeLoans",
+    "outputs": [{ "internalType": "address", "name": "tokensBorrowed", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
+    "name": "activeLoansLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "delegate", "type": "address" }],
+    "name": "addProxyDelegate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "underlyingAgTokenAddress", "type": "address" },
+      { "internalType": "address", "name": "newWagTokenAddress", "type": "address" }
+    ],
+    "name": "addWagToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "externalContract", "type": "address" }],
+    "name": "allowedAddresses",
+    "outputs": [{ "internalType": "bool", "name": "allowed", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "contract IERC20", "name": "sellToken", "type": "address" },
+          { "internalType": "contract IERC20", "name": "buyToken", "type": "address" },
+          { "internalType": "address", "name": "receiver", "type": "address" },
+          { "internalType": "uint256", "name": "sellAmount", "type": "uint256" },
+          { "internalType": "uint256", "name": "buyAmount", "type": "uint256" },
+          { "internalType": "uint32", "name": "validTo", "type": "uint32" },
+          { "internalType": "bytes32", "name": "appData", "type": "bytes32" },
+          { "internalType": "uint256", "name": "feeAmount", "type": "uint256" },
+          { "internalType": "bytes32", "name": "kind", "type": "bytes32" },
+          { "internalType": "bool", "name": "partiallyFillable", "type": "bool" },
+          { "internalType": "bytes32", "name": "sellTokenBalance", "type": "bytes32" },
+          { "internalType": "bytes32", "name": "buyTokenBalance", "type": "bytes32" }
+        ],
+        "internalType": "struct GPv2Order.Data",
+        "name": "_order",
+        "type": "tuple"
+      },
+      { "internalType": "address", "name": "_user", "type": "address" }
+    ],
+    "name": "calculateOrderUid",
+    "outputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newWagTokenAuthority", "type": "address" }],
+    "name": "changeWagTokenAuthority",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "delegateToProxies",
+    "outputs": [{ "internalType": "address", "name": "delegates", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "_proxyName", "type": "string" }],
+    "name": "generateUserProxy",
+    "outputs": [{ "internalType": "address", "name": "newUserProxy", "type": "address" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+    "name": "isWagToken",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "proxy", "type": "address" }],
+    "name": "proxyOwner",
+    "outputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "proxy", "type": "address" }],
+    "name": "proxyOwnerAddress",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "delegate", "type": "address" }],
+    "name": "removeProxyDelegate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "WagTokenAddress", "type": "address" }],
+    "name": "removeWagToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "contractAddress", "type": "address" },
+      { "internalType": "bool", "name": "state", "type": "bool" }
+    ],
+    "name": "setAddressAllowedState",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "settlementAddress", "type": "address" },
+      { "internalType": "address", "name": "relayAddress", "type": "address" }
+    ],
+    "name": "setGPv2Contracts",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_userProxyFactory", "type": "address" }],
+    "name": "setUserProxyFactory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_userProxyImplementation", "type": "address" }
+    ],
+    "name": "setUserProxyImplementation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "name": "userProxies",
+    "outputs": [{ "internalType": "address", "name": "proxies", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "user", "type": "address" }],
+    "name": "userProxyAddress",
+    "outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "wrappedToken", "type": "address" }],
+    "name": "wrappedToUnderlying",
+    "outputs": [{ "internalType": "address", "name": "underlyingToken", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
