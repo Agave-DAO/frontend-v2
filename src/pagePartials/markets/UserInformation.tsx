@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   margin-left: calc(var(--outer-container-horizontal-padding) * -1);
   margin-right: calc(var(--outer-container-horizontal-padding) * -1);
   margin-top: 26px;
-  padding: 48px 16px 32px;
+  padding: 48px var(--padding-md) var(--padding-xxl);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     border-radius: 16px;

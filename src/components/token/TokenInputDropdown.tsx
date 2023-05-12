@@ -17,7 +17,6 @@ import { fromWei } from '@/src/utils/common'
 import { Token } from '@/types/token'
 
 const Wrapper = styled.div<{ status?: TextfieldStatus | undefined }>`
-  --padding: 16px;
   --border-radius: 16px;
 
   align-items: center;
@@ -28,7 +27,7 @@ const Wrapper = styled.div<{ status?: TextfieldStatus | undefined }>`
   display: flex;
   height: 62px;
   justify-content: space-between;
-  padding-left: var(--padding);
+  padding-left: var(--padding-md);
   position: relative;
   width: 100%;
 
@@ -94,7 +93,7 @@ const Dropdown = styled(TokenDropdownSearch)<{ status?: TextfieldStatus | undefi
 `
 
 const FormStatus = styled(BaseFormStatus)`
-  left: var(--padding);
+  left: var(--padding-md);
   position: absolute;
   top: calc(100% - 14px);
 `

@@ -161,7 +161,7 @@ const RangeWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 20px;
   height: 44px;
-  padding: 0 16px;
+  padding: 0 var(--padding-md);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     background: ${({ theme: { colors } }) => colors.mainDark4};

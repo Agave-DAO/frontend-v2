@@ -12,10 +12,10 @@ export const Tabs = styled.div`
   display: flex;
   justify-content: center;
   max-width: fit-content;
-  padding: 8px;
+  padding: var(--padding-sm);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
-    padding: 16px;
+    padding: var(--padding-md);
   }
 `
 
@@ -32,7 +32,7 @@ const TabCSS = css`
   font-weight: 400;
   height: 38px;
   justify-content: center;
-  padding: 0 16px;
+  padding: 0 var(--padding-md);
   text-decoration: none;
   transition: all 0.15s linear;
   user-select: none;
@@ -44,7 +44,7 @@ const TabCSS = css`
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
     font-size: 1.8rem;
     height: 57px;
-    padding: 0 24px;
+    padding: 0 var(--padding-xl);
     border-radius: 60px;
   }
 `

@@ -4,8 +4,6 @@ import styled from 'styled-components'
 import { BigNumber } from '@ethersproject/bignumber'
 
 const Wrapper = styled.div`
-  --padding-medium: 16px;
-  --padding-xl: 24px;
   --border-radius: 16px;
 
   background-color: rgba(1, 157, 139, 0.1);
@@ -21,7 +19,7 @@ export const Head = styled.div`
   border-top-right-radius: var(--border-radius);
   column-gap: 16px;
   display: flex;
-  padding: var(--padding-xl) var(--padding-medium);
+  padding: var(--padding-xl) var(--padding-md);
 `
 
 export const HeadContents = styled.div`
@@ -36,7 +34,7 @@ export const Body = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: var(--padding-medium);
+  padding: var(--padding-md);
 `
 
 export interface TitleValueType {

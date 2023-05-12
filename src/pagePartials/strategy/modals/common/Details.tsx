@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Row as BaseRow, RowKey, RowValue, Rows } from '@/src/components/card/FormCard'
 
 const Wrapper = styled(Rows)`
-  padding: 40px 0 32px;
+  padding: var(--padding-xxxl) 0 var(--padding-xxl);
   row-gap: 6px;
 `
 

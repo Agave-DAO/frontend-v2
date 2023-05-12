@@ -45,7 +45,7 @@ const Label = styled.p`
 `
 
 const Buttons = styled(ButtonWrapper)`
-  padding: 24px 0 0 0;
+  padding: var(--padding-xl) 0 0 0;
 `
 
 interface Props extends ModalProps {

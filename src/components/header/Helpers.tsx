@@ -5,7 +5,7 @@ export const NavLinkCSS = css`
   display: flex;
   height: 100%;
   justify-content: center;
-  padding: 0 8px;
+  padding: 0 var(--padding-sm);
 
   &:active {
     opacity: 0.7;

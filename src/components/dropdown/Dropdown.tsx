@@ -71,7 +71,7 @@ const Items = styled.div<ItemsProps>`
   box-shadow: ${({ theme: { dropdown } }) => dropdown.boxShadow};
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
   min-width: 140px;
-  padding: 4px;
+  padding: var(--padding-xs);
   position: absolute;
   white-space: nowrap;
 

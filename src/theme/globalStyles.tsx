@@ -14,6 +14,14 @@ export const GlobalStyles = createGlobalStyle<{ theme: any }>`
       --rt-color-dark:  ${({ theme: { tooltip } }) => tooltip.backgroundColor};
       --rt-color-info:  ${({ theme: { tooltip } }) => tooltip.textColor};
       --rt-opacity: 1;
+
+      --padding-xs: 4px;
+      --padding-sm: 8px;
+      --padding-sm-md: 12px;
+      --padding-md: 16px;
+      --padding-xl: 24px;
+      --padding-xxl: 32px;
+      --padding-xxxl: 40px;
   }
 
   html {

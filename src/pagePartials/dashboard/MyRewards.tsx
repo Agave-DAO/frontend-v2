@@ -19,10 +19,10 @@ const Wrapper = styled.div`
   column-gap: 16px;
   display: flex;
   justify-content: space-between;
-  padding: 16px;
+  padding: var(--padding-md);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletLandscapeStart}) {
-    padding: 24px;
+    padding: var(--padding-xl);
   }
 `
 

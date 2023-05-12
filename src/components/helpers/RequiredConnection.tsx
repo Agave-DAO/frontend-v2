@@ -20,7 +20,7 @@ const Text = styled.p`
   font-weight: 500;
   line-height: 1.5;
   margin: 0 auto 10px;
-  padding: 0 20px;
+  padding: 0 var(--padding-md);
   text-align: center;
   text-decoration: none;
   width: 100%;

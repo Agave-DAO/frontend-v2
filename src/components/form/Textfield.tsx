@@ -25,7 +25,7 @@ const getTextfieldStyles = (
   return css`
     --textfield-border-radius: 16px;
     --texfield-font-size: 1.4rem;
-    --textfield-padding: 16px;
+    --textfield-padding: var(--padding-md);
     --textfield-height: 49px;
     --textfield-font-weight: 400;
 

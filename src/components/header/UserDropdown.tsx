@@ -50,7 +50,7 @@ const Item = styled.div<ItemProps>`
   justify-content: space-between;
   line-height: 1.2;
   overflow: hidden;
-  padding: 8px 12px;
+  padding: var(--padding-sm) var(--padding-sm-md);
   text-decoration: none;
   text-overflow: ellipsis;
   white-space: nowrap;

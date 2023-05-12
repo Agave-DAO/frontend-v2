@@ -89,6 +89,12 @@ export const CollateralSwap: React.FC = withGenericSuspense(
       console.log('Receive token', token)
     }
 
+    const onSwap = useCallback(() => {
+      const tempToken = receiveToken
+      setReceiveToken(sendToken)
+      setSendToken(tempToken)
+    }, [receiveToken, sendToken])
+
     const onSubmit = useCallback(() => {
       console.log('Submit')
     }, [])
@@ -125,11 +131,7 @@ export const CollateralSwap: React.FC = withGenericSuspense(
           usdPrice={BigNumber.from('1000000000000000000')}
           value={sendTokenValue}
         />
-        <SwapButton
-          onClick={() => {
-            console.log('Swap values')
-          }}
-        />
+        <SwapButton onClick={onSwap} />
         <ReceiveTokenInputDropdown
           decimals={18}
           maxValue={'10000'}

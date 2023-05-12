@@ -106,7 +106,7 @@ const Rewards = styled.div`
   display: flex;
   height: 40px;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 var(--padding-md);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     height: 50px;

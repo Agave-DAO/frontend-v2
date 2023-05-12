@@ -14,7 +14,7 @@ export const ButtonCSS = css`
   --border-radius: 20px;
   --font-size: 1.4rem;
   --height: 36px;
-  --padding: 12px;
+  --padding: var(--padding-sm-md);
 
   border-radius: var(--border-radius);
   font-size: var(--font-size);
@@ -27,7 +27,7 @@ export const ButtonCSS = css`
     --border-radius: 30px;
     --font-size: 1.6rem;
     --height: 46px;
-    --padding: 16px;
+    --padding: var(--padding-md);
   }
 `
 

@@ -87,7 +87,7 @@ const DevelopedByWrapper = styled.div`
   display: flex;
   justify-content: center;
   margin: 24px 0 0 0;
-  padding: 24px 0 0 0;
+  padding: var(--padding-xl) 0 0 0;
   width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {

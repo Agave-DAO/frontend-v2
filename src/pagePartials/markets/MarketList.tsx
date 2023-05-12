@@ -36,7 +36,7 @@ const WelcomeText = styled.p`
     max-width: 100%;
     opacity: 0.6;
     order: 1;
-    padding: 8px 24px;
+    padding: var(--padding-sm) var(--padding-xl);
     width: fit-content;
   }
 `
@@ -79,7 +79,7 @@ const MarketSize = styled.div`
   justify-content: space-between;
   margin-bottom: 16px;
   order: 2;
-  padding: 0 16px;
+  padding: 0 var(--padding-md);
   width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
@@ -87,7 +87,7 @@ const MarketSize = styled.div`
     column-gap: 16px;
     height: 53px;
     margin: 0 auto 24px;
-    padding: 0 32px;
+    padding: 0 var(--padding-xxl);
     width: fit-content;
   }
 `

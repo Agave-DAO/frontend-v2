@@ -16,7 +16,7 @@ const Wrapper = styled.div<{ isActive?: boolean }>`
   flex-direction: column;
   flex-grow: 1;
   min-height: 115px;
-  padding: 16px;
+  padding: var(--padding-md);
 `
 
 const StepNumber = styled.div<{ isActive?: boolean }>`

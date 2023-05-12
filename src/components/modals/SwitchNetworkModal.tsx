@@ -33,7 +33,7 @@ const NetworkButtons = styled.div`
   margin: 0 auto;
   max-width: 400px;
   min-height: 200px;
-  padding: 0 20px;
+  padding: 0 var(--padding-md);
   row-gap: 10px;
   width: 100%;
 `

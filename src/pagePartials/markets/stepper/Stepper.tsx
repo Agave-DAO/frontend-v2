@@ -16,7 +16,7 @@ const TogglesWrapper = styled.div`
   margin-left: calc(var(--padding-horizontal) * -1);
   margin-right: calc(var(--padding-horizontal) * -1);
   margin-top: calc(var(--padding-top) * -1);
-  padding: 16px var(--padding-horizontal);
+  padding: var(--padding-md) var(--padding-horizontal);
   row-gap: 4px;
 `
 
