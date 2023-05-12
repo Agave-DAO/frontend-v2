@@ -11,7 +11,7 @@ export const useClaimRewards = (userAddress = AddressZero) => {
   const baseIncentivesController = useContractInstance(
     BaseIncentivesController__factory,
     'BaseIncentivesController',
-    true,
+    { useSigner: true },
   )
 
   return useCallback(() => {

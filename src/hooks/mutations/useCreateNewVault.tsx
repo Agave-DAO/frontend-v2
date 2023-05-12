@@ -8,7 +8,7 @@ export const useCreateNewVault = () => {
   const SwapperCoordinatorContract = useContractInstance(
     Swapper_Coordinator__factory,
     'SwapperCoordinator',
-    true,
+    { useSigner: true },
   )
 
   const sendTx = useTransaction()

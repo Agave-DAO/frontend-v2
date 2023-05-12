@@ -8,6 +8,7 @@ export const useEditVaultName = (vaultAddress: string) => {
   const SwapperProxyImplementationContract = useContractInstance(
     Swapper_UserProxyImplementation__factory,
     vaultAddress,
+    { useSigner: true },
   )
 
   const sendTx = useTransaction()

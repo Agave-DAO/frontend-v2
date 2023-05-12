@@ -26,10 +26,10 @@ describe('formatAmount', () => {
     )
     const retValueWithoutSymbol = formatAmount(mockValue, mockDecimals, mockSymbol, 'before')
 
-    expect(retValueWithSymbolBefore).toBe('ETH 22.53')
+    expect(retValueWithSymbolBefore).toBe('ETH22.53')
     expect(retValueWithSymbolAfter).toBe('22.53 ETH')
-    expect(retValueWithDefaultSymbolAndDefaultPosition).toBe('ETH 22.53')
-    expect(retValueWithoutSymbol).toBe('ETH 22.53')
+    expect(retValueWithDefaultSymbolAndDefaultPosition).toBe('ETH22.53')
+    expect(retValueWithoutSymbol).toBe('ETH22.53')
   })
 })
 

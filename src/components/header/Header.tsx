@@ -7,6 +7,7 @@ import { Logo as BaseLogo } from '@/src/components/header/Logo'
 // import { SwitchThemeButton } from '@/src/components/header/SwitchThemeButton'
 import { UserDropdown } from '@/src/components/header/UserDropdown'
 import { InnerContainer as BaseInnerContainer } from '@/src/components/helpers/InnerContainer'
+import { MarketVersionSwitcher } from '@/src/components/helpers/MarketVersionSwitcher'
 import { MainMenu } from '@/src/components/navigation/MainMenu'
 import { MobileMenu } from '@/src/components/navigation/MobileMenu'
 import WrongNetwork from '@/src/components/utils/WrongNetwork'
@@ -69,6 +70,9 @@ export const Header: React.FC = (props) => {
       <Wrapper {...props}>
         <InnerContainer>
           <Logo />
+          {/*  Disabled market version switcher (for now). 
+          you can change the version from marketVersion query param (main|boosted values) */}
+          {/* <MarketVersionSwitcher /> */}
           <End>
             <MainMenu />
             {/* Disabled (for now) */}
