@@ -1,0 +1,38 @@
+{
+  "tokens": [
+    {
+      "symbol": "GNO",
+      "name": "Gnosis",
+      "address": "0x9c58bacc331c9aa871afd802db6379a98e80cedb",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/gno.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0xa26783ead6c1f4744685c14079950622674ae8a8",
+          "variableDebt": "0x99272c6e2baa601cea8212b8fbaa7920a9f916f0",
+          "stableDebt": "0x0dfd401903ba960b2eed32a10f8aeb601cd9a7a5"
+        }
+      }
+    },
+    {
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "address": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
+      "decimals": 6,
+      "chainId": 100,
+      "logoURI": "/coins/usdc.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0x291b5957c9cbe9ca6f0b98281594b4eb495f4ec1",
+          "variableDebt": "0xa728c8f1cf7fc4d8c6d5195945c3760c87532724",
+          "stableDebt": "0x05c43e14d38bc5123f6408a57be03714ab689f6e"
+        }
+      }
+    }
+  ]
+}

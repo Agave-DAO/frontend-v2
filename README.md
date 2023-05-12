@@ -1,4 +1,4 @@
-# BootNode - Frontend Starter Kit
+# AGAVE interface V2
 
 [Bootnode](https://bootnode.dev) is a web3 development company, with broad experience in the development of web3 products for many of the main players in the industry, such as [these](https://www.bootnode.dev/#projects) and [these](https://www.bootnode.dev/#team).
 
@@ -153,24 +153,24 @@ we also provide a Button helper that works like so:
 ## How to add a new smart contract
 
 1. Put your contract ABI file in [`src/contracts/abis`](./src/contracts/abis) as a `.json` file.
-2. Go to [`src/contracts/contracts.ts`](./src/contracts/contracts.ts).
-3. Provide a key name for your contract in `const contracts = {...}`.
-4. Provide a contract address for all the chains you have configured.
-5. Import your contract ABI file and add it to the contract key created in step 3.
+2. Run `yarn typechain` to generate the Typescript types for the ABI.
+3. Go to [`src/contracts/contracts.ts`](./src/contracts/contracts.ts).
+4. Provide a key name for your contract in `const V1Contracts = {...}` or `const V2Contracts = {...}`. (depends on the market version that you need to add a contract)
+5. Provide a contract address for all the chains you have configured.
+6. Import your contract factory and add it to the contract key created in step 4.
 
 Example for an ERC20 contract (USDC):
 
 ```ts
-import ERC_20_abi from '@/src/abis/ERC20.json'
+import ERC20__factory from '@/types/generated/typechain'
 
 export const contracts = {
   // Other contracts
   USDC: {
     address: {
-      [Chains.mainnet]: '0x123...',
-      [Chains.goerli]: '0x456...',
+      [Chains.gnosis]: '0x123...',
     },
-    abi: ERC_20_abi,
+    factory: ERC20__factory,
   },
 } as const
 ```
@@ -258,6 +258,16 @@ To consume them, we implemented the hook [`useTokensLists`](./src/hooks/useToken
 filepath: `src/hooks/presentation/useAgaveMarketsData.tsx`
 
 React hook that can be used to get Agave markets information from an array of tokens addresses (reserve tokens addresses). The hook accepts an array of tokens addresses and returns data for each token as `marketData`, such as `priceData`, `reserveData`, `assetData`, and `incentiveData`. Additionally, the hook provides a number of functions that can be used to get data about a single market from the result, such as `getMarketSize`, `getTotalBorrowed`, `getDepositAPY`, `getBorrowRate`, and `getIncentiveRate`.
+
+### MarketVersion
+
+Each version of the market has its own set of reserve tokens and borrowing/lending mechanics. By understanding the differences between the versions, users can choose the one that best suits their needs from the dApp.
+
+The available versions are:
+
+- Main version: also known as the current Agave protocol, refers to the primary market that includes a wider range of assets beyond Ethereum. It encompasses various assets with different correlation levels to ETH, allowing for more diversified trading options. It serves as the standard market for users to trade and interact with different assets within the platform.
+
+- Boosted version: is a specialized market designed specifically for highly correlated assets with Ethereum. The selection of assets in this market is tailored to provide higher leverage opportunities, particularly with liquid staking assets. By focusing on assets closely tied to ETH, the Boosted market aims to offer increased leverage potential for traders and investors who seek amplified exposure to Ethereum's performance.
 
 ## Contributing
 

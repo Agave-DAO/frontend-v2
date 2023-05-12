@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { AgaveLending__factory, WETHGateway__factory } from '@/types/generated/typechain'
 
 export const useWithdrawStepInitialIndex = ({
   amount,
@@ -18,14 +18,17 @@ export const useWithdrawStepInitialIndex = ({
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const isNativeToken = tokenInfo.extensions.isNative
 
-  const { appChainId } = useWeb3ConnectedApp()
-  const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
+  const agaveLendingAddress = useContractInstance(AgaveLending__factory, 'AgaveLendingPool').address
+
   const { approvedAmount: agaveLendingAllowance } = useGetERC20Allowance(
     tokenAddress,
     agaveLendingAddress,
   )
 
-  const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
+  const wrappedNativeGatewayAddress = useContractInstance(
+    WETHGateway__factory,
+    'WETHGateway',
+  ).address
   const agTokenInfo = agaveTokens.getProtocolTokenInfo(
     isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress,
     'ag',

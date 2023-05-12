@@ -5,10 +5,16 @@ import { IStringIndex } from '@/types/utils'
 export type Token = IStringIndex &
   TokenInfo & {
     extensions: {
+      protocolTokens?: {
+        ag: string
+        stableDebt: string
+        variableDebt: string
+      }
       isNative: boolean
       isNativeWrapper: boolean
     }
   }
+
 export type TokenListResponse = TokenList & {
   tokens: Token[]
 }

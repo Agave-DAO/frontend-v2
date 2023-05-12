@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { JsonRpcBatchProvider } from '@ethersproject/providers'
 import toast from 'react-hot-toast'
 import useSWR from 'swr'
 
 import { IDAgaveTokens } from '@/src/config/agaveTokens'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
-import { contracts } from '@/src/contracts/contracts'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
+import { useMarketVersion } from '@/src/hooks/useMarketVersion'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { isSameAddress } from '@/src/utils/isSameAddress'
-import { ChainsValues } from '@/types/chains'
 import {
+  AaveOracle,
   AaveOracle__factory,
   AaveProtocolDataProvider,
   AaveProtocolDataProvider__factory,
+  BaseIncentivesController,
   BaseIncentivesController__factory,
 } from '@/types/generated/typechain'
 import { isFulfilled } from '@/types/utils'
@@ -33,19 +33,13 @@ export type AgaveMarketData = {
   priceData: BigNumber
   reserveData: Awaited<ReturnType<AaveProtocolDataProvider['getReserveData']>>
   assetData: Awaited<ReturnType<AaveProtocolDataProvider['getReserveConfigurationData']>>
-
   incentiveData: IncentiveData
 }
 
 /**
  * FETCHERS
  */
-const fetchTokensPrices = async (
-  tokenAddresses: string[],
-  provider: JsonRpcBatchProvider,
-  chainId: ChainsValues,
-) => {
-  const contract = AaveOracle__factory.connect(contracts.AaveOracle.address[chainId], provider)
+const fetchTokensPrices = async (tokenAddresses: string[], contract: AaveOracle) => {
   try {
     const prices = await contract.getAssetsPrices(tokenAddresses)
     return tokenAddresses.map((tokenAddress, index) => ({
@@ -53,62 +47,35 @@ const fetchTokensPrices = async (
       tokenAddress,
     }))
   } catch (error) {
+    console.error('Error fetching tokens prices', error)
     return
   }
 }
 
-const fetchReserveData = async (
+const fetchReserveAndAssetData = async (
   tokenAddress: string,
-  provider: JsonRpcBatchProvider,
-  chainId: ChainsValues,
+  contract: AaveProtocolDataProvider,
 ) => {
   try {
     return {
-      reserveData: await AaveProtocolDataProvider__factory.connect(
-        contracts.AaveProtocolDataProvider.address[chainId],
-        provider,
-      ).getReserveData(tokenAddress),
+      reserveData: await contract.getReserveData(tokenAddress),
+      assetData: await contract.getReserveConfigurationData(tokenAddress),
       tokenAddress,
     }
   } catch (error) {
-    return
-  }
-}
-
-const fetchAssetConfigurationData = async (
-  tokenAddress: string,
-  provider: JsonRpcBatchProvider,
-  chainId: ChainsValues,
-) => {
-  try {
-    const assetData = await AaveProtocolDataProvider__factory.connect(
-      contracts.AaveProtocolDataProvider.address[chainId],
-      provider,
-    ).getReserveConfigurationData(tokenAddress)
-
-    return {
-      assetData,
-      tokenAddress,
-    }
-  } catch (error) {
+    console.error('Error fetching reserve and asset data', error)
     return
   }
 }
 
 const fetchAssetIncentiveData = async (
   tokenAddress: string,
-  provider: JsonRpcBatchProvider,
-  chainId: ChainsValues,
+  contract: BaseIncentivesController,
   relatedTokens: {
     agToken: string
     variableDebtToken: string
   },
 ) => {
-  const contract = BaseIncentivesController__factory.connect(
-    contracts.BaseIncentivesController.address[chainId],
-    provider,
-  )
-
   try {
     const [agTokenIncentiveData, variableDebtIncentiveData] = await Promise.all([
       contract.getAssetData(relatedTokens.agToken),
@@ -124,6 +91,7 @@ const fetchAssetIncentiveData = async (
       tokenAddress,
     }
   } catch (error) {
+    console.error('Error fetching incentive data', error)
     return
   }
 }
@@ -133,23 +101,25 @@ const fetchAssetIncentiveData = async (
  */
 const fetchAgaveMarketsData = async ({
   agaveTokens,
-  chainId,
-  provider,
+  contracts,
 }: {
-  chainId: ChainsValues
-  provider: JsonRpcBatchProvider
+  contracts: {
+    AaveProtocolDataProvider: AaveProtocolDataProvider
+    BaseIncentivesController: BaseIncentivesController
+    AaveOracle: AaveOracle
+  }
   agaveTokens: IDAgaveTokens
 }) => {
-  const reserveDataPromises: ReturnType<typeof fetchReserveData>[] = []
-  const assetDataPromises: ReturnType<typeof fetchAssetConfigurationData>[] = []
+  const reserveAndAssetDataPromises: ReturnType<typeof fetchReserveAndAssetData>[] = []
   const incentiveDataPromises: ReturnType<typeof fetchAssetIncentiveData>[] = []
 
   const reserveTokens = agaveTokens.reserveTokens
   const reserveTokensAddresses = reserveTokens.map((token) => token.address)
 
   reserveTokens.forEach(async (token) => {
-    reserveDataPromises.push(fetchReserveData(token.address, provider, chainId))
-    assetDataPromises.push(fetchAssetConfigurationData(token.address, provider, chainId))
+    reserveAndAssetDataPromises.push(
+      fetchReserveAndAssetData(token.address, contracts.AaveProtocolDataProvider),
+    )
 
     const relatedTokens = agaveTokens.getRelatedTokensByAddress(token.address)
     const agToken = relatedTokens.find((item) => item.type === 'ag')?.address
@@ -160,7 +130,7 @@ const fetchAgaveMarketsData = async ({
     }
 
     incentiveDataPromises.push(
-      fetchAssetIncentiveData(token.address, provider, chainId, {
+      fetchAssetIncentiveData(token.address, contracts.BaseIncentivesController, {
         agToken,
         variableDebtToken,
       }),
@@ -168,10 +138,9 @@ const fetchAgaveMarketsData = async ({
   })
 
   const rawResults = await Promise.allSettled([
-    ...reserveDataPromises,
-    ...assetDataPromises,
+    ...reserveAndAssetDataPromises,
     ...incentiveDataPromises,
-    ...((await fetchTokensPrices(reserveTokensAddresses, provider, chainId)) || []), // price is getting from all tokens in one call
+    ...((await fetchTokensPrices(reserveTokensAddresses, contracts.AaveOracle)) || []), // price is getting from all tokens in one call
   ])
 
   const filteredRawResults = rawResults.filter(isFulfilled).map(({ value }) => value)
@@ -199,44 +168,50 @@ const fetchAgaveMarketsData = async ({
 // TODO warning with the number of batch calls.
 // If the array of token is too big, we can split the tokens array into smaller chunks (such as pagination)
 export const useGetMarketsData = () => {
-  const { appChainId, batchProvider, batchProviderFallback } = useWeb3Connection()
   const agaveTokens = useAgaveTokens()
+  const [marketVersion] = useMarketVersion()
+
   const [toastDisplayed, setToastDisplayed] = useState(false)
 
-  // Simple cacheKey to get the cache data in other uses.
-  const { data, isLoading } = useSWR(
-    ['agave-tokens-data', agaveTokens.reserveTokens],
-    async () => {
-      const result = await fetchAgaveMarketsData({
-        agaveTokens,
-        provider: batchProvider,
-        chainId: appChainId,
-      })
-      if (result.length) {
-        return result
-      }
-
-      const fallbackResult = await fetchAgaveMarketsData({
-        agaveTokens,
-        provider: batchProviderFallback,
-        chainId: appChainId,
-      })
-
-      if (fallbackResult.length) {
-        return fallbackResult
-      }
-
-      return []
-    },
-    {
-      refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
-      onSuccess: (data) => {
-        if (data.length) {
-          setToastDisplayed(false)
-        }
-      },
-    },
+  const dataProviderContract = useContractInstance(
+    AaveProtocolDataProvider__factory,
+    'AaveProtocolDataProvider',
+    { useSigner: false, batch: true },
   )
+
+  const incetiveControllerContract = useContractInstance(
+    BaseIncentivesController__factory,
+    'BaseIncentivesController',
+    { useSigner: false, batch: true },
+  )
+
+  const oracleContract = useContractInstance(AaveOracle__factory, 'AaveOracle', {
+    useSigner: false,
+    batch: true,
+  })
+
+  const memoFetcher = useCallback(async () => {
+    const result = await fetchAgaveMarketsData({
+      agaveTokens,
+      contracts: {
+        AaveProtocolDataProvider: dataProviderContract,
+        BaseIncentivesController: incetiveControllerContract,
+        AaveOracle: oracleContract,
+      },
+    })
+
+    return result
+  }, [agaveTokens, dataProviderContract, incetiveControllerContract, oracleContract])
+
+  // Simple cacheKey to get the cache data in other uses.
+  const { data, isLoading } = useSWR(['agave-tokens-data', marketVersion], memoFetcher, {
+    refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
+    onSuccess: (data) => {
+      if (data.length) {
+        setToastDisplayed(false)
+      }
+    },
+  })
 
   useEffect(() => {
     if (!isLoading && data && data.length === 0 && !toastDisplayed) {

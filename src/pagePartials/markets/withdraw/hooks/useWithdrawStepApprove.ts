@@ -1,13 +1,15 @@
 import { useCallback } from 'react'
 
-import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { ERC20__factory } from '@/types/generated/typechain'
+import {
+  AgaveLending__factory,
+  ERC20__factory,
+  WETHGateway__factory,
+} from '@/types/generated/typechain'
 
 export const useWithdrawStepApprove = ({
   amount,
@@ -21,9 +23,12 @@ export const useWithdrawStepApprove = ({
   const agTokenInfo = agaveTokens.getProtocolTokenInfo(agaveTokens.wrapperToken.address, 'ag')
   const isNativeToken = tokenInfo.extensions.isNative
 
-  const { appChainId } = useWeb3ConnectedApp()
-  const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
-  const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
+  const agaveLendingAddress = useContractInstance(AgaveLending__factory, 'AgaveLendingPool').address
+
+  const wrappedNativeGatewayAddress = useContractInstance(
+    WETHGateway__factory,
+    'WETHGateway',
+  ).address
 
   const params = {
     amount,
@@ -31,7 +36,7 @@ export const useWithdrawStepApprove = ({
     asset: isNativeToken ? agTokenInfo.address : tokenAddress,
   }
 
-  const erc20 = useContractInstance(ERC20__factory, params.asset, true)
+  const erc20 = useContractInstance(ERC20__factory, params.asset, { useSigner: true })
   const sendTx = useTransaction()
 
   const { refetchAllowance: refetchTokenAllowance } = useGetERC20Allowance(

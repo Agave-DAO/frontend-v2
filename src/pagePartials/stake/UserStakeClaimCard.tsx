@@ -24,7 +24,9 @@ export const UserStakeClaimCard: React.FC = withGenericSuspense(
       refetchAllStakeData,
     } = useStakeInformation()
     const [isClaimLoading, setIsClaimLoading] = useState(false)
-    const { claimRewards } = useContractInstance(StakedToken__factory, 'StakedToken', true)
+    const { claimRewards } = useContractInstance(StakedToken__factory, 'StakedToken', {
+      useSigner: true,
+    })
     const submitDisabled = userAmountAvailableToClaim.isZero() || isClaimLoading
 
     const ClaimButton: React.FC = ({ ...restProps }) => (

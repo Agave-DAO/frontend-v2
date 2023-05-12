@@ -43,8 +43,10 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
       stakedTokenAddress,
     } = useStakeInformation()
 
-    const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken', true)
-    const stakedToken = useContractInstance(ERC20__factory, stakedTokenAddress, true)
+    const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken', {
+      useSigner: true,
+    })
+    const stakedToken = useContractInstance(ERC20__factory, stakedTokenAddress, { useSigner: true })
 
     const { approvedAmount, refetchAllowance } = useGetERC20Allowance(
       stakedTokenAddress,
