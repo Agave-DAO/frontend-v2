@@ -6,8 +6,10 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
+import { useUserRewards } from '@/src/hooks/presentation/useUserRewards'
 import { ApproximateBalance, Rewards as RewardsTooltip } from '@/src/pagePartials/common/tooltips'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { fromWei } from '@/src/utils/common'
 
 const TooltipIcon: React.FC = ({ ...restProps }) => (
   <svg
@@ -127,8 +129,9 @@ const RewardsBalance = styled.div`
 export const UserBalanceSummary: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const { address: userAddress } = useWeb3ConnectedApp()
-    const { userDeposits, userRewards } = useUserAccountDetails(userAddress)
-    const noRewards = userRewards.isZero()
+    const { userDeposits } = useUserAccountDetails(userAddress)
+    const { totalValue } = useUserRewards(userAddress)
+    const noRewards = totalValue.isZero()
     const noDeposits = userDeposits.isZero()
 
     return (
@@ -147,7 +150,9 @@ export const UserBalanceSummary: React.FC = withGenericSuspense(
             Rewards <Tooltip content={RewardsTooltip} />
           </Text>
           <Rewards>
-            <RewardsBalance>{noRewards ? '$0.00' : <Amount value={userRewards} />}</RewardsBalance>
+            <RewardsBalance>
+              {noRewards ? '$0.00' : <Amount value={fromWei(totalValue)} />}
+            </RewardsBalance>
             <RewardPair size={18} />
           </Rewards>
         </Row>

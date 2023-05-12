@@ -75,7 +75,7 @@ export const ApproximateBalance = (
 export const Rewards = (
   <Wrapper>
     <Text>
-      Rewards in CPT tokens.
+      Rewards in Balancer Pool tokens.
       <br />
       Click{' '}
       <a
