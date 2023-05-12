@@ -20,7 +20,7 @@ const Wrapper = styled(Dropdown)`
 
   .dropdownItems {
     background-color: ${({ theme: { colors } }) => colors.almostWhite};
-    max-height: 340px;
+    max-height: 290px;
     overflow: auto;
     padding: 0 1px;
     width: 330px;
@@ -113,9 +113,15 @@ const NoResults = styled.div<{ closeOnClick?: boolean }>`
 `
 
 export const TokenDropdownSearch: React.FC<{
+  dropdownDirection?: DropdownDirection
   onChange?: (token: Token | null) => void
   selectedToken?: Token | null
-}> = ({ onChange, selectedToken, ...restProps }) => {
+}> = ({
+  onChange,
+  selectedToken,
+  dropdownDirection = DropdownDirection.downwards,
+  ...restProps
+}) => {
   const { onSearch, onSelectToken, searchString, token, tokensList } = useTokensLists(
     ['reserve'],
     onChange,
@@ -132,7 +138,7 @@ export const TokenDropdownSearch: React.FC<{
           <Chevron />
         </BaseButton>
       }
-      dropdownDirection={DropdownDirection.upwards}
+      dropdownDirection={dropdownDirection}
       dropdownPosition={DropdownPosition.right}
       items={[
         <TextfieldContainer closeOnClick={false} key="tokenSearchInput">

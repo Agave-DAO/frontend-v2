@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components'
 import { BigNumber } from '@ethersproject/bignumber'
 import debounce from 'lodash/debounce'
 
+import { DropdownDirection } from '@/src/components/dropdown/Dropdown'
 import { FormStatus as BaseFormStatus } from '@/src/components/form/FormStatus'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
@@ -25,7 +26,6 @@ const Wrapper = styled.div<{ status?: TextfieldStatus | undefined }>`
   border: 1px solid ${({ theme: { colors } }) => colors.lighterGray};
   column-gap: 8px;
   display: flex;
-  flex-direction: row;
   height: 62px;
   justify-content: space-between;
   padding-left: var(--padding);
@@ -60,6 +60,7 @@ const USDValue = styled.div`
 const Dropdown = styled(TokenDropdownSearch)<{ status?: TextfieldStatus | undefined }>`
   height: calc(100% + 2px);
   margin: 0 -1px 0 0;
+  width: 140px;
 
   .dropdownButton {
     height: 100%;
@@ -75,6 +76,7 @@ const Dropdown = styled(TokenDropdownSearch)<{ status?: TextfieldStatus | undefi
       border-width: 1px;
       height: 100%;
       border-left: none;
+      width: 100%;
 
       &:hover {
         background-color: ${({ theme: { colors } }) => colors.lightGray};
@@ -104,12 +106,14 @@ interface Props extends TokenInputProps {
   status?: TextfieldStatus | undefined
   statusText?: string | undefined
   usdPrice?: BigNumber
+  dropdownDirection?: DropdownDirection
 }
 
 export const TokenInputDropdown: React.FC<Props> = ({
   decimals,
   delay = 500,
   disabled,
+  dropdownDirection = DropdownDirection.upwards,
   maxValue,
   onDropdownChange,
   selectedToken,
@@ -156,9 +160,14 @@ export const TokenInputDropdown: React.FC<Props> = ({
             <Amount value={fromWei(usdPrice.mul(localValue || '0'), decimals)} />
           </USDValue>
         )}
+        {statusText && <FormStatus status={status}>{statusText}</FormStatus>}
       </ValueWrapper>
-      <Dropdown onChange={onDropdownChange} selectedToken={selectedToken} status={status} />
-      {statusText && <FormStatus status={status}>{statusText}</FormStatus>}
+      <Dropdown
+        dropdownDirection={dropdownDirection}
+        onChange={onDropdownChange}
+        selectedToken={selectedToken}
+        status={status}
+      />
     </Wrapper>
   )
 }
