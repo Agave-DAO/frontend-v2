@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { AgaveLending__factory } from '@/types/generated/typechain'
 
 // TODO: This is a duplicate of useDepositStepInitialIndex.tsx. Refactor to a single hook.
 export const useRepayStepInitialIndex = ({
@@ -15,8 +15,8 @@ export const useRepayStepInitialIndex = ({
   amount: string
   tokenAddress: string
 }) => {
-  const { appChainId } = useWeb3ConnectedApp()
-  const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
+  const agaveLendingAddress = useContractInstance(AgaveLending__factory, 'AgaveLendingPool').address
+
   const agaveTokens = useAgaveTokens()
 
   const { approvedAmount: allowance } = useGetERC20Allowance(tokenAddress, agaveLendingAddress)

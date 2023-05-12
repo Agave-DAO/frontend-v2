@@ -76,7 +76,9 @@ export const UserStakedCard: React.FC = withGenericSuspense(
       isCooldownActive && !isInUnstakeWindow && !!userActivateCooldownReady
     const showUnstakeWindowCooldown = isInUnstakeWindow && !!userActivateCooldownTo
 
-    const { cooldown, redeem } = useContractInstance(StakedToken__factory, 'StakedToken', true)
+    const { cooldown, redeem } = useContractInstance(StakedToken__factory, 'StakedToken', {
+      useSigner: true,
+    })
 
     const ActivateCooldownButton: React.FC = ({ ...restProps }) => {
       const submitDisabled = isActivateCooldownLoading || userAmountStaked.isZero()

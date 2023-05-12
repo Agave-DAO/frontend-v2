@@ -16,7 +16,6 @@ import TooltipConfig from '@/src/components/tooltip/TooltipConfig'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { Head } from '@/src/pagePartials/index/Head'
 import { TransactionNotificationProvider } from '@/src/providers/TransactionNotificationProvider'
-import AgaveTokensProvider from '@/src/providers/agaveTokensProvider'
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
 import ModalsProvider from '@/src/providers/modalsProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
@@ -67,6 +66,10 @@ const MobileScrollTo = styled.div`
 `
 
 const Web3ConnectionProvider = dynamic(() => import('@/src/providers/web3ConnectionProvider'), {
+  ssr: false,
+})
+
+const AgaveTokensProvider = dynamic(() => import('@/src/providers/agaveTokensProvider'), {
   ssr: false,
 })
 

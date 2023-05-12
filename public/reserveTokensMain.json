@@ -1,0 +1,157 @@
+{
+  "tokens": [
+    {
+      "symbol": "GNO",
+      "name": "Gnosis",
+      "address": "0x9c58bacc331c9aa871afd802db6379a98e80cedb",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/gno.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0xa26783ead6c1f4744685c14079950622674ae8a8",
+          "variableDebt": "0x99272c6e2baa601cea8212b8fbaa7920a9f916f0",
+          "stableDebt": "0x0dfd401903ba960b2eed32a10f8aeb601cd9a7a5"
+        }
+      }
+    },
+    {
+      "symbol": "WETH",
+      "name": "WETH",
+      "address": "0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/eth.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0x44932e3b1e662adde2f7bac6d5081c5adab908c6",
+          "variableDebt": "0x73ada33d706085d6b93350b5e6aed6178905fb8a",
+          "stableDebt": "0x43ae4a9474ea23b0bc04c99f9ff2a9b4c2d5554c"
+        }
+      }
+    },
+    {
+      "symbol": "WXDAI",
+      "name": "Wrapped XDAI",
+      "address": "0xe91d153e0b41518a2ce8dd3d7944fa863463a97d",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/wxdai.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": true,
+        "protocolTokens": {
+          "ag": "0xd4e420bbf00b0f409188b338c5d87df761d6c894",
+          "variableDebt": "0xec72de30c3084023f7908002a2252a606cce0b2c",
+          "stableDebt": "0xf4401355b41c867edbf09c821fa7b4fffbed5c82"
+        }
+      }
+    },
+    {
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "address": "0xddafbb505ad214d7b80b1f830fccc89b60fb7a83",
+      "decimals": 6,
+      "chainId": 100,
+      "logoURI": "/coins/usdc.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0x291b5957c9cbe9ca6f0b98281594b4eb495f4ec1",
+          "variableDebt": "0xa728c8f1cf7fc4d8c6d5195945c3760c87532724",
+          "stableDebt": "0x05c43e14d38bc5123f6408a57be03714ab689f6e"
+        }
+      }
+    },
+    {
+      "symbol": "WBTC",
+      "name": "Wrapped Bitcoin",
+      "address": "0x8e5bbbb09ed1ebde8674cda39a0c169401db4252",
+      "decimals": 8,
+      "chainId": 100,
+      "logoURI": "/coins/wbtc.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0x4863cfaf3392f20531aa72ce19e5783f489817d6",
+          "variableDebt": "0x110c5a1494f0ab6c851abb72aa2efa3da738ab72",
+          "stableDebt": "0xca0f3b157165fe11692a047ea14963ffadfb31fd"
+        }
+      }
+    },
+    {
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "address": "0xe2e73a1c69ecf83f464efce6a5be353a37ca09b2",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/link.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0xa286ce70fb3a6269676c8d99bd9860de212252ef",
+          "variableDebt": "0x5b0568531322759eab69269a86448b39b47e2ae8",
+          "stableDebt": "0x4f9401fb52fe53de977dcbf05a0f6237aadc7eb1"
+        }
+      }
+    },
+    {
+      "symbol": "FOX",
+      "name": "ShapeShift FOX",
+      "address": "0x21a42669643f45bc0e086b8fc2ed70c23d67509d",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/fox.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0xa916a4891d80494c6cb0b49b11fd68238aaaf617",
+          "variableDebt": "0x7388cbdeb284902e1e07be616f92adb3660ed3a4",
+          "stableDebt": "0x6ca958336e7a1bdcdf7762aeb81613eaddcc3110"
+        }
+      }
+    },
+    {
+      "symbol": "USDT",
+      "name": "Tether USD on xDai",
+      "address": "0x4ecaba5870353805a9f068101a40e0f32ed605c6",
+      "decimals": 6,
+      "chainId": 100,
+      "logoURI": "/coins/usdt.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0x5b4ef67c63d091083ec4d30cfc4ac685ef051046",
+          "variableDebt": "0x474f83d77150bddc6a6f34eee4f5574eafd05938",
+          "stableDebt": "0xb067fad853d099edd9c86483682e7d947b7983e5"
+        }
+      }
+    },
+    {
+      "symbol": "EURe",
+      "name": " Monerium EUR emoney",
+      "address": "0xcB444e90D8198415266c6a2724b7900fb12FC56E",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/eure.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false,
+        "protocolTokens": {
+          "ag": "0xEB20B07a9abE765252E6b45e8292b12CB553CcA6",
+          "variableDebt": "0xA4a45B550897dD5d8a44c68DBD245C5934EbAcd9",
+          "stableDebt": "0x78A69aFc50E7705Ad4588cB57cF8D27B29161e51"
+        }
+      }
+    }
+  ]
+}

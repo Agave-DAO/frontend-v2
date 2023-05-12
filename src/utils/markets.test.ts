@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { getIncentiveRate } from './markets'
-import { AgaveProtocolTokens, agaveTokens } from '@/src/config/agaveTokens'
+import { AgaveProtocolTokens, agaveTokensMain } from '@/src/config/agaveTokens'
 import { TokenListResponse } from '@/types/token'
 
 jest.mock('@/public/reserveTokens.json', (): Pick<TokenListResponse, 'tokens'> => {
@@ -27,18 +27,15 @@ jest.mock('@/public/protocolTokens.json', (): { protocolTokens: AgaveProtocolTok
   return {
     protocolTokens: {
       '0x0000000000000000000000000000000000000010': {
-        symbol: 'TT1',
         ag: '0x0000000000000000000000000000000000000011',
         variableDebt: '0x0000000000000000000000000000000000000012',
         stableDebt: '0x0000000000000000000000000000000000000013',
-        strategy: '0x0000000000000000000000000000000000000014',
-        oracle: '0x0000000000000000000000000000000000000015',
       },
     },
   }
 })
 
-const { decimals } = agaveTokens.reserveTokens[0] // get first token of the token reserves array
+const { decimals } = agaveTokensMain.reserveTokens[0] // get first token of the token reserves array
 
 const mockPriceShare = BigNumber.from(((1.5 / 12.5) * 1e16).toFixed())
 

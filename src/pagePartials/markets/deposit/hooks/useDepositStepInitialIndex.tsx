@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { AgaveLending__factory } from '@/types/generated/typechain'
 
 export const useDepositStepInitialIndex = ({
   amount,
@@ -14,9 +14,8 @@ export const useDepositStepInitialIndex = ({
   amount: string
   tokenAddress: string
 }) => {
-  const { appChainId } = useWeb3ConnectedApp()
   const agaveTokens = useAgaveTokens()
-  const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
+  const agaveLendingAddress = useContractInstance(AgaveLending__factory, 'AgaveLendingPool').address
 
   const { approvedAmount: allowance } = useGetERC20Allowance(tokenAddress, agaveLendingAddress)
 

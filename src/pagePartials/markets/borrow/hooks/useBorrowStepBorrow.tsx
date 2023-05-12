@@ -21,8 +21,12 @@ export const useBorrowStepBorrow = ({
 }) => {
   const { address: userAddress } = useWeb3ConnectedApp()
   const agaveTokens = useAgaveTokens()
-  const wrappedNativeGateway = useContractInstance(WETHGateway__factory, 'WETHGateway', true)
-  const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool', true)
+  const wrappedNativeGateway = useContractInstance(WETHGateway__factory, 'WETHGateway', {
+    useSigner: true,
+  })
+  const agaveLending = useContractInstance(AgaveLending__factory, 'AgaveLendingPool', {
+    useSigner: true,
+  })
   const sendTx = useTransaction()
 
   const { mutate: refetchUserReservesData } = useGetUserReservesData()
