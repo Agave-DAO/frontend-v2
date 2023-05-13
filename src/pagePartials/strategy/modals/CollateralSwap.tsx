@@ -62,7 +62,6 @@ export const CollateralSwap: React.FC = withGenericSuspense(
 
     const onSendDropdownChange = (token: Token | null) => {
       setSendToken(token)
-      console.log('Send token', token)
     }
 
     const [receiveTokenValue, setReceiveTokenValue] = useState('0')
@@ -86,7 +85,6 @@ export const CollateralSwap: React.FC = withGenericSuspense(
 
     const onReceiveDropdownChange = (token: Token | null) => {
       setReceiveToken(token)
-      console.log('Receive token', token)
     }
 
     const onSwap = useCallback(() => {

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { CollateralSwap } from '@/src/pagePartials/strategy/modals/CollateralSwap'
+import { LongShort } from '@/src/pagePartials/strategy/modals/LongShort'
 import { StrategiesDropdown } from '@/src/pagePartials/strategy/modals/common/StrategiesDropdown'
 import { Strategy } from '@/types/strategy'
 
@@ -33,8 +34,8 @@ export const Strategies: React.FC<Props> = ({ currentStrategy, onClose, ...restP
       <Title>Strategies</Title>
       <StrategiesDropdown onChange={onChange} strategy={strategy} />
       {strategy === 'collateralSwap' && <CollateralSwap />}
-      {strategy === 'long' && <>Long component</>}
-      {strategy === 'short' && <>Short component</>}
+      {strategy === 'long' && <LongShort type={'long'} />}
+      {strategy === 'short' && <LongShort type={'short'} />}
     </Modal>
   )
 }
