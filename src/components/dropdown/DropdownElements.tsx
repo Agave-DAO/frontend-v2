@@ -7,6 +7,7 @@ import { Dropdown, DropdownItem } from '@/src/components/dropdown/Dropdown'
 
 export const Wrapper = styled(Dropdown)`
   --inner-padding: var(--padding-md);
+  --border-radius: 16px;
 
   .dropdownItems {
     background-color: ${({ theme: { colors } }) => colors.almostWhite};

@@ -14,6 +14,7 @@ import { useVaults } from '@/src/hooks/presentation/useVaults'
 import { VaultInfo } from '@/src/pagePartials/strategy/vaults/VaultInfo'
 
 const Title = styled(BaseTitle)`
+  font-size: 2.4rem;
   margin: 0 0 32px;
 `
 

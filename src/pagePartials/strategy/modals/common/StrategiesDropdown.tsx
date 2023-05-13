@@ -6,7 +6,7 @@ import { CollateralSwap } from '@/src/components/assets/CollateralSwap'
 import { Long } from '@/src/components/assets/Long'
 import { Short } from '@/src/components/assets/Short'
 import {
-  Item,
+  Item as BaseItem,
   NoResults,
   SearchIcon,
   Textfield,
@@ -15,16 +15,83 @@ import {
 } from '@/src/components/dropdown/DropdownElements'
 import { Strategy } from '@/types/strategy'
 
+const Dropdown = styled(Wrapper)`
+  margin: 0 0 16px;
+  width: 100%;
+
+  @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
+    margin-bottom: 32px;
+  }
+`
+
+const Item = styled(BaseItem)`
+  svg {
+    --size: 32px;
+
+    height: var(--size);
+    width: var(--size);
+
+    rect {
+      fill: ${({ theme: { colors } }) => colors.secondary};
+    }
+
+    path {
+      fill: ${({ theme: { colors } }) => colors.accent};
+    }
+  }
+`
+
+const Button = styled.button`
+  align-items: center;
+  background: ${({ theme: { colors } }) => colors.mainDark4};
+  border-radius: 16px;
+  border: none;
+  column-gap: 10px;
+  cursor: pointer;
+  display: flex;
+  filter: drop-shadow(0 51px 80px rgba(0, 0, 0, 0.17))
+    drop-shadow(0 19.6444px 25.4815px rgba(0, 0, 0, 0.103259))
+    drop-shadow(0 4.15556px 6.51852px rgba(0, 0, 0, 0.0667407));
+  height: 62px;
+  justify-content: space-between;
+  padding: 0 var(--padding-xl) 0 var(--padding-md);
+  width: 100%;
+
+  &:hover {
+    filter: drop-shadow(0 51px 80px rgba(0, 0, 0, 0.2))
+      drop-shadow(0 19.6444px 25.4815px rgba(0, 0, 0, 0.2))
+      drop-shadow(0 4.15556px 6.51852px rgba(0, 0, 0, 0.1));
+    height: 62px;
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
+
+  svg {
+    rect {
+      fill: none;
+    }
+
+    path {
+      fill: ${({ theme: { colors } }) => colors.accent};
+    }
+  }
+`
+
 const Value = styled.span`
-  color: ${({ theme: { colors } }) => colors.secondary};
-  font-size: 1.4rem;
+  align-items: center;
+  color: ${({ theme: { colors } }) => colors.textColor};
+  column-gap: 0;
+  display: flex;
+  font-size: 1.8rem;
   font-weight: 400;
   line-height: 1.2;
 `
 
 const Chevron = styled(ChevronDown)`
   path {
-    fill: ${({ theme: { colors } }) => colors.secondary};
+    fill: ${({ theme: { colors } }) => colors.textColor};
   }
 `
 
@@ -37,9 +104,9 @@ export const StrategiesDropdown: React.FC<{
   const items = useMemo(
     () =>
       [
-        { name: 'Collateral Swap', icon: <CollateralSwap />, type: 'collateralSwap' },
         { name: 'Long', icon: <Long />, type: 'long' },
         { name: 'Short', icon: <Short />, type: 'short' },
+        { name: 'Collateral Swap', icon: <CollateralSwap />, type: 'collateralSwap' },
       ] as const,
     [],
   )
@@ -72,14 +139,14 @@ export const StrategiesDropdown: React.FC<{
   }
 
   return (
-    <Wrapper
+    <Dropdown
       dropdownButton={
-        <button>
+        <Button>
           <Value>
             {getCurrentStrategy[0].icon} {getCurrentStrategy[0].name}
           </Value>
           <Chevron />
-        </button>
+        </Button>
       }
       items={[
         <TextfieldContainer closeOnClick={false} key="tokenSearchInput">
