@@ -1,8 +1,10 @@
 import styled from 'styled-components'
 
-type Type = 'long' | 'short' | 'collateralSwap' | 'neutral' | undefined
+import { Strategy } from '@/types/strategy'
 
-const getColor = (colors: any, type?: Type) => {
+export type AssetType = Strategy | 'neutral' | undefined
+
+const getColor = (colors: any, type?: AssetType) => {
   return type === 'long'
     ? colors.primaryUltraLight
     : type === 'short'
@@ -14,7 +16,7 @@ const getColor = (colors: any, type?: Type) => {
     : colors.mainDark3
 }
 
-export const AssetBadge = styled.div<{ type?: Type }>`
+export const AssetBadge = styled.div<{ type?: AssetType }>`
   align-items: center;
   background-color: ${({ theme: { colors }, type }) => getColor(colors, type)};
   border-radius: 6px;

@@ -27,9 +27,9 @@ const Link = styled.a`
 
 export const FormCard = styled.div`
   --border-radius: 16px;
-  --padding-top: 32px;
-  --padding-horizontal: 8px;
-  --padding-bottom: 8px;
+  --padding-top: var(--padding-xxl);
+  --padding-horizontal: var(--padding-sm);
+  --padding-bottom: var(--padding-sm);
 
   background-color: ${({ theme: { colors } }) => colors.lightestGray};
   border-radius: var(--border-radius);
@@ -74,10 +74,10 @@ export const Row = styled.div<{ variant?: RowVariant }>`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 8px 16px;
+  padding: var(--padding-sm) var(--padding-md);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    padding: 16px;
+    padding: var(--padding-md);
   }
 `
 

@@ -9,7 +9,7 @@ const Buttons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: 34px;
-  padding: 4px;
+  padding: var(--padding-xs);
 `
 
 const Button = styled.button<{ isActive: boolean }>`
@@ -27,7 +27,7 @@ const Button = styled.button<{ isActive: boolean }>`
   justify-content: center;
   line-height: 1.2;
   min-width: fit-content;
-  padding: 0 12px;
+  padding: 0 var(--padding-sm-md);
   transition: background-color 0.25s ease-in-out;
   user-select: none;
 

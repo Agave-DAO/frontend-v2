@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  padding: 32px 16px;
+  padding: var(--padding-xxl) var(--padding-md);
   row-gap: 16px;
 `
 

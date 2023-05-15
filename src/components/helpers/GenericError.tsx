@@ -33,7 +33,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: auto;
-  padding: 32px;
+  padding: var(--padding-xxl);
   width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
@@ -108,7 +108,7 @@ const MessageWrapper = styled.div<{
         cursor: pointer;
         display: flex;
         font-size: 1.2rem;
-        padding: 0 8px;
+        padding: 0 var(--padding-sm);
         position: absolute;
         right: 50%;
         transform: translateX(50%);

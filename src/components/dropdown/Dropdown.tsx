@@ -71,7 +71,7 @@ const Items = styled.div<ItemsProps>`
   box-shadow: ${({ theme: { dropdown } }) => dropdown.boxShadow};
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
   min-width: 140px;
-  padding: 4px;
+  padding: var(--padding-xs);
   position: absolute;
   white-space: nowrap;
 
@@ -97,13 +97,13 @@ const Items = styled.div<ItemsProps>`
   ${({ dropdownDirection }) =>
     dropdownDirection === DropdownDirection.downwards &&
     css`
-      top: calc(100% + 10px);
+      top: calc(100% + 5px);
     `}
 
   ${({ dropdownDirection }) =>
     dropdownDirection === DropdownDirection.upwards &&
     css`
-      bottom: calc(100%);
+      bottom: calc(100% + 5px);
     `}
 `
 

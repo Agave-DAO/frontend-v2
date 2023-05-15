@@ -26,11 +26,11 @@ export const Row = styled.div<{ variant?: RowVariant }>`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 8px 16px;
+  padding: var(--padding-sm) var(--padding-md);
   transition: all 0.15s linear;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    padding: 16px;
+    padding: var(--padding-md);
   }
 `
 

@@ -14,7 +14,7 @@ const Head = styled.div`
   cursor: pointer;
   display: flex;
   justify-content: space-between;
-  padding: var(--padding);
+  padding: var(--padding-md);
   transition: border-color 0.15s linear;
 `
 
@@ -40,7 +40,7 @@ const Content = styled.div<{ isOpen?: boolean }>`
   font-size: 1.4rem;
   font-weight: 400;
   line-height: 1.6;
-  padding: var(--padding) var(--padding) 24px var(--padding);
+  padding: var(--padding-md) var(--padding-md) var(--padding-xl) var(--padding-md);
   transition: color 0.15s linear;
   word-break: break-word;
 
@@ -54,7 +54,7 @@ const Content = styled.div<{ isOpen?: boolean }>`
 
   ul {
     margin: 0;
-    padding: 0 0 0 8px;
+    padding: 0 0 0 var(--padding-sm);
   }
 
   li {
@@ -88,8 +88,6 @@ const Content = styled.div<{ isOpen?: boolean }>`
 `
 
 const Wrapper = styled.div<{ isOpen?: boolean }>`
-  --padding: 16px;
-
   background: ${({ isOpen, theme: { colors } }) =>
     isOpen ? colors.lightestGray : colors.secondary};
   border-radius: 8px;

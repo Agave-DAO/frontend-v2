@@ -19,7 +19,7 @@ const Wrapper = styled.div`
     background: ${({ theme: { colors } }) => colors.black40};
     border-radius: 16px;
     height: 42px;
-    padding: 0 16px;
+    padding: 0 var(--padding-md);
     width: auto;
   }
 `

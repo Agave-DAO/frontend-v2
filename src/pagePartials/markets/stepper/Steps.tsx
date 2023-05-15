@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   column-gap: 8px;
   display: flex;
   margin: 4px 0;
-  padding: 8px;
+  padding: var(--padding-sm);
 `
 
 interface StepsProps {

@@ -49,7 +49,7 @@ const Buttons = styled.div`
   display: flex;
   min-height: var(--buttons-height);
   justify-content: center;
-  padding: 0 8px;
+  padding: 0 var(--padding-sm);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     column-gap: 10px;

@@ -21,13 +21,13 @@ export const ButtonMini = styled.button<{ variant?: 'dark' | 'regular' | 'danger
   font-size: 1.4rem;
   font-weight: 400;
   height: 28px;
-  padding: 0 8px;
+  padding: 0 var(--padding-sm);
   transition: all 0.15s ease-out;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     font-size: 1.6rem;
     height: 30px;
-    padding: 0 16px;
+    padding: 0 var(--padding-md);
   }
 
   &:active {

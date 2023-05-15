@@ -5,13 +5,15 @@ import styled from 'styled-components'
 
 import { List } from '@/src/components/common/List'
 import { GoToExplorer } from '@/src/components/helpers/GoToExplorer'
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
+import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { ButtonTab, ButtonTabs } from '@/src/components/tabs/ButtonTabs'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { HistoryList } from '@/src/pagePartials/strategy/positions/HistoryList'
 import { PositionsList } from '@/src/pagePartials/strategy/positions/PositionsList'
 import { CollateralSwap, Long, Short } from '@/src/pagePartials/strategy/strategies/StrategyItem'
 import { VaultDetails as BaseVaultDetails } from '@/src/pagePartials/strategy/vaults/VaultDetails'
-import VaultModalProvider from '@/src/providers/vaultModalProvider'
+import VaultModalProvider, { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
 const Title = styled(BaseTitle)`
   margin: 0 0 40px;
@@ -27,7 +29,7 @@ const SubTitle = styled(BaseTitle)`
   margin: 0 0 16px;
 `
 
-const Strategy: NextPage = () => {
+const StrategyImpl = withGenericSuspense(() => {
   const router = useRouter()
   const { strategyName } = router.query
   const [positions, setPositions] = useState<Array<number>>([])
@@ -37,6 +39,7 @@ const Strategy: NextPage = () => {
   const showPositionsList = useMemo(() => activeTab === 'positions', [activeTab])
   const showHistoryList = useMemo(() => activeTab === 'history', [activeTab])
   const showNewStrategyList = useMemo(() => activeTab === 'newStrategy', [activeTab])
+  const { openCollateralSwapModal, openLongModal, openShortModal } = useVaultModalContext()
 
   const tabs = useMemo(
     () => [
@@ -68,41 +71,64 @@ const Strategy: NextPage = () => {
 
   const strategyCreationItems = (
     <List>
-      <Long onClick={() => createPosition()} />
-      <Short onClick={() => createPosition()} />
-      <CollateralSwap onClick={() => createPosition()} />
+      <Long
+        onClick={() => {
+          openLongModal
+          createPosition()
+        }}
+      />
+      <Short
+        onClick={() => {
+          openShortModal()
+          createPosition()
+        }}
+      />
+      <CollateralSwap
+        onClick={() => {
+          openCollateralSwapModal()
+          createPosition()
+        }}
+      />
     </List>
   )
 
   return (
     <>
-      <VaultModalProvider>
-        <Title hasExtraControls>
-          <span>Vault {strategyName}</span>
-          <GoToExplorer address={getStrategyAddress} text="Vault" />
-        </Title>
-        <VaultDetails />
-        {positions.length ? (
-          <>
-            <ButtonTabs>
-              {tabs.map(({ isActive, onClick, text }, index) => (
-                <ButtonTab isActive={isActive} key={`button_tab_${index}`} onClick={onClick}>
-                  {text}
-                </ButtonTab>
-              ))}
-            </ButtonTabs>
-            {showPositionsList && <PositionsList />}
-            {showHistoryList && <HistoryList />}
-            {showNewStrategyList && <>{strategyCreationItems}</>}
-          </>
-        ) : (
-          <>
-            <SubTitle>Create Strategy</SubTitle>
-            {strategyCreationItems}
-          </>
-        )}
-      </VaultModalProvider>
+      <Title hasExtraControls>
+        <span>Vault {strategyName}</span>
+        <GoToExplorer address={getStrategyAddress} text="Vault" />
+      </Title>
+      <VaultDetails />
+      {positions.length ? (
+        <>
+          <ButtonTabs>
+            {tabs.map(({ isActive, onClick, text }, index) => (
+              <ButtonTab isActive={isActive} key={`button_tab_${index}`} onClick={onClick}>
+                {text}
+              </ButtonTab>
+            ))}
+          </ButtonTabs>
+          {showPositionsList && <PositionsList />}
+          {showHistoryList && <HistoryList />}
+          {showNewStrategyList && <>{strategyCreationItems}</>}
+        </>
+      ) : (
+        <>
+          <SubTitle>Create Strategy</SubTitle>
+          {strategyCreationItems}
+        </>
+      )}
     </>
+  )
+})
+
+const Strategy: NextPage = () => {
+  return (
+    <RequiredConnection>
+      <VaultModalProvider>
+        <StrategyImpl />
+      </VaultModalProvider>
+    </RequiredConnection>
   )
 }
 

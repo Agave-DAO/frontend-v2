@@ -14,6 +14,7 @@ import { useVaults } from '@/src/hooks/presentation/useVaults'
 import { VaultInfo } from '@/src/pagePartials/strategy/vaults/VaultInfo'
 
 const Title = styled(BaseTitle)`
+  font-size: 2.4rem;
   margin: 0 0 32px;
 `
 
@@ -45,7 +46,7 @@ const Label = styled.p`
 `
 
 const Buttons = styled(ButtonWrapper)`
-  padding: 24px 0 0 0;
+  padding: var(--padding-xl) 0 0 0;
 `
 
 interface Props extends ModalProps {

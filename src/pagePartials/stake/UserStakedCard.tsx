@@ -24,7 +24,7 @@ const StakeActionCard = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  padding: 24px 16px 16px;
+  padding: var(--padding-xl) var(--padding-md) var(--padding-md);
 `
 
 const CoolingDown = styled(StakeActionCard)``

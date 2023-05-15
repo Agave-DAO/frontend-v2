@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Head } from '@/src/components/asset/Asset'
-import { AssetBadge } from '@/src/components/asset/AssetBadge'
+import { AssetBadge, AssetType } from '@/src/components/asset/AssetBadge'
 import { HeadInnerCollapsable } from '@/src/components/asset/HeadInnerCollapsable'
 import { Icon } from '@/src/components/asset/Icon'
 import { Swap } from '@/src/components/assets/Swap'
@@ -126,7 +126,7 @@ export const PositionHead: React.FC<Props> = ({ positionTokens, value, ...restPr
         </Value>
       </Values>
       <Badges>
-        <AssetBadge type={type as 'long' | 'short' | 'collateralSwap' | 'neutral' | undefined}>
+        <AssetBadge type={type as AssetType}>
           {type === 'long' && 'Long'}
           {type === 'short' && 'Short'}
           {type === 'collateralSwap' && 'Coll. Swap'}

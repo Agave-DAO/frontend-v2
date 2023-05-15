@@ -22,7 +22,7 @@ export const ListItem = styled.li`
   list-style: none;
   margin: 0;
   min-height: 88px;
-  padding: 16px;
+  padding: var(--padding-md);
   row-gap: 16px;
 
   &:active {

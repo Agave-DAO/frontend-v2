@@ -1,13 +1,13 @@
 import styled, { css } from 'styled-components'
 
 export const InnerCardCSS = css`
-  --padding: 16px;
+  --inner-card-padding: var(--padding-md);
 
   background-color: ${({ theme: { colors } }) => colors.primary10};
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  padding: var(--padding);
+  padding: var(--inner-card-padding);
   width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
@@ -25,8 +25,8 @@ export const InnerCardDarkCSS = css`
   padding-right: 8px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    padding-left: var(--padding);
-    padding-right: var(--padding);
+    padding-left: var(--inner-card-padding);
+    padding-right: var(--inner-card-padding);
   }
 `
 
