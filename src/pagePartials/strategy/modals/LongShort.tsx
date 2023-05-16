@@ -150,7 +150,7 @@ const AdjustLeverageValue = styled.div`
   line-height: 1.2;
 `
 
-const Values = styled.div`
+const LeverageMultipliers = styled.div`
   --values-height: 21px;
   --value-size: 15px;
 
@@ -163,67 +163,87 @@ const Values = styled.div`
 const CURRENT_STEP_X = [
   0, 8.33, 16.66, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100,
 ]
+const X2 = 0
+const X5 = 3
+const X10 = 8
+const X15 = 13
+const X20 = 18
 
-const CurrentValue = styled.div<{ currentLeverage: number }>`
+const LeverageMultiplier = styled.div<{ currentLeverageX: number }>`
   background-color: ${({ theme: { colors } }) => colors.primary};
   border-radius: 50%;
   border: 2px solid #fff;
   height: var(--values-height);
+  left: calc(
+    ${({ currentLeverageX }) => CURRENT_STEP_X[currentLeverageX]}% - var(--values-height) / 2
+  );
   position: absolute;
   top: calc(var(--values-height) / 2 - var(--values-height) / 2);
   transition: left 0.2s ease-in-out;
   width: var(--values-height);
   z-index: 10;
-
-  left: calc(
-    ${({ currentLeverage }) => CURRENT_STEP_X[currentLeverage]}% - var(--values-height) / 2
-  );
 `
 
-const ValuesBackground = styled.div`
-  background-color: ${({ theme: { colors } }) => colors.primary};
+const LeverageMultipliersBackground = styled.div<{ currentLeverageX: number }>`
+  background-color: ${({ theme: { colors } }) => colors.lightGray};
   height: 4px;
   left: 0;
   position: absolute;
   top: calc(var(--values-height) / 2 - 2px / 2);
   width: 100%;
   z-index: 1;
+
+  &::before {
+    background-color: ${({ theme: { colors } }) => colors.primary};
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: calc(
+      ${({ currentLeverageX }) => CURRENT_STEP_X[currentLeverageX]}% - var(--values-height) / 2
+    );
+    transition: width 0.2s ease-in-out;
+  }
 `
 
-const Value = styled.div`
+const LeverageMainMultiplier = styled.div`
   position: absolute;
   top: calc(var(--values-height) / 2 - var(--value-size) / 2);
   z-index: 5;
 
   &.value_0 {
-    left: calc(${CURRENT_STEP_X[0]}% - var(--value-size) / 2);
+    left: calc(${CURRENT_STEP_X[X2]}% - var(--value-size) / 2);
   }
 
   &.value_1 {
-    left: calc(${CURRENT_STEP_X[3]}% - var(--value-size) / 2);
+    left: calc(${CURRENT_STEP_X[X5]}% - var(--value-size) / 2);
   }
 
   &.value_2 {
-    left: calc(${CURRENT_STEP_X[8]}% - var(--value-size) / 2);
+    left: calc(${CURRENT_STEP_X[X10]}% - var(--value-size) / 2);
   }
 
   &.value_3 {
-    left: calc(${CURRENT_STEP_X[13]}% - var(--value-size) / 2);
+    left: calc(${CURRENT_STEP_X[X15]}% - var(--value-size) / 2);
   }
 
   &.value_4 {
-    left: calc(${CURRENT_STEP_X[18]}% - var(--value-size) / 2);
+    left: calc(${CURRENT_STEP_X[X20]}% - var(--value-size) / 2);
   }
 `
 
-const ValueDot = styled.div`
-  background-color: ${({ theme: { colors } }) => colors.primary};
+const MainMultiplierDot = styled.div<{ isActive?: boolean }>`
+  background-color: ${({ isActive, theme: { colors } }) =>
+    isActive ? colors.primary : colors.lightGray};
   border-radius: 50%;
+  cursor: pointer;
   height: var(--value-size);
+  transition: background-color 0.2s ease-in-out;
   width: var(--value-size);
 `
 
-const ValueText = styled.div`
+const MainMultiplierText = styled.div`
   color: ${({ theme: { colors } }) => colors.darkerGray};
   font-size: 1.2rem;
   font-weight: 400;
@@ -286,12 +306,18 @@ export const LongShort: React.FC<{ type: Strategy }> = withGenericSuspense(
       setReceiveToken(token)
     }
 
-    const [leverageIndex, setLeverageIndex] = useState(8)
-    const leverageMainSteps = [2, 5, 10, 15, 20]
     const leverageSteps = useMemo(
       () => [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
       [],
     )
+    const leverageMainMultipliers = [
+      leverageSteps[X2],
+      leverageSteps[X5],
+      leverageSteps[X10],
+      leverageSteps[X15],
+      leverageSteps[X20],
+    ]
+    const [leverageIndex, setLeverageIndex] = useState(leverageSteps[X10])
 
     const nextStep = useCallback(() => {
       if (leverageIndex < leverageSteps.length - 1) {
@@ -372,16 +398,23 @@ export const LongShort: React.FC<{ type: Strategy }> = withGenericSuspense(
               <Add />
             </AdjustLeverageControl>
           </AdjustLeverageControls>
-          <Values>
-            <ValuesBackground />
-            <CurrentValue currentLeverage={leverageIndex} />
-            {leverageMainSteps.map((value, index) => (
-              <Value className={`value_${index}`} key={value}>
-                <ValueDot />
-                <ValueText>{value}x</ValueText>
-              </Value>
+          <LeverageMultipliers>
+            <LeverageMultipliersBackground currentLeverageX={leverageIndex} />
+            <LeverageMultiplier currentLeverageX={leverageIndex} />
+            {leverageMainMultipliers.map((value, index) => (
+              <LeverageMainMultiplier
+                className={`value_${index}`}
+                key={value}
+                onClick={() => {
+                  const index = leverageSteps.findIndex((step) => step === value)
+                  setLeverageIndex(index)
+                }}
+              >
+                <MainMultiplierDot isActive={value <= leverageSteps[leverageIndex]} />
+                <MainMultiplierText>{value}x</MainMultiplierText>
+              </LeverageMainMultiplier>
             ))}
-          </Values>
+          </LeverageMultipliers>
         </AdjustLeverage>
         <Details
           data={[
