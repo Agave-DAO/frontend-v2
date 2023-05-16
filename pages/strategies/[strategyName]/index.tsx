@@ -73,7 +73,7 @@ const StrategyImpl = withGenericSuspense(() => {
     <List>
       <Long
         onClick={() => {
-          openLongModal
+          openLongModal()
           createPosition()
         }}
       />

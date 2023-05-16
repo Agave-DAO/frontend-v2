@@ -78,18 +78,15 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
     }, [activeTab])
 
     const withdraw = useCallback(() => {
-      console.log('withdraw')
       onClose()
     }, [onClose])
 
     const deposit = useCallback(() => {
-      console.log('deposit')
       onClose()
     }, [onClose])
 
     const onDropdownChange = (token: Token | null) => {
       setToken(token)
-      console.log('token', token)
     }
 
     return (

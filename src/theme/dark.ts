@@ -61,6 +61,7 @@ const textColor60 = white60
 const lightGrayUltra = '#E1EBEA'
 const lightestGray = '#F0F4F4'
 const lighterGray = '#D1DDDC'
+const lighterGray50 = `${lighterGray}80`
 const lightGray = '#B3C7C4'
 
 const gray = '#97B1AB'
@@ -191,9 +192,9 @@ export const dark = {
     borderColor: borderColor,
   },
   colors: {
-    almostWhite: almostWhite,
     accent: accent,
     accentDark: accentDark,
+    almostWhite: almostWhite,
     black05: black05,
     black20: black20,
     black40: black40,
@@ -222,6 +223,7 @@ export const dark = {
     greenGradientMedium: greenGradientMedium,
     lightGray: lightGray,
     lightGrayUltra: lightGrayUltra,
+    lighterGray50: lighterGray50,
     lighterGray: lighterGray,
     lightestGray: lightestGray,
     mainDark1: mainDark1,
