@@ -1,10 +1,17 @@
+import { isAddress } from '@ethersproject/address'
+
 import { useGetQueryParam } from '@/src/hooks/useGetQueryParam'
+
+function isValidVault(vaultAddress: string) {
+  return true
+}
 
 export const useCollateralSwap = () => {
   const vaultAddress = useGetQueryParam('vault')
 
-  console.log('hook: useCollateralSwap')
-  console.log('vaultAddress', vaultAddress)
+  if (!vaultAddress || !isAddress(vaultAddress) || !isValidVault(vaultAddress)) {
+    throw new Error('No valid vault address provided')
+  }
 
   return {
     data: {
