@@ -317,7 +317,7 @@ export const LongShort: React.FC<{ type: Strategy }> = withGenericSuspense(
       leverageSteps[X15],
       leverageSteps[X20],
     ]
-    const [leverageIndex, setLeverageIndex] = useState(leverageSteps[X10])
+    const [leverageIndex, setLeverageIndex] = useState(X10)
 
     const nextStep = useCallback(() => {
       if (leverageIndex < leverageSteps.length - 1) {
