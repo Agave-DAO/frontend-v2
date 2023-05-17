@@ -5,6 +5,7 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { AssetsList } from '@/src/components/layout/AssetsList'
 import { Position } from '@/src/pagePartials/strategy/positions/Position'
+import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
 const Wrapper = styled.div``
 
@@ -49,6 +50,7 @@ export const PositionsList: React.FC = withGenericSuspense(
         value: '<0.000001 WXDAI',
       },
     ]
+    const { openClosePositionModal } = useVaultModalContext()
 
     return (
       <Wrapper {...restProps}>
@@ -56,9 +58,7 @@ export const PositionsList: React.FC = withGenericSuspense(
           {mockedData.map((item, index) => (
             <Position data={item} key={index}>
               <ActionsWrapper>
-                <Button onClick={() => console.log('Do something with the position')}>
-                  Close position
-                </Button>
+                <Button onClick={openClosePositionModal}>Close position</Button>
               </ActionsWrapper>
             </Position>
           ))}

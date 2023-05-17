@@ -1,6 +1,7 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
 
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
+import { ClosePosition } from '@/src/pagePartials/strategy/modals/ClosePosition'
 import { DepositWithdraw } from '@/src/pagePartials/strategy/modals/DepositWithdraw'
 import { Strategies } from '@/src/pagePartials/strategy/modals/Strategies'
 import VaultModal from '@/src/pagePartials/strategy/modals/VaultModal'
@@ -12,7 +13,7 @@ const VaultModalContext = createContext({} as any)
 
 type vaultAddress = string | undefined
 
-type ModalTypes = 'vault' | Strategy | DepositWithdrawTabs | false
+type ModalTypes = 'vault' | 'close' | Strategy | DepositWithdrawTabs | false
 
 const VaultModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [showModal, setShowModal] = useState<ModalTypes>(false)
@@ -37,6 +38,9 @@ const VaultModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
     },
     openShortModal: () => {
       setShowModal('short')
+    },
+    openClosePositionModal: () => {
+      setShowModal('close')
     },
   }
 
@@ -65,6 +69,7 @@ const VaultModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
           isOpen={showModal === 'collateralSwap' || showModal === 'long' || showModal === 'short'}
           onClose={() => setShowModal(false)}
         />
+        <ClosePosition isOpen={showModal === 'close'} onClose={() => setShowModal(false)} />
       </RequiredConnection>
     </VaultModalContext.Provider>
   )
