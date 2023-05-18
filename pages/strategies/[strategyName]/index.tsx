@@ -129,15 +129,17 @@ const StrategyImpl = withGenericSuspense(
       <SkeletonLoading
         style={{
           borderRadius: '16px',
-          columnGap: '16px',
           display: 'flex',
+          flexDirection: 'column',
           height: '192px',
+          justifyContent: 'space-between',
           marginBottom: '32px',
-          padding: '0 16px',
+          padding: '16px',
         }}
       >
-        <SkeletonLoading style={{ marginBottom: '8px', height: '35px' }} />
-        <SkeletonLoading style={{ height: '35px' }} />
+        <SkeletonLoading animate={false} style={{ height: '35px' }} />
+        <SkeletonLoading animate={false} style={{ height: '35px' }} />
+        <SkeletonLoading animate={false} style={{ height: '35px' }} />
       </SkeletonLoading>
       <SkeletonLoading style={{ marginBottom: '16px', height: '20px' }} />
       <List>
