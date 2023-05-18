@@ -4,6 +4,7 @@ import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { List, ListNavigationItem } from '@/src/components/common/List'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { useVaults } from '@/src/hooks/presentation/useVaults'
 import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
@@ -53,7 +54,7 @@ export const VaultsList: React.FC = withGenericSuspense(
               // TODO: change to query param
               href={`/strategies/${vault.vaultAddress}`}
               key={index}
-              title={`Vault ${vault.name}`}
+              title={`${vault.name}`}
             ></ListNavigationItem>
           ))}
         </List>
@@ -93,5 +94,38 @@ export const VaultsList: React.FC = withGenericSuspense(
       />
     )
   },
-  ({ ...restProps }) => <div {...restProps}>VaultsList skeleton</div>,
+  ({ ...restProps }) => (
+    <div {...restProps}>
+      <Wrapper {...restProps}>
+        <List>
+          {Array.from({ length: 6 }).map((item, index) => (
+            <SkeletonLoading
+              key={`list_${index}`}
+              style={{
+                alignItems: 'center',
+                borderRadius: '16px',
+                columnGap: '16px',
+                display: 'flex',
+                height: '88px',
+                padding: '0 16px',
+              }}
+            >
+              <SkeletonLoading animate={false} style={{ height: '22px' }} />
+              <SkeletonLoading
+                animate={false}
+                style={{
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  flexShrink: '0',
+                  minWidth: '0',
+                  minHeight: '0',
+                }}
+              />
+            </SkeletonLoading>
+          ))}
+        </List>
+      </Wrapper>
+    </div>
+  ),
 )
