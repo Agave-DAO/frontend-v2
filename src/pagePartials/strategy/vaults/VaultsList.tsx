@@ -95,37 +95,35 @@ export const VaultsList: React.FC = withGenericSuspense(
     )
   },
   ({ ...restProps }) => (
-    <div {...restProps}>
-      <Wrapper {...restProps}>
-        <List>
-          {Array.from({ length: 6 }).map((item, index) => (
+    <Wrapper {...restProps}>
+      <List>
+        {Array.from({ length: 6 }).map((item, index) => (
+          <SkeletonLoading
+            key={`list_${index}`}
+            style={{
+              alignItems: 'center',
+              borderRadius: '16px',
+              columnGap: '16px',
+              display: 'flex',
+              height: '88px',
+              padding: '0 16px',
+            }}
+          >
+            <SkeletonLoading animate={false} style={{ height: '22px' }} />
             <SkeletonLoading
-              key={`list_${index}`}
+              animate={false}
               style={{
-                alignItems: 'center',
-                borderRadius: '16px',
-                columnGap: '16px',
-                display: 'flex',
-                height: '88px',
-                padding: '0 16px',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                flexShrink: '0',
+                minWidth: '0',
+                minHeight: '0',
               }}
-            >
-              <SkeletonLoading animate={false} style={{ height: '22px' }} />
-              <SkeletonLoading
-                animate={false}
-                style={{
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  flexShrink: '0',
-                  minWidth: '0',
-                  minHeight: '0',
-                }}
-              />
-            </SkeletonLoading>
-          ))}
-        </List>
-      </Wrapper>
-    </div>
+            />
+          </SkeletonLoading>
+        ))}
+      </List>
+    </Wrapper>
   ),
 )

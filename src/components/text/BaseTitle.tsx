@@ -6,12 +6,14 @@ export const BaseTitle = styled.h1<{ hasExtraControls?: boolean }>`
   font-weight: 700;
   line-height: 1.2;
   margin: 0 0 24px;
+  word-break: break-word;
 
   ${({ hasExtraControls }) =>
     hasExtraControls &&
     css`
-      display: flex;
       align-items: center;
+      column-gap: 16px;
+      display: flex;
       justify-content: space-between;
     `}
 
