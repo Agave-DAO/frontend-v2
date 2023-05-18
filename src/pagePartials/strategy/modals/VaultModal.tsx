@@ -8,6 +8,7 @@ import { Formfield } from '@/src/components/form/Formfield'
 import { Textfield, TextfieldStatus } from '@/src/components/form/Textfield'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { useVaults } from '@/src/hooks/presentation/useVaults'
@@ -91,58 +92,93 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, ...restProps }) =>
 
   return (
     <Modal onClose={onClose} {...restProps}>
-      <>
-        <Title>{editVault ? 'Edit vault name' : 'New vault'}</Title>
-        {editVault ? (
-          <Info text={<VaultInfo />} title="Vault information" />
-        ) : (
-          <Info
-            text={
-              <>
-                A vault can receive cryptocurrency like a normal asset balance in your account.
-                Deposit collateral and borrow your future yield.
-                <br />
-                <br />
-                <ActionButton
-                  onClick={() =>
-                    window.open(
-                      'https://agavedev.notion.site/agavedev/Agave-Docs-a0cb462422b941d89a6dc646cdb1bdf8',
-                      '_blank',
-                    )
-                  }
-                  variant="darker"
-                >
-                  Learn more
-                </ActionButton>
-              </>
-            }
-            title="Information"
-          />
-        )}
-        <FormCard>
-          <FormTitle>{editVault ? 'Rename vault' : 'Create new vault'}</FormTitle>
-          <Label>Name</Label>
-          <Formfield
-            formControl={
-              <Textfield
-                onChange={(e) => setVaultName(e.currentTarget.value)}
-                value={vaultName}
-                variant="light"
-              />
-            }
-            status={vaultName && error ? TextfieldStatus.error : undefined}
-            statusText={error}
-          />
+      <Title>{editVault ? 'Edit vault name' : 'New vault'}</Title>
+      {editVault ? (
+        <Info text={<VaultInfo />} title="Vault information" />
+      ) : (
+        <Info
+          text={
+            <>
+              A vault can receive cryptocurrency like a normal asset balance in your account.
+              Deposit collateral and borrow your future yield.
+              <br />
+              <br />
+              <ActionButton
+                onClick={() =>
+                  window.open(
+                    'https://agavedev.notion.site/agavedev/Agave-Docs-a0cb462422b941d89a6dc646cdb1bdf8',
+                    '_blank',
+                  )
+                }
+                variant="darker"
+              >
+                Learn more
+              </ActionButton>
+            </>
+          }
+          title="Information"
+        />
+      )}
+      <FormCard>
+        <FormTitle>{editVault ? 'Rename vault' : 'Create new vault'}</FormTitle>
+        <Label>Name</Label>
+        <Formfield
+          formControl={
+            <Textfield
+              onChange={(e) => setVaultName(e.currentTarget.value)}
+              value={vaultName}
+              variant="light"
+            />
+          }
+          status={vaultName && error ? TextfieldStatus.error : undefined}
+          statusText={error}
+        />
 
-          <Buttons>
-            <Button disabled={disableSubmit} onClick={saveAndClose}>
-              {editVault ? 'Rename' : 'Create'}
-            </Button>
-          </Buttons>
-        </FormCard>
-      </>
+        <Buttons>
+          <Button disabled={disableSubmit} onClick={saveAndClose}>
+            {editVault ? 'Rename' : 'Create'}
+          </Button>
+        </Buttons>
+      </FormCard>
     </Modal>
   )
 }
 
-export default withGenericSuspense(VaultModal, () => null) // avoid loading in hidden element
+export default withGenericSuspense(VaultModal, ({ onClose, ...restProps }) => (
+  <Modal onClose={onClose} {...restProps}>
+    <SkeletonLoading style={{ height: '30px', marginBottom: '32px' }} />
+    <SkeletonLoading
+      style={{
+        alignItems: 'center',
+        borderRadius: '16px',
+        columnGap: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '220px',
+        justifyContent: 'space-between',
+        marginBottom: '32px',
+        padding: '16px',
+      }}
+    >
+      {Array.from({ length: 4 }).map((item, index) => (
+        <SkeletonLoading animate={false} key={index} style={{ height: '35px' }} />
+      ))}
+    </SkeletonLoading>
+    <SkeletonLoading
+      style={{
+        alignItems: 'center',
+        borderRadius: '16px',
+        columnGap: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '250px',
+        justifyContent: 'space-between',
+        padding: '16px',
+      }}
+    >
+      {Array.from({ length: 4 }).map((item, index) => (
+        <SkeletonLoading animate={false} key={index} style={{ height: '35px' }} />
+      ))}
+    </SkeletonLoading>
+  </Modal>
+)) // avoid loading in hidden element
