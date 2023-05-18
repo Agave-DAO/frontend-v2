@@ -31,7 +31,7 @@ export const useContractInstance = <F extends AppFactories, RT extends ReturnTyp
   object. If it is not a valid key, then it sets the `marketVersion` variable to the value of the
   `main` key in the `MarketVersions` object. This ensures that the `marketVersion` variable always
   has a valid value. */
-  if (!MarketVersions[marketVersion]) {
+  if (!marketVersion || !MarketVersions[marketVersion]) {
     marketVersion = MarketVersions.main
   }
 
@@ -45,7 +45,7 @@ export const useContractInstance = <F extends AppFactories, RT extends ReturnTyp
 
   let address: string
   if (isKnownContract(contractKey)) {
-    address = address = contracts[marketVersion][contractKey].address[appChainId]
+    address = contracts[marketVersion][contractKey].address[appChainId]
   } else if (isAddress(contractKey)) {
     address = contractKey
   } else {

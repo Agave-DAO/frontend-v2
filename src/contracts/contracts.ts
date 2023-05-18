@@ -102,13 +102,20 @@ export const contracts = {
   },
 }
 
-export type ContractsKeys = keyof typeof contracts[MarketVersions.main]
+const MAIN_KEYS = Object.keys(contracts[MarketVersions.main]) as Array<
+  keyof typeof contracts[MarketVersions.main]
+>
+const BOOSTED_KEYS = Object.keys(contracts[MarketVersions.boosted]) as Array<
+  keyof typeof contracts[MarketVersions.boosted]
+>
+
+const KEYS = [...new Set([...MAIN_KEYS, ...BOOSTED_KEYS])] as const
+
+// this is valid as we assume that contracts names/interfaces are the same for all markets
+export type ContractsKeys = typeof KEYS[number]
 
 export const isKnownContract = (
   contractName: ContractsKeys | string,
 ): contractName is ContractsKeys => {
-  return (
-    contracts[MarketVersions.main || MarketVersions.boosted][contractName as ContractsKeys] !==
-    undefined
-  )
+  return KEYS.includes(contractName as ContractsKeys)
 }
