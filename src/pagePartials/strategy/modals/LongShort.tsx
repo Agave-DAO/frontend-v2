@@ -371,11 +371,12 @@ export const LongShort: React.FC<{ type: Strategy }> = withGenericSuspense(
         <Rows>
           <Row>
             <RowKeyStrong>{type === 'long' ? 'Long' : 'Short'}</RowKeyStrong>
-            <RowValue>Leverage: {leverageIndex}x</RowValue>
+            <RowValue>Leverage: {leverageSteps[leverageIndex]}x</RowValue>
           </Row>
         </Rows>
         <ReceiveTokenInputDropdown
           decimals={18}
+          dropdownDirection={DropdownDirection.downwards}
           maxValue={'10000'}
           onDropdownChange={onReceiveDropdownChange}
           selectedToken={receiveToken}
