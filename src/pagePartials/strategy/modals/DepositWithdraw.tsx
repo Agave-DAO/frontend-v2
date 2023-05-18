@@ -156,9 +156,9 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
           padding: '16px',
         }}
       >
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
+        {Array.from({ length: 3 }).map((item, index) => (
+          <SkeletonLoading animate={false} key={index} style={{ height: '35px' }} />
+        ))}
       </SkeletonLoading>
       <Tabs style={{ margin: '32px auto', height: '89px', maxWidth: 'none', width: '244px' }} />
       <SkeletonLoading
@@ -173,11 +173,9 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
           padding: '16px',
         }}
       >
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
+        {Array.from({ length: 5 }).map((item, index) => (
+          <SkeletonLoading animate={false} key={index} style={{ height: '35px' }} />
+        ))}
       </SkeletonLoading>
     </Modal>
   ),

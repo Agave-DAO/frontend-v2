@@ -9,6 +9,7 @@ import { TitleWithAction } from '@/src/components/common/TitleWithAction'
 import { DropdownDirection } from '@/src/components/dropdown/Dropdown'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
@@ -182,5 +183,29 @@ export const ClosePosition: React.FC<ModalProps> = withGenericSuspense(
       </Modal>
     )
   },
-  () => <>Loading...</>,
+  ({ onClose, ...restProps }) => (
+    <Modal onClose={onClose} {...restProps}>
+      <SkeletonLoading style={{ height: '58px', marginBottom: '40px' }} />
+      <SkeletonLoading
+        style={{
+          alignItems: 'center',
+          borderRadius: '16px',
+          columnGap: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '232px',
+          justifyContent: 'space-between',
+          marginBottom: '24px',
+          padding: '16px',
+        }}
+      >
+        {Array.from({ length: 4 }).map((item, index) => (
+          <SkeletonLoading animate={false} key={index} style={{ height: '35px' }} />
+        ))}
+      </SkeletonLoading>
+      {Array.from({ length: 8 }).map((item, index) => (
+        <SkeletonLoading key={index} style={{ height: '30px', marginBottom: '8px' }} />
+      ))}
+    </Modal>
+  ),
 )

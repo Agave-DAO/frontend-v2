@@ -137,9 +137,9 @@ const StrategyImpl = withGenericSuspense(
           padding: '16px',
         }}
       >
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
-        <SkeletonLoading animate={false} style={{ height: '35px' }} />
+        {Array.from({ length: 3 }).map((item, index) => (
+          <SkeletonLoading animate={false} key={index} style={{ height: '35px' }} />
+        ))}
       </SkeletonLoading>
       <SkeletonLoading style={{ marginBottom: '16px', height: '20px' }} />
       <List>
