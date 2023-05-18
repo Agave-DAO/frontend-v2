@@ -8,6 +8,8 @@ import {
   ERC20__factory,
   StakedToken__factory,
   Swapper_Coordinator__factory,
+  Swapper_Helper__factory,
+  Swapper_UserProxyImplementation__factory,
   WETHGateway__factory,
 } from '@/types/generated/typechain'
 
@@ -70,6 +72,18 @@ const mainContracts = {
       [Chains.gnosis]: '0xdD494510e56347058703c277Ef770D3D9099ca42',
     },
     factory: Swapper_Coordinator__factory,
+  },
+  SwapperHelper: {
+    address: {
+      [Chains.gnosis]: '0xb624888498c057b5398eF34898EfC3d0fBF89489',
+    },
+    factory: Swapper_Helper__factory,
+  },
+  SwapperUserProxyImplementation: {
+    address: {
+      [Chains.gnosis]: '0xea45ce264A5b2A2d2CC12Fd5a92D6c8b444d5636',
+    },
+    factory: Swapper_UserProxyImplementation__factory,
   },
 } as const
 
