@@ -26,7 +26,6 @@ export const Strategies: React.FC<Props> = ({ currentStrategy, onClose, ...restP
 
   const onChange = (strategy: Strategy) => {
     setStrategy(strategy)
-    console.log('strategy', strategy)
   }
 
   return (

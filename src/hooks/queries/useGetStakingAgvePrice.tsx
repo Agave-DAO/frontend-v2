@@ -21,7 +21,7 @@ export const useGetStakingAgvePrice = () => {
       // Returning the price of AGVE in wei
       return toWei(data['agave-token'].usd.toString())
     } catch (error) {
-      console.log(error)
+      console.error(error)
       return ZERO_BN
     }
   })

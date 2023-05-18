@@ -71,7 +71,7 @@ export const TokenDropdown: React.FC<{
   }, [activeTokenSymbol])
 
   return (
-    <Wrapper>
+    <Wrapper {...restProps}>
       {currentToken && <Icon dimensions={40} symbol={currentToken} />}
       <Dropdown
         dropdownButton={
@@ -90,7 +90,6 @@ export const TokenDropdown: React.FC<{
             {item.symbol}
           </DropdownItem>
         ))}
-        {...restProps}
       />
     </Wrapper>
   )

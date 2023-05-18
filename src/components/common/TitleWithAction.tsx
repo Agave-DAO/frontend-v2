@@ -28,7 +28,7 @@ export interface ButtonType {
 }
 
 export const TitleWithAction: React.FC<{
-  title: string
+  title: string | React.ReactNode
   button: ButtonType
 }> = ({ button, title, ...restProps }) => {
   return (
