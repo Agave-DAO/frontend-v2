@@ -16,6 +16,7 @@ import { TitleWithAction } from '@/src/components/common/TitleWithAction'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
@@ -141,5 +142,41 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
       </Modal>
     )
   },
-  () => <>Loading...</>,
+  ({ onClose, ...restProps }) => (
+    <Modal onClose={onClose} {...restProps}>
+      <SkeletonLoading
+        style={{
+          alignItems: 'center',
+          borderRadius: '16px',
+          columnGap: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '175px',
+          justifyContent: 'space-between',
+          padding: '16px',
+        }}
+      >
+        {Array.from({ length: 3 }).map((item, index) => (
+          <SkeletonLoading animate={false} key={index} style={{ height: '35px' }} />
+        ))}
+      </SkeletonLoading>
+      <Tabs style={{ margin: '32px auto', height: '89px', maxWidth: 'none', width: '244px' }} />
+      <SkeletonLoading
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          borderRadius: '16px',
+          columnGap: '16px',
+          height: '277px',
+          padding: '16px',
+        }}
+      >
+        {Array.from({ length: 5 }).map((item, index) => (
+          <SkeletonLoading animate={false} key={index} style={{ height: '35px' }} />
+        ))}
+      </SkeletonLoading>
+    </Modal>
+  ),
 )

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -15,7 +15,6 @@ import {
 import { TitleWithAction } from '@/src/components/common/TitleWithAction'
 import { DropdownDirection } from '@/src/components/dropdown/Dropdown'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
-import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInputDropdown } from '@/src/components/token/TokenInputDropdown'
 import { Details as BaseDetails } from '@/src/pagePartials/strategy/modals/common/Details'
@@ -258,196 +257,191 @@ const Details = styled(BaseDetails)`
   padding-top: 24px;
 `
 
-export const LongShort: React.FC<{ type: Strategy }> = withGenericSuspense(
-  ({ type, ...restProps }) => {
-    const [amountTokenValue, setSendTokenValue] = useState('0')
-    const [sendAmountInputStatus, setAmountTokenInputStatus] = useState<TextfieldStatus>()
-    const [sendAmountInputStatusText, setAmountTokenInputStatusText] = useState<
-      string | undefined
-    >()
-    const [amountToken, setAmountToken] = useState<Token | null>({
-      symbol: 'USDC',
-      name: 'USD Coin',
-      address: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83',
-      decimals: 6,
-      chainId: 100,
-      logoURI: '/coins/usdc.svg',
-      extensions: {
-        isNative: false,
-        isNativeWrapper: false,
-      },
-      type: 'reserve',
-    })
+export const LongShort: React.FC<{ type: Strategy }> = ({ type, ...restProps }) => {
+  const [amountTokenValue, setSendTokenValue] = useState('0')
+  const [sendAmountInputStatus, setAmountTokenInputStatus] = useState<TextfieldStatus>()
+  const [sendAmountInputStatusText, setAmountTokenInputStatusText] = useState<string | undefined>()
+  const [amountToken, setAmountToken] = useState<Token | null>({
+    symbol: 'USDC',
+    name: 'USD Coin',
+    address: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83',
+    decimals: 6,
+    chainId: 100,
+    logoURI: '/coins/usdc.svg',
+    extensions: {
+      isNative: false,
+      isNativeWrapper: false,
+    },
+    type: 'reserve',
+  })
 
-    const onSendDropdownChange = (token: Token | null) => {
-      setAmountToken(token)
+  const onSendDropdownChange = (token: Token | null) => {
+    setAmountToken(token)
+  }
+
+  const [receiveTokenValue, setReceiveTokenValue] = useState('0')
+  const [receiveTokenInputStatus, setReceiveTokenInputStatus] = useState<TextfieldStatus>()
+  const [receiveTokenInputStatusText, setReceiveTokenInputStatusText] = useState<
+    string | undefined
+  >()
+  const [receiveToken, setReceiveToken] = useState<Token | null>({
+    symbol: 'WXDAI',
+    name: 'Wrapped XDAI',
+    address: '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d',
+    decimals: 18,
+    chainId: 100,
+    logoURI: '/coins/wxdai.svg',
+    extensions: {
+      isNative: false,
+      isNativeWrapper: true,
+    },
+    type: 'reserve',
+  })
+
+  const onReceiveDropdownChange = (token: Token | null) => {
+    setReceiveToken(token)
+  }
+
+  const leverageSteps = useMemo(
+    () => [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+    [],
+  )
+  const leverageMainMultipliers = [
+    leverageSteps[X2],
+    leverageSteps[X5],
+    leverageSteps[X10],
+    leverageSteps[X15],
+    leverageSteps[X20],
+  ]
+  const [leverageIndex, setLeverageIndex] = useState(X10)
+
+  const nextStep = useCallback(() => {
+    if (leverageIndex < leverageSteps.length - 1) {
+      setLeverageIndex(leverageIndex + 1)
     }
+  }, [leverageIndex, leverageSteps])
 
-    const [receiveTokenValue, setReceiveTokenValue] = useState('0')
-    const [receiveTokenInputStatus, setReceiveTokenInputStatus] = useState<TextfieldStatus>()
-    const [receiveTokenInputStatusText, setReceiveTokenInputStatusText] = useState<
-      string | undefined
-    >()
-    const [receiveToken, setReceiveToken] = useState<Token | null>({
-      symbol: 'WXDAI',
-      name: 'Wrapped XDAI',
-      address: '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d',
-      decimals: 18,
-      chainId: 100,
-      logoURI: '/coins/wxdai.svg',
-      extensions: {
-        isNative: false,
-        isNativeWrapper: true,
-      },
-      type: 'reserve',
-    })
-
-    const onReceiveDropdownChange = (token: Token | null) => {
-      setReceiveToken(token)
+  const previousStep = useCallback(() => {
+    if (leverageIndex > 0) {
+      setLeverageIndex(leverageIndex - 1)
     }
+  }, [leverageIndex])
 
-    const leverageSteps = useMemo(
-      () => [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-      [],
-    )
-    const leverageMainMultipliers = [
-      leverageSteps[X2],
-      leverageSteps[X5],
-      leverageSteps[X10],
-      leverageSteps[X15],
-      leverageSteps[X20],
-    ]
-    const [leverageIndex, setLeverageIndex] = useState(X10)
+  const onSubmit = useCallback(() => {
+    console.log('Submit')
+  }, [])
 
-    const nextStep = useCallback(() => {
-      if (leverageIndex < leverageSteps.length - 1) {
-        setLeverageIndex(leverageIndex + 1)
-      }
-    }, [leverageIndex, leverageSteps])
-
-    const previousStep = useCallback(() => {
-      if (leverageIndex > 0) {
-        setLeverageIndex(leverageIndex - 1)
-      }
-    }, [leverageIndex])
-
-    const onSubmit = useCallback(() => {
-      console.log('Submit')
-    }, [])
-
-    return (
-      <FormCard {...restProps}>
-        <TitleWithAction
-          button={{
-            onClick: () => console.log('Use max'),
-            text: 'Use max',
-          }}
-          title={`Amount`}
-        />
-        <Rows>
-          <Row>
-            <RowKey>Available</RowKey>
-            <RowValue>
-              {amountToken && <TokenIcon dimensions={18} symbol={amountToken?.symbol} />}
-              1,000,000.00
-            </RowValue>
-          </Row>
-        </Rows>
-        <SendTokenInputDropdown
-          decimals={18}
-          dropdownDirection={DropdownDirection.downwards}
-          maxValue={'10000'}
-          onDropdownChange={onSendDropdownChange}
-          selectedToken={amountToken}
-          setStatus={() => console.log('amountToken setStatus')}
-          setStatusText={() => console.log('amountToken setStatusText')}
-          setValue={setSendTokenValue}
-          status={sendAmountInputStatus}
-          statusText={sendAmountInputStatusText}
-          usdPrice={BigNumber.from('1000000000000000000')}
-          value={amountTokenValue}
-        />
-        <Line />
-        <Rows>
-          <Row>
-            <RowKeyStrong>{type === 'long' ? 'Long' : 'Short'}</RowKeyStrong>
-            <RowValue>Leverage: {leverageSteps[leverageIndex]}x</RowValue>
-          </Row>
-        </Rows>
-        <ReceiveTokenInputDropdown
-          decimals={18}
-          dropdownDirection={DropdownDirection.downwards}
-          maxValue={'10000'}
-          onDropdownChange={onReceiveDropdownChange}
-          selectedToken={receiveToken}
-          setStatus={() => console.log('Receive setStatus')}
-          setStatusText={() => console.log('Receive setStatusText')}
-          setValue={setReceiveTokenValue}
-          status={receiveTokenInputStatus}
-          statusText={receiveTokenInputStatusText}
-          usdPrice={BigNumber.from('1000000000000000000')}
-          value={receiveTokenValue}
-        />
-        <AdjustLeverage>
-          <AdjustLeverageTitle>Adjust leverage</AdjustLeverageTitle>
-          <AdjustLeverageControls>
-            <AdjustLeverageControl onClick={previousStep}>
-              <Substract />
-            </AdjustLeverageControl>
-            <AdjustLeverageValue>{leverageSteps[leverageIndex]}x</AdjustLeverageValue>
-            <AdjustLeverageControl onClick={nextStep}>
-              <Add />
-            </AdjustLeverageControl>
-          </AdjustLeverageControls>
-          <LeverageMultipliers>
-            <LeverageMultipliersBackground currentLeverageX={leverageIndex} />
-            <LeverageMultiplier currentLeverageX={leverageIndex} />
-            {leverageMainMultipliers.map((value, index) => (
-              <LeverageMainMultiplier
-                className={`value_${index}`}
-                key={value}
-                onClick={() => {
-                  const index = leverageSteps.findIndex((step) => step === value)
-                  setLeverageIndex(index)
-                }}
-              >
-                <MainMultiplierDot isActive={value <= leverageSteps[leverageIndex]} />
-                <MainMultiplierText>{value}x</MainMultiplierText>
-              </LeverageMainMultiplier>
-            ))}
-          </LeverageMultipliers>
-        </AdjustLeverage>
-        <Details
-          data={[
-            {
-              key: 'Collateral In',
-              value: amountToken?.symbol,
-            },
-            {
-              key: 'Leverage',
-              value: `${leverageSteps[leverageIndex]}x`,
-            },
-            {
-              key: 'Entry Price',
-              value: '$1,066.86',
-            },
-            {
-              key: 'Liq Price',
-              value: '-',
-            },
-            {
-              key: 'Fees',
-              value: '-',
-            },
-          ]}
-        />
-        <Buttons>
-          <Button onClick={onSubmit}>
-            {type === 'long' ? 'Long' : 'Short'} {receiveToken?.symbol}
-          </Button>
-        </Buttons>
-      </FormCard>
-    )
-  },
-  () => <>Loading...</>,
-)
+  return (
+    <FormCard {...restProps}>
+      <TitleWithAction
+        button={{
+          onClick: () => console.log('Use max'),
+          text: 'Use max',
+        }}
+        title={`Amount`}
+      />
+      <Rows>
+        <Row>
+          <RowKey>Available</RowKey>
+          <RowValue>
+            {amountToken && <TokenIcon dimensions={18} symbol={amountToken?.symbol} />}
+            1,000,000.00
+          </RowValue>
+        </Row>
+      </Rows>
+      <SendTokenInputDropdown
+        decimals={18}
+        dropdownDirection={DropdownDirection.downwards}
+        maxValue={'10000'}
+        onDropdownChange={onSendDropdownChange}
+        selectedToken={amountToken}
+        setStatus={() => console.log('amountToken setStatus')}
+        setStatusText={() => console.log('amountToken setStatusText')}
+        setValue={setSendTokenValue}
+        status={sendAmountInputStatus}
+        statusText={sendAmountInputStatusText}
+        usdPrice={BigNumber.from('1000000000000000000')}
+        value={amountTokenValue}
+      />
+      <Line />
+      <Rows>
+        <Row>
+          <RowKeyStrong>{type === 'long' ? 'Long' : 'Short'}</RowKeyStrong>
+          <RowValue>Leverage: {leverageSteps[leverageIndex]}x</RowValue>
+        </Row>
+      </Rows>
+      <ReceiveTokenInputDropdown
+        decimals={18}
+        dropdownDirection={DropdownDirection.downwards}
+        maxValue={'10000'}
+        onDropdownChange={onReceiveDropdownChange}
+        selectedToken={receiveToken}
+        setStatus={() => console.log('Receive setStatus')}
+        setStatusText={() => console.log('Receive setStatusText')}
+        setValue={setReceiveTokenValue}
+        status={receiveTokenInputStatus}
+        statusText={receiveTokenInputStatusText}
+        usdPrice={BigNumber.from('1000000000000000000')}
+        value={receiveTokenValue}
+      />
+      <AdjustLeverage>
+        <AdjustLeverageTitle>Adjust leverage</AdjustLeverageTitle>
+        <AdjustLeverageControls>
+          <AdjustLeverageControl onClick={previousStep}>
+            <Substract />
+          </AdjustLeverageControl>
+          <AdjustLeverageValue>{leverageSteps[leverageIndex]}x</AdjustLeverageValue>
+          <AdjustLeverageControl onClick={nextStep}>
+            <Add />
+          </AdjustLeverageControl>
+        </AdjustLeverageControls>
+        <LeverageMultipliers>
+          <LeverageMultipliersBackground currentLeverageX={leverageIndex} />
+          <LeverageMultiplier currentLeverageX={leverageIndex} />
+          {leverageMainMultipliers.map((value, index) => (
+            <LeverageMainMultiplier
+              className={`value_${index}`}
+              key={value}
+              onClick={() => {
+                const index = leverageSteps.findIndex((step) => step === value)
+                setLeverageIndex(index)
+              }}
+            >
+              <MainMultiplierDot isActive={value <= leverageSteps[leverageIndex]} />
+              <MainMultiplierText>{value}x</MainMultiplierText>
+            </LeverageMainMultiplier>
+          ))}
+        </LeverageMultipliers>
+      </AdjustLeverage>
+      <Details
+        data={[
+          {
+            key: 'Collateral In',
+            value: amountToken?.symbol,
+          },
+          {
+            key: 'Leverage',
+            value: `${leverageSteps[leverageIndex]}x`,
+          },
+          {
+            key: 'Entry Price',
+            value: '$1,066.86',
+          },
+          {
+            key: 'Liq Price',
+            value: '-',
+          },
+          {
+            key: 'Fees',
+            value: '-',
+          },
+        ]}
+      />
+      <Buttons>
+        <Button onClick={onSubmit}>
+          {type === 'long' ? 'Long' : 'Short'} {receiveToken?.symbol}
+        </Button>
+      </Buttons>
+    </FormCard>
+  )
+}

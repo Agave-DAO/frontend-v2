@@ -12,6 +12,7 @@ const Wrapper = styled.a`
   font-weight: 400;
   line-height: 1.2;
   text-decoration: none;
+  white-space: nowrap;
 
   &:hover {
     text-decoration: underline;
