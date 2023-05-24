@@ -27,14 +27,19 @@ const hoveringAnimation = keyframes`
 
 const Wrapper = styled.div`
   align-items: center;
+  align-self: center;
   background-color: ${({ theme: { colors } }) => colors.primary10};
   border-radius: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: auto;
-  padding: var(--padding-xxl);
+  margin: auto auto 20px;
+  padding: 32px;
   width: 100%;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     max-width: 400px;
