@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import toast from 'react-hot-toast'
 import useSWR from 'swr'
 
+import { notify } from '@/src/components/toast/Toast'
 import { IDAgaveTokens } from '@/src/config/agaveTokens'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
@@ -18,6 +19,7 @@ import {
   BaseIncentivesController,
   BaseIncentivesController__factory,
 } from '@/types/generated/typechain'
+import { ToastStates } from '@/types/toast'
 import { isFulfilled } from '@/types/utils'
 
 /**
@@ -171,8 +173,6 @@ export const useGetMarketsData = () => {
   const agaveTokens = useAgaveTokens()
   const [marketVersion] = useMarketVersion()
 
-  const [toastDisplayed, setToastDisplayed] = useState(false)
-
   const dataProviderContract = useContractInstance(
     AaveProtocolDataProvider__factory,
     'AaveProtocolDataProvider',
@@ -208,19 +208,21 @@ export const useGetMarketsData = () => {
     refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
     onSuccess: (data) => {
       if (data.length) {
-        setToastDisplayed(false)
+        toast.remove('marketsDataError')
       }
     },
   })
 
   useEffect(() => {
-    if (!isLoading && data && data.length === 0 && !toastDisplayed) {
-      setToastDisplayed(true)
-      toast.error('Error on getting markets data. Please try again later.', {
-        id: 'markets-data-error',
+    if (!isLoading && data && data.length === 0) {
+      toast.remove('marketsDataError')
+      notify({
+        type: ToastStates.failed,
+        message: 'Error while getting markets data. Please try again later.',
+        id: 'marketsDataError',
       })
     }
-  }, [data, isLoading, toastDisplayed])
+  }, [data, isLoading])
 
   return data
 }

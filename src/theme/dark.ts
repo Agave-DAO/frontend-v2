@@ -332,9 +332,10 @@ export const dark = {
     sidebarBackgroundColor: secondary,
   },
   toast: {
-    backgroundColor: componentBackgroundColor,
-    borderColor: borderColor,
-    boxShadow: '0 0 10px rgba(255, 255, 255, 0.25)',
+    backgroundColor: secondary,
+    borderColor: secondary,
+    boxShadow:
+      '0 27px 80px rgba(0, 0, 0, 0.07), 0 10.4px 25.4815px rgba(0, 0, 0, 0.0425185), 0px 2.2px 6.51852px rgba(0, 0, 0, 0.0274815)',
   },
   tooltip: {
     backgroundColor: secondary,
