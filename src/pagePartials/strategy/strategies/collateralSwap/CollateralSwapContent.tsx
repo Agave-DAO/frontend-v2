@@ -1,7 +1,6 @@
-import { useCallback } from 'react'
+import { FormEvent, useCallback } from 'react'
 import styled from 'styled-components'
 
-import { BigNumber } from '@ethersproject/bignumber'
 import { hexValue, hexZeroPad } from 'ethers/lib/utils'
 
 import { useCollateralSwap } from './hooks/useCollateralSwap'
@@ -12,6 +11,15 @@ import { useCollateralSwapStore } from '@/src/pagePartials/strategy/strategies/c
 import { DestinationToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/DestinationToken'
 import { OriginToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/OriginToken'
 import {
+  BuyTokenDestination,
+  OrderCreation,
+  OrderKind,
+  SellTokenSource,
+  SigningScheme,
+  UID,
+} from '@/types/generated/cowSwap/order-book'
+import {
+  Swapper_Helper,
   Swapper_Helper__factory,
   Swapper_UserProxyImplementation__factory,
 } from '@/types/generated/typechain'
@@ -20,50 +28,119 @@ const Buttons = styled(ButtonWrapper)`
   padding-top: 8px;
 `
 
-const ADDRESSES = {
-  coordinator: '0xdD494510e56347058703c277Ef770D3D9099ca42',
-  proxyImplementation: '0xea45ce264A5b2A2d2CC12Fd5a92D6c8b444d5636',
-  proxyFactory: '0x19BFAF6c3c091aa145f7df7d7a687b2c1C1Abd10',
-  proxyHelper: '0xb624888498c057b5398eF34898EfC3d0fBF89489',
-  WagTokenFactory: '0x6C1878a83884B9F14a342C7D96Fc00C9a0D434d2',
-  WagTokenImplementation: '0xFC4c44bb2fFf803B16d0B421BB9F08ed65B0D716',
-  WagUSDC: '0x300ABE8f7924BEb7115093361C4A78b9d9327Fb0',
-  WagWXDAI: '0xFF2A1866ecb13B67388C7a7DC1FdB3a5ff83Fb23',
-  WagGNO: '0xb5c3B258e461F17084a70624C2Fb2544710523B9',
-  WagBTC: '0x620eEa23606C3B3818419E37Dd6867e5aBF074CC',
-  WagETH: '0xf710Ef31830EeF5C25D47ABa5f60A0fCC045bA28',
-  WagUSDT: '0x991e64F303F4fFC38ABDc1bC93aB23FCF609c269',
-  WagEURe: '0x4f74D565379DFc78F56855E60b40282222f2Ae69',
-}
-
 export function CollateralSwapContent() {
   const { dispatch, state } = useCollateralSwapStore()
+  const { addOrder } = useSetAgaveOrder()
+  const {
+    data: { vaultAddress },
+  } = useCollateralSwap()
 
   function handleSwitchTokens() {
     dispatch({ type: 'SWITCH_TOKENS' })
   }
 
+  async function handleSwapRequest(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (
+      state.originToken &&
+      state.destinationToken &&
+      state.originAmount &&
+      state.destinationAmount
+    ) {
+      const wagTokenIn = state.originToken.extensions.protocolTokens?.wag
+      const wagTokenOut = state.destinationToken.extensions.protocolTokens?.wag
+
+      if (!wagTokenIn || !wagTokenOut) {
+        throw new Error('WAG token not found')
+      }
+
+      const validTo = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7
+
+      const params: OrderCreation = {
+        sellToken: wagTokenIn,
+        buyToken: wagTokenOut,
+        receiver: vaultAddress,
+        sellAmount: state.originAmount,
+        buyAmount: state.destinationAmount,
+        validTo,
+        appData: hexZeroPad('0x0', 32),
+        feeAmount: '0',
+        kind: OrderKind.SELL,
+        partiallyFillable: false,
+        sellTokenBalance: SellTokenSource.ERC20,
+        buyTokenBalance: BuyTokenDestination.ERC20,
+        signingScheme: SigningScheme.PRESIGN,
+        signature: '0x',
+        from: vaultAddress,
+      }
+
+      const swapWagTokenInfo = {
+        userProxy: vaultAddress,
+        WagTokenIn: wagTokenIn,
+        WagTokenOut: wagTokenOut,
+        amountIn: state.originAmount,
+        amountOut: state.destinationAmount,
+        validTo,
+      }
+
+      const orderUid = await setCowSwapOrder(params)
+      localStorage.setItem('orderUid', orderUid)
+
+      // TODO: remove before commit
+      {
+        console.log('params', params)
+        console.log('swapWagTokenInfo', swapWagTokenInfo)
+        console.log('orderUid', orderUid)
+      }
+
+      try {
+        const receipt = await addOrder(swapWagTokenInfo, orderUid)
+        console.log('receipt', receipt)
+      } catch (error) {
+        console.log('failed to add order', error)
+      }
+    }
+  }
+
   return (
-    <FormCard>
-      <OriginToken />
-      <Button disabled={!state.originToken || !state.destinationToken} onClick={handleSwitchTokens}>
-        Switch tokens
-      </Button>
-      <DestinationToken />
-      <Buttons>
-        <Button onClick={() => console.log('swap')}>Swap</Button>
-      </Buttons>
-    </FormCard>
+    <form onSubmit={handleSwapRequest}>
+      <FormCard>
+        <OriginToken />
+        <Buttons>
+          <Button
+            disabled={!state.originToken || !state.destinationToken}
+            onClick={handleSwitchTokens}
+          >
+            Switch tokens
+          </Button>
+        </Buttons>
+        <DestinationToken />
+        <Buttons>
+          <Button type="submit">Swap</Button>
+        </Buttons>
+      </FormCard>
+    </form>
   )
 }
 
-interface SwapWagTokenInfo {
-  userProxy: string
-  WagTokenIn: string
-  WagTokenOut: string
-  amountIn: BigNumber
-  amountOut: BigNumber
-  validTo: number
+/**
+ * This function will:
+ * 1. POST the payload JSON `params` to https://api.cow.fi/xdai/api/v1/orders
+ * 2. The response will be a string with the orderUid
+ * 3. Store the orderUid in localStorage
+ * 4. Return the orderUid
+ * @param params - the payload JSON to send to the CowSwap API
+ * @returns the orderUid
+ */
+function setCowSwapOrder(params: OrderCreation): Promise<UID> {
+  return fetch('https://api.cow.fi/xdai/api/v1/orders', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  }).then((res) => res.json())
 }
 
 function useSetAgaveOrder() {
@@ -73,11 +150,22 @@ function useSetAgaveOrder() {
 
   const sendTx = useTransaction()
   const vault = useContractInstance(Swapper_UserProxyImplementation__factory, vaultAddress)
-  const swapperHelper = useContractInstance(Swapper_Helper__factory, ADDRESSES.proxyHelper)
+  const swapperHelper = useContractInstance(Swapper_Helper__factory, 'SwapperHelper')
 
   const addOrder = useCallback(
-    async (swapWagTokenInfo: SwapWagTokenInfo) => {
-      const data = await swapperHelper.swapWagTokenFromUser(swapWagTokenInfo)
+    async (swapWagTokenInfo: Swapper_Helper.SwapWagTokenInfoStruct, orderUid: UID) => {
+      const data = await swapperHelper.swapWagTokenFromProxy(swapWagTokenInfo)
+
+      // TODO: remove before push
+      {
+        console.log('data', data)
+        return
+      }
+
+      if (data.orderUid !== orderUid) {
+        throw new Error('Order UIDs do not match')
+      }
+
       const tx = await sendTx(() =>
         vault.addOrder(
           data.order,
@@ -90,7 +178,7 @@ function useSetAgaveOrder() {
         ),
       )
 
-      return await tx.wait() // receipt
+      return tx.wait() // receipt
     },
     [sendTx, swapperHelper, vault],
   )

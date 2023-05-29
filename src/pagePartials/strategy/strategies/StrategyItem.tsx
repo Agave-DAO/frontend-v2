@@ -42,7 +42,7 @@ const Type = styled.span`
   line-height: 1.2;
 `
 
-const StrategyItem: React.FC<{
+export const StrategyItem: React.FC<{
   title: string
   type: string
   icon: React.ReactNode

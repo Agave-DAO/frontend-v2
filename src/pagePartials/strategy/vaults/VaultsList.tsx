@@ -51,8 +51,7 @@ export const VaultsList: React.FC = withGenericSuspense(
         <List>
           {vaults.map((vault, index) => (
             <ListNavigationItem
-              // TODO: change to query param
-              href={`/strategies/${vault.vaultAddress}`}
+              href={`/strategies/vault-details?vault=${vault.vaultAddress}`}
               key={index}
               title={`${vault.name}`}
             ></ListNavigationItem>
