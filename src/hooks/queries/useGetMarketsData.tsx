@@ -116,7 +116,7 @@ const fetchAgaveMarketsData = async ({
   const reserveTokens = agaveTokens.reserveTokens
   const reserveTokensAddresses = reserveTokens.map((token) => token.address)
 
-  reserveTokens.forEach(async (token) => {
+  for (const token of reserveTokens) {
     reserveAndAssetDataPromises.push(
       fetchReserveAndAssetData(token.address, contracts.AaveProtocolDataProvider),
     )
@@ -126,7 +126,7 @@ const fetchAgaveMarketsData = async ({
     const variableDebtToken = relatedTokens.find((item) => item.type === 'variableDebt')?.address
 
     if (!agToken || !variableDebtToken) {
-      throw new Error(`Incetive tokens not found for reserve token ${token.address}}`)
+      throw new Error(`Incentive tokens not found for reserve token ${token.address}}`)
     }
 
     incentiveDataPromises.push(
@@ -135,7 +135,7 @@ const fetchAgaveMarketsData = async ({
         variableDebtToken,
       }),
     )
-  })
+  }
 
   const rawResults = await Promise.allSettled([
     ...reserveAndAssetDataPromises,
@@ -179,7 +179,7 @@ export const useGetMarketsData = () => {
     { useSigner: false, batch: true },
   )
 
-  const incetiveControllerContract = useContractInstance(
+  const incentiveControllerContract = useContractInstance(
     BaseIncentivesController__factory,
     'BaseIncentivesController',
     { useSigner: false, batch: true },
@@ -190,18 +190,18 @@ export const useGetMarketsData = () => {
     batch: true,
   })
 
-  const memoFetcher = useCallback(async () => {
-    const result = await fetchAgaveMarketsData({
-      agaveTokens,
-      contracts: {
-        AaveProtocolDataProvider: dataProviderContract,
-        BaseIncentivesController: incetiveControllerContract,
-        AaveOracle: oracleContract,
-      },
-    })
-
-    return result
-  }, [agaveTokens, dataProviderContract, incetiveControllerContract, oracleContract])
+  const memoFetcher = useCallback(
+    () =>
+      fetchAgaveMarketsData({
+        agaveTokens,
+        contracts: {
+          AaveProtocolDataProvider: dataProviderContract,
+          BaseIncentivesController: incentiveControllerContract,
+          AaveOracle: oracleContract,
+        },
+      }),
+    [agaveTokens, dataProviderContract, incentiveControllerContract, oracleContract],
+  )
 
   // Simple cacheKey to get the cache data in other uses.
   const { data, isLoading } = useSWR(['agave-tokens-data', marketVersion], memoFetcher, {

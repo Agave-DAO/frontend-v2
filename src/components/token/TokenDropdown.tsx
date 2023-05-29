@@ -7,6 +7,7 @@ import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/dropdow
 import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useTokensLists } from '@/src/hooks/useTokensLists'
+import { isSameAddress } from '@/src/utils/isSameAddress'
 import { Token } from '@/types/token'
 
 const Wrapper = styled.div`
@@ -51,11 +52,13 @@ export const TokenDropdown: React.FC<{
 
   // Filter out frozen markets
   const enabledMarketsAddresses = useMarketsData()
-    .agaveMarketsData?.filter((market) => market.assetData.isFrozen === false)
-    ?.map((market) => market.tokenAddress)
+    .agaveMarketsData?.filter((market) => !market.assetData.isFrozen)
+    ?.map(({ tokenAddress }) => tokenAddress)
 
-  const enabledTokensList = tokensList.filter((token) =>
-    enabledMarketsAddresses?.includes(token.address),
+  const enabledTokensList = tokensList.filter(({ address }) =>
+    enabledMarketsAddresses?.some((enabledMarketAddress) =>
+      isSameAddress(enabledMarketAddress, address),
+    ),
   )
 
   const onSelect = useCallback(
