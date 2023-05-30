@@ -39,7 +39,7 @@ function BalanceObserver() {
   } = useCollateralSwap()
   const { balance } = useAccountBalance({
     accountAddress: vaultAddress,
-    tokenAddress: state.originToken!.address,
+    tokenAddress: state.originToken!.extensions.protocolTokens!.ag,
   })
 
   useEffect(() => {
