@@ -1,15 +1,22 @@
 import { FormEvent, useCallback } from 'react'
 import styled from 'styled-components'
 
+import { FixedNumber } from '@ethersproject/bignumber'
+import { One } from '@ethersproject/constants'
 import { hexValue, hexZeroPad } from 'ethers/lib/utils'
 
 import { useCollateralSwap } from './hooks/useCollateralSwap'
+import { Swap } from '@/src/components/assets/Swap'
 import { Button, ButtonWrapper, FormCard } from '@/src/components/card/FormCard'
+import { Amount } from '@/src/components/helpers/Amount'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
+import { Details } from '@/src/pagePartials/strategy/modals/common/Details'
+import { SwapButton } from '@/src/pagePartials/strategy/modals/common/SwapButton'
 import { useCollateralSwapStore } from '@/src/pagePartials/strategy/strategies/collateralSwap/CollateralSwapStore'
 import { DestinationToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/DestinationToken'
 import { OriginToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/OriginToken'
+import { toWei } from '@/src/utils/common'
 import {
   BuyTokenDestination,
   OrderCreation,
@@ -28,7 +35,13 @@ const Buttons = styled(ButtonWrapper)`
   padding-top: 8px;
 `
 
-export function CollateralSwapContent() {
+const SwapSVG = styled(Swap)`
+  path {
+    fill: ${({ theme: { colors } }) => colors.darkerGray};
+  }
+`
+
+export function CollateralSwapContent({ ...restProps }) {
   const { dispatch, state } = useCollateralSwapStore()
   const { addOrder } = useSetAgaveOrder()
   const {
@@ -103,19 +116,69 @@ export function CollateralSwapContent() {
     }
   }
 
+  const destinationPrice = FixedNumber.fromValue(state.originPriceInDAI)
+    .divUnsafe(
+      FixedNumber.fromValue(
+        state.destinationPriceInDAI.isZero() ? One : state.destinationPriceInDAI,
+      ),
+    )
+    .round(state.destinationToken?.decimals || 0)
+    .toString()
+
+  const destinationPriceInWei = toWei(destinationPrice, state.destinationToken?.decimals ?? 0)
+
   return (
     <form onSubmit={handleSwapRequest}>
-      <FormCard>
+      <FormCard {...restProps}>
         <OriginToken />
-        <Buttons>
-          <Button
-            disabled={!state.originToken || !state.destinationToken}
-            onClick={handleSwitchTokens}
-          >
-            Switch tokens
-          </Button>
-        </Buttons>
+        <SwapButton
+          disabled={!state.originToken || !state.destinationToken}
+          onClick={handleSwitchTokens}
+        />
         <DestinationToken />
+        <Details
+          data={[
+            {
+              key: 'Ref. price',
+              value: (
+                <>
+                  {state.originToken ? (
+                    <Amount
+                      decimals={0}
+                      symbol={state.originToken.symbol}
+                      symbolPosition="after"
+                      value={One}
+                    />
+                  ) : (
+                    0
+                  )}{' '}
+                  ={' '}
+                  {state.destinationToken ? (
+                    <span title={`${destinationPrice} ${state.destinationToken.symbol}`}>
+                      <Amount
+                        decimals={state.destinationToken.decimals}
+                        symbol={state.destinationToken.symbol}
+                        symbolPosition="after"
+                        value={destinationPriceInWei}
+                      />
+                    </span>
+                  ) : (
+                    0
+                  )}{' '}
+                  <SwapSVG />
+                </>
+              ),
+            },
+            {
+              key: 'Price Impact',
+              value: '-1.23%',
+            },
+            {
+              key: 'Network Fee',
+              value: '0.30%',
+            },
+          ]}
+        />
         <Buttons>
           <Button type="submit">Swap</Button>
         </Buttons>

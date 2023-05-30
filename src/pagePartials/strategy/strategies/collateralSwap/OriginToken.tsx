@@ -5,6 +5,7 @@ import { Zero } from '@ethersproject/constants'
 
 import { Rows as BaseRows, Row, RowKey, RowValue } from '@/src/components/card/FormCard'
 import { TitleWithAction } from '@/src/components/common/TitleWithAction'
+import { DropdownDirection } from '@/src/components/dropdown/Dropdown'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import SafeSuspense from '@/src/components/helpers/SafeSuspense'
@@ -94,6 +95,7 @@ export function OriginToken() {
       <TokenInputDropdown
         decimals={state.originToken?.decimals ?? 0}
         disabled={!state.originToken?.address}
+        dropdownDirection={DropdownDirection.downwards}
         maxValue={state.originBalance.toString()}
         onDropdownChange={handleSelectOriginToken}
         selectedToken={state.originToken}
