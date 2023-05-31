@@ -34,7 +34,7 @@ export const TitleWithAction: React.FC<{
   return (
     <Wrapper {...restProps}>
       <Title>{title}</Title>
-      <ButtonMini onClick={button.onClick} variant={button.variant}>
+      <ButtonMini onClick={button.onClick} type="button" variant={button.variant}>
         {button.text}
       </ButtonMini>
     </Wrapper>

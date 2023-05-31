@@ -1,4 +1,4 @@
-import { createElement, useEffect, useState } from 'react'
+import { FC, createElement, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Zero } from '@ethersproject/constants'
@@ -22,7 +22,7 @@ const Rows = styled(BaseRows)`
   margin-bottom: 8px;
 `
 
-function PriceObserver() {
+const PriceObserver = () => {
   const { dispatch, state } = useCollateralSwapStore()
   const [{ data: originPriceInDAI }] = useGetAssetsPriceInDAI([state.originToken!.address])
 
@@ -33,7 +33,7 @@ function PriceObserver() {
   return null
 }
 
-function BalanceObserver() {
+const BalanceObserver = () => {
   const { dispatch, state } = useCollateralSwapStore()
   const {
     data: { vaultAddress },
@@ -50,18 +50,16 @@ function BalanceObserver() {
   return null
 }
 
-export function OriginToken() {
+export const OriginToken: FC = () => {
   const [status, setStatus] = useState<TextfieldStatus>()
   const [statusText, setStatusText] = useState<string | undefined>()
   const { dispatch, state } = useCollateralSwapStore()
 
-  function handleSelectOriginToken(token: Token | null) {
+  const handleSelectOriginToken = (token: Token | null) =>
     dispatch({ type: 'SELECT_ORIGIN_TOKEN', payload: token })
-  }
 
-  function handleUpdateOriginAmount(amount: string) {
+  const handleUpdateOriginAmount = (amount: string) =>
     dispatch({ type: 'UPDATE_ORIGIN_AMOUNT', payload: amount })
-  }
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { createElement, useEffect, useState } from 'react'
+import { FC, createElement, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Zero } from '@ethersproject/constants'
@@ -18,7 +18,7 @@ const Rows = styled(BaseRows)`
   margin-bottom: 8px;
 `
 
-function PriceObserver() {
+const PriceObserver = () => {
   const { dispatch, state } = useCollateralSwapStore()
   const [{ data: destinationPriceInDAI }] = useGetAssetsPriceInDAI([
     state.destinationToken!.address,
@@ -34,7 +34,7 @@ function PriceObserver() {
   return null
 }
 
-export function DestinationToken() {
+export const DestinationToken: FC = () => {
   const {
     computed: { destinationSuggestedAmountInWei },
     dispatch,
@@ -43,13 +43,17 @@ export function DestinationToken() {
   const [status, setStatus] = useState<TextfieldStatus>()
   const [statusText, setStatusText] = useState<string | undefined>()
 
-  function handleSelectDestinationToken(token: Token | null) {
-    dispatch({ type: 'SELECT_DESTINATION_TOKEN', payload: token })
-  }
+  const handleSelectDestinationToken = (token: Token | null) =>
+    dispatch({
+      type: 'SELECT_DESTINATION_TOKEN',
+      payload: token,
+    })
 
-  function handleUpdateDestinationAmount(amount: string) {
-    dispatch({ type: 'UPDATE_DESTINATION_AMOUNT', payload: amount })
-  }
+  const handleUpdateDestinationAmount = (amount: string) =>
+    dispatch({
+      type: 'UPDATE_DESTINATION_AMOUNT',
+      payload: amount,
+    })
 
   return (
     <>
@@ -63,10 +67,7 @@ export function DestinationToken() {
           <RowKey>Balance</RowKey>
           <RowValue
             onClick={() =>
-              dispatch({
-                type: 'UPDATE_DESTINATION_AMOUNT',
-                payload: destinationSuggestedAmountInWei.toString(),
-              })
+              handleUpdateDestinationAmount(destinationSuggestedAmountInWei.toString())
             }
           >
             Estimated amount (

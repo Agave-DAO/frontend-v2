@@ -48,5 +48,5 @@ export const VaultInfo: React.FC<{ vaultAddress: string }> = withGenericSuspense
       </Rows>
     )
   },
-  ({ ...restProps }) => <div {...restProps}>VaultInfo Loading...</div>,
+  ({ vaultAddress, ...restProps }) => <div {...restProps}>VaultInfo Loading...</div>,
 )
