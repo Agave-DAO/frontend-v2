@@ -17,7 +17,7 @@ import { DropdownDirection } from '@/src/components/dropdown/Dropdown'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInputDropdown } from '@/src/components/token/TokenInputDropdown'
-import { Details as BaseDetails } from '@/src/pagePartials/strategy/modals/common/Details'
+import { Details as BaseDetails } from '@/src/pagePartials/strategy/common/Details'
 import { Strategy } from '@/types/strategy'
 import { Token } from '@/types/token'
 
