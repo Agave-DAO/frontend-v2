@@ -11,26 +11,35 @@ import {
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
 
+import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { toWei } from '@/src/utils/common'
 import { Token } from '@/types/token'
 
 interface State {
   destinationAmount: string
   destinationPriceInDAI: BigNumber
+  destinationStatus?: TextfieldStatus
+  destinationStatusText?: string
   destinationToken: Token | null
   originAmount: string
   originBalance: BigNumber
   originPriceInDAI: BigNumber
+  originStatus?: TextfieldStatus
+  originStatusText?: string
   originToken: Token | null
 }
 
 const initialState: State = {
   destinationAmount: '0',
   destinationPriceInDAI: Zero,
+  destinationStatus: undefined,
+  destinationStatusText: undefined,
   destinationToken: null,
   originAmount: '0',
   originBalance: Zero,
   originPriceInDAI: Zero,
+  originStatus: undefined,
+  originStatusText: undefined,
   originToken: null,
 }
 
@@ -50,6 +59,14 @@ type Action =
   | {
       type: 'UPDATE_ORIGIN_BALANCE'
       payload: BigNumber
+    }
+  | {
+      type: 'UPDATE_ORIGIN_STATUS' | 'UPDATE_DESTINATION_STATUS'
+      payload?: TextfieldStatus
+    }
+  | {
+      type: 'UPDATE_ORIGIN_STATUS_TEXT' | 'UPDATE_DESTINATION_STATUS_TEXT'
+      payload?: string
     }
   | {
       type: 'SWITCH_TOKENS'
@@ -93,6 +110,16 @@ function reducer(state: State, action: Action): State {
         ...state,
         originBalance: action.payload,
       }
+    case 'UPDATE_ORIGIN_STATUS':
+      return {
+        ...state,
+        originStatus: action.payload,
+      }
+    case 'UPDATE_ORIGIN_STATUS_TEXT':
+      return {
+        ...state,
+        originStatusText: action.payload,
+      }
     case 'UPDATE_DESTINATION_AMOUNT':
       return {
         ...state,
@@ -102,6 +129,16 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         destinationPriceInDAI: action.payload,
+      }
+    case 'UPDATE_DESTINATION_STATUS':
+      return {
+        ...state,
+        destinationStatus: action.payload,
+      }
+    case 'UPDATE_DESTINATION_STATUS_TEXT':
+      return {
+        ...state,
+        destinationStatusText: action.payload,
       }
     default:
       throw new Error(`Invalid action`)

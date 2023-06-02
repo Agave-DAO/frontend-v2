@@ -1,4 +1,4 @@
-import { FC, createElement, useEffect, useState } from 'react'
+import { FC, createElement, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { Zero } from '@ethersproject/constants'
@@ -51,8 +51,6 @@ const BalanceObserver = () => {
 }
 
 export const OriginToken: FC = () => {
-  const [status, setStatus] = useState<TextfieldStatus>()
-  const [statusText, setStatusText] = useState<string | undefined>()
   const { dispatch, state } = useCollateralSwapStore()
 
   const handleSelectOriginToken = (token: Token | null) =>
@@ -60,6 +58,12 @@ export const OriginToken: FC = () => {
 
   const handleUpdateOriginAmount = (amount: string) =>
     dispatch({ type: 'UPDATE_ORIGIN_AMOUNT', payload: amount })
+
+  const handleSetStatus = (status?: TextfieldStatus) =>
+    dispatch({ type: 'UPDATE_ORIGIN_STATUS', payload: status })
+
+  const handleSetStatusText = (statusText?: string) =>
+    dispatch({ type: 'UPDATE_ORIGIN_STATUS_TEXT', payload: statusText })
 
   return (
     <>
@@ -97,11 +101,11 @@ export const OriginToken: FC = () => {
         maxValue={state.originBalance.toString()}
         onDropdownChange={handleSelectOriginToken}
         selectedToken={state.originToken}
-        setStatus={setStatus}
-        setStatusText={setStatusText}
+        setStatus={handleSetStatus}
+        setStatusText={handleSetStatusText}
         setValue={handleUpdateOriginAmount}
-        status={status}
-        statusText={statusText}
+        status={state.originStatus}
+        statusText={state.originStatusText}
         usdPrice={state.originPriceInDAI}
         value={state.originAmount}
       />

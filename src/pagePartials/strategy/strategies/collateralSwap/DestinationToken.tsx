@@ -1,4 +1,4 @@
-import { FC, createElement, useEffect, useState } from 'react'
+import { FC, createElement, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { Zero } from '@ethersproject/constants'
@@ -40,9 +40,6 @@ export const DestinationToken: FC = () => {
     dispatch,
     state,
   } = useCollateralSwapStore()
-  const [status, setStatus] = useState<TextfieldStatus>()
-  const [statusText, setStatusText] = useState<string | undefined>()
-
   const handleSelectDestinationToken = (token: Token | null) =>
     dispatch({
       type: 'SELECT_DESTINATION_TOKEN',
@@ -54,6 +51,12 @@ export const DestinationToken: FC = () => {
       type: 'UPDATE_DESTINATION_AMOUNT',
       payload: amount,
     })
+
+  const handleSetDestinationStatus = (status?: TextfieldStatus) =>
+    dispatch({ type: 'UPDATE_DESTINATION_STATUS', payload: status })
+
+  const handleSetDestinationStatusText = (statusText?: string) =>
+    dispatch({ type: 'UPDATE_DESTINATION_STATUS_TEXT', payload: statusText })
 
   return (
     <>
@@ -87,11 +90,11 @@ export const DestinationToken: FC = () => {
         maxValue={MAX_UINT_256.toString()}
         onDropdownChange={handleSelectDestinationToken}
         selectedToken={state.destinationToken}
-        setStatus={setStatus}
-        setStatusText={setStatusText}
+        setStatus={handleSetDestinationStatus}
+        setStatusText={handleSetDestinationStatusText}
         setValue={handleUpdateDestinationAmount}
-        status={status}
-        statusText={statusText}
+        status={state.destinationStatus}
+        statusText={state.destinationStatusText}
         usdPrice={state.destinationPriceInDAI}
         value={state.destinationAmount}
       />

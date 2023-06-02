@@ -8,6 +8,7 @@ import { hexZeroPad } from 'ethers/lib/utils'
 import { useCollateralSwap } from './hooks/useCollateralSwap'
 import { Swap } from '@/src/components/assets/Swap'
 import { Button, ButtonWrapper, FormCard } from '@/src/components/card/FormCard'
+import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { Details } from '@/src/pagePartials/strategy/common/Details'
@@ -194,7 +195,17 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
             ]}
           />
           <Buttons>
-            <Button type="submit">Swap</Button>
+            <Button
+              disabled={
+                state.originStatus === TextfieldStatus.error ||
+                state.destinationStatus === TextfieldStatus.error ||
+                state.originAmount === '0' ||
+                state.destinationAmount === '0'
+              }
+              type="submit"
+            >
+              Swap
+            </Button>
           </Buttons>
         </FormCard>
       </form>
