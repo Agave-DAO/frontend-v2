@@ -2,9 +2,9 @@ import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { useGetStakingAgvePrice } from '../queries/useGetStakingAgvePrice'
 import { WEI_PER_ETHER, ZERO_BN } from '@/src/constants/bigNumber'
 import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
+import { useGetStakingAgvePrice } from '@/src/hooks/queries/useGetStakingAgvePrice'
 import {
   useGetUserAmountAvailableToClaim,
   useGetUserAmountAvailableToStake,
