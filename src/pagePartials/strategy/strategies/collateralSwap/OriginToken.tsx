@@ -1,8 +1,6 @@
 import { FC, createElement, useEffect } from 'react'
 import styled from 'styled-components'
 
-import { Zero } from '@ethersproject/constants'
-
 import { Rows as BaseRows, Row, RowKey, RowValue } from '@/src/components/card/FormCard'
 import { TitleWithAction } from '@/src/components/common/TitleWithAction'
 import { DropdownDirection } from '@/src/components/dropdown/Dropdown'
@@ -11,6 +9,7 @@ import { Amount } from '@/src/components/helpers/Amount'
 import SafeSuspense from '@/src/components/helpers/SafeSuspense'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInputDropdown } from '@/src/components/token/TokenInputDropdown'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
 import { useCollateralSwapStore } from '@/src/pagePartials/strategy/strategies/collateralSwap/CollateralSwapStore'
@@ -27,7 +26,7 @@ const PriceObserver = () => {
   const [{ data: originPriceInDAI }] = useGetAssetsPriceInDAI([state.originToken!.address])
 
   useEffect(() => {
-    dispatch({ type: 'UPDATE_ORIGIN_PRICE_IN_DAI', payload: originPriceInDAI?.[0][0] ?? Zero })
+    dispatch({ type: 'UPDATE_ORIGIN_PRICE_IN_DAI', payload: originPriceInDAI?.[0][0] ?? ZERO_BN })
   }, [dispatch, originPriceInDAI])
 
   return null

@@ -1,5 +1,6 @@
-import { AddressZero, Zero } from '@ethersproject/constants'
+import { AddressZero } from '@ethersproject/constants'
 
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
@@ -24,5 +25,5 @@ export const useGetRewardsBalance = (userAddress: string = AddressZero) => {
     `getRewardsBalance-${userAddress}`,
   )
 
-  return { rewardsBalance: rewardsBalance?.[0] ?? Zero }
+  return { rewardsBalance: rewardsBalance?.[0] ?? ZERO_BN }
 }

@@ -1,5 +1,4 @@
-import { Zero } from '@ethersproject/constants'
-
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
@@ -12,7 +11,7 @@ export const useGetGnoPrice = () => {
   }
 
   const [{ data }, refreshGnoPrice] = useGetAssetsPriceInDAI([gnoAddress])
-  const [gnoPrice] = data?.[0] ?? [Zero]
+  const [gnoPrice] = data?.[0] ?? [ZERO_BN]
 
   return {
     gnoPrice,

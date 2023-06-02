@@ -2,11 +2,10 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { One } from '@ethersproject/constants'
 
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { ZERO_BN } from '@/src/constants/bigNumber'
+import { ONE_BN, ZERO_BN } from '@/src/constants/bigNumber'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { fromWei } from '@/src/utils/common'
 import { NumberType } from '@/src/utils/format'
@@ -25,7 +24,7 @@ const FiatTokenAmount = styled.span`
 /**
  * Displays the token cap value in both token and USD.
  * IF limit is 0, then it displays "unlimited"
- * IF limit is 1 wei, then it displays "Zero"
+ * IF limit is 1 wei, then it displays "ZERO_BN"
  * ELSE it displays the limit in token and USD
  * @param limit
  * @param priceData
@@ -36,7 +35,7 @@ export const TokenCapValue = ({ limit, priceData, tokenAddress }: Props) => {
   const tokenInfo = useAgaveTokens().getTokenByAddress(tokenAddress)
 
   const { tokenAmount, usdAmount } = useMemo(() => {
-    if (limit.eq(One)) {
+    if (limit.eq(ONE_BN)) {
       return {
         tokenAmount: ZERO_BN,
         usdAmount: ZERO_BN,

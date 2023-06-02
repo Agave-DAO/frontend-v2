@@ -9,9 +9,9 @@ import {
 } from 'react'
 
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
-import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { toWei } from '@/src/utils/common'
 import { Token } from '@/types/token'
 
@@ -39,13 +39,13 @@ interface State {
 
 const initialState: State = {
   destinationAmount: '0',
-  destinationPriceInDAI: Zero,
+  destinationPriceInDAI: ZERO_BN,
   destinationStatus: undefined,
   destinationStatusText: undefined,
   destinationToken: null,
   originAmount: '0',
-  originBalance: Zero,
-  originPriceInDAI: Zero,
+  originBalance: ZERO_BN,
+  originPriceInDAI: ZERO_BN,
   originStatus: undefined,
   originStatusText: undefined,
   originToken: null,
@@ -94,7 +94,7 @@ function reducer(state: State, action: Action): State {
         ...state,
         originToken: action.payload,
         originAmount: '0',
-        originBalance: Zero,
+        originBalance: ZERO_BN,
       }
     case 'SELECT_DESTINATION_TOKEN':
       return {
@@ -108,7 +108,7 @@ function reducer(state: State, action: Action): State {
         originToken: state.destinationToken,
         destinationToken: state.originToken,
         originAmount: state.destinationAmount,
-        originBalance: Zero,
+        originBalance: ZERO_BN,
       }
     case 'UPDATE_ORIGIN_AMOUNT':
       return {
@@ -183,10 +183,10 @@ export const CollateralSwapStore: FC<PropsWithChildren> = ({ children }) => {
       !state.originToken ||
       !state.originAmount ||
       !state.destinationToken ||
-      !state.destinationPriceInDAI.gt(Zero)
+      !state.destinationPriceInDAI.gt(ZERO_BN)
     ) {
       return {
-        destinationSuggestedAmountInWei: Zero,
+        destinationSuggestedAmountInWei: ZERO_BN,
       }
     }
 

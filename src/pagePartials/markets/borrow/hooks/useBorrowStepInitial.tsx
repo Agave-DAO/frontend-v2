@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
@@ -37,11 +37,11 @@ export function useBorrowStepInitial({
   const availableToBorrowDAI = userAccountData?.[0].availableBorrowsETH
 
   const [{ data: assetPricesInDAI }] = useGetAssetsPriceInDAI([marketAddress])
-  const tokenPrice = assetPricesInDAI?.[0]?.[0] ?? Zero
+  const tokenPrice = assetPricesInDAI?.[0]?.[0] ?? ZERO_BN
 
-  const userMaxAvailable = tokenPrice.gt(Zero)
-    ? toWei(availableToBorrowDAI ?? Zero, tokenInfo.decimals).div(tokenPrice)
-    : Zero
+  const userMaxAvailable = tokenPrice.gt(ZERO_BN)
+    ? toWei(availableToBorrowDAI ?? ZERO_BN, tokenInfo.decimals).div(tokenPrice)
+    : ZERO_BN
 
   const maxToBorrow =
     availableLiquidity && userMaxAvailable?.gt(availableLiquidity)
@@ -65,7 +65,7 @@ export function useBorrowStepInitial({
   const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
 
   const disableSubmit =
-    tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(Zero)
+    tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(ZERO_BN)
 
   return {
     borrowStableAPR,

@@ -2,7 +2,6 @@ import { FC, FormEvent } from 'react'
 import styled from 'styled-components'
 
 import { FixedNumber } from '@ethersproject/bignumber'
-import { One } from '@ethersproject/constants'
 import { hexZeroPad } from 'ethers/lib/utils'
 
 import { useCollateralSwap } from './hooks/useCollateralSwap'
@@ -13,6 +12,7 @@ import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Spinner } from '@/src/components/loading/Spinner'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
+import { ONE_BN } from '@/src/constants/bigNumber'
 import { Details } from '@/src/pagePartials/strategy/common/Details'
 import { StrategiesDropdown } from '@/src/pagePartials/strategy/common/StrategiesDropdown'
 import { SwapButton } from '@/src/pagePartials/strategy/common/SwapButton'
@@ -148,7 +148,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
   const destinationPrice = FixedNumber.fromValue(state.originPriceInDAI)
     .divUnsafe(
       FixedNumber.fromValue(
-        state.destinationPriceInDAI.isZero() ? One : state.destinationPriceInDAI,
+        state.destinationPriceInDAI.isZero() ? ONE_BN : state.destinationPriceInDAI,
       ),
     )
     .round(state.destinationToken?.decimals || 0)
@@ -189,7 +189,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
                         decimals={0}
                         symbol={state.originToken.symbol}
                         symbolPosition="after"
-                        value={One}
+                        value={ONE_BN}
                       />
                     ) : (
                       0

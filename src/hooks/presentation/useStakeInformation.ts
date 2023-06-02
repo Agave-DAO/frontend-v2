@@ -1,10 +1,9 @@
 import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { WeiPerEther } from '@ethersproject/constants'
 
 import { useGetStakingAgvePrice } from '../queries/useGetStakingAgvePrice'
-import { ZERO_BN } from '@/src/constants/bigNumber'
+import { WEI_PER_ETHER, ZERO_BN } from '@/src/constants/bigNumber'
 import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
 import {
   useGetUserAmountAvailableToClaim,
@@ -46,13 +45,13 @@ export const useStakeInformation = () => {
   const { data: userStakeCooldown, refetch: refetchUserStakeCooldown } = useGetUserStakeCooldown()
   const agvePriceInUSD = useGetStakingAgvePrice()
 
-  const yieldPerSecond = emissionPerSecond.mul(amountStaked).div(WeiPerEther)
+  const yieldPerSecond = emissionPerSecond.mul(amountStaked).div(WEI_PER_ETHER)
   const yieldPerMonth = yieldPerSecond.mul(MONTH_IN_SECONDS)
   const yieldPerYear = yieldPerSecond.mul(YEAR_IN_SECONDS)
 
   /* Calculating the staking APY */
   const stakingAPY = amountStaked.gt(0)
-    ? yieldPerYear.mul(WeiPerEther).div(amountStaked).mul(100)
+    ? yieldPerYear.mul(WEI_PER_ETHER).div(amountStaked).mul(100)
     : emissionPerSecond.mul(YEAR_IN_SECONDS).mul(100)
 
   const currentTimeStamp = BigNumber.from((Date.now() / 1000) | 0)

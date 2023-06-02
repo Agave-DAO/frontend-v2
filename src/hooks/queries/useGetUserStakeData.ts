@@ -1,9 +1,5 @@
-import { isAddress } from '@ethersproject/address'
-import { Zero } from '@ethersproject/constants'
-import useSWR from 'swr'
-
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
-import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
@@ -26,7 +22,7 @@ export const useGetUserAmountInStake = () => {
     `StakedToken-balanceOf-${address}`,
   )
 
-  return { data: userStakedAmount?.[0] ?? Zero, refetch }
+  return { data: userStakedAmount?.[0] ?? ZERO_BN, refetch }
 }
 /**
  *
@@ -41,7 +37,7 @@ export const useGetUserAmountAvailableToStake = () => {
 
   const [{ data }, refetch] = useContractCall(calls, [[address]], `balanceOf-AGVE-${address}`)
 
-  return { data: data?.[0] ?? Zero, refetch }
+  return { data: data?.[0] ?? ZERO_BN, refetch }
 }
 /**
  * @returns amount of AGAVE staked tokens that the user can claim.
@@ -59,7 +55,7 @@ export const useGetUserAmountAvailableToClaim = () => {
     `StakedToken-getClaimableRewards-${address}`,
   )
 
-  return { data: userAmountClaimable?.[0] ?? Zero, refetch }
+  return { data: userAmountClaimable?.[0] ?? ZERO_BN, refetch }
 }
 /**
  * `useGetUserStakeCooldown` returns the user's stake cooldown
@@ -82,5 +78,5 @@ export const useGetUserStakeCooldown = () => {
     },
   )
 
-  return { data: userStakeCooldown?.[0] ?? Zero, refetch }
+  return { data: userStakeCooldown?.[0] ?? ZERO_BN, refetch }
 }

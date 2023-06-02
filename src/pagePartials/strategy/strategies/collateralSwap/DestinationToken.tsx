@@ -1,14 +1,12 @@
 import { FC, createElement, useEffect } from 'react'
 import styled from 'styled-components'
 
-import { Zero } from '@ethersproject/constants'
-
 import { Rows as BaseRows, Row, RowKey, RowValue } from '@/src/components/card/FormCard'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import SafeSuspense from '@/src/components/helpers/SafeSuspense'
 import { TokenInputDropdown } from '@/src/components/token/TokenInputDropdown'
-import { MAX_UINT_256 } from '@/src/constants/bigNumber'
+import { MAX_UINT_256, ZERO_BN } from '@/src/constants/bigNumber'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 import { useCollateralSwapStore } from '@/src/pagePartials/strategy/strategies/collateralSwap/CollateralSwapStore'
 import { NumberType } from '@/src/utils/format'
@@ -27,7 +25,7 @@ const PriceObserver = () => {
   useEffect(() => {
     dispatch({
       type: 'UPDATE_DESTINATION_PRICE_IN_DAI',
-      payload: destinationPriceInDAI?.[0][0] ?? Zero,
+      payload: destinationPriceInDAI?.[0][0] ?? ZERO_BN,
     })
   }, [dispatch, destinationPriceInDAI])
 
