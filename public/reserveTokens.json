@@ -98,11 +98,23 @@
     },
     {
       "symbol": "EURe",
-      "name": " Monerium EUR emoney",
+      "name": "Monerium EUR emoney",
       "address": "0xcB444e90D8198415266c6a2724b7900fb12FC56E",
       "decimals": 18,
       "chainId": 100,
       "logoURI": "/coins/eure.svg",
+      "extensions": {
+        "isNative": false,
+        "isNativeWrapper": false
+      }
+    },
+    {
+      "symbol": "wstETH",
+      "name": "Wrapped liquid staked Ether 2.0 from Mainnet",
+      "address": "0x6c76971f98945ae98dd7d4dfca8711ebea946ea6",
+      "decimals": 18,
+      "chainId": 100,
+      "logoURI": "/coins/wsteth.svg",
       "extensions": {
         "isNative": false,
         "isNativeWrapper": false

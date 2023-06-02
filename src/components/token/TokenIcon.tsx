@@ -31,6 +31,8 @@ export const getIconBackgroundColor = (symbol?: string): string => {
     ? '#fff'
     : symbolLowerCase === 'eure'
     ? '#027fba'
+    : symbolLowerCase === 'wsteth'
+    ? '#f5f5f5'
     : '#019D8B'
 }
 

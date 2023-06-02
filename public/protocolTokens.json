@@ -61,16 +61,24 @@
       "ag": "0x5b4ef67c63d091083ec4d30cfc4ac685ef051046",
       "variableDebt": "0x474f83d77150bddc6a6f34eee4f5574eafd05938",
       "stableDebt": "0xb067fad853d099edd9c86483682e7d947b7983e5",
-      "strategy": "",
-      "oracle": ""
+      "strategy": "0x103a06d091D53Fd25E29348484CC7518215EE672 ",
+      "oracle": "0x68811D7DF835B1c33e6EEae8E7C141eF48d48cc7"
     },
     "0xcB444e90D8198415266c6a2724b7900fb12FC56E": {
       "symbol": "EURe",
       "ag": "0xEB20B07a9abE765252E6b45e8292b12CB553CcA6",
       "variableDebt": "0xA4a45B550897dD5d8a44c68DBD245C5934EbAcd9",
       "stableDebt": "0x78A69aFc50E7705Ad4588cB57cF8D27B29161e51",
-      "strategy": "",
-      "oracle": ""
+      "strategy": "0xA32B572f94EaE1638b7076565d06cA196Ce6558D",
+      "oracle": "0xab70BCB260073d036d1660201e9d5405F5829b7a"
+    },
+    "0x6c76971f98945ae98dd7d4dfca8711ebea946ea6": {
+      "symbol": "wstETH",
+      "ag": "0x606b2689ba4a9f798f449fa6495186021486dd9f",
+      "variableDebt": "0xd0b168fd6a4e220f1a8fa99de97f8f428587e178",
+      "stableDebt": "0xec7f91f26e7fd42e90ffa53ca0b0b02095a6b450",
+      "strategy": "0x152fe5a19e4A4740699Bfd519BE89c9F7540927F",
+      "oracle": "0xae27e63307963850c4d30BFba78FC1116d7b48C3"
     }
   }
 }

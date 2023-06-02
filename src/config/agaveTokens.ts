@@ -254,7 +254,6 @@ class AgaveTokens implements IDAgaveTokens {
   getProtocolTokenInfo(reserveAddress: string, tokenType: AgaveProtocolTokenType): Token {
     const tokenInfo = this.getReserveTokenByAddress(reserveAddress)
     const protocolTokens = this.getProtocolTokensByReserve(reserveAddress)
-
     switch (tokenType) {
       case 'ag':
         return {
