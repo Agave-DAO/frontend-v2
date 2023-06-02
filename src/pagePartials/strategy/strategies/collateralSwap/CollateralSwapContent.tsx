@@ -11,6 +11,7 @@ import { Button, ButtonWrapper, FormCard } from '@/src/components/card/FormCard'
 import { FormStatus as BaseFormStatus } from '@/src/components/form/FormStatus'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
+import { Spinner } from '@/src/components/loading/Spinner'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { Details } from '@/src/pagePartials/strategy/common/Details'
 import { StrategiesDropdown } from '@/src/pagePartials/strategy/common/StrategiesDropdown'
@@ -213,12 +214,10 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
               },
             ]}
           />
-          {state.submit.status === 'error' && (
-            <FormStatus status={TextfieldStatus.error}>{state.submit.message}</FormStatus>
-          )}
           <Buttons>
             <Button
               disabled={
+                state.submit.status === 'pending' ||
                 state.originStatus === TextfieldStatus.error ||
                 state.destinationStatus === TextfieldStatus.error ||
                 state.originAmount === '0' ||
@@ -226,9 +225,12 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
               }
               type="submit"
             >
-              Swap
+              {state.submit.status === 'pending' ? <Spinner /> : 'Swap'}
             </Button>
           </Buttons>
+          {state.submit.status === 'error' && (
+            <FormStatus status={TextfieldStatus.error}>{state.submit.message}</FormStatus>
+          )}
         </FormCard>
       </form>
     </>
