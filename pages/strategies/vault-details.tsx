@@ -3,14 +3,13 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { CollateralSwap as CollateralSwapSVG } from '@/src/components/assets/CollateralSwap'
 import { List } from '@/src/components/common/List'
 import { GoToExplorer } from '@/src/components/helpers/GoToExplorer'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
-import { strategies } from '@/src/constants/strategies.json'
+import { strategiesInfo } from '@/src/constants/strategiesInfo'
 import { useVaults } from '@/src/hooks/presentation/useVaults'
 import { useGetQueryParam } from '@/src/hooks/useGetQueryParam'
 import { StrategyItem } from '@/src/pagePartials/strategy/strategies/StrategyItem'
@@ -63,15 +62,15 @@ const VaultDetailsImpl = withGenericSuspense(
           <VaultDetailsComponent vaultAddress={selectedVault.vaultAddress} />
         </VaultModalProvider>
         <SubTitle>Create Strategy</SubTitle>
-        {strategies.map((strategy) => (
+        {strategiesInfo.map((strategy) => (
           <StrategyItem
-            icon={<CollateralSwapSVG />}
+            icon={strategy.icon}
             key={strategy.slug}
             onClick={() =>
               router.push(`/strategies/${strategy.slug}?vault=${selectedVault.vaultAddress}`)
             }
             title={strategy.name}
-            type="Action"
+            type={strategy.type}
           />
         ))}
       </>
