@@ -69,6 +69,10 @@ const Button = styled.button`
   &:active {
     opacity: 0.7;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `
 
 export const SwapButton: React.FC<{ disabled?: boolean; onClick: () => void }> = ({
