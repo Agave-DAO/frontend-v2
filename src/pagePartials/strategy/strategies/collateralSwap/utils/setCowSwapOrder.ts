@@ -14,7 +14,7 @@ export const setCowSwapOrder = async (params: OrderCreation): Promise<UID> => {
     body: JSON.stringify(params),
   })
 
-  if (response.status !== 200) {
+  if (!response.ok) {
     const error = await response.json()
     throw new Error('Error setting CowSwap order: ' + error.errorType + ' - ' + error.description)
   }

@@ -129,6 +129,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
         localStorage.setItem('orderUid', orderUid)
 
         await addOrder(swapWagTokenInfo, orderUid)
+        dispatch({ type: 'UPDATE_SUBMIT_STATUS', payload: { status: 'success' } })
       } catch (error: any) {
         dispatch({
           type: 'UPDATE_SUBMIT_STATUS',
@@ -151,7 +152,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
   const destinationPriceInWei = toWei(destinationPrice, state.destinationToken?.decimals ?? 0)
 
   const canSubmit =
-    state.submit.status === 'pending' ||
+    state.submit.status !== 'pending' ||
     state.originStatus === TextfieldStatus.error ||
     state.destinationStatus === TextfieldStatus.error ||
     state.originAmount === '0' ||
