@@ -129,6 +129,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
         localStorage.setItem('orderUid', orderUid)
 
         await addOrder(swapWagTokenInfo, orderUid)
+        localStorage.removeItem('orderUid')
         dispatch({ type: 'UPDATE_SUBMIT_STATUS', payload: { status: 'success' } })
       } catch (error: any) {
         dispatch({
