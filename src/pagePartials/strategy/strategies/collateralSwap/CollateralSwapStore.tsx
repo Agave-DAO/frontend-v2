@@ -27,6 +27,14 @@ interface State {
   originStatus?: TextfieldStatus
   originStatusText?: string
   originToken: Token | null
+  submit:
+    | {
+        status: 'idle' | 'pending' | 'success'
+      }
+    | {
+        message: string
+        status: 'error'
+      }
 }
 
 const initialState: State = {
@@ -41,6 +49,9 @@ const initialState: State = {
   originStatus: undefined,
   originStatusText: undefined,
   originToken: null,
+  submit: {
+    status: 'idle',
+  },
 }
 
 type Action =
@@ -58,7 +69,7 @@ type Action =
     }
   | {
       type: 'UPDATE_ORIGIN_BALANCE'
-      payload: BigNumber
+      payload: State['originBalance']
     }
   | {
       type: 'UPDATE_ORIGIN_STATUS' | 'UPDATE_DESTINATION_STATUS'
@@ -67,6 +78,10 @@ type Action =
   | {
       type: 'UPDATE_ORIGIN_STATUS_TEXT' | 'UPDATE_DESTINATION_STATUS_TEXT'
       payload?: string
+    }
+  | {
+      type: 'UPDATE_SUBMIT_STATUS'
+      payload: State['submit']
     }
   | {
       type: 'SWITCH_TOKENS'
@@ -139,6 +154,11 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         destinationStatusText: action.payload,
+      }
+    case 'UPDATE_SUBMIT_STATUS':
+      return {
+        ...state,
+        submit: action.payload,
       }
     default:
       throw new Error(`Invalid action`)

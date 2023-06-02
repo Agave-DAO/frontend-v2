@@ -8,6 +8,7 @@ import { hexZeroPad } from 'ethers/lib/utils'
 import { useCollateralSwap } from './hooks/useCollateralSwap'
 import { Swap } from '@/src/components/assets/Swap'
 import { Button, ButtonWrapper, FormCard } from '@/src/components/card/FormCard'
+import { FormStatus as BaseFormStatus } from '@/src/components/form/FormStatus'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
@@ -40,6 +41,12 @@ const SwapSVG = styled(Swap)`
   path {
     fill: ${({ theme: { colors } }) => colors.darkerGray};
   }
+`
+
+const FormStatus = styled(BaseFormStatus)`
+  margin: var(--padding-md);
+  white-space: break-spaces;
+  font-size: var(--font-size-lg);
 `
 
 type OrderCreationFixedValues = Pick<
@@ -76,6 +83,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
 
   const handleSwapRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    dispatch({ type: 'UPDATE_SUBMIT_STATUS', payload: { status: 'pending' } })
 
     if (
       state.originToken &&
@@ -87,6 +95,13 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
       const wagTokenOut = state.destinationToken.extensions.protocolTokens?.wag
 
       if (!wagTokenIn || !wagTokenOut) {
+        dispatch({
+          type: 'UPDATE_SUBMIT_STATUS',
+          payload: {
+            message: 'WAG token not found',
+            status: 'error',
+          },
+        })
         throw new Error('WAG token not found')
       }
 
@@ -119,7 +134,11 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
         localStorage.setItem('orderUid', orderUid)
 
         await addOrder(swapWagTokenInfo, orderUid)
-      } catch (error) {
+      } catch (error: any) {
+        dispatch({
+          type: 'UPDATE_SUBMIT_STATUS',
+          payload: { message: error?.message ?? 'Unknown', status: 'error' },
+        })
         console.error('failed to add order', error)
       }
     }
@@ -194,6 +213,9 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
               },
             ]}
           />
+          {state.submit.status === 'error' && (
+            <FormStatus status={TextfieldStatus.error}>{state.submit.message}</FormStatus>
+          )}
           <Buttons>
             <Button
               disabled={
