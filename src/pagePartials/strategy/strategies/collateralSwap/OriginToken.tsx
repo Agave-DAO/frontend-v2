@@ -74,6 +74,7 @@ export const OriginToken: FC = () => {
       )}
       <TitleWithAction
         button={{
+          disabled: !state.originToken,
           onClick: () => handleUpdateOriginAmount(state.originBalance.toString() ?? ''),
           text: 'Use max',
         }}
