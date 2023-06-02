@@ -50,7 +50,7 @@ const InitialDepositStepInfo: React.FC<InitialDepositStepInfoProps> = ({
       <Text>
         Need to bridge assets to Gnosis
         <br />
-        from other chains? Please visit <a href="https://li.fi">li.fi</a>
+        from other chains? Consider using <a href="https://jumper.exchange/">jumper</a>
       </Text>
       <Row>
         <RowKey>Available to deposit</RowKey>
