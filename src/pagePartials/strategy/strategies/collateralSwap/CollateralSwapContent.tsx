@@ -156,6 +156,13 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
 
   const destinationPriceInWei = toWei(destinationPrice, state.destinationToken?.decimals ?? 0)
 
+  const canSubmit =
+    state.submit.status === 'pending' ||
+    state.originStatus === TextfieldStatus.error ||
+    state.destinationStatus === TextfieldStatus.error ||
+    state.originAmount === '0' ||
+    state.destinationAmount === '0'
+
   return (
     <>
       <Title>Strategies</Title>
@@ -215,16 +222,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
             ]}
           />
           <Buttons>
-            <Button
-              disabled={
-                state.submit.status === 'pending' ||
-                state.originStatus === TextfieldStatus.error ||
-                state.destinationStatus === TextfieldStatus.error ||
-                state.originAmount === '0' ||
-                state.destinationAmount === '0'
-              }
-              type="submit"
-            >
+            <Button disabled={!canSubmit} type="submit">
               {state.submit.status === 'pending' ? <Spinner /> : 'Swap'}
             </Button>
           </Buttons>
