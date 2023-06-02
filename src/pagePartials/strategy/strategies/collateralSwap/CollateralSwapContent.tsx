@@ -11,11 +11,10 @@ import { FormStatus as BaseFormStatus } from '@/src/components/form/FormStatus'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Spinner } from '@/src/components/loading/Spinner'
-import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { ONE_BN } from '@/src/constants/bigNumber'
 import { Details } from '@/src/pagePartials/strategy/common/Details'
-import { StrategiesDropdown } from '@/src/pagePartials/strategy/common/StrategiesDropdown'
 import { SwapButton } from '@/src/pagePartials/strategy/common/SwapButton'
+import { StrategyContainer } from '@/src/pagePartials/strategy/strategies/StrategyContainer'
 import { useCollateralSwapStore } from '@/src/pagePartials/strategy/strategies/collateralSwap/CollateralSwapStore'
 import { DestinationToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/DestinationToken'
 import { OriginToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/OriginToken'
@@ -28,11 +27,6 @@ import {
   SellTokenSource,
   SigningScheme,
 } from '@/types/generated/cowSwap/order-book'
-
-const Title = styled(BaseTitle)`
-  margin: 0 0 40px;
-  text-transform: capitalize;
-`
 
 const Buttons = styled(ButtonWrapper)`
   padding-top: 8px;
@@ -164,12 +158,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
     state.destinationAmount === '0'
 
   return (
-    <>
-      <Title>Strategies</Title>
-      <StrategiesDropdown
-        onChange={console.log.bind(console, 'Strategy changed:')}
-        strategy={'collateralSwap'}
-      />
+    <StrategyContainer strategy="collateral-swap" vaultAddress={vaultAddress}>
       <form onSubmit={handleSwapRequest}>
         <FormCard {...restProps}>
           <OriginToken />
@@ -231,6 +220,6 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
           )}
         </FormCard>
       </form>
-    </>
+    </StrategyContainer>
   )
 }
