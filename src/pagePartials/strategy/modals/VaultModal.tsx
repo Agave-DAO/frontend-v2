@@ -94,7 +94,7 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, ...restProps }) =>
     <Modal onClose={onClose} {...restProps}>
       <Title>{editVault ? 'Edit vault name' : 'New vault'}</Title>
       {editVault ? (
-        <Info text={<VaultInfo />} title="Vault information" />
+        <Info text={<VaultInfo vaultAddress={''} />} title="Vault information" />
       ) : (
         <Info
           text={
