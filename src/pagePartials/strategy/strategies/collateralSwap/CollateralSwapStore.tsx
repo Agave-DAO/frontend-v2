@@ -15,7 +15,7 @@ import { ZERO_BN } from '@/src/constants/bigNumber'
 import { toWei } from '@/src/utils/common'
 import { Token } from '@/types/token'
 
-interface State {
+export interface State {
   destinationAmount: string
   destinationPriceInDAI: BigNumber
   destinationStatus?: TextfieldStatus
@@ -108,6 +108,7 @@ function reducer(state: State, action: Action): State {
         originToken: state.destinationToken,
         destinationToken: state.originToken,
         originAmount: state.destinationAmount,
+        destinationAmount: '0',
         originBalance: ZERO_BN,
       }
     case 'UPDATE_ORIGIN_AMOUNT':

@@ -1,7 +1,7 @@
 import { FC, FormEvent } from 'react'
 import styled from 'styled-components'
 
-import { FixedNumber } from '@ethersproject/bignumber'
+import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 import { hexZeroPad } from 'ethers/lib/utils'
 
 import { useCollateralSwap } from './hooks/useCollateralSwap'
@@ -11,15 +11,19 @@ import { FormStatus as BaseFormStatus } from '@/src/components/form/FormStatus'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Spinner } from '@/src/components/loading/Spinner'
-import { ONE_BN } from '@/src/constants/bigNumber'
+import { ONE_BN, ZERO_BN } from '@/src/constants/bigNumber'
 import { Details } from '@/src/pagePartials/strategy/common/Details'
 import { SwapButton } from '@/src/pagePartials/strategy/common/SwapButton'
 import { StrategyContainer } from '@/src/pagePartials/strategy/strategies/StrategyContainer'
-import { useCollateralSwapStore } from '@/src/pagePartials/strategy/strategies/collateralSwap/CollateralSwapStore'
+import {
+  State,
+  useCollateralSwapStore,
+} from '@/src/pagePartials/strategy/strategies/collateralSwap/CollateralSwapStore'
 import { DestinationToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/DestinationToken'
 import { OriginToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/OriginToken'
 import { setCowSwapOrder } from '@/src/pagePartials/strategy/strategies/collateralSwap/utils/setCowSwapOrder'
-import { toWei } from '@/src/utils/common'
+import { formatAmount, toWei } from '@/src/utils/common'
+import { NumberType } from '@/src/utils/format'
 import {
   BuyTokenDestination,
   OrderCreation,
@@ -66,6 +70,51 @@ const orderCreationFixedValues: OrderCreationFixedValues = {
   signingScheme: SigningScheme.PRESIGN,
   signature: '0x',
 } as const
+
+function calculatePrice(state: State) {
+  let price: BigNumber = ZERO_BN
+
+  if (
+    state.originToken &&
+    state.destinationToken &&
+    state.originAmount &&
+    state.destinationAmount
+  ) {
+    const originAmount = FixedNumber.from(
+      formatAmount(
+        BigNumber.from(state.originAmount),
+        state.originToken.decimals,
+        '',
+        'after',
+        NumberType.SwapTradeAmount,
+      ),
+    )
+
+    const destinationAmount = FixedNumber.from(
+      formatAmount(
+        BigNumber.from(state.destinationAmount),
+        state.destinationToken.decimals,
+        '',
+        'after',
+        NumberType.SwapTradeAmount,
+      ),
+    )
+
+    if (!originAmount.isZero()) {
+      price = BigNumber.from(
+        toWei(
+          destinationAmount
+            .divUnsafe(originAmount)
+            .round(state.destinationToken.decimals)
+            .toString(),
+          state.destinationToken.decimals,
+        ),
+      )
+    }
+  }
+
+  return price
+}
 
 export const CollateralSwapContent: FC = ({ ...restProps }) => {
   const { dispatch, state } = useCollateralSwapStore()
@@ -141,16 +190,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
     }
   }
 
-  const destinationPrice = FixedNumber.fromValue(state.originPriceInDAI)
-    .divUnsafe(
-      FixedNumber.fromValue(
-        state.destinationPriceInDAI.isZero() ? ONE_BN : state.destinationPriceInDAI,
-      ),
-    )
-    .round(state.destinationToken?.decimals || 0)
-    .toString()
-
-  const destinationPriceInWei = toWei(destinationPrice, state.destinationToken?.decimals ?? 0)
+  const destinationPriceInWei = calculatePrice(state)
 
   const canSubmit =
     state.submit.status !== 'pending' ||
@@ -187,7 +227,15 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
                     )}{' '}
                     ={' '}
                     {state.destinationToken ? (
-                      <span title={`${destinationPrice} ${state.destinationToken.symbol}`}>
+                      <span
+                        title={formatAmount(
+                          destinationPriceInWei,
+                          state.destinationToken.decimals,
+                          state.destinationToken.symbol,
+                          'after',
+                          NumberType.SwapTradeAmount,
+                        )}
+                      >
                         <Amount
                           decimals={state.destinationToken.decimals}
                           symbol={state.destinationToken.symbol}
