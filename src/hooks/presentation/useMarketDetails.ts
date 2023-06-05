@@ -47,5 +47,6 @@ export const useMarketDetails = (tokenAddress: string) => {
     market,
     reserveSize,
     utilizationRate: parseFloat(utilizationRate.toString()).toFixed(DISPLAY_DECIMALS),
+    isBorrowable: market.assetData.borrowingEnabled,
   }
 }
