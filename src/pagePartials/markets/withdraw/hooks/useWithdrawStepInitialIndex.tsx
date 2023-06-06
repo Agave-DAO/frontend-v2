@@ -37,7 +37,7 @@ export const useWithdrawStepInitialIndex = ({
     const isAllowanceEnough = isNativeToken
       ? !wrappedNativeGatewayAllowance.isZero() &&
         wrappedNativeGatewayAllowance.gte(BigNumber.from(amount))
-      : true
+      : false
 
     return isAllowanceEnough ? 1 : 0
   }, [amount, isNativeToken, wrappedNativeGatewayAllowance])
