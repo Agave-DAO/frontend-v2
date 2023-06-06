@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { WETHGateway__factory } from '@/types/generated/typechain'
 
 export const useWithdrawStepInitialIndex = ({
   amount,
@@ -18,28 +18,27 @@ export const useWithdrawStepInitialIndex = ({
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const isNativeToken = tokenInfo.extensions.isNative
 
-  const { appChainId } = useWeb3ConnectedApp()
-  const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
-  const { approvedAmount: agaveLendingAllowance } = useGetERC20Allowance(
-    tokenAddress,
-    agaveLendingAddress,
-  )
+  const wrappedNativeGatewayAddress = useContractInstance(
+    WETHGateway__factory,
+    'WETHGateway',
+  ).address
 
-  const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
   const agTokenInfo = agaveTokens.getProtocolTokenInfo(
     isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress,
     'ag',
   )
+
   const { approvedAmount: wrappedNativeGatewayAllowance } = useGetERC20Allowance(
     agTokenInfo.address,
     wrappedNativeGatewayAddress,
   )
 
   return useMemo(() => {
-    const allowance = isNativeToken ? wrappedNativeGatewayAllowance : agaveLendingAllowance
-
-    const isAllowanceEnough = !allowance.isZero() && allowance.gte(BigNumber.from(amount))
+    const isAllowanceEnough = isNativeToken
+      ? !wrappedNativeGatewayAllowance.isZero() &&
+        wrappedNativeGatewayAllowance.gte(BigNumber.from(amount))
+      : true
 
     return isAllowanceEnough ? 1 : 0
-  }, [agaveLendingAllowance, amount, isNativeToken, wrappedNativeGatewayAllowance])
+  }, [amount, isNativeToken, wrappedNativeGatewayAllowance])
 }

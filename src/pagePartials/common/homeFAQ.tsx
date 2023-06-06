@@ -156,10 +156,6 @@ export const homeFAQ = [
           Other available charts are on{' '}
           <a href="https://www.coingecko.com/en/coins/agave-token" rel="noreferrer" target="_blank">
             Coingecko
-          </a>{' '}
-          and{' '}
-          <a href="https://www.tradingview.com/symbols/AGVEWXDAI/" rel="noreferrer" target="_blank">
-            Trading View
           </a>
           .
         </li>
