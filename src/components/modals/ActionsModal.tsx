@@ -11,6 +11,7 @@ import { DepositWithdraw } from '@/src/components/modals/DepositWithdraw'
 import { Header } from '@/src/components/modals/Header'
 import { Overlay } from '@/src/components/modals/Overlay'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
+import { useNonBorrowableTokens } from '@/src/hooks/presentation/useNonBorrowableTokens'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { BorrowRepayTabs, DepositWithdrawTabs } from '@/types/modal'
 import { Token } from '@/types/token'
@@ -51,9 +52,11 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 interface ActionsModalProps extends Props {
   onTokenSelect: (token: Token | null) => void
   symbol: string
+  activeTab?: string
 }
 
 export const ActionsModal: React.FC<ActionsModalProps> = ({
+  activeTab,
   children,
   closeOnBackgroundClick = false,
   onClose,
@@ -76,6 +79,8 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
     },
     [onClose],
   )
+
+  const nonBorrowableTokens = useNonBorrowableTokens().symbols
 
   useEffect(() => {
     window.addEventListener('keyup', close)
@@ -116,7 +121,11 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
             >
               <Contents id="modalDescription">
                 <ActionsWrapper>
-                  <TokenDropdown activeTokenSymbol={symbol} onChange={onTokenSelect} />
+                  <TokenDropdown
+                    activeTokenSymbol={symbol}
+                    excludedTokens={activeTab == 'borrow' ? nonBorrowableTokens : []}
+                    onChange={onTokenSelect}
+                  />
                   <ButtonMini onClick={closeModalAndGo} variant="dark">
                     More Info
                   </ButtonMini>
@@ -176,7 +185,12 @@ export const BorrowRepayModal: React.FC<BorrowRepayModalProps> = ({
   }
 
   return (
-    <ActionsModal onTokenSelect={onTokenSelect} symbol={currentToken?.symbol || ''} {...restProps}>
+    <ActionsModal
+      activeTab={activeTab}
+      onTokenSelect={onTokenSelect}
+      symbol={currentToken?.symbol || ''}
+      {...restProps}
+    >
       <BorrowRepay
         activeTab={activeTab}
         interestRateMode={interestRateMode}

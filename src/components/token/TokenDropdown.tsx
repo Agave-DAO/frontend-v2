@@ -52,8 +52,9 @@ const ButtonText = styled.span``
 
 export const TokenDropdown: React.FC<{
   activeTokenSymbol?: string
+  excludedTokens?: string[]
   onChange?: (token: Token | null) => void
-}> = ({ activeTokenSymbol = '', onChange, ...restProps }) => {
+}> = ({ activeTokenSymbol = '', excludedTokens = [], onChange, ...restProps }) => {
   const { onSelectToken, tokensList } = useTokensLists(['reserve'], onChange)
   const [currentToken, setCurrentToken] = useState<string>(activeTokenSymbol)
 
@@ -62,9 +63,9 @@ export const TokenDropdown: React.FC<{
     .agaveMarketsData?.filter((market) => market.assetData.isFrozen === false)
     ?.map((market) => market.tokenAddress)
 
-  const enabledTokensList = tokensList.filter((token) =>
-    enabledMarketsAddresses?.includes(token.address),
-  )
+  const enabledTokensList = tokensList
+    .filter((token) => enabledMarketsAddresses?.includes(token.address))
+    .filter((token) => !excludedTokens.includes(token.symbol))
 
   const onSelect = useCallback(
     (token: TokenWithType) => {
