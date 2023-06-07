@@ -60,7 +60,7 @@ const UserConnectedActions: React.FC<{
   userAddress: string
   tokenSymbol: string
 }> = ({ tokenAddress, userAddress }) => {
-  const isBorrowable = useMarketDetails(tokenAddress).isBorrowable
+  const isBorrowable = useMarketDetails(tokenAddress).market.assetData.borrowingEnabled
   const { userHasBorrows } = useUserBorrowsInformationByToken({
     tokenAddress,
     userAddress,

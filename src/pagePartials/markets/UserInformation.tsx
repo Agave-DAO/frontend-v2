@@ -41,7 +41,7 @@ export const UserInformation: React.FC<{ tokenAddress: string }> = ({
   ...restProps
 }) => {
   const { isWalletConnected } = useWeb3Connection()
-  const isBorrowable = useMarketDetails(tokenAddress).isBorrowable
+  const isBorrowable = useMarketDetails(tokenAddress).market.assetData.borrowingEnabled
 
   return isWalletConnected ? (
     <Wrapper {...restProps}>
