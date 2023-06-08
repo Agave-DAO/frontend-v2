@@ -107,7 +107,12 @@ export const useMarketsData = () => {
 
       try {
         const marketData = getMarket(tokenAddress)
-        const { stableBorrowRate, variableBorrowRate } = marketData.reserveData
+        const stableBorrowRate = marketData.assetData.stableBorrowRateEnabled
+          ? marketData.reserveData.stableBorrowRate
+          : ZERO_BN
+        const variableBorrowRate = marketData.assetData.borrowingEnabled
+          ? marketData.reserveData.variableBorrowRate
+          : ZERO_BN
 
         return {
           stable: stableBorrowRate,
