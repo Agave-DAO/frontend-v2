@@ -21,6 +21,7 @@ import {
 } from '@/src/pagePartials/strategy/strategies/collateralSwap/CollateralSwapStore'
 import { DestinationToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/DestinationToken'
 import { OriginToken } from '@/src/pagePartials/strategy/strategies/collateralSwap/OriginToken'
+import { PriceImpact } from '@/src/pagePartials/strategy/strategies/collateralSwap/PriceImpact'
 import { setCowSwapOrder } from '@/src/pagePartials/strategy/strategies/collateralSwap/utils/setCowSwapOrder'
 import { formatAmount, toWei } from '@/src/utils/common'
 import { NumberType } from '@/src/utils/format'
@@ -252,11 +253,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
               },
               {
                 key: 'Price Impact',
-                value: '-1.23%',
-              },
-              {
-                key: 'Network Fee',
-                value: '0.30%',
+                value: <PriceImpact />,
               },
             ]}
           />
