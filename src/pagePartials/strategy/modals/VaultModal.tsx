@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
@@ -11,6 +11,8 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
+import { useCreateNewVault } from '@/src/hooks/mutations/useCreateNewVault'
+import { useEditVaultName } from '@/src/hooks/mutations/useEditVaultName'
 import { useVaults } from '@/src/hooks/presentation/useVaults'
 import { VaultInfo } from '@/src/pagePartials/strategy/vaults/VaultInfo'
 
@@ -52,43 +54,92 @@ const Buttons = styled(ButtonWrapper)`
 
 interface Props extends ModalProps {
   vaultAddress?: string
+  vaultName?: string
 }
 
 const MIN_VAULT_NAME_LENGTH = 3
 const MAX_VAULT_NAME_LENGTH = 30
 
-const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, ...restProps }) => {
-  const editVault = useMemo(() => (vaultAddress !== undefined ? true : false), [vaultAddress])
-  const { createVault, refetchUserVaults, vaultNameExists } = useVaults()
-  const [vaultName, setVaultName] = useState<string>('')
-  const [loading, setLoading] = useState<boolean>(false)
+const EditButtonAction = ({
+  disableSubmit,
+  onClose,
+  setLoading,
+  setVaultName,
+  vaultAddress,
+  vaultName,
+}: {
+  vaultAddress: string
+  vaultName: string
+  disableSubmit: boolean
+  setVaultName: (value: string) => void
+  onClose: () => void
+  setLoading: (value: boolean) => void
+}) => {
+  const { refetchUserVaults } = useVaults()
+  const editVaultName = useEditVaultName(vaultAddress)
 
-  const saveAndClose = async () => {
-    if (vaultName) {
+  const editAndClose = async () => {
+    if (!disableSubmit) {
       setLoading(true)
-      const vault = await createVault(vaultName)
-      setLoading(false)
+      const vault = await editVaultName(vaultName)
       if (vault) {
         await refetchUserVaults()
         setVaultName('')
+        setLoading(false)
+        onClose()
+      }
+    }
+  }
+
+  return (
+    <Button disabled={disableSubmit} onClick={editAndClose}>
+      Rename
+    </Button>
+  )
+}
+
+const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, vaultName, ...restProps }) => {
+  const editVault = useMemo(() => (vaultAddress !== undefined ? true : false), [vaultAddress])
+  const { refetchUserVaults, vaultNameExists } = useVaults()
+  const createVault = useCreateNewVault()
+  const [vaultNameEdited, setVaultName] = useState<string>(vaultName || '')
+  const [loading, setLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (vaultName && !vaultNameEdited) {
+      setVaultName(vaultName)
+    }
+  }, [vaultName, vaultNameEdited])
+
+  const saveAndClose = async () => {
+    if (vaultNameEdited && vaultNameEdited !== vaultName) {
+      setLoading(true)
+      const vault = await createVault(vaultNameEdited)
+      if (vault) {
+        await refetchUserVaults()
+        setVaultName('')
+        setLoading(false)
         onClose()
       }
     }
   }
 
   const error = useMemo(() => {
-    if (vaultName.length < MIN_VAULT_NAME_LENGTH) {
+    if (vaultNameEdited.length < MIN_VAULT_NAME_LENGTH) {
       return 'Vault name must be at least 3 characters'
     }
-    if (vaultName.length > MAX_VAULT_NAME_LENGTH) {
+    if (vaultNameEdited.length > MAX_VAULT_NAME_LENGTH) {
       return 'Vault name must be less than 30 characters'
     }
-    if (vaultNameExists(vaultName)) {
+    if (vaultNameExists(vaultNameEdited) && vaultNameEdited !== vaultName) {
       return 'Vault name already exists'
     }
-  }, [vaultName, vaultNameExists])
+  }, [vaultName, vaultNameEdited, vaultNameExists])
 
-  const disableSubmit = useMemo(() => !vaultName || loading || !!error, [vaultName, loading, error])
+  const disableSubmit = useMemo(
+    () => !vaultNameEdited || loading || !!error || (editVault && vaultNameEdited === vaultName),
+    [vaultNameEdited, loading, error, editVault, vaultName],
+  )
 
   return (
     <Modal onClose={onClose} {...restProps}>
@@ -126,7 +177,7 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, ...restProps }) =>
           formControl={
             <Textfield
               onChange={(e) => setVaultName(e.currentTarget.value)}
-              value={vaultName}
+              value={vaultNameEdited}
               variant="light"
             />
           }
@@ -135,9 +186,23 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, ...restProps }) =>
         />
 
         <Buttons>
-          <Button disabled={disableSubmit} onClick={saveAndClose}>
-            {editVault ? 'Rename' : 'Create'}
-          </Button>
+          {/* Edit vault button */}
+          {editVault && vaultAddress && vaultNameEdited && (
+            <EditButtonAction
+              disableSubmit={disableSubmit}
+              onClose={onClose}
+              setLoading={setLoading}
+              setVaultName={setVaultName}
+              vaultAddress={vaultAddress}
+              vaultName={vaultNameEdited}
+            />
+          )}
+          {/* Create vault button */}
+          {!editVault && (
+            <Button disabled={disableSubmit} onClick={saveAndClose}>
+              Create
+            </Button>
+          )}
         </Buttons>
       </FormCard>
     </Modal>

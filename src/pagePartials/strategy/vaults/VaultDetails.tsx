@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-import vaultDetails from '@/pages/strategies/vault-details'
 import { Asset, Body, Head } from '@/src/components/asset/Asset'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { MoreActionsDropdown } from '@/src/components/dropdown/MoreActionsDropdown'
@@ -12,8 +11,9 @@ const Wrapper = styled(Asset)`
   height: auto;
 `
 
-export const VaultDetails: React.FC<{ vaultAddress: string }> = ({
+export const VaultDetails: React.FC<{ vaultAddress: string; vaultName: string }> = ({
   vaultAddress,
+  vaultName,
   ...restProps
 }) => {
   // this is obviously just a placeholder
@@ -21,7 +21,7 @@ export const VaultDetails: React.FC<{ vaultAddress: string }> = ({
   const items = [
     {
       text: 'Edit name',
-      onClick: () => openCreateVaultModal(vaultDetails),
+      onClick: () => openCreateVaultModal(vaultAddress, vaultName),
     },
     {
       text: 'Withdraw',

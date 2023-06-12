@@ -59,7 +59,10 @@ const VaultDetailsImpl = withGenericSuspense(
           <GoToExplorer address={selectedVault.vaultAddress} text="Vault" />
         </Title>
         <VaultModalProvider>
-          <VaultDetailsComponent vaultAddress={selectedVault.vaultAddress} />
+          <VaultDetailsComponent
+            vaultAddress={selectedVault.vaultAddress}
+            vaultName={selectedVault.name}
+          />
         </VaultModalProvider>
         <SubTitle>Create Strategy</SubTitle>
         {strategiesInfo.map((strategy) => (
