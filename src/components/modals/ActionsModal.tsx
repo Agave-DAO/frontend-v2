@@ -176,6 +176,7 @@ export const BorrowRepayModal: React.FC<BorrowRepayModalProps> = ({
 }) => {
   const [currentToken, setCurrentToken] = useState<Token | null>(token)
   const [interestRateMode, setInterestRateMode] = useState<InterestRateMode>(() => mode)
+  const [tab, setTab] = useState<BorrowRepayTabs>(activeTab)
   const onTokenSelect = (token: Token | null) => {
     setCurrentToken(token)
   }
@@ -186,16 +187,17 @@ export const BorrowRepayModal: React.FC<BorrowRepayModalProps> = ({
 
   return (
     <ActionsModal
-      activeTab={activeTab}
+      activeTab={tab}
       onTokenSelect={onTokenSelect}
       symbol={currentToken?.symbol || ''}
       {...restProps}
     >
       <BorrowRepay
-        activeTab={activeTab}
+        activeTab={tab}
         interestRateMode={interestRateMode}
         onInterestRateSelect={onInterestRateSelect}
         onTokenSelect={onTokenSelect}
+        setTab={setTab}
         token={currentToken}
       />
     </ActionsModal>

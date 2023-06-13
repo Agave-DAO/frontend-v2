@@ -21,24 +21,24 @@ interface Props {
   interestRateMode: InterestRateMode
   onInterestRateSelect: (mode: InterestRateMode) => void
   onTokenSelect: (token: Token) => void
+  setTab: (tab: BorrowRepayTabs) => void
   token: Token | null
 }
 
 export const BorrowRepay: React.FC<Props> = withGenericSuspense(
-  ({ activeTab, interestRateMode, onInterestRateSelect, onTokenSelect, token }) => {
-    const [tab, setTab] = useState<BorrowRepayTabs>(activeTab || 'borrow')
-    const borrowActive = tab === 'borrow'
-    const repayActive = tab === 'repay'
+  ({ activeTab, interestRateMode, onInterestRateSelect, onTokenSelect, setTab, token }) => {
+    const borrowActive = activeTab === 'borrow'
+    const repayActive = activeTab === 'repay'
 
     return token ? (
       <>
         {borrowActive && <BorrowInfo token={token} />}
         {repayActive && <RepayInfo token={token} />}
         <Tabs>
-          <Tab isActive={tab === 'borrow'} onClick={() => setTab('borrow')}>
+          <Tab isActive={borrowActive} onClick={() => setTab('borrow')}>
             Borrow
           </Tab>
-          <Tab isActive={tab === 'repay'} onClick={() => setTab('repay')}>
+          <Tab isActive={repayActive} onClick={() => setTab('repay')}>
             Repay
           </Tab>
         </Tabs>
