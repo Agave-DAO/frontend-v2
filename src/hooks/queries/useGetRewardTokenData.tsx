@@ -21,7 +21,8 @@ export const useGetRewardTokenData = () => {
   const gqlBalancer = getSubgraphSdkByNetwork(appChainId, SubgraphName.BalancerV2)
 
   const { data: rewardTokenData } = gqlBalancer.useBalancerV2Pool(undefined, {
-    loadingTimeout: 10000,
+    loadingTimeout: 5000,
+    suspense: false,
     onSuccess: (data) => {
       if (data.pool) return data
       else return undefined
@@ -31,9 +32,9 @@ export const useGetRewardTokenData = () => {
   const gnoPrice = useGetGnoPrice().gnoPrice
   const parsedData = useMemo(() => {
     const MockData = {
-      liquidity: toWei('233081', 18),
+      liquidity: toWei('2300003081', 18),
       totalShares: toWei('4114', 18),
-      priceShares: toWei((233081 / 4114).toString(), 18),
+      priceShares: toWei((2300003081 / 4114).toString(), 18),
     }
     if (!rewardTokenData || !agvePrice || !gnoPrice) {
       return MockData
