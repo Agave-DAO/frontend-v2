@@ -20,18 +20,27 @@ export const useGetRewardTokenData = () => {
   const { appChainId } = useWeb3Connection()
   const gqlBalancer = getSubgraphSdkByNetwork(appChainId, SubgraphName.BalancerV2)
 
-  const { data: rewardTokenData } = gqlBalancer.useBalancerV2Pool(undefined, {})
-
+  const { data: rewardTokenData } = gqlBalancer.useBalancerV2Pool(undefined, {
+    onSuccess: (data) => {
+      if (data.pool) return data
+      else return undefined
+    },
+  })
   const agvePrice = useGetStakingAgvePrice()
   const gnoPrice = useGetGnoPrice().gnoPrice
-
+  //rewardTokenData = undefined
   const parsedData = useMemo(() => {
+    const MockData = {
+      liquidity: toWei('233081', 18),
+      totalShares: toWei('4114', 18),
+      priceShares: toWei((233081 / 4114).toString(), 18),
+    }
     if (!rewardTokenData || !agvePrice || !gnoPrice) {
-      return
+      return MockData
     }
     const { pool } = rewardTokenData
 
-    if (!pool) return
+    if (!pool) return MockData
 
     const useExternalPrices = false
 
@@ -64,7 +73,6 @@ export const useGetRewardTokenData = () => {
     }
 
     const priceShares = totalSharesAsNumber > 0 ? liquiditySize / totalSharesAsNumber : 0
-
     return {
       liquidity: toWei(liquiditySize.toString(), 18),
       totalShares: toWei(pool?.totalShares.toString(), 18),
