@@ -19,9 +19,11 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Modal, Props as ModalProps } from '@/src/components/modals/Modal'
 import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
+import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInputDropdown } from '@/src/components/token/TokenInputDropdown'
 import { VaultInfo } from '@/src/pagePartials/strategy/vaults/VaultInfo'
+import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 import { DepositWithdrawTabs } from '@/types/modal'
 import { Token } from '@/types/token'
 
@@ -38,6 +40,11 @@ const Info = styled(EmptyContent)`
   }
 `
 
+const Title = styled(BaseTitle)`
+  font-size: 2.4rem;
+  margin: 0 0 32px;
+`
+
 const Rows = styled(BaseRows)`
   margin-bottom: 8px;
 `
@@ -48,16 +55,17 @@ const Buttons = styled(ButtonWrapper)`
 
 interface Props extends ModalProps {
   activeTab?: DepositWithdrawTabs
+  vaultAddress?: string
 }
 
 export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
   ({ activeTab, onClose, ...restProps }) => {
-    const [tab, setTab] = useState<DepositWithdrawTabs>('deposit')
-    const depositActive = tab === 'deposit'
-    const withdrawActive = tab === 'withdraw'
+    const depositActive = activeTab === 'deposit'
+    const withdrawActive = activeTab === 'withdraw'
     const [value, setValue] = useState('0')
     const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
     const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
+    const { openDepositWithdrawModal, vaultName } = useVaultModalContext()
     const [token, setToken] = useState<Token | null>({
       symbol: 'USDC',
       name: 'USD Coin',
@@ -71,12 +79,6 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
       },
       type: 'reserve',
     })
-
-    useEffect(() => {
-      if (activeTab) {
-        setTab(activeTab)
-      }
-    }, [activeTab])
 
     const withdraw = useCallback(() => {
       onClose()
@@ -92,12 +94,21 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
 
     return (
       <Modal onClose={onClose} {...restProps}>
-        <Info text={<VaultInfo vaultAddress={''} />} title="Vault information" />
+        {activeTab === 'deposit' ? (
+          <Title>
+            Deposit in <em>{vaultName}</em> vault
+          </Title>
+        ) : (
+          <Title>
+            Withdraw from <em>{vaultName}</em> vault
+          </Title>
+        )}
+        <Info text={<VaultInfo />} title="" />
         <Tabs>
-          <Tab isActive={depositActive} onClick={() => setTab('deposit')}>
+          <Tab isActive={depositActive} onClick={() => openDepositWithdrawModal('deposit')}>
             Deposit
           </Tab>
-          <Tab isActive={withdrawActive} onClick={() => setTab('withdraw')}>
+          <Tab isActive={withdrawActive} onClick={() => openDepositWithdrawModal('withdraw')}>
             Withdraw
           </Tab>
         </Tabs>
