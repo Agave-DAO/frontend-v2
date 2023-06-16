@@ -29,14 +29,18 @@ import { Token } from '@/types/token'
 
 interface InitialBorrowStepInfoProps {
   amount: string
-  maxToBorrow: BigNumber
+  maxToBorrowVariable: BigNumber
+  maxToBorrowStable: BigNumber
   tokenAddress: string
   tokenInfo: TokenWithType
+  interestRateMode: InterestRateMode
 }
 
 const InitialBorrowStepInfo: React.FC<InitialBorrowStepInfoProps> = ({
   amount,
-  maxToBorrow,
+  interestRateMode,
+  maxToBorrowStable,
+  maxToBorrowVariable,
   tokenAddress,
   tokenInfo,
 }) => {
@@ -45,6 +49,9 @@ const InitialBorrowStepInfo: React.FC<InitialBorrowStepInfoProps> = ({
     amount: sanitizedAmount,
     type: 'borrow',
   })
+
+  const maxToBorrow =
+    interestRateMode === InterestRateMode.stable ? maxToBorrowStable : maxToBorrowVariable
 
   return (
     <>
@@ -94,7 +101,8 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
     borrowVariableAPR,
     disableSubmit,
     isStableBorrowRateEnabled,
-    maxToBorrow,
+    maxToBorrowStable,
+    maxToBorrowVariable,
     setTokenInputStatus,
     setTokenInputStatusText,
     tokenInfo,
@@ -117,11 +125,16 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
 
   const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
 
+  const maxToBorrow =
+    interestRateMode === InterestRateMode.stable ? maxToBorrowStable : maxToBorrowVariable
+
   const stepperProps = {
     info: (
       <InitialBorrowStepInfo
         amount={amount}
-        maxToBorrow={maxToBorrow}
+        interestRateMode={interestRateMode}
+        maxToBorrowStable={maxToBorrowStable}
+        maxToBorrowVariable={maxToBorrowVariable}
         tokenAddress={tokenAddress}
         tokenInfo={tokenInfo}
       />

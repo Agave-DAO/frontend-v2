@@ -7,6 +7,7 @@ import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
+import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
 import { usePersistedState } from '@/src/hooks/usePersistedState'
@@ -43,7 +44,7 @@ export function useBorrowStepInitial({
     ? toWei(availableToBorrowDAI ?? Zero, tokenInfo.decimals).div(tokenPrice)
     : Zero
 
-  const maxToBorrow =
+  const maxToBorrowVariable =
     availableLiquidity && userMaxAvailable?.gt(availableLiquidity)
       ? availableLiquidity
       : userMaxAvailable
@@ -51,7 +52,7 @@ export function useBorrowStepInitial({
   const { maxAmountGivenHealthFactor } = useNewHealthFactorCalculator(marketAddress)
 
   const maxSafeAmountToBorrow = maxAmountGivenHealthFactor({
-    amount: maxToBorrow,
+    amount: maxToBorrowVariable,
     type: 'borrow',
     targetValue: BigNumber.from(minSafeHF),
   })
@@ -67,12 +68,31 @@ export function useBorrowStepInitial({
   const disableSubmit =
     tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(Zero)
 
+  const isStableBorrowRateEnabled = tokenInfo.extensions.isNative ? false : stableBorrowRateEnabled
+
+  const userDeposits = useUserDeposits()
+  const calculateMaxToBorrowStable = () => {
+    if (!isStableBorrowRateEnabled) {
+      return Zero
+    }
+    let maxToBorrowStable = maxSafeAmountToBorrow
+    const deposit = userDeposits.find((deposit) => deposit.assetAddress === tokenAddress)
+    if (deposit && deposit.asCollateral) {
+      if (deposit.depositedAmount.lt(maxSafeAmountToBorrow)) {
+        maxToBorrowStable = deposit.depositedAmount
+      }
+    }
+    return maxToBorrowStable
+  }
+  const maxToBorrowStable = calculateMaxToBorrowStable()
+
   return {
     borrowStableAPR,
     borrowVariableAPR,
     disableSubmit,
-    isStableBorrowRateEnabled: tokenInfo.extensions.isNative ? false : stableBorrowRateEnabled,
-    maxToBorrow: maxSafeAmountToBorrow,
+    isStableBorrowRateEnabled,
+    maxToBorrowStable,
+    maxToBorrowVariable,
     setTokenInputStatus,
     setTokenInputStatusText,
     tokenInfo,
