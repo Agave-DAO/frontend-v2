@@ -7,6 +7,8 @@ import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/common/
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { useNonBorrowableTokens } from '@/src/hooks/presentation/useNonBorrowableTokens'
+import { useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
 import { useTokensLists } from '@/src/hooks/useTokensLists'
 import { Token } from '@/types/token'
 
@@ -52,20 +54,36 @@ const ButtonText = styled.span``
 
 export const TokenDropdown: React.FC<{
   activeTokenSymbol?: string
-  excludedTokens?: string[]
+  activeTab?: string
   onChange?: (token: Token | null) => void
-}> = ({ activeTokenSymbol = '', excludedTokens = [], onChange, ...restProps }) => {
+}> = ({ activeTab = '', activeTokenSymbol = '', onChange, ...restProps }) => {
   const { onSelectToken, tokensList } = useTokensLists(['reserve'], onChange)
   const [currentToken, setCurrentToken] = useState<string>(activeTokenSymbol)
 
   // Filter out frozen markets
-  const enabledMarketsAddresses = useMarketsData()
+  let enabledMarketsAddresses = useMarketsData()
     .agaveMarketsData?.filter((market) => market.assetData.isFrozen === false)
     ?.map((market) => market.tokenAddress)
 
-  const enabledTokensList = tokensList
-    .filter((token) => enabledMarketsAddresses?.includes(token.address))
-    .filter((token) => !excludedTokens.includes(token.symbol))
+  const nonBorrowableTokens = useNonBorrowableTokens().addresses
+  const borrowedAssetsAddresses = useUserBorrows().map((borrow) => borrow.assetAddress)
+
+  switch (activeTab) {
+    case 'borrow':
+      enabledMarketsAddresses = enabledMarketsAddresses?.filter(
+        (address) => !nonBorrowableTokens.includes(address),
+      )
+      break
+    case 'repay':
+      enabledMarketsAddresses = (enabledMarketsAddresses || []).concat(
+        borrowedAssetsAddresses.filter((address) => !enabledMarketsAddresses?.includes(address)),
+      )
+      break
+  }
+
+  const enabledTokensList = tokensList.filter((token) =>
+    enabledMarketsAddresses?.includes(token.address),
+  )
 
   const onSelect = useCallback(
     (token: TokenWithType) => {

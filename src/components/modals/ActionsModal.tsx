@@ -11,7 +11,6 @@ import { DepositWithdraw } from '@/src/components/modals/DepositWithdraw'
 import { Header } from '@/src/components/modals/Header'
 import { Overlay } from '@/src/components/modals/Overlay'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
-import { useNonBorrowableTokens } from '@/src/hooks/presentation/useNonBorrowableTokens'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { BorrowRepayTabs, DepositWithdrawTabs } from '@/types/modal'
 import { Token } from '@/types/token'
@@ -80,8 +79,6 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
     [onClose],
   )
 
-  const nonBorrowableTokens = useNonBorrowableTokens().symbols
-
   useEffect(() => {
     window.addEventListener('keyup', close)
 
@@ -122,8 +119,8 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
               <Contents id="modalDescription">
                 <ActionsWrapper>
                   <TokenDropdown
+                    activeTab={activeTab}
                     activeTokenSymbol={symbol}
-                    excludedTokens={activeTab == 'borrow' ? nonBorrowableTokens : []}
                     onChange={onTokenSelect}
                   />
                   <ButtonMini onClick={closeModalAndGo} variant="dark">
@@ -151,13 +148,24 @@ export const DepositWithdrawModal: React.FC<DepositWithdrawModalProps> = ({
   ...restProps
 }) => {
   const [currentToken, setCurrentToken] = useState<Token | null>(token)
+  const [tab, setTab] = useState<DepositWithdrawTabs>(activeTab)
   const onTokenSelect = (token: Token | null) => {
     setCurrentToken(token)
   }
 
   return (
-    <ActionsModal onTokenSelect={onTokenSelect} symbol={currentToken?.symbol || ''} {...restProps}>
-      <DepositWithdraw activeTab={activeTab} onTokenSelect={onTokenSelect} token={currentToken} />
+    <ActionsModal
+      activeTab={tab}
+      onTokenSelect={onTokenSelect}
+      symbol={currentToken?.symbol || ''}
+      {...restProps}
+    >
+      <DepositWithdraw
+        activeTab={tab}
+        onTokenSelect={onTokenSelect}
+        setTab={setTab}
+        token={currentToken}
+      />
     </ActionsModal>
   )
 }
