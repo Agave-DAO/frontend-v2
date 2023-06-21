@@ -8,6 +8,12 @@ import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { fromWei } from '@/src/utils/common'
 import { ERC20__factory } from '@/types/generated/typechain'
 
+interface VaultBalance {
+  balanceInDai: BigNumber
+  balanceRaw: BigNumber
+  token: TokenWithType
+  agToken: TokenWithType
+}
 /**
  * Gets the balance of a user's vault for each agToken of the reserve token.
  * @param {string} vaultAddress - The address of the user's vault.
@@ -21,7 +27,7 @@ export const useGetUserVaultBalances = (vaultAddress: string) => {
   const agaveReserveTokens = useAgaveTokens()
 
   // Gets the balance of the user's vault for each reserve token that has an related agToken.
-  const { data: vaultBalance, mutate: refetchUserVaultBalance } = useSWR(
+  const { data: vaultBalances, mutate: refetchUserVaultBalance } = useSWR(
     vaultAddress && agaveMarketsData?.length
       ? { key: `vaultBalance-${vaultAddress}`, vaultAddress: vaultAddress }
       : null,
@@ -54,16 +60,14 @@ export const useGetUserVaultBalances = (vaultAddress: string) => {
             balanceRaw: balance,
             token: marketToken,
             balanceInDai: fromWei(balance.mul(reserveToken.priceData), marketToken.decimals),
-          }
+            agToken,
+          } as VaultBalance
         }),
       )
 
       // Filter out undefined results
       const filteredResults = results.filter(
-        (
-          result,
-        ): result is { balanceRaw: BigNumber; token: TokenWithType; balanceInDai: BigNumber } =>
-          result !== undefined,
+        (result): result is VaultBalance => result !== undefined,
       )
 
       return filteredResults
@@ -71,7 +75,7 @@ export const useGetUserVaultBalances = (vaultAddress: string) => {
   )
 
   return {
-    vaultBalance: vaultBalance,
+    vaultBalance: vaultBalances,
     refetchUserVaultBalance,
   }
 }

@@ -21,17 +21,17 @@ export const VaultInfo: React.FC = withGenericSuspense(
       <Rows {...restProps}>
         <Title>Vault balance</Title>
         {vaultBalance?.length ? (
-          vaultBalance.map(({ balanceInDai, balanceRaw, token }, index) => {
+          vaultBalance.map(({ agToken, balanceInDai, balanceRaw }, index) => {
             // if index is multiple of 2, then it's a dark row
             const variant = index % 2 === 0 ? 'dark' : undefined
             return (
-              <Row key={token.address} variant={variant}>
+              <Row key={agToken.address} variant={variant}>
                 <RowKey>
-                  <TokenIcon dimensions={18} symbol={token.symbol} />
-                  {`ag${token.symbol}`}
+                  <TokenIcon dimensions={18} symbol={agToken.symbol} />
+                  {agToken.symbol}
                 </RowKey>
                 <EmphasizedRowValue>
-                  <Amount decimals={token.decimals} symbol="" value={balanceRaw} />
+                  <Amount decimals={agToken.decimals} symbol="" value={balanceRaw} />
                 </EmphasizedRowValue>
                 &nbsp; (<Amount value={balanceInDai} />)
               </Row>
