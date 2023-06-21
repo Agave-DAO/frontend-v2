@@ -87,6 +87,8 @@ const EditButtonAction = ({
         setVaultName('')
         setLoading(false)
         onClose()
+      } else {
+        setLoading(false)
       }
     }
   }
@@ -120,6 +122,8 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, vaultName, ...rest
         setVaultName('')
         setLoading(false)
         onClose()
+      } else {
+        setLoading(false)
       }
     }
   }
