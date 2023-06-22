@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { List } from '@/src/components/common/List'
@@ -11,10 +11,9 @@ import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { strategiesInfo } from '@/src/constants/strategiesInfo'
 import { useVaults } from '@/src/hooks/presentation/useVaults'
-import { useGetQueryParam } from '@/src/hooks/useGetQueryParam'
 import { StrategyItem } from '@/src/pagePartials/strategy/strategies/StrategyItem'
 import { VaultDetails as BaseVaultDetails } from '@/src/pagePartials/strategy/vaults/VaultDetails'
-import VaultModalProvider from '@/src/providers/vaultModalProvider'
+import VaultModalProvider, { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 
 const Title = styled(BaseTitle)`
@@ -34,8 +33,9 @@ const SubTitle = styled(BaseTitle)`
 const VaultDetailsImpl = withGenericSuspense(
   () => {
     const router = useRouter()
+    const { setVaultName, vaultAddress } = useVaultModalContext()
+
     const { vaultList: vaults } = useVaults()
-    const vaultAddress = useGetQueryParam('vault')
     const selectedVault = useMemo(
       () =>
         vaults?.find((vault) => vaultAddress && isSameAddress(vault.vaultAddress, vaultAddress)),
@@ -50,6 +50,11 @@ const VaultDetailsImpl = withGenericSuspense(
       )
     }
 
+    // set vault name in the vault modal context
+    useEffect(() => {
+      setVaultName(selectedVault.name)
+    }, [selectedVault.name, setVaultName])
+
     return (
       <>
         <Title hasExtraControls>
@@ -58,9 +63,7 @@ const VaultDetailsImpl = withGenericSuspense(
           </span>
           <GoToExplorer address={selectedVault.vaultAddress} text="Vault" />
         </Title>
-        <VaultModalProvider>
-          <VaultDetailsComponent vaultAddress={selectedVault.vaultAddress} />
-        </VaultModalProvider>
+        <VaultDetailsComponent />
         <SubTitle>Create Strategy</SubTitle>
         {strategiesInfo.map((strategy) => (
           <StrategyItem
@@ -130,7 +133,9 @@ const VaultDetailsImpl = withGenericSuspense(
 const VaultDetails: NextPage = () => {
   return (
     <RequiredConnection>
-      <VaultDetailsImpl />
+      <VaultModalProvider>
+        <VaultDetailsImpl />
+      </VaultModalProvider>
     </RequiredConnection>
   )
 }
