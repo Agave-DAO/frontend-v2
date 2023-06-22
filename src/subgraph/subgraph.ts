@@ -8,7 +8,7 @@ import { SdkWithHooks, getSdkWithHooks } from '@/types/generated/subgraph'
 export type AllSDK = Record<ChainsValues, SdkWithHooks>
 
 export enum SubgraphName {
-  SymmetricV1 = 'symmetric-v1',
+  BalancerV2 = 'balancer-gnosis-chain-v2',
 }
 
 export function getSubgraphSdkByNetwork(

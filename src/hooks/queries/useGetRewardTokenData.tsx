@@ -18,45 +18,50 @@ import { toWei } from '@/src/utils/common'
  */
 export const useGetRewardTokenData = () => {
   const { appChainId } = useWeb3Connection()
+  const gqlBalancer = getSubgraphSdkByNetwork(appChainId, SubgraphName.BalancerV2)
+
+  const { data: rewardTokenData } = gqlBalancer.useBalancerV2Pool(undefined, {})
+
   const agvePrice = useGetStakingAgvePrice()
-  const { gnoPrice } = useGetGnoPrice()
-
-  const gqlSymm = getSubgraphSdkByNetwork(appChainId, SubgraphName.SymmetricV1)
-
-  const { data: rewardTokenData } = gqlSymm.useSymmetricV2Pool(undefined, {})
+  const gnoPrice = useGetGnoPrice().gnoPrice
 
   const parsedData = useMemo(() => {
     if (!rewardTokenData || !agvePrice || !gnoPrice) {
       return
     }
-
     const { pool } = rewardTokenData
 
-    if (!pool?.tokens) {
-      return
-    }
+    if (!pool) return
 
-    const agvePriceAsNumber = FixedNumber.fromValue(agvePrice, 18).toUnsafeFloat()
-    const gnoPriceAsNumber = FixedNumber.fromValue(gnoPrice, 18).toUnsafeFloat()
+    const useExternalPrices = false
+
+    let liquiditySize: number
+
     const totalSharesAsNumber = FixedNumber.from(pool.totalShares, 18).toUnsafeFloat()
 
-    /* Calculating the total liquidity size of the symmetric pool by iterating over the
+    /* Calculating the total liquidity size of the Balancer pool by iterating over the
     tokens in the pool and multiplying the balance of each token by its respective price (AGVE or
     GNO).
      */
-    const liquiditySize = pool.tokens
-      .map((token) => {
-        if (token.symbol === 'AGVE') {
-          return Number(token.balance) * agvePriceAsNumber
-        }
+    if (!useExternalPrices) {
+      liquiditySize = FixedNumber.from(pool.totalLiquidity, 28).toUnsafeFloat()
+    } else {
+      if (!pool?.tokens || !agvePrice || !gnoPrice) return
+      const agvePriceAsNumber = FixedNumber.fromValue(agvePrice, 18).toUnsafeFloat()
+      const gnoPriceAsNumber = FixedNumber.fromValue(gnoPrice, 18).toUnsafeFloat()
+      liquiditySize = pool.tokens
+        .map((token) => {
+          if (token.symbol === 'AGVE') {
+            return Number(token.balance) * agvePriceAsNumber
+          }
 
-        if (token.symbol === 'GNO') {
-          return Number(token.balance) * gnoPriceAsNumber
-        }
-
-        return 0
-      })
-      .reduce((acc, curr) => acc + curr, 0)
+          if (token.symbol === 'GNO') {
+            return Number(token.balance) * gnoPriceAsNumber
+          }
+          return 0
+        })
+        .reduce((acc, curr) => acc + curr, 0)
+    }
 
     const priceShares = totalSharesAsNumber > 0 ? liquiditySize / totalSharesAsNumber : 0
 

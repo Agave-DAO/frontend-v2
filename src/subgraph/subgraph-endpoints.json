@@ -1,5 +1,5 @@
 {
   "100": {
-    "symmetric-v1": "https://api.thegraph.com/subgraphs/name/centfinance/symmetric-v2-gnosis"
+    "balancer-gnosis-chain-v2": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-gnosis-chain-v2"
   }
 }

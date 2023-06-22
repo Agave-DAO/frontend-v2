@@ -28,8 +28,6 @@ export const useBorrowStepInitialIndex = ({
     wrappedNativeGatewayAddress,
   )
 
-  console.log('borrowAllowance', borrowAllowance.toString())
-
   return useMemo(() => {
     const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
 

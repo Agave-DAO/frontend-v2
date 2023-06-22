@@ -11,6 +11,7 @@ import { OuterContainer } from '@/src/components/layout/OuterContainer'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
 import { agaveTokensBoosted, agaveTokensMain } from '@/src/config/agaveTokens'
+import { useMarketDetails } from '@/src/hooks/presentation/useMarketDetails'
 import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
 import { MarketInformation } from '@/src/pagePartials/markets/MarketInformation'
@@ -61,6 +62,7 @@ const UserConnectedActions: React.FC<{
   userAddress: string
   tokenSymbol: string
 }> = ({ tokenAddress, userAddress }) => {
+  const isBorrowable = useMarketDetails(tokenAddress).market.assetData.borrowingEnabled
   const { userHasBorrows } = useUserBorrowsInformationByToken({
     tokenAddress,
     userAddress,
@@ -84,9 +86,11 @@ const UserConnectedActions: React.FC<{
   return (
     <>
       <MoreActionsDropdown items={items} size="md" variant="neutral" />
-      <ButtonDark onClick={() => openBorrowRepayModal({ activeTab: 'borrow', tokenAddress })}>
-        Borrow
-      </ButtonDark>
+      {isBorrowable && (
+        <ButtonDark onClick={() => openBorrowRepayModal({ activeTab: 'borrow', tokenAddress })}>
+          Borrow
+        </ButtonDark>
+      )}
       <ButtonPrimary
         onClick={() => openDepositWithdrawModal({ tokenAddress, activeTab: 'deposit' })}
       >

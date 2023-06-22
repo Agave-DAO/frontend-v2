@@ -7,7 +7,7 @@ import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
 import { BaseParagraph as Paragraph } from '@/src/components/text/BaseParagraph'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
-import { FundsInSafetyModule } from '@/src/pagePartials/stake/FundsInSafetyModule'
+import { FundsInStakingModule } from '@/src/pagePartials/stake/FundsInStakingModule'
 import { StakeInformationCard } from '@/src/pagePartials/stake/StakeInformationCard'
 import { UserStakeActionCard } from '@/src/pagePartials/stake/UserStakeActionCard'
 import { UserStakeClaimCard } from '@/src/pagePartials/stake/UserStakeClaimCard'
@@ -30,7 +30,7 @@ const Title = styled(BaseTitle)`
   }
 `
 
-const Funds = styled(FundsInSafetyModule)`
+const Funds = styled(FundsInStakingModule)`
   margin-bottom: 16px;
 `
 
@@ -76,8 +76,8 @@ const Stake: NextPage = () => {
         </ActionButton>
       </Title>
       <Paragraph>
-        Staking Agave in the Safety Module helps to secure the protocol in exchange for protocol
-        incentives
+        Staking Agave helps to secure the protocol's governance by incentivizing participants with
+        protocol rewards.
       </Paragraph>
       <MandatoryConnection>
         <Funds />

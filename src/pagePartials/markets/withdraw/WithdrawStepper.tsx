@@ -53,13 +53,13 @@ interface WithdrawStepperProps {
 }
 
 export const WithdrawStepper = ({ amount, cancel, tokenAddress }: WithdrawStepperProps) => {
-  const depositSteps = useWithdrawSteps({
+  const withdrawSteps = useWithdrawSteps({
     tokenAddress,
     amount,
   })
 
   const params = {
-    ...depositSteps,
+    ...withdrawSteps,
     info: <WithdrawStepperInfo amount={amount} tokenAddress={tokenAddress} />,
     title: 'Withdraw overview',
     titleButton: { onClick: cancel, text: 'Cancel', variant: 'danger' as const },

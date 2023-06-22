@@ -7,7 +7,7 @@ interface CalculateRewards {
 }
 
 /**
- * Calculates the rewards values for the "40% AGVE - 60% GNO" Token.
+ * Calculates the rewards values for the "50% AGVE - 50% GNO" Token.
  * Returns the rewards values expressed in XDAI.
  * @param {BigNumber} agvePrice
  * @param {BigNumber} gnoPrice
@@ -15,8 +15,8 @@ interface CalculateRewards {
  * @returns {Object} { agveValue, gnoValue, totalValue }
  */
 export const calculateRewards = ({ agvePrice, gnoPrice, rewardsBalance }: CalculateRewards) => {
-  const agveRewards = rewardsBalance.mul(2).div(5) // 40%
-  const gnoRewards = rewardsBalance.mul(3).div(5) // 60%
+  const agveRewards = rewardsBalance.div(2) // 50%
+  const gnoRewards = rewardsBalance.div(2) // 50%
   const agveValue = agveRewards.mul(agvePrice)
   const gnoValue = gnoRewards.mul(gnoPrice)
   const totalValue = agveValue.add(gnoValue)

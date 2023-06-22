@@ -95,7 +95,9 @@ const Button = styled(ButtonConnect)`
 `
 
 const MainTitle: React.FC = ({ ...restProps }) => (
-  <Title {...restProps}>Earn interest Borrow assets</Title>
+  <Title {...restProps}>
+    Earn interest <br></br>Borrow assets
+  </Title>
 )
 
 const MainText: React.FC = ({ ...restProps }) => (

@@ -35,16 +35,18 @@ export const DepositInfo: React.FC<{ token: Token }> = ({ token, ...restProps })
   const depositedAmount = useUserDepositsByToken(token.address)?.depositedAmount || ZERO_BN
   const depositedAmountInDAI =
     useUserDepositsByToken(token.address)?.depositedAmountInDAI || ZERO_BN
-  const { agaveMarketsData, getDepositAPY } = useMarketsData()
-  const depositAPY = useMemo(() => getDepositAPY(token.address), [getDepositAPY, token.address])
 
   const healthFactor = useMemo(() => userData?.[0].healthFactor || ZERO_BN, [userData])
 
-  const maxLTV = useMemo(() => agaveMarketsData?.[0].assetData.ltv || ZERO_BN, [agaveMarketsData])
+  const { getDepositAPY, getMarket } = useMarketsData()
+  const depositAPY = useMemo(() => getDepositAPY(token.address), [getDepositAPY, token.address])
+  const marketData = useMemo(() => getMarket(token.address), [getMarket, token.address])
+
+  const maxLTV = useMemo(() => marketData.assetData.ltv || ZERO_BN, [marketData])
 
   const collateralizable = useMemo(
-    () => agaveMarketsData?.[0].assetData.usageAsCollateralEnabled || false,
-    [agaveMarketsData],
+    () => marketData.assetData.usageAsCollateralEnabled || false,
+    [marketData],
   )
 
   return (

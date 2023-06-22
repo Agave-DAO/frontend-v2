@@ -75,11 +75,11 @@ export const ApproximateBalance = (
 export const Rewards = (
   <Wrapper>
     <Text>
-      Rewards in CPT tokens.
+      Rewards in Balancer Pool tokens.
       <br />
       Click{' '}
       <a
-        href="https://gnosis.symm.fi/#/pool/0x870bb2c024513b5c9a69894dcc65fb5c47e422f3000200000000000000000014"
+        href="https://app.balancer.fi/#/gnosis-chain/pool/0x388cae2f7d3704c937313d990298ba67d70a3709000200000000000000000026"
         rel="noreferrer"
         target="_blank"
       >

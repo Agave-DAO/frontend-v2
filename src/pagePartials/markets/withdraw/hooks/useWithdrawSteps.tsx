@@ -19,8 +19,13 @@ export const useWithdrawSteps = ({
     tokenAddress,
   })
 
+  const displayedSteps =
+    tokenAddress === '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+      ? [approveStep, withdrawStep, finalStep]
+      : [withdrawStep, finalStep]
+
   return useMetaSteps({
     initialStepIndex,
-    stepsWithDispatchers: [approveStep, withdrawStep, finalStep],
+    stepsWithDispatchers: displayedSteps,
   })
 }

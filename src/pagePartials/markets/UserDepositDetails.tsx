@@ -97,8 +97,7 @@ export const UserDepositDetails = withGenericSuspense(
               <>
                 <ECTitle>Nothing deposited yet</ECTitle>
                 <ECText>
-                  Your account is empty. Move cryptocurrency from your wallet and start earning
-                  interest.
+                  Your account is empty. Deposit a supported token and start earning interest.
                 </ECText>
               </>
             )}

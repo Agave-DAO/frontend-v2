@@ -29,13 +29,13 @@ const Value = styled.p`
   margin: 0;
 `
 
-export const FundsInSafetyModule: React.FC = withGenericSuspense(
+export const FundsInStakingModule: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const { totalStaked } = useStakeInformation()
 
     return (
       <Wrapper {...restProps}>
-        <Title>Funds in the Safety Module</Title>
+        <Title>Funds in the Staking Module</Title>
         <Value>
           <Amount decimals={18} symbol="AGVE" symbolPosition="after" value={totalStaked} />
         </Value>

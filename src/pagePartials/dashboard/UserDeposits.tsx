@@ -23,7 +23,7 @@ export const UserDeposits: React.FC = withGenericSuspense(
           text: 'All markets',
           href: '/',
         }}
-        text="Your account is empty. Move cryptocurrency from your wallet and start earning interest."
+        text="Your account is empty. Deposit a supported token and start earning interest."
         title="Nothing deposited yet"
       />
     ) : (
