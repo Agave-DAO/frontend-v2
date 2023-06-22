@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
-
-import { BigNumber } from '@ethersproject/bignumber'
 
 import {
   Rows as BaseRows,
@@ -14,6 +12,7 @@ import {
 } from '@/src/components/card/FormCard'
 import { TitleWithAction } from '@/src/components/common/TitleWithAction'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
+import { Amount } from '@/src/components/helpers/Amount'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
@@ -22,8 +21,21 @@ import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInputDropdown } from '@/src/components/token/TokenInputDropdown'
+import { ZERO_BN } from '@/src/constants/bigNumber'
+import { contracts } from '@/src/contracts/contracts'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
+import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesData'
+import { useGetUserVaultBalances } from '@/src/hooks/queries/useGetUserVaultBalances'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
+import { useMarketVersion } from '@/src/hooks/useMarketVersion'
+import useTransaction from '@/src/hooks/useTransaction'
 import { VaultInfo } from '@/src/pagePartials/strategy/vaults/VaultInfo'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
+import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { NumberType } from '@/src/utils/format'
+import { ERC20__factory } from '@/types/generated/typechain'
 import { DepositWithdrawTabs } from '@/types/modal'
 import { Token } from '@/types/token'
 
@@ -60,37 +72,101 @@ interface Props extends ModalProps {
 
 export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
   ({ activeTab, onClose, ...restProps }) => {
-    const depositActive = activeTab === 'deposit'
-    const withdrawActive = activeTab === 'withdraw'
+    const { web3Provider } = useWeb3ConnectedApp()
+    const [marketVersion] = useMarketVersion()
+    const { openDepositWithdrawModal, vaultAddress, vaultName } = useVaultModalContext()
+    const { refetchUserVaultBalance, vaultBalances } = useGetUserVaultBalances(vaultAddress)
+    const { mutate: refetchUserReserveData } = useGetUserReservesData()
+
     const [value, setValue] = useState('0')
+    const [loading, setLoading] = useState(false)
+
     const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
     const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
-    const { openDepositWithdrawModal, vaultName } = useVaultModalContext()
-    const [token, setToken] = useState<Token | null>({
-      symbol: 'USDC',
-      name: 'USD Coin',
-      address: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83',
-      decimals: 6,
-      chainId: 100,
-      logoURI: '/coins/usdc.svg',
-      extensions: {
-        isNative: false,
-        isNativeWrapper: false,
-      },
-      type: 'reserve',
-    })
 
-    const withdraw = useCallback(() => {
-      onClose()
-    }, [onClose])
+    const vualtProxy = contracts[marketVersion].SwapperUserProxyImplementation.factory.connect(
+      vaultAddress,
+      web3Provider.getSigner(),
+    )
 
-    const deposit = useCallback(() => {
-      onClose()
-    }, [onClose])
+    const sendTx = useTransaction()
 
-    const onDropdownChange = (token: Token | null) => {
-      setToken(token)
+    const agaveTokens = useAgaveTokens().reserveTokens
+
+    // default token is the first token in the list of reserve tokens
+    const [token, setToken] = useState<Token>(agaveTokens[0])
+
+    // get the data for the selected reserve token
+    const { priceData } = useMarketsData().getMarket(token.address)
+
+    // get the agToken for the selected reserve token
+    const agToken = token?.extensions.protocolTokens?.ag
+
+    // if the agToken is not defined, throw an error
+    if (!agToken) {
+      throw new Error('agToken is not defined')
     }
+
+    // create a contract instance for the agToken (ERC20)
+    const agTokenInstance = useContractInstance(ERC20__factory, agToken, { useSigner: true })
+
+    // get user deposits for the selected reserve token
+    const selectedTokenDeposit = useUserDeposits().find(
+      ({ assetAddress }) => assetAddress === token.address,
+    )
+
+    // get the balance of agTokens in the vault to withdraw from the vault
+    const selectedTokenBalanceInVault = vaultBalances?.find(
+      (vaultBalance) => vaultBalance.token.address === token.address,
+    )
+
+    const activeTokenBalance = useMemo(() => {
+      if (activeTab === 'deposit') {
+        // return deposit amount for the selected reserve token (agToken balance) to deposit into the vault
+        return selectedTokenDeposit?.depositedAmount || ZERO_BN
+      } else {
+        // return balance in the vault to withdraw from the vault
+        return selectedTokenBalanceInVault?.balanceRaw || ZERO_BN
+      }
+    }, [activeTab, selectedTokenBalanceInVault?.balanceRaw, selectedTokenDeposit?.depositedAmount])
+    const onTransactionSuccess = useCallback(() => {
+      setLoading(false)
+      setValue('')
+      onClose()
+      refetchUserVaultBalance()
+      refetchUserReserveData()
+    }, [onClose, refetchUserReserveData, refetchUserVaultBalance])
+
+    const withdraw = useCallback(async () => {
+      setLoading(true)
+      try {
+        const tx = await sendTx(() => vualtProxy['withdraw(address,uint256)'](agToken, value))
+        if (tx) {
+          onTransactionSuccess()
+        } else {
+          setLoading(false)
+        }
+      } catch (e) {
+        setLoading(false)
+      }
+    }, [agToken, onTransactionSuccess, sendTx, value, vualtProxy])
+
+    const deposit = useCallback(async () => {
+      try {
+        const tx = await sendTx(() => agTokenInstance.transfer(vaultAddress, value))
+        if (tx) {
+          onTransactionSuccess()
+        } else {
+          setLoading(false)
+        }
+      } catch (e) {
+        setLoading(false)
+      }
+    }, [agTokenInstance, onTransactionSuccess, sendTx, value, vaultAddress])
+
+    const disableSubmit = useMemo(() => {
+      return !value || !Number(value) || tokenInputStatus === TextfieldStatus.error || loading
+    }, [loading, tokenInputStatus, value])
 
     return (
       <Modal onClose={onClose} {...restProps}>
@@ -105,48 +181,63 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
         )}
         <Info text={<VaultInfo />} title="" />
         <Tabs>
-          <Tab isActive={depositActive} onClick={() => openDepositWithdrawModal('deposit')}>
+          <Tab
+            isActive={activeTab === 'deposit'}
+            onClick={() => openDepositWithdrawModal('deposit')}
+          >
             Deposit
           </Tab>
-          <Tab isActive={withdrawActive} onClick={() => openDepositWithdrawModal('withdraw')}>
+          <Tab
+            isActive={activeTab === 'withdraw'}
+            onClick={() => openDepositWithdrawModal('withdraw')}
+          >
             Withdraw
           </Tab>
         </Tabs>
         <FormCard>
           <TitleWithAction
             button={{
-              onClick: () => console.log('click'),
+              onClick: () => setValue(activeTokenBalance.toString()),
               text: 'Use max',
             }}
-            title={`Amount to ${depositActive ? 'deposit' : 'withdraw'}`}
+            title={`Amount to ${activeTab === 'deposit' ? 'deposit' : 'withdraw'}`}
           />
           <Rows>
             <Row>
               <RowKey>Available</RowKey>
               <RowValue>
                 {token && <TokenIcon dimensions={18} symbol={token?.symbol} />}
-                1,000,000.00
+                <Amount
+                  decimals={token.decimals}
+                  numberType={NumberType.SwapTradeAmount}
+                  symbol=""
+                  value={activeTokenBalance}
+                />
               </RowValue>
             </Row>
           </Rows>
           <TokenInputDropdown
-            decimals={18}
-            maxValue={'10000'}
-            onDropdownChange={onDropdownChange}
+            decimals={token.decimals}
+            maxValue={activeTokenBalance.toString()}
+            onDropdownChange={(token) => (token ? setToken(token) : null)}
             selectedToken={token}
-            setStatus={() => console.log('setStatus')}
-            setStatusText={() => console.log('setStatusText')}
+            setStatus={setTokenInputStatus}
+            setStatusText={setTokenInputStatusText}
             setValue={setValue}
             status={tokenInputStatus}
             statusText={tokenInputStatusText}
-            usdPrice={BigNumber.from('1000000000000000000')}
+            usdPrice={priceData}
             value={value}
           />
           <Buttons>
-            {depositActive ? (
-              <Button onClick={deposit}>Deposit</Button>
+            {activeTab === 'deposit' ? (
+              <Button disabled={disableSubmit} onClick={deposit}>
+                Deposit
+              </Button>
             ) : (
-              <Button onClick={withdraw}>Withdraw</Button>
+              <Button disabled={disableSubmit} onClick={withdraw}>
+                Withdraw
+              </Button>
             )}
           </Buttons>
         </FormCard>

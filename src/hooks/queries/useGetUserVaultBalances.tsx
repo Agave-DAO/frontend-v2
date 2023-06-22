@@ -3,6 +3,7 @@ import useSWR from 'swr'
 
 import { useMarketsData } from '../presentation/useMarketsData'
 import { TokenWithType } from '@/src/config/agaveTokens'
+import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { fromWei } from '@/src/utils/common'
@@ -15,7 +16,7 @@ interface VaultBalance {
   agToken: TokenWithType
 }
 /**
- * Gets the balance of a user's vault for each agToken of the reserve token.
+ * Gets the balance of a user's vault for agToken of each reserve token.
  * @param {string} vaultAddress - The address of the user's vault.
  * @returns An object containing the vault balance and a function to refetch the balance.
  */
@@ -72,10 +73,13 @@ export const useGetUserVaultBalances = (vaultAddress: string) => {
 
       return filteredResults
     },
+    {
+      refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
+    },
   )
 
   return {
-    vaultBalance: vaultBalances,
+    vaultBalances,
     refetchUserVaultBalance,
   }
 }
