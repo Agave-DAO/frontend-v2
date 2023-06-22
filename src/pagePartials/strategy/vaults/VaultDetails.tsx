@@ -11,17 +11,13 @@ const Wrapper = styled(Asset)`
   height: auto;
 `
 
-export const VaultDetails: React.FC<{ vaultAddress: string; vaultName: string }> = ({
-  vaultAddress,
-  vaultName,
-  ...restProps
-}) => {
+export const VaultDetails: React.FC = ({ ...restProps }) => {
   // this is obviously just a placeholder
   const { openCreateVaultModal, openDepositWithdrawModal } = useVaultModalContext()
   const items = [
     {
       text: 'Edit name',
-      onClick: () => openCreateVaultModal(vaultAddress, vaultName),
+      onClick: () => openCreateVaultModal(),
     },
     {
       text: 'Withdraw',
@@ -32,7 +28,7 @@ export const VaultDetails: React.FC<{ vaultAddress: string; vaultName: string }>
   return (
     <Wrapper {...restProps}>
       <Head>
-        <VaultInfo vaultAddress={vaultAddress} />
+        <VaultInfo />
       </Head>
       <Body>
         <ActionsWrapper>

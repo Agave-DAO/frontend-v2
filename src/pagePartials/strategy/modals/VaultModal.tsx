@@ -15,6 +15,7 @@ import { useCreateNewVault } from '@/src/hooks/mutations/useCreateNewVault'
 import { useEditVaultName } from '@/src/hooks/mutations/useEditVaultName'
 import { useVaults } from '@/src/hooks/presentation/useVaults'
 import { VaultInfo } from '@/src/pagePartials/strategy/vaults/VaultInfo'
+import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
 const Title = styled(BaseTitle)`
   font-size: 2.4rem;
@@ -60,6 +61,17 @@ interface Props extends ModalProps {
 const MIN_VAULT_NAME_LENGTH = 3
 const MAX_VAULT_NAME_LENGTH = 30
 
+/**
+ * Renders a button that allows the user to edit the name of a vault.
+ * @param {Object} props - The component props.
+ * @param {string} props.vaultAddress - The address of the vault.
+ * @param {string} props.vaultName - The name of the vault.
+ * @param {boolean} props.disableSubmit - Whether the submit button should be disabled.
+ * @param {function} props.setVaultName - A function to set the name of the vault.
+ * @param {function} props.onClose - A function to close the modal.
+ * @param {function} props.setLoading - A function to set the loading state of the component.
+ * @returns {JSX.Element} - The rendered button component.
+ */
 const EditButtonAction = ({
   disableSubmit,
   onClose,
@@ -100,10 +112,13 @@ const EditButtonAction = ({
   )
 }
 
-const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, vaultName, ...restProps }) => {
-  const editVault = useMemo(() => (vaultAddress !== undefined ? true : false), [vaultAddress])
+const VaultModal: React.FC<Props> = ({ onClose, ...restProps }) => {
+  const { vaultAddress, vaultName } = useVaultModalContext()
   const { refetchUserVaults, vaultNameExists } = useVaults()
   const createVault = useCreateNewVault()
+
+  const isEditMode = useMemo(() => (vaultAddress ? true : false), [vaultAddress])
+
   const [vaultNameEdited, setVaultName] = useState<string>(vaultName || '')
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -119,7 +134,6 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, vaultName, ...rest
       const vault = await createVault(vaultNameEdited)
       if (vault) {
         await refetchUserVaults()
-        setVaultName('')
         setLoading(false)
         onClose()
       } else {
@@ -141,15 +155,27 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, vaultName, ...rest
   }, [vaultName, vaultNameEdited, vaultNameExists])
 
   const disableSubmit = useMemo(
-    () => !vaultNameEdited || loading || !!error || (editVault && vaultNameEdited === vaultName),
-    [vaultNameEdited, loading, error, editVault, vaultName],
+    () => !vaultNameEdited || loading || !!error || (isEditMode && vaultNameEdited === vaultName),
+    [vaultNameEdited, loading, error, isEditMode, vaultName],
   )
 
   return (
-    <Modal onClose={onClose} {...restProps}>
-      <Title>{editVault ? 'Edit vault name' : 'New vault'}</Title>
-      {editVault ? (
-        <Info text={<VaultInfo vaultAddress={''} />} title="Vault information" />
+    <Modal
+      onClose={() => {
+        setVaultName(vaultName)
+        onClose()
+      }}
+      {...restProps}
+    >
+      {isEditMode ? (
+        <Title>
+          Edit vault <em>{vaultName}</em>
+        </Title>
+      ) : (
+        <Title>Create new vault</Title>
+      )}
+      {isEditMode && vaultAddress ? (
+        <Info text={<VaultInfo />} title="" />
       ) : (
         <Info
           text={
@@ -175,7 +201,7 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, vaultName, ...rest
         />
       )}
       <FormCard>
-        <FormTitle>{editVault ? 'Rename vault' : 'Create new vault'}</FormTitle>
+        <FormTitle>{isEditMode ? 'Rename vault' : 'Create new vault'}</FormTitle>
         <Label>Name</Label>
         <Formfield
           formControl={
@@ -191,7 +217,7 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, vaultName, ...rest
 
         <Buttons>
           {/* Edit vault button */}
-          {editVault && vaultAddress && vaultNameEdited && (
+          {isEditMode && vaultAddress && vaultNameEdited && (
             <EditButtonAction
               disableSubmit={disableSubmit}
               onClose={onClose}
@@ -202,7 +228,7 @@ const VaultModal: React.FC<Props> = ({ onClose, vaultAddress, vaultName, ...rest
             />
           )}
           {/* Create vault button */}
-          {!editVault && (
+          {!isEditMode && (
             <Button disabled={disableSubmit} onClick={saveAndClose}>
               Create
             </Button>

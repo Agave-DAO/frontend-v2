@@ -1,52 +1,49 @@
+import styled from 'styled-components'
+
 import { EmphasizedRowValue, Row, RowKey, Rows } from '@/src/components/common/Rows'
+import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { useTokensLists } from '@/src/hooks/useTokensLists'
+import { useGetUserVaultBalances } from '@/src/hooks/queries/useGetUserVaultBalances'
+import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
-type TokenAddress = string
-type TokenBalance = string
+const Title = styled(InnerTitle)`
+  margin-bottom: 12px;
+`
 
-type VaultBalance = {
-  [tokenAddress: TokenAddress]: TokenBalance
-}
-
-const useBatchTokenBalances = (tokensAddresses: string[], vaultAddress: string): VaultBalance[] => {
-  return []
-}
-
-const useVaultBalances = (vaultAddress: string) => {
-  const { tokensList } = useTokensLists({ includeFrozen: false, types: ['ag'] })
-
-  return useBatchTokenBalances(
-    tokensList.map(({ address }) => address),
-    vaultAddress,
-  )
-}
-
-export const VaultInfo: React.FC<{ vaultAddress: string }> = withGenericSuspense(
-  ({ vaultAddress, ...restProps }) => {
-    const tokenSymbol = 'usdc'
-    const tokenIcon = <TokenIcon dimensions={18} symbol={tokenSymbol} />
-    const vaultBalances = useVaultBalances(vaultAddress)
+export const VaultInfo: React.FC = withGenericSuspense(
+  ({ ...restProps }) => {
+    const { vaultAddress } = useVaultModalContext()
+    const { vaultBalance } = useGetUserVaultBalances(vaultAddress)
 
     return (
       <Rows {...restProps}>
-        <Row variant="dark">
-          <RowKey>Your vault balance</RowKey>
-          <EmphasizedRowValue>
-            {tokenIcon}
-            1,000.00
-          </EmphasizedRowValue>
-        </Row>
-        <Row>
-          <RowKey>Value locked</RowKey>
-          <EmphasizedRowValue>
-            {tokenIcon}
-            100.00
-          </EmphasizedRowValue>
-        </Row>
+        <Title>Vault balance</Title>
+        {vaultBalance?.length ? (
+          vaultBalance.map(({ agToken, balanceInDai, balanceRaw }, index) => {
+            // if index is multiple of 2, then it's a dark row
+            const variant = index % 2 === 0 ? 'dark' : undefined
+            return (
+              <Row key={agToken.address} variant={variant}>
+                <RowKey>
+                  <TokenIcon dimensions={18} symbol={agToken.symbol} />
+                  {agToken.symbol}
+                </RowKey>
+                <EmphasizedRowValue>
+                  <Amount decimals={agToken.decimals} symbol="" value={balanceRaw} />
+                </EmphasizedRowValue>
+                &nbsp; (<Amount value={balanceInDai} />)
+              </Row>
+            )
+          })
+        ) : (
+          <Row>
+            <RowKey>No balances in this vault. Deposit some tokens to see the balance here.</RowKey>
+          </Row>
+        )}
       </Rows>
     )
   },
-  ({ vaultAddress, ...restProps }) => <div {...restProps}>VaultInfo Loading...</div>,
+  ({ ...restProps }) => <div {...restProps}>VaultInfo Loading...</div>,
 )
