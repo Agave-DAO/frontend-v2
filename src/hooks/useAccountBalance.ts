@@ -1,5 +1,4 @@
-import { Zero } from '@ethersproject/constants'
-
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
@@ -24,11 +23,11 @@ export function useAccountBalance({
     {
       refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
       // when the tokenAddress is not a valid ERC20 contract, the balanceOf call will fail
-      fallbackData: tokenInfo.extensions.isNative ? [Zero] : undefined,
+      fallbackData: tokenInfo.extensions.isNative ? [ZERO_BN] : undefined,
     },
   )
 
   return {
-    balance: data?.[0] ?? Zero,
+    balance: data?.[0] ?? ZERO_BN,
   }
 }

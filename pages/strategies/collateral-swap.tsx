@@ -1,15 +1,17 @@
-/**
- * IMPORTANT: DO NOT DELETE THIS FILE
- * Due to the limitations of static files + IPFS we can't use the usual approach
- * of using the vault address as part of the param in the URL
- * (as they are dynamic).
- */
 import { NextPage } from 'next'
 
+import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { CollateralSwapContent } from '@/src/pagePartials/strategy/strategies/collateralSwap/CollateralSwapContent'
+import { CollateralSwapStore } from '@/src/pagePartials/strategy/strategies/collateralSwap/CollateralSwapStore'
 
 const CollateralSwap: NextPage = () => {
-  return <CollateralSwapContent />
+  return (
+    <RequiredConnection>
+      <CollateralSwapStore>
+        <CollateralSwapContent />
+      </CollateralSwapStore>
+    </RequiredConnection>
+  )
 }
 
 export default CollateralSwap

@@ -13,10 +13,11 @@ export type AgaveProtocolTokens = {
     ag: string
     variableDebt: string
     stableDebt: string
+    wag: string
   }
 }
 
-export type AgaveProtocolTokenStrictType = 'ag' | 'variableDebt' | 'stableDebt'
+export type AgaveProtocolTokenStrictType = 'ag' | 'variableDebt' | 'stableDebt' | 'wag'
 
 export type AgaveProtocolTokenType =
   | 'ag'
@@ -25,6 +26,7 @@ export type AgaveProtocolTokenType =
   | 'reserve'
   | 'native'
   | 'stake'
+  | 'wag'
 
 export type TokenWithType = Token & { type: AgaveProtocolTokenType }
 
@@ -60,7 +62,7 @@ class AgaveTokens implements IDAgaveTokens {
   private _protocolName = 'Agave'
   private _chainId = 100 // gnosis chain as default
   private _validLookupFields: (keyof ValidLookupFields)[] = ['address', 'symbol', 'name']
-  private _marketVersion: MarketVersions
+  private readonly _marketVersion: MarketVersions
 
   constructor(marketVersion: MarketVersions) {
     this._marketVersion = marketVersion
@@ -68,6 +70,10 @@ class AgaveTokens implements IDAgaveTokens {
 
     // runtime check to prevent consuming invalid token info
     this.allTokens.every(this.isValidTokenInfo)
+  }
+
+  get marketVersion(): MarketVersions {
+    return this._marketVersion
   }
 
   set chainId(chainId: number) {
@@ -130,6 +136,7 @@ class AgaveTokens implements IDAgaveTokens {
             ...this.getProtocolTokenInfo(address, 'stableDebt'),
             type: 'stableDebt',
           },
+          { ...this.getProtocolTokenInfo(address, 'wag'), type: 'wag' },
         ]
       }),
     ]
@@ -223,9 +230,11 @@ class AgaveTokens implements IDAgaveTokens {
       if (isSameAddress(token.address, tokenAddress)) {
         return token
       }
+
       if (!token.extensions.protocolTokens) {
         continue
       }
+
       // if not found, lookup reserve token by protocol token address
       for (const tokenType in token.extensions.protocolTokens) {
         if (
@@ -296,6 +305,18 @@ class AgaveTokens implements IDAgaveTokens {
           name: `${this._protocolName} stable debt bearing ${tokenInfo.symbol}`,
           symbol: `stableDebt${tokenInfo.symbol}`,
         }
+      case 'wag': {
+        return {
+          ...tokenInfo,
+          extensions: {
+            ...tokenInfo.extensions,
+            protocolTokens: undefined, // remove protocol tokens from extensions
+          },
+          address: protocolTokens.wag,
+          name: `Wrapped ${this._protocolName} interest bearing ${tokenInfo.symbol}`,
+          symbol: `wag${tokenInfo.symbol}`,
+        }
+      }
       default:
         throw new Error(`Unsupported token type: ${tokenType}`)
     }

@@ -9,6 +9,7 @@ export type Token = IStringIndex &
         ag: string
         stableDebt: string
         variableDebt: string
+        wag: string
       }
       isNative: boolean
       isNativeWrapper: boolean

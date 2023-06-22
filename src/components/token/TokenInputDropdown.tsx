@@ -46,7 +46,7 @@ const Wrapper = styled.div<{ status?: TextfieldStatus | undefined }>`
 const ValueWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  width: calc(100% - 140px); // 140px is the width of the dropdown
 `
 
 const USDValue = styled.div`

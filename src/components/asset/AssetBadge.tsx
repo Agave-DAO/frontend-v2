@@ -2,14 +2,14 @@ import styled from 'styled-components'
 
 import { Strategy } from '@/types/strategy'
 
-export type AssetType = Strategy | 'neutral' | undefined
+export type AssetType = Strategy['slug'] | 'neutral' | undefined
 
 const getColor = (colors: any, type?: AssetType) => {
   return type === 'long'
     ? colors.primaryUltraLight
     : type === 'short'
     ? colors.errorLight
-    : type === 'collateralSwap'
+    : type === 'collateral-swap'
     ? colors.accentDark
     : type === 'neutral'
     ? colors.secondary

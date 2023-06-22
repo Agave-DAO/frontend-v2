@@ -5,7 +5,6 @@ import { Icon } from '@/src/components/asset/Icon'
 import { ChevronDown } from '@/src/components/assets/ChevronDown'
 import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/dropdown/Dropdown'
 import { TokenWithType } from '@/src/config/agaveTokens'
-import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useTokensLists } from '@/src/hooks/useTokensLists'
 import { Token } from '@/types/token'
 
@@ -46,17 +45,12 @@ export const TokenDropdown: React.FC<{
   activeTokenSymbol?: string
   onChange?: (token: Token | null) => void
 }> = ({ activeTokenSymbol = '', onChange, ...restProps }) => {
-  const { onSelectToken, tokensList } = useTokensLists(['reserve'], onChange)
+  const { onSelectToken, tokensList } = useTokensLists({
+    includeFrozen: false,
+    types: ['reserve'],
+    onChange,
+  })
   const [currentToken, setCurrentToken] = useState<string>(activeTokenSymbol)
-
-  // Filter out frozen markets
-  const enabledMarketsAddresses = useMarketsData()
-    .agaveMarketsData?.filter((market) => market.assetData.isFrozen === false)
-    ?.map((market) => market.tokenAddress)
-
-  const enabledTokensList = tokensList.filter((token) =>
-    enabledMarketsAddresses?.includes(token.address),
-  )
 
   const onSelect = useCallback(
     (token: TokenWithType) => {
@@ -80,7 +74,7 @@ export const TokenDropdown: React.FC<{
             <ChevronDown />
           </Button>
         }
-        items={enabledTokensList.map((item, index) => (
+        items={tokensList.map((item, index) => (
           <DropdownItem
             key={index}
             onClick={() => {
@@ -94,5 +88,3 @@ export const TokenDropdown: React.FC<{
     </Wrapper>
   )
 }
-
-export default TokenDropdown

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { BigNumber } from '@ethersproject/bignumber'
@@ -43,24 +43,23 @@ export const TokenInputTextfield: React.FC<Props> = ({
   value,
   ...restProps
 }) => {
+  // we know that these functions will remain unchanged during the current implementation
+  const { current: setters } = useRef({ setStatus, setStatusText })
+
   const valueGreaterThanMaxValue = useMemo(
     () => !!(value && BigNumber.from(value).gt(maxValue)),
     [maxValue, value],
   )
 
-  const clearStatuses = useCallback(() => {
-    setStatus(undefined)
-    setStatusText(undefined)
-  }, [setStatus, setStatusText])
-
   useEffect(() => {
     if (valueGreaterThanMaxValue) {
-      setStatus(TextfieldStatus.error)
-      setStatusText('Insufficient balance')
+      setters.setStatus(TextfieldStatus.error)
+      setters.setStatusText('Insufficient balance')
     } else {
-      clearStatuses()
+      setters.setStatus(undefined)
+      setters.setStatusText(undefined)
     }
-  }, [clearStatuses, setStatus, setStatusText, valueGreaterThanMaxValue])
+  }, [setters, valueGreaterThanMaxValue])
 
   return (
     <BigNumberInput

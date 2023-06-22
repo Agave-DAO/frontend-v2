@@ -3,7 +3,6 @@ import { PropsWithChildren, createContext, useContext, useState } from 'react'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { ClosePosition } from '@/src/pagePartials/strategy/modals/ClosePosition'
 import { DepositWithdraw } from '@/src/pagePartials/strategy/modals/DepositWithdraw'
-import { Strategies } from '@/src/pagePartials/strategy/modals/Strategies'
 import VaultModal from '@/src/pagePartials/strategy/modals/VaultModal'
 import { DepositWithdrawTabs } from '@/types/modal'
 import { Strategy } from '@/types/strategy'
@@ -30,15 +29,6 @@ const VaultModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
     openDepositWithdrawModal: (activeTab: DepositWithdrawTabs) => {
       setShowModal(activeTab)
     },
-    openCollateralSwapModal: () => {
-      setShowModal('collateralSwap')
-    },
-    openLongModal: () => {
-      setShowModal('long')
-    },
-    openShortModal: () => {
-      setShowModal('short')
-    },
     openClosePositionModal: () => {
       setShowModal('close')
     },
@@ -55,18 +45,7 @@ const VaultModalProvider: React.FC<PropsWithChildren> = ({ children }) => {
         />
         <DepositWithdraw
           activeTab={showModal === 'deposit' ? 'deposit' : 'withdraw'}
-          isOpen={showModal === 'deposit' || showModal === 'withdraw' ? true : false}
-          onClose={() => setShowModal(false)}
-        />
-        <Strategies
-          currentStrategy={
-            showModal === 'collateralSwap'
-              ? 'collateralSwap'
-              : showModal === 'long'
-              ? 'long'
-              : 'short'
-          }
-          isOpen={showModal === 'collateralSwap' || showModal === 'long' || showModal === 'short'}
+          isOpen={showModal === 'deposit' || showModal === 'withdraw'}
           onClose={() => setShowModal(false)}
         />
         <ClosePosition isOpen={showModal === 'close'} onClose={() => setShowModal(false)} />

@@ -8,6 +8,8 @@ import {
   ERC20__factory,
   StakedToken__factory,
   Swapper_Coordinator__factory,
+  Swapper_Helper__factory,
+  Swapper_UserProxyImplementation__factory,
   WETHGateway__factory,
 } from '@/types/generated/typechain'
 
@@ -71,6 +73,18 @@ const mainContracts = {
     },
     factory: Swapper_Coordinator__factory,
   },
+  SwapperHelper: {
+    address: {
+      [Chains.gnosis]: '0xb624888498c057b5398eF34898EfC3d0fBF89489',
+    },
+    factory: Swapper_Helper__factory,
+  },
+  SwapperUserProxyImplementation: {
+    address: {
+      [Chains.gnosis]: '0xea45ce264A5b2A2d2CC12Fd5a92D6c8b444d5636',
+    },
+    factory: Swapper_UserProxyImplementation__factory,
+  },
 } as const
 
 const boostedContracts = {
@@ -102,13 +116,20 @@ export const contracts = {
   },
 }
 
-export type ContractsKeys = keyof typeof contracts[MarketVersions.main]
+const MAIN_KEYS = Object.keys(contracts[MarketVersions.main]) as Array<
+  keyof typeof contracts[MarketVersions.main]
+>
+const BOOSTED_KEYS = Object.keys(contracts[MarketVersions.boosted]) as Array<
+  keyof typeof contracts[MarketVersions.boosted]
+>
+
+const KEYS = [...new Set([...MAIN_KEYS, ...BOOSTED_KEYS])] as const
+
+// this is valid as we assume that contracts names/interfaces are the same for all markets
+export type ContractsKeys = typeof KEYS[number]
 
 export const isKnownContract = (
   contractName: ContractsKeys | string,
 ): contractName is ContractsKeys => {
-  return (
-    contracts[MarketVersions.main || MarketVersions.boosted][contractName as ContractsKeys] !==
-    undefined
-  )
+  return KEYS.includes(contractName as ContractsKeys)
 }

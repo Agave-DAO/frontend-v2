@@ -92,7 +92,7 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
 
     return (
       <Modal onClose={onClose} {...restProps}>
-        <Info text={<VaultInfo />} title="Vault information" />
+        <Info text={<VaultInfo vaultAddress={''} />} title="Vault information" />
         <Tabs>
           <Tab isActive={depositActive} onClick={() => setTab('deposit')}>
             Deposit

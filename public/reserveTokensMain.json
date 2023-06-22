@@ -13,7 +13,8 @@
         "protocolTokens": {
           "ag": "0xa26783ead6c1f4744685c14079950622674ae8a8",
           "variableDebt": "0x99272c6e2baa601cea8212b8fbaa7920a9f916f0",
-          "stableDebt": "0x0dfd401903ba960b2eed32a10f8aeb601cd9a7a5"
+          "stableDebt": "0x0dfd401903ba960b2eed32a10f8aeb601cd9a7a5",
+          "wag": "0xb5c3B258e461F17084a70624C2Fb2544710523B9"
         }
       }
     },
@@ -30,7 +31,8 @@
         "protocolTokens": {
           "ag": "0x44932e3b1e662adde2f7bac6d5081c5adab908c6",
           "variableDebt": "0x73ada33d706085d6b93350b5e6aed6178905fb8a",
-          "stableDebt": "0x43ae4a9474ea23b0bc04c99f9ff2a9b4c2d5554c"
+          "stableDebt": "0x43ae4a9474ea23b0bc04c99f9ff2a9b4c2d5554c",
+          "wag": "0xf710Ef31830EeF5C25D47ABa5f60A0fCC045bA28"
         }
       }
     },
@@ -47,7 +49,8 @@
         "protocolTokens": {
           "ag": "0xd4e420bbf00b0f409188b338c5d87df761d6c894",
           "variableDebt": "0xec72de30c3084023f7908002a2252a606cce0b2c",
-          "stableDebt": "0xf4401355b41c867edbf09c821fa7b4fffbed5c82"
+          "stableDebt": "0xf4401355b41c867edbf09c821fa7b4fffbed5c82",
+          "wag": "0xFF2A1866ecb13B67388C7a7DC1FdB3a5ff83Fb23"
         }
       }
     },
@@ -64,7 +67,8 @@
         "protocolTokens": {
           "ag": "0x291b5957c9cbe9ca6f0b98281594b4eb495f4ec1",
           "variableDebt": "0xa728c8f1cf7fc4d8c6d5195945c3760c87532724",
-          "stableDebt": "0x05c43e14d38bc5123f6408a57be03714ab689f6e"
+          "stableDebt": "0x05c43e14d38bc5123f6408a57be03714ab689f6e",
+          "wag": "0x300ABE8f7924BEb7115093361C4A78b9d9327Fb0"
         }
       }
     },
@@ -81,7 +85,8 @@
         "protocolTokens": {
           "ag": "0x4863cfaf3392f20531aa72ce19e5783f489817d6",
           "variableDebt": "0x110c5a1494f0ab6c851abb72aa2efa3da738ab72",
-          "stableDebt": "0xca0f3b157165fe11692a047ea14963ffadfb31fd"
+          "stableDebt": "0xca0f3b157165fe11692a047ea14963ffadfb31fd",
+          "wag": "0x620eEa23606C3B3818419E37Dd6867e5aBF074CC"
         }
       }
     },
@@ -98,7 +103,8 @@
         "protocolTokens": {
           "ag": "0xa286ce70fb3a6269676c8d99bd9860de212252ef",
           "variableDebt": "0x5b0568531322759eab69269a86448b39b47e2ae8",
-          "stableDebt": "0x4f9401fb52fe53de977dcbf05a0f6237aadc7eb1"
+          "stableDebt": "0x4f9401fb52fe53de977dcbf05a0f6237aadc7eb1",
+          "wag": "0x0000000000000000000000000000000000000000"
         }
       }
     },
@@ -115,7 +121,8 @@
         "protocolTokens": {
           "ag": "0xa916a4891d80494c6cb0b49b11fd68238aaaf617",
           "variableDebt": "0x7388cbdeb284902e1e07be616f92adb3660ed3a4",
-          "stableDebt": "0x6ca958336e7a1bdcdf7762aeb81613eaddcc3110"
+          "stableDebt": "0x6ca958336e7a1bdcdf7762aeb81613eaddcc3110",
+          "wag": "0x0000000000000000000000000000000000000000"
         }
       }
     },
@@ -132,7 +139,8 @@
         "protocolTokens": {
           "ag": "0x5b4ef67c63d091083ec4d30cfc4ac685ef051046",
           "variableDebt": "0x474f83d77150bddc6a6f34eee4f5574eafd05938",
-          "stableDebt": "0xb067fad853d099edd9c86483682e7d947b7983e5"
+          "stableDebt": "0xb067fad853d099edd9c86483682e7d947b7983e5",
+          "wag": "0x991e64F303F4fFC38ABDc1bC93aB23FCF609c269"
         }
       }
     },
@@ -149,7 +157,8 @@
         "protocolTokens": {
           "ag": "0xEB20B07a9abE765252E6b45e8292b12CB553CcA6",
           "variableDebt": "0xA4a45B550897dD5d8a44c68DBD245C5934EbAcd9",
-          "stableDebt": "0x78A69aFc50E7705Ad4588cB57cF8D27B29161e51"
+          "stableDebt": "0x78A69aFc50E7705Ad4588cB57cF8D27B29161e51",
+          "wag": "0x4f74D565379DFc78F56855E60b40282222f2Ae69"
         }
       }
     }

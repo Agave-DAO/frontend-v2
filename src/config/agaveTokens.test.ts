@@ -18,6 +18,7 @@ jest.mock('@/public/reserveTokensMain.json', (): Pick<TokenListResponse, 'tokens
             ag: '0x0000000000000000000000000000000000000011',
             variableDebt: '0x0000000000000000000000000000000000000012',
             stableDebt: '0x0000000000000000000000000000000000000013',
+            wag: '0x0000000000000000000000000000000000000014',
           },
         },
       },
@@ -35,6 +36,7 @@ jest.mock('@/public/reserveTokensMain.json', (): Pick<TokenListResponse, 'tokens
             ag: '0x0000000000000000000000000000000000000021',
             variableDebt: '0x0000000000000000000000000000000000000022',
             stableDebt: '0x0000000000000000000000000000000000000023',
+            wag: '0x0000000000000000000000000000000000000024',
           },
         },
       },
@@ -46,7 +48,7 @@ describe('AgaveTokens', () => {
   it('returns all protocol tokens', () => {
     const allTokens = agaveTokensMain.allTokens
 
-    expect(allTokens.length).toEqual(10)
+    expect(allTokens.length).toEqual(12)
   })
 
   it('returns all incentives tokens', () => {
@@ -141,6 +143,11 @@ describe('AgaveTokens', () => {
         symbol: 'stableDebtTT1',
         type: 'stableDebt',
       },
+      {
+        address: '0x0000000000000000000000000000000000000014',
+        symbol: 'wagTT1',
+        type: 'wag',
+      },
     ])
   })
 
@@ -169,6 +176,11 @@ describe('AgaveTokens', () => {
         address: '0x0000000000000000000000000000000000000013',
         symbol: 'stableDebtTT1',
         type: 'stableDebt',
+      },
+      {
+        address: '0x0000000000000000000000000000000000000014',
+        symbol: 'wagTT1',
+        type: 'wag',
       },
     ])
   })
@@ -199,6 +211,7 @@ describe('AgaveTokens', () => {
           ag: '0x0000000000000000000000000000000000000011',
           variableDebt: '0x0000000000000000000000000000000000000012',
           stableDebt: '0x0000000000000000000000000000000000000013',
+          wag: '0x0000000000000000000000000000000000000014',
         },
       },
     })
@@ -222,6 +235,7 @@ describe('AgaveTokens', () => {
           ag: '0x0000000000000000000000000000000000000011',
           variableDebt: '0x0000000000000000000000000000000000000012',
           stableDebt: '0x0000000000000000000000000000000000000013',
+          wag: '0x0000000000000000000000000000000000000014',
         },
       },
     })
@@ -278,6 +292,7 @@ describe('AgaveTokens', () => {
             ag: '0x0000000000000000000000000000000000000011',
             variableDebt: '0x0000000000000000000000000000000000000012',
             stableDebt: '0x0000000000000000000000000000000000000013',
+            wag: '0x0000000000000000000000000000000000000014',
           },
         },
       })

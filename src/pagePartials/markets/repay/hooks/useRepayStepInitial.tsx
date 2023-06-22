@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { MINIMUM_NATIVE_RESERVE } from '@/src/constants/common'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
@@ -33,7 +33,7 @@ export function useRepayStepInitial({
   ).borrows.find(({ borrowMode }) => borrowMode === interestRateMode)
 
   // 0.05% extra to ensure sufficient coverage for interest accrued during the time between fetching and repaying
-  const maxValueDebt = borrowInfo?.borrowedAmount.mul(10005).div(10000) || Zero
+  const maxValueDebt = borrowInfo?.borrowedAmount.mul(10005).div(10000) || ZERO_BN
   const maxToRepay = useMemo(() => {
     const availableBalance =
       isNativeToken && accountBalance ? accountBalance.sub(MINIMUM_NATIVE_RESERVE) : balance
@@ -44,7 +44,7 @@ export function useRepayStepInitial({
   const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
 
   const disableSubmit =
-    tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(Zero)
+    tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(ZERO_BN)
 
   const marketsData = useMarketsData()
   const market = marketsData.getMarket(tokenAddress)

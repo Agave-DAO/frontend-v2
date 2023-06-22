@@ -73,6 +73,7 @@ export const ClosePosition: React.FC<ModalProps> = withGenericSuspense(
           ag: '0x4863cfaf3392f20531aa72ce19e5783f489817d6',
           variableDebt: '0x110c5a1494f0ab6c851abb72aa2efa3da738ab72',
           stableDebt: '0xca0f3b157165fe11692a047ea14963ffadfb31fd',
+          wag: '0x620eEa23606C3B3818419E37Dd6867e5aBF074CC',
         },
       },
       type: 'reserve',

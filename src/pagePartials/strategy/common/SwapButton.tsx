@@ -69,12 +69,20 @@ const Button = styled.button`
   &:active {
     opacity: 0.7;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `
 
-export const SwapButton: React.FC<{ onClick: () => void }> = ({ onClick, ...restProps }) => {
+export const SwapButton: React.FC<{ disabled?: boolean; onClick: () => void }> = ({
+  disabled,
+  onClick,
+  ...restProps
+}) => {
   return (
     <Wrapper {...restProps}>
-      <Button onClick={onClick}>
+      <Button disabled={disabled} onClick={onClick} type="button">
         <Chevrons />
       </Button>
     </Wrapper>

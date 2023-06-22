@@ -38,11 +38,11 @@ export const TokenDropdownSearch: React.FC<{
   dropdownDirection = DropdownDirection.downwards,
   ...restProps
 }) => {
-  const { onSearch, onSelectToken, searchString, token, tokensList } = useTokensLists(
-    ['reserve'],
+  const { onSearch, onSelectToken, searchString, token, tokensList } = useTokensLists({
+    includeFrozen: false,
+    types: ['reserve'],
     onChange,
-  )
-
+  })
   const currentToken = selectedToken || token
 
   return (

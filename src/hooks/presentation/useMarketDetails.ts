@@ -1,6 +1,6 @@
 import { FixedNumber } from '@ethersproject/bignumber'
-import { Zero } from '@ethersproject/constants'
 
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { DISPLAY_DECIMALS } from '@/src/constants/common'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
@@ -35,11 +35,11 @@ export const useMarketDetails = (tokenAddress: string) => {
     price: marketData.getMarketSize(tokenAddress).usd,
   }
 
-  const utilizationRate = reserveSize.wei.gt(Zero)
+  const utilizationRate = reserveSize.wei.gt(ZERO_BN)
     ? FixedNumber.from(borrowed.wei)
         .divUnsafe(FixedNumber.from(reserveSize.wei))
         .mulUnsafe(FixedNumber.from(100))
-    : Zero
+    : ZERO_BN
 
   return {
     borrowed,

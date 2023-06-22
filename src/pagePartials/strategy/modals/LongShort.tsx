@@ -17,7 +17,7 @@ import { DropdownDirection } from '@/src/components/dropdown/Dropdown'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInputDropdown } from '@/src/components/token/TokenInputDropdown'
-import { Details as BaseDetails } from '@/src/pagePartials/strategy/modals/common/Details'
+import { Details as BaseDetails } from '@/src/pagePartials/strategy/common/Details'
 import { Strategy } from '@/types/strategy'
 import { Token } from '@/types/token'
 
@@ -257,7 +257,7 @@ const Details = styled(BaseDetails)`
   padding-top: 24px;
 `
 
-export const LongShort: React.FC<{ type: Strategy }> = ({ type, ...restProps }) => {
+export const LongShort: React.FC<{ type: Strategy['slug'] }> = ({ type, ...restProps }) => {
   const [amountTokenValue, setSendTokenValue] = useState('0')
   const [sendAmountInputStatus, setAmountTokenInputStatus] = useState<TextfieldStatus>()
   const [sendAmountInputStatusText, setAmountTokenInputStatusText] = useState<string | undefined>()

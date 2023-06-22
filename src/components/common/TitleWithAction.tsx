@@ -22,19 +22,25 @@ export const Title = styled.h3`
 type ButtonVariants = 'dark' | 'regular' | 'danger' | undefined
 
 export interface ButtonType {
+  disabled?: boolean
   onClick: () => void
   text: string
   variant?: ButtonVariants
 }
 
 export const TitleWithAction: React.FC<{
-  title: string | React.ReactNode
   button: ButtonType
+  title: string | React.ReactNode
 }> = ({ button, title, ...restProps }) => {
   return (
     <Wrapper {...restProps}>
       <Title>{title}</Title>
-      <ButtonMini onClick={button.onClick} variant={button.variant}>
+      <ButtonMini
+        disabled={button.disabled}
+        onClick={button.onClick}
+        type="button"
+        variant={button.variant}
+      >
         {button.text}
       </ButtonMini>
     </Wrapper>

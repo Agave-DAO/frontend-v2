@@ -2,9 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { ChevronDown } from '@/src/components/assets/ChevronDown'
-import { CollateralSwap } from '@/src/components/assets/CollateralSwap'
-import { Long } from '@/src/components/assets/Long'
-import { Short } from '@/src/components/assets/Short'
 import {
   Item as BaseItem,
   NoResults,
@@ -13,6 +10,7 @@ import {
   TextfieldContainer,
   Wrapper,
 } from '@/src/components/dropdown/DropdownElements'
+import { strategiesInfo } from '@/src/constants/strategiesInfo'
 import { Strategy } from '@/types/strategy'
 
 const Dropdown = styled(Wrapper)`
@@ -96,29 +94,20 @@ const Chevron = styled(ChevronDown)`
 `
 
 export const StrategiesDropdown: React.FC<{
-  onChange: (strategy: Strategy) => void
-  strategy: Strategy
+  onChange: (strategy: Strategy['slug']) => void
+  strategy: Strategy['slug']
 }> = ({ onChange, strategy, ...restProps }) => {
   const [searchString, setSearchString] = useState<string | undefined>(undefined)
-  const [currentStrategy, setCurrentStrategy] = useState<Strategy>(strategy)
-  const items = useMemo(
-    () =>
-      [
-        { name: 'Long', icon: <Long />, type: 'long' },
-        { name: 'Short', icon: <Short />, type: 'short' },
-        { name: 'Collateral Swap', icon: <CollateralSwap />, type: 'collateralSwap' },
-      ] as const,
-    [],
-  )
+  const [currentStrategy, setCurrentStrategy] = useState<Strategy['slug']>(strategy)
 
   const filteredItems = useMemo(
     () =>
       searchString
-        ? items.filter(({ name }) => {
+        ? strategiesInfo.filter(({ name }) => {
             return name.toUpperCase().indexOf(searchString.toUpperCase()) >= 0
           })
-        : items,
-    [items, searchString],
+        : strategiesInfo,
+    [searchString],
   )
 
   const onSearch = useCallback((search: string | undefined) => {
@@ -126,14 +115,14 @@ export const StrategiesDropdown: React.FC<{
   }, [])
 
   const getCurrentStrategy = useMemo(() => {
-    return items.filter((item) => item.type === currentStrategy)
-  }, [currentStrategy, items])
+    return strategiesInfo.filter((item) => item.slug === currentStrategy)
+  }, [currentStrategy])
 
   useEffect(() => {
     setCurrentStrategy(strategy)
   }, [strategy])
 
-  const onSelectStrategy = (strategy: Strategy) => {
+  const onSelectStrategy = (strategy: Strategy['slug']) => {
     setCurrentStrategy(strategy)
     onChange(strategy)
   }
@@ -163,7 +152,7 @@ export const StrategiesDropdown: React.FC<{
           <Item
             key={index}
             onClick={() => {
-              onSelectStrategy(item.type)
+              onSelectStrategy(item.slug)
             }}
           >
             {item.icon}
