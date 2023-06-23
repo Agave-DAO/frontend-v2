@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import useSWR from 'swr'
 
-import { useMarketsData } from '../presentation/useMarketsData'
 import { TokenWithType } from '@/src/config/agaveTokens'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { fromWei } from '@/src/utils/common'

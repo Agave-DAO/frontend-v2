@@ -35,6 +35,7 @@ import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { NumberType } from '@/src/utils/format'
+import { isSameAddress } from '@/src/utils/isSameAddress'
 import { ERC20__factory } from '@/types/generated/typechain'
 import { DepositWithdrawTabs } from '@/types/modal'
 import { Token } from '@/types/token'
@@ -111,13 +112,13 @@ export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
     const agTokenInstance = useContractInstance(ERC20__factory, agToken, { useSigner: true })
 
     // get user deposits for the selected reserve token
-    const selectedTokenDeposit = useUserDeposits().find(
-      ({ assetAddress }) => assetAddress === token.address,
+    const selectedTokenDeposit = useUserDeposits().find(({ assetAddress }) =>
+      isSameAddress(assetAddress, token.address),
     )
 
     // get the balance of agTokens in the vault to withdraw from the vault
-    const selectedTokenBalanceInVault = vaultBalances?.find(
-      (vaultBalance) => vaultBalance.token.address === token.address,
+    const selectedTokenBalanceInVault = vaultBalances?.find((vaultBalance) =>
+      isSameAddress(vaultBalance.token.address, token.address),
     )
 
     const activeTokenBalance = useMemo(() => {
