@@ -39,7 +39,11 @@ nullthrows(
 )
 
 const injected = injectedModule()
-const walletConnect = walletConnectModule()
+const walletConnect = walletConnectModule({
+  version: 2, // **New Param** Defaults to version: 1 - this behavior will be deprecated after the WalletConnect v1 sunset
+  projectId: '006ebb71415ac00246c619155f5d56f7', // ***New Param* Project ID associated with [WalletConnect account](https://cloud.walletconnect.com)
+  requiredChains: [100], // chains required to be supported by WC wallet
+})
 
 const chainsForOnboard = Object.values(chainsConfig).map(
   ({ chainIdHex, name, rpcUrl, token }: ChainConfig) => ({

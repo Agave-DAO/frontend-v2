@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 import { InnerTitle } from '@/src/components/text/InnerTitle'
+import { useMarketDetails } from '@/src/hooks/presentation/useMarketDetails'
 import { UserBorrowDetails } from '@/src/pagePartials/markets/UserBorrowDetails'
 import { UserDepositDetails } from '@/src/pagePartials/markets/UserDepositDetails'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
@@ -40,12 +41,13 @@ export const UserInformation: React.FC<{ tokenAddress: string }> = ({
   ...restProps
 }) => {
   const { isWalletConnected } = useWeb3Connection()
+  const isBorrowable = useMarketDetails(tokenAddress).market.assetData.borrowingEnabled
 
   return isWalletConnected ? (
     <Wrapper {...restProps}>
       <Title>My information</Title>
       <DepositDetails tokenAddress={tokenAddress} />
-      <UserBorrowDetails tokenAddress={tokenAddress} />
+      {isBorrowable && <UserBorrowDetails tokenAddress={tokenAddress} />}
     </Wrapper>
   ) : (
     <></>

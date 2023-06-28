@@ -1,3 +1,5 @@
+import { useCallback, useMemo, useState } from 'react'
+
 import { UserAsset } from '@/src/components/asset/UserAsset'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { Amount } from '@/src/components/helpers/Amount'
@@ -6,6 +8,7 @@ import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { ActionsWrapper } from '@/src/components/layout/ActionsWrapper'
 import { AssetsList } from '@/src/components/layout/AssetsList'
 import { MyAssetSkeletonLoading } from '@/src/components/loading/SkeletonLoading'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { InterestRateMode, useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useModalsContext } from '@/src/providers/modalsProvider'
@@ -15,6 +18,14 @@ export const UserBorrows: React.FC = withGenericSuspense(
     const userBorrows = useUserBorrows()
     const { openBorrowRepayModal } = useModalsContext()
     const agaveTokens = useAgaveTokens()
+
+    const enabledMarketsAddresses = useMarketsData()
+      .agaveMarketsData?.filter((market) => {
+        if (market.assetData.isFrozen === false && market.assetData.borrowingEnabled === true)
+          return true
+        return false
+      })
+      ?.map((market) => market.tokenAddress)
 
     return !userBorrows.length ? (
       <EmptyContent
@@ -31,6 +42,7 @@ export const UserBorrows: React.FC = withGenericSuspense(
           ({ assetAddress, borrowMode, borrowRate, borrowedAmount, borrowedAmountInDAI }) => {
             const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
 
+            const isActive = enabledMarketsAddresses?.includes(assetAddress)
             return (
               <UserAsset
                 badge={InterestRateMode[borrowMode]}
@@ -63,17 +75,19 @@ export const UserBorrows: React.FC = withGenericSuspense(
                   >
                     Repay
                   </ActionButton>
-                  <ActionButton
-                    onClick={() =>
-                      openBorrowRepayModal({
-                        activeTab: 'borrow',
-                        mode: borrowMode,
-                        tokenAddress: assetAddress,
-                      })
-                    }
-                  >
-                    Borrow
-                  </ActionButton>
+                  {isActive ? (
+                    <ActionButton
+                      onClick={() =>
+                        openBorrowRepayModal({
+                          activeTab: 'borrow',
+                          mode: borrowMode,
+                          tokenAddress: assetAddress,
+                        })
+                      }
+                    >
+                      Borrow
+                    </ActionButton>
+                  ) : null}
                 </ActionsWrapper>
               </UserAsset>
             )
