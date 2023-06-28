@@ -102,12 +102,11 @@ const Collapsable = styled(HeadInnerCollapsable)`
 `
 
 interface Props {
-  positionTokens: any
-  value: string
+  position: any
 }
 
-export const PositionHead: React.FC<Props> = ({ positionTokens, value, ...restProps }) => {
-  const { status, tokens, type } = positionTokens
+export const PositionHead: React.FC<Props> = ({ position, ...restProps }) => {
+  const { status, tokens, type, value } = position
   const notCollateralSwap = type === 'long' || type === 'short'
   const [isOpen, setIsOpen] = useState(false)
 

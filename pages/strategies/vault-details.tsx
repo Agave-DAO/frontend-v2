@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { List } from '@/src/components/common/List'
@@ -8,14 +8,20 @@ import { GoToExplorer } from '@/src/components/helpers/GoToExplorer'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
+import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { strategiesInfo } from '@/src/constants/strategiesInfo'
 import { useVaults } from '@/src/hooks/presentation/useVaults'
+import { HistoryList } from '@/src/pagePartials/strategy/positions/HistoryList'
+import { PositionsList } from '@/src/pagePartials/strategy/positions/PositionsList'
 import { StrategyItem } from '@/src/pagePartials/strategy/strategies/StrategyItem'
 import { VaultDetails as BaseVaultDetails } from '@/src/pagePartials/strategy/vaults/VaultDetails'
 import VaultModalProvider, { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 
+const Tabs = styled(BaseTabs)`
+  margin: 0 auto 32px auto;
+`
 const Title = styled(BaseTitle)`
   margin: 0 0 40px;
   text-transform: capitalize;
@@ -25,15 +31,30 @@ const VaultDetailsComponent = styled(BaseVaultDetails)`
   margin: 0 0 32px;
 `
 
-const SubTitle = styled(BaseTitle)`
-  font-size: 1.6rem;
-  margin: 0 0 16px;
-`
+const NewStrategy = () => {
+  const router = useRouter()
+  const { vaultAddress } = useVaultModalContext()
+
+  return (
+    <>
+      {strategiesInfo.map((strategy) => (
+        <StrategyItem
+          icon={strategy.icon}
+          key={strategy.slug}
+          onClick={() => router.push(`/strategies/${strategy.slug}?vault=${vaultAddress}`)}
+          title={strategy.name}
+          type={strategy.type}
+        />
+      ))}
+    </>
+  )
+}
 
 const VaultDetailsImpl = withGenericSuspense(
   () => {
-    const router = useRouter()
     const { setVaultName, vaultAddress } = useVaultModalContext()
+
+    const [tab, setTab] = useState<'new-strategy' | 'positions' | 'history'>('new-strategy')
 
     const { vaultList: vaults } = useVaults()
     const selectedVault = useMemo(
@@ -64,18 +85,20 @@ const VaultDetailsImpl = withGenericSuspense(
           <GoToExplorer address={selectedVault.vaultAddress} text="Vault" />
         </Title>
         <VaultDetailsComponent />
-        <SubTitle>Create Strategy</SubTitle>
-        {strategiesInfo.map((strategy) => (
-          <StrategyItem
-            icon={strategy.icon}
-            key={strategy.slug}
-            onClick={() =>
-              router.push(`/strategies/${strategy.slug}?vault=${selectedVault.vaultAddress}`)
-            }
-            title={strategy.name}
-            type={strategy.type}
-          />
-        ))}
+        <Tabs>
+          <Tab isActive={tab === 'new-strategy'} onClick={() => setTab('new-strategy')}>
+            New Strategy
+          </Tab>
+          <Tab isActive={tab === 'history'} onClick={() => setTab('history')}>
+            History
+          </Tab>
+          <Tab isActive={tab === 'positions'} onClick={() => setTab('positions')}>
+            Positions
+          </Tab>
+        </Tabs>
+        {tab === 'new-strategy' && <NewStrategy />}
+        {tab === 'history' && <HistoryList />}
+        {tab === 'positions' && <PositionsList />}
       </>
     )
   },
