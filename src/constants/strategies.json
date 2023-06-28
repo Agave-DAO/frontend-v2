@@ -4,6 +4,16 @@
       "slug": "collateral-swap",
       "name": "Collateral Swap",
       "type": "Action"
+    },
+    {
+      "slug": "long",
+      "name": "Long",
+      "type": "Position"
+    },
+    {
+      "slug": "short",
+      "name": "Short",
+      "type": "Position"
     }
   ]
 }
