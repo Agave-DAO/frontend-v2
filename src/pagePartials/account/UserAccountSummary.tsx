@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 
+import { ButtonMini } from '@/src/components/buttons/ButtonMini'
 import { HealthFactor } from '@/src/components/common/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
@@ -9,8 +10,10 @@ import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { useUserAccountDetails } from '@/src/hooks/presentation/useUserAccountDetails'
 import {
   CurrentLTV as CurrentLTVTooltip,
+  HealthFactorAlerts as HealthFactorAlertsTooltip,
   HealthFactor as HealthFactorTooltip,
 } from '@/src/pagePartials/common/tooltips'
+import { useModalsContext } from '@/src/providers/modalsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const Wrapper = styled.div`
@@ -91,6 +94,29 @@ const EmptyContent = styled.div`
   text-align: center;
 `
 
+const HFAlertsButton = styled(ButtonMini)`
+  cursor: pointer;
+  font-size: 1.3rem;
+`
+
+const ActiveHFAlert = styled.div`
+  color: #1ddba0;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding-right: 10px;
+`
+
+const InactiveHFAlert = styled.div`
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding-right: 10px;
+`
+const ErrorHFAlert = styled.div`
+  font-size: 1.3rem;
+  padding-right: 10px;
+  opacity: 0.5;
+`
+
 export const UserAccountSummary: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const { address } = useWeb3ConnectedApp()
@@ -103,6 +129,8 @@ export const UserAccountSummary: React.FC = withGenericSuspense(
       userCollateral,
       userDeposits,
     } = useUserAccountDetails(address)
+    const { isHFAlertEnabled, isHFAlertFetchError, openHealthFactorAlertsModal } =
+      useModalsContext()
 
     return userDeposits.isZero() ? (
       <EmptyContent>
@@ -150,6 +178,23 @@ export const UserAccountSummary: React.FC = withGenericSuspense(
             Health status <Tooltip content={HealthFactorTooltip} />
           </Title>
           <HealthFactor value={healthFactor} />
+        </HFWrapper>
+        <HFWrapper>
+          <Title>
+            Health factor alerts <Tooltip content={HealthFactorAlertsTooltip} />
+          </Title>
+          {isHFAlertFetchError ? (
+            <ErrorHFAlert>Temporary unavailable</ErrorHFAlert>
+          ) : (
+            <InfoRow>
+              {isHFAlertEnabled ? (
+                <ActiveHFAlert>Active</ActiveHFAlert>
+              ) : (
+                <InactiveHFAlert>Inactive</InactiveHFAlert>
+              )}
+              <HFAlertsButton onClick={openHealthFactorAlertsModal}>Configure</HFAlertsButton>
+            </InfoRow>
+          )}
         </HFWrapper>
       </Wrapper>
     )

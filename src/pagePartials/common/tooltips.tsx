@@ -145,6 +145,19 @@ export const LiquidityPenalty = (
   </Wrapper>
 )
 
+export const HealthFactorAlerts = (
+  <Wrapper>
+    <Text>
+      The <b>health factor alerts</b> option allows you to receive notifications regarding your
+      health factor.
+    </Text>
+    <Text>
+      You can select the desired threshold for the health factor, and whenever it reaches a critical
+      level, an email alert will be sent to your e-mail address.
+    </Text>
+  </Wrapper>
+)
+
 export const CurrentLTV: React.FC<{
   currentLTV: React.ReactNode
   maxLTV: React.ReactNode

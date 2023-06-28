@@ -1,9 +1,12 @@
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
 
+import { getUserHealthFactorAlerts } from '@/src/apis/healthFactorAlerts'
 import { BorrowRepayModal, DepositWithdrawModal } from '@/src/components/modals/ActionsModal'
+import { HealthFactorAlertsModal } from '@/src/components/modals/HealthFactorAlertsModal'
 import { MinHealthConfigurationModal } from '@/src/components/modals/MinHealthConfigurationModal'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useTokenInfo } from '@/src/hooks/useTokenInfo'
+import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { BorrowRepayTabs, DepositWithdrawTabs, Modals } from '@/types/modal'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,6 +25,32 @@ const ModalsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const openModalClass = 'modalOpen'
   const [showMinHealthConfiguration, setShowMinHealthConfiguration] = useState<boolean | null>(null)
   const someModalIsOpen = currentModal || showMinHealthConfiguration
+  const { address } = useWeb3Connection()
+  const [isHFAlertEnabled, setIsHFAlertEnabled] = useState(false)
+  const [HFAlertEmail, setHFAlertEmail] = useState('')
+  const [HFAlertThreshold, setHFAlertThreshold] = useState(0)
+  const [isHFAlertAgentListed, setisHFAlertAgentListed] = useState(false)
+  const [HFAlertId, setHFAlertId] = useState(0)
+  const [isHFAlertFetchError, setIsHFAlertFetchError] = useState(false)
+
+  useEffect(() => {
+    const fetchUserAlerts = async () => {
+      if (address) {
+        try {
+          const userHealthFactorAlerts = await getUserHealthFactorAlerts(address)
+          if (userHealthFactorAlerts) {
+            setIsHFAlertEnabled(userHealthFactorAlerts.isReminderEnabled)
+            setIsHFAlertFetchError(false)
+          } else {
+            setIsHFAlertFetchError(true)
+          }
+        } catch (e) {
+          setIsHFAlertFetchError(true)
+        }
+      }
+    }
+    fetchUserAlerts()
+  }, [address])
 
   const closeModal = () => setCurrentModal(null)
 
@@ -64,12 +93,32 @@ const ModalsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
+  const openHealthFactorAlertsModal = () => {
+    setCurrentModal({
+      activeTab: undefined,
+      tokenAddress: '',
+      modalName: 'healthFactorAlerts',
+    })
+  }
+
   const values = {
     closeModal,
     currentModal,
     openBorrowRepayModal,
     openDepositWithdrawModal,
     openMinHealthConfigurationModal: () => setShowMinHealthConfiguration(true),
+    openHealthFactorAlertsModal,
+    isHFAlertEnabled,
+    setIsHFAlertEnabled,
+    HFAlertEmail,
+    setHFAlertEmail,
+    HFAlertThreshold,
+    setHFAlertThreshold,
+    isHFAlertAgentListed,
+    setisHFAlertAgentListed,
+    HFAlertId,
+    setHFAlertId,
+    isHFAlertFetchError,
   }
 
   return (
@@ -92,6 +141,9 @@ const ModalsContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
       )}
       {showMinHealthConfiguration && (
         <MinHealthConfigurationModal onClose={() => setShowMinHealthConfiguration(false)} />
+      )}
+      {currentModal?.modalName === 'healthFactorAlerts' && (
+        <HealthFactorAlertsModal onClose={closeModal} />
       )}
     </ModalsContext.Provider>
   )
