@@ -291,6 +291,26 @@ export const ModalCSS = `
     transition: background-color 250ms ease-in-out;
   }
 
+  .notice-container > .container {
+    border: 0
+  }
+
+  .notice-container > .container > *{
+    font-size: var(--font-size-md);
+    color: var(--onboard-text-color);
+  }
+
+  .notice-container > .container .icon{
+    width: 20px;
+    display: none
+  }
+
+  .notice-container > .container .link{
+    font-size: var(--font-size-md);
+    line-height: 1.8;
+    color: var(--primary-700)
+  }
+
 
   /* Tablets and above */
   @media (min-width: 768px) {
