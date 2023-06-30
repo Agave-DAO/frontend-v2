@@ -58,7 +58,7 @@ const wcV2InitOptions: WalletConnectOptions = {
   requiredChains: [100],
 }
 
-const walletConnect = walletConnectModule(wcV1InitOptions || wcV2InitOptions)
+const walletConnect = walletConnectModule(wcV2InitOptions || wcV1InitOptions)
 
 const chainsForOnboard = Object.values(chainsConfig).map(
   ({ chainIdHex, name, rpcUrl, token }: ChainConfig) => ({
@@ -77,6 +77,9 @@ export function initOnboard() {
   onBoardApi = init({
     wallets: [injected, frame, gnosis, walletConnect],
     chains: chainsForOnboard,
+    connect: {
+      removeWhereIsMyWalletWarning: true,
+    },
     notify: {
       enabled: false,
     },
@@ -96,9 +99,6 @@ export function initOnboard() {
       mobile: {
         enabled: false,
       },
-    },
-    connect: {
-      //hideWhereIsMyWallet:true
     },
     // i18n: {} change all texts in the onboard modal
   })
