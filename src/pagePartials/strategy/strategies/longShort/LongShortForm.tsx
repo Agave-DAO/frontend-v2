@@ -257,7 +257,7 @@ const Details = styled(BaseDetails)`
   padding-top: 24px;
 `
 
-export const LongShort: React.FC<{ type: Strategy['slug'] }> = ({ type, ...restProps }) => {
+export const LongShortForm: React.FC<{ type: Strategy['slug'] }> = ({ type, ...restProps }) => {
   const [amountTokenValue, setSendTokenValue] = useState('0')
   const [sendAmountInputStatus, setAmountTokenInputStatus] = useState<TextfieldStatus>()
   const [sendAmountInputStatusText, setAmountTokenInputStatusText] = useState<string | undefined>()

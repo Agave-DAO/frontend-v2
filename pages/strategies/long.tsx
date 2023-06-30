@@ -1,12 +1,12 @@
 import { NextPage } from 'next'
 
-import { LongContent } from '@/src/pagePartials/strategy/strategies/long/LongContent'
+import { LongShortContent } from '@/src/pagePartials/strategy/strategies/longShort/LongShortContent'
 import VaultModalProvider from '@/src/providers/vaultModalProvider'
 
 const Long: NextPage = () => {
   return (
     <VaultModalProvider>
-      <LongContent />
+      <LongShortContent type="long" />
     </VaultModalProvider>
   )
 }
