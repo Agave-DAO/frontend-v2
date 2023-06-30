@@ -62,6 +62,9 @@ export function initOnboard() {
   onBoardApi = init({
     wallets: [injected, walletConnect],
     chains: chainsForOnboard,
+    connect: {
+      removeWhereIsMyWalletWarning: true,
+    },
     notify: {
       enabled: false,
     },
