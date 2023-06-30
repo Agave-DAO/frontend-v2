@@ -18,11 +18,9 @@ interface Props extends PropsWithChildren {
 }
 
 export const Position: React.FC<Props> = ({ children, data, ...restProps }) => {
-  const { positionTokens, value } = data
-
   return (
     <Wrapper {...restProps}>
-      <PositionHead positionTokens={positionTokens} value={value} />
+      <PositionHead position={data} />
       {children && <Body>{children}</Body>}
     </Wrapper>
   )

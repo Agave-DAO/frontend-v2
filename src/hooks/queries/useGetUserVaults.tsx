@@ -9,6 +9,11 @@ import {
   Swapper_UserProxyImplementation__factory,
 } from '@/types/generated/typechain'
 
+export type VaultData = {
+  name: string
+  vaultAddress: string
+}
+
 export const useGetUserVaults = () => {
   const { address, batchProvider } = useWeb3ConnectedApp()
   const SwapperCoordinatorContract = useContractInstance(
@@ -30,7 +35,7 @@ export const useGetUserVaults = () => {
       ? { key: `vaultList-names-${address}`, vaultAddresses: vaultAddresses[0] }
       : null,
     async ({ vaultAddresses }) => {
-      const results = await Promise.all(
+      const results: VaultData[] = await Promise.all(
         vaultAddresses.map(async (vaultAddress) => {
           const contract = Swapper_UserProxyImplementation__factory.connect(
             vaultAddress,

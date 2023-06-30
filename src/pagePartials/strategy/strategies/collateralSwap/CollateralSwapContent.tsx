@@ -201,7 +201,7 @@ export const CollateralSwapContent: FC = ({ ...restProps }) => {
     state.destinationAmount === '0'
 
   return (
-    <StrategyContainer strategy="collateral-swap" vaultAddress={vaultAddress}>
+    <StrategyContainer strategy="collateral-swap">
       <form onSubmit={handleSwapRequest}>
         <FormCard {...restProps}>
           <OriginToken />
