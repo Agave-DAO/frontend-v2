@@ -20,7 +20,6 @@ import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
 import MinHealthConfigurationModalProvider from '@/src/providers/minHealthConfigurationModalProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
 import TokenActionsModalProvider from '@/src/providers/tokenActionsModalProvider'
-import VaultModalProvider from '@/src/providers/vaultModalProvider'
 
 import 'sanitize.css'
 import 'react-tooltip/dist/react-tooltip.css'

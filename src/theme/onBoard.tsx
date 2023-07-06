@@ -291,6 +291,9 @@ export const ModalCSS = `
     transition: background-color 250ms ease-in-out;
   }
 
+  .notice-container{
+    display: none;
+  }
 
   /* Tablets and above */
   @media (min-width: 768px) {

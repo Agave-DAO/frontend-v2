@@ -12,9 +12,11 @@ import {
 import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcBatchProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { OnboardAPI, WalletState } from '@web3-onboard/core'
+import frameModule from '@web3-onboard/frame'
+import gnosisModule from '@web3-onboard/gnosis'
 import injectedModule from '@web3-onboard/injected-wallets'
 import { init, useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'
-import walletConnectModule from '@web3-onboard/walletconnect'
+import walletConnectModule, { WalletConnectOptions } from '@web3-onboard/walletconnect'
 import nullthrows from 'nullthrows'
 
 import { Chains, INITIAL_APP_CHAIN_ID, chainsConfig, getNetworkConfig } from '@/src/config/web3'
@@ -39,7 +41,24 @@ nullthrows(
 )
 
 const injected = injectedModule()
-const walletConnect = walletConnectModule()
+const frame = frameModule()
+const gnosis = gnosisModule()
+
+const wcV1InitOptions = {
+  bridge: 'https://safe-walletconnect.safe.global',
+  qrcodeModalOptions: {
+    mobileLinks: ['metamask', 'minerva', 'trust'],
+  },
+  connectFirstChainId: true,
+}
+
+const wcV2InitOptions: WalletConnectOptions = {
+  version: 2,
+  projectId: '006ebb71415ac00246c619155f5d56f7',
+  requiredChains: [100],
+}
+
+const walletConnect = walletConnectModule(wcV2InitOptions)
 
 const chainsForOnboard = Object.values(chainsConfig).map(
   ({ chainIdHex, name, rpcUrl, token }: ChainConfig) => ({
@@ -56,17 +75,18 @@ export function initOnboard() {
   if (typeof window === 'undefined' || window?.onboard || onBoardApi) return
 
   onBoardApi = init({
-    wallets: [injected, walletConnect],
+    wallets: [injected, frame, gnosis, walletConnect],
     chains: chainsForOnboard,
     notify: {
       enabled: false,
     },
     appMetadata: {
-      name: 'Agave - Liquidity Protocol',
-      icon: '<svg style="display: none" />', // brand icon
+      name: 'Agave',
+      icon: 'https://agave.finance/favicon/favicon.ico',
+      logo: 'https://agave.finance/favicon/favicon.svg',
       description:
         'Earn interest on deposits and borrow assets thanks to Agave, a decentralized, non-custodial money market and lending protocol on Gnosis Chain',
-      recommendedInjectedWallets: [{ name: 'MetaMask', url: 'https://metamask.io' }],
+      recommendedInjectedWallets: [{ name: 'Frame', url: 'https://frame.sh' }],
     },
     // Account center put an interactive menu in the UI to manage your account.
     accountCenter: {
@@ -76,6 +96,9 @@ export function initOnboard() {
       mobile: {
         enabled: false,
       },
+    },
+    connect: {
+      //hideWhereIsMyWallet:true
     },
     // i18n: {} change all texts in the onboard modal
   })
