@@ -15,6 +15,7 @@ import { useVaults } from '@/src/hooks/presentation/useVaults'
 import { HistoryList } from '@/src/pagePartials/strategy/positions/HistoryList'
 import { PositionsList } from '@/src/pagePartials/strategy/positions/PositionsList'
 import { StrategyItem } from '@/src/pagePartials/strategy/strategies/StrategyItem'
+import StrategyLayout from '@/src/pagePartials/strategy/strategies/StrategyLayout'
 import { VaultDetails as BaseVaultDetails } from '@/src/pagePartials/strategy/vaults/VaultDetails'
 import VaultModalProvider, { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 import { isSameAddress } from '@/src/utils/isSameAddress'
@@ -155,11 +156,9 @@ const VaultDetailsImpl = withGenericSuspense(
 
 const VaultDetails: NextPage = () => {
   return (
-    <RequiredConnection>
-      <VaultModalProvider>
-        <VaultDetailsImpl />
-      </VaultModalProvider>
-    </RequiredConnection>
+    <StrategyLayout>
+      <VaultDetailsImpl />
+    </StrategyLayout>
   )
 }
 

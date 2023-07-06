@@ -5,6 +5,7 @@ import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
+import StrategyLayout from '@/src/pagePartials/strategy/strategies/StrategyLayout'
 import { VaultsList } from '@/src/pagePartials/strategy/vaults/VaultsList'
 import VaultModalProvider, { useVaultModalContext } from '@/src/providers/vaultModalProvider'
 
@@ -34,11 +35,9 @@ const StrategiesImpl = withGenericSuspense(() => {
 
 const Strategies: NextPage = () => {
   return (
-    <RequiredConnection>
-      <VaultModalProvider>
-        <StrategiesImpl />
-      </VaultModalProvider>
-    </RequiredConnection>
+    <StrategyLayout>
+      <StrategiesImpl />
+    </StrategyLayout>
   )
 }
 
