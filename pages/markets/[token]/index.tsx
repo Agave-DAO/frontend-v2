@@ -2,13 +2,15 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import uniq from 'lodash/uniq'
+
 import { ButtonDark, ButtonPrimary } from '@/src/components/buttons/Button'
-import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
+import { MoreActionsDropdown } from '@/src/components/dropdown/MoreActionsDropdown'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { TokenDropdown } from '@/src/components/token/TokenDropdown'
-import { agaveTokens } from '@/src/config/agaveTokens'
+import { agaveTokensBoosted, agaveTokensMain } from '@/src/config/agaveTokens'
 import { useMarketDetails } from '@/src/hooks/presentation/useMarketDetails'
 import { useMarketByURLParam } from '@/src/hooks/presentation/useTokenInfoByURLParam'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
@@ -16,7 +18,7 @@ import { MarketInformation } from '@/src/pagePartials/markets/MarketInformation'
 import { ReserveRates } from '@/src/pagePartials/markets/ReserveRates'
 import { ReserveStatus } from '@/src/pagePartials/markets/ReserveStatus'
 import { UserInformation } from '@/src/pagePartials/markets/UserInformation'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { Token } from '@/types/token'
 
@@ -48,7 +50,7 @@ const Buttons = styled.div`
   display: flex;
   min-height: var(--buttons-height);
   justify-content: center;
-  padding: 0 8px;
+  padding: 0 var(--padding-sm);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     column-gap: 10px;
@@ -65,7 +67,7 @@ const UserConnectedActions: React.FC<{
     tokenAddress,
     userAddress,
   })
-  const { openBorrowRepayModal, openDepositWithdrawModal } = useModalsContext()
+  const { openBorrowRepayModal, openDepositWithdrawModal } = useTokenActionsModalsContext()
 
   const items = [
     {
@@ -214,22 +216,23 @@ const MarketDetails: React.FC = withGenericSuspense(
     </>
   ),
 )
+
 // generate the actions html files for each market
 export async function getStaticPaths() {
   // Get the list of markets
-  const markets = agaveTokens.reserveTokens
+  const MainMarkets = agaveTokensMain.reserveTokens.map((token) => token.symbol)
+  const BoostedMarkets = agaveTokensBoosted.reserveTokens.map((token) => token.symbol)
 
-  // Generate the paths for each market (symbol & address)
-  const paths = markets.flatMap(({ address, symbol }) => {
+  // Merge the two lists and remove duplicates
+  const markets = uniq([...MainMarkets, ...BoostedMarkets])
+
+  // Generate the paths for each market (symbol)
+  const paths = markets.flatMap((symbol) => {
     return [
       { params: { token: symbol } },
       { params: { token: symbol } },
       { params: { token: symbol } },
       { params: { token: symbol } },
-      { params: { token: address } },
-      { params: { token: address } },
-      { params: { token: address } },
-      { params: { token: address } },
     ]
   })
 
@@ -238,12 +241,10 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: { params: { token: string; action: string } }) {
   const { token } = params
-  // TODO - we need to add the tokens for both market versions here
-  const tokenExists = agaveTokens.reserveTokens.find(
-    (t) => t.symbol === token || t.address === token,
-  )
+  const tokenExistsInMain = agaveTokensMain.reserveTokens.find((t) => t.symbol === token)
+  const tokenExistsInBoosted = agaveTokensBoosted.reserveTokens.find((t) => t.symbol === token)
 
-  if (!tokenExists) {
+  if (!tokenExistsInMain && !tokenExistsInBoosted) {
     return { notFound: true }
   }
 

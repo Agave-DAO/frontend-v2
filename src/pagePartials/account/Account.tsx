@@ -120,7 +120,7 @@ const UserInfo = styled.div`
   flex-direction: column;
   gap: 24px;
   min-width: 0;
-  padding: 40px 16px;
+  padding: var(--padding-xxxl) var(--padding-md);
   width: 100%;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
@@ -128,7 +128,7 @@ const UserInfo = styled.div`
     border-radius: 24px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 36px 24px;
+    padding: var(--padding-xxl) var(--padding-xl);
   }
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {

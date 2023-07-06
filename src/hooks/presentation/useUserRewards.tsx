@@ -1,9 +1,9 @@
 import { AddressZero } from '@ethersproject/constants'
 
-import { useGetStakingAgvePrice } from '../queries/useGetStakingAgvePrice'
 import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useGetGnoPrice } from '@/src/hooks/queries/useGetGnoPrice'
 import { useGetRewardsBalance } from '@/src/hooks/queries/useGetRewardsBalance'
+import { useGetStakingAgvePrice } from '@/src/hooks/queries/useGetStakingAgvePrice'
 import { calculateRewards } from '@/src/utils/calculateRewards'
 import { formatAmount, fromWei } from '@/src/utils/common'
 

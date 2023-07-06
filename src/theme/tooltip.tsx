@@ -8,7 +8,7 @@ export const tooltipCSS = css`
     font-size: 1.4rem;
     font-weight: 400;
     line-height: 1.5;
-    padding: 12px 16px;
+    padding: var(--padding-sm-md) var(--padding-md);
     z-index: 1000;
 
     a {

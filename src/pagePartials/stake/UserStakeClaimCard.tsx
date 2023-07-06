@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 import TxButton from '@/src/components/buttons/txButton'
-import { InnerCard } from '@/src/components/common/InnerCard'
-import { Button } from '@/src/components/common/StepsCard'
+import { Button } from '@/src/components/card/FormCard'
+import { InnerCard } from '@/src/components/card/InnerCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
@@ -24,7 +24,9 @@ export const UserStakeClaimCard: React.FC = withGenericSuspense(
       refetchAllStakeData,
     } = useStakeInformation()
     const [isClaimLoading, setIsClaimLoading] = useState(false)
-    const { claimRewards } = useContractInstance(StakedToken__factory, 'StakedToken', true)
+    const { claimRewards } = useContractInstance(StakedToken__factory, 'StakedToken', {
+      useSigner: true,
+    })
     const submitDisabled = userAmountAvailableToClaim.isZero() || isClaimLoading
 
     const ClaimButton: React.FC = ({ ...restProps }) => (

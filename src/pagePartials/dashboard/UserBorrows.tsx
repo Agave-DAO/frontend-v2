@@ -11,12 +11,12 @@ import { MyAssetSkeletonLoading } from '@/src/components/loading/SkeletonLoading
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { InterestRateMode, useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 
 export const UserBorrows: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const userBorrows = useUserBorrows()
-    const { openBorrowRepayModal } = useModalsContext()
+    const { openBorrowRepayModal } = useTokenActionsModalsContext()
     const agaveTokens = useAgaveTokens()
 
     const enabledMarketsAddresses = useMarketsData()

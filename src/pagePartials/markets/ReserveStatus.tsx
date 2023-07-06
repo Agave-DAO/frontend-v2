@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { BigNumber, FixedNumber } from '@ethersproject/bignumber'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
-import { InnerCard } from '@/src/components/common/InnerCard'
+import { InnerCard } from '@/src/components/card/InnerCard'
 import { Rows as BaseRows, Row, RowKey, RowValue } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
 import { InnerTitle } from '@/src/components/text/InnerTitle'

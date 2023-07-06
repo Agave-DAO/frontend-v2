@@ -1,6 +1,6 @@
 import { UserAsset } from '@/src/components/asset/UserAsset'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
-import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
+import { MoreActionsDropdown } from '@/src/components/dropdown/MoreActionsDropdown'
 import { Amount } from '@/src/components/helpers/Amount'
 import { EmptyContent } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
@@ -9,12 +9,12 @@ import { AssetsList } from '@/src/components/layout/AssetsList'
 import { MyAssetSkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 
 export const UserDeposits: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
     const userDeposits = useUserDeposits()
-    const { openDepositWithdrawModal } = useModalsContext()
+    const { openDepositWithdrawModal } = useTokenActionsModalsContext()
     const agaveTokens = useAgaveTokens()
 
     return !userDeposits.length ? (

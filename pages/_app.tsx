@@ -7,19 +7,19 @@ import styled from 'styled-components'
 import { GoogleAnalytics } from 'nextjs-google-analytics'
 import { SWRConfig } from 'swr'
 
+import { Footer } from '@/src/components/footer/Footer'
 import { Header } from '@/src/components/header/Header'
 import { InnerContainer } from '@/src/components/helpers/InnerContainer'
 import SafeSuspense from '@/src/components/helpers/SafeSuspense'
-import { Footer } from '@/src/components/layout/Footer'
 import Toast from '@/src/components/toast/Toast'
 import TooltipConfig from '@/src/components/tooltip/TooltipConfig'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { Head } from '@/src/pagePartials/index/Head'
 import { TransactionNotificationProvider } from '@/src/providers/TransactionNotificationProvider'
-import AgaveTokensProvider from '@/src/providers/agaveTokensProvider'
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
-import ModalsProvider from '@/src/providers/modalsProvider'
+import MinHealthConfigurationModalProvider from '@/src/providers/minHealthConfigurationModalProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
+import TokenActionsModalProvider from '@/src/providers/tokenActionsModalProvider'
 
 import 'sanitize.css'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -47,7 +47,6 @@ const Scroll = styled.div`
 const Container = styled(InnerContainer)`
   flex-grow: 1;
   overflow: hidden;
-  padding-bottom: 40px;
   padding-top: 25px;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.desktopStart}) {
@@ -67,6 +66,10 @@ const MobileScrollTo = styled.div`
 `
 
 const Web3ConnectionProvider = dynamic(() => import('@/src/providers/web3ConnectionProvider'), {
+  ssr: false,
+})
+
+const AgaveTokensProvider = dynamic(() => import('@/src/providers/agaveTokensProvider'), {
   ssr: false,
 })
 
@@ -100,14 +103,16 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               <TransactionNotificationProvider>
                 <CookiesWarningProvider>
                   <AgaveTokensProvider>
-                    <ModalsProvider>
-                      <Header />
-                      <Scroll>
-                        <MobileScrollTo id="main" />
-                        <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
-                        <Footer />
-                      </Scroll>
-                    </ModalsProvider>
+                    <MinHealthConfigurationModalProvider>
+                      <TokenActionsModalProvider>
+                        <Header />
+                        <Scroll>
+                          <MobileScrollTo id="main" />
+                          <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
+                          <Footer />
+                        </Scroll>
+                      </TokenActionsModalProvider>
+                    </MinHealthConfigurationModalProvider>
                   </AgaveTokensProvider>
                 </CookiesWarningProvider>
               </TransactionNotificationProvider>

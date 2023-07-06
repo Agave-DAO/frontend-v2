@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
@@ -37,7 +37,7 @@ export function useWithdrawStepInitial({
   const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()
 
   const disableSubmit =
-    tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(Zero)
+    tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(ZERO_BN)
 
   const maxSafeAmount = maxAmountGivenHealthFactor({
     amount: agTokenBalance,

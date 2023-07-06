@@ -4,16 +4,16 @@ import styled from 'styled-components'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import TxButton from '@/src/components/buttons/txButton'
-import { StepAuxiliaryAction } from '@/src/components/common/StepAuxiliaryAction'
 import {
   Rows as BaseRows,
   Button,
   ButtonWrapper,
+  FormCard,
   Row,
   RowKey,
   RowValueBig,
-  StepsCard,
-} from '@/src/components/common/StepsCard'
+} from '@/src/components/card/FormCard'
+import { TitleWithAction } from '@/src/components/common/TitleWithAction'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
@@ -43,8 +43,10 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
       stakedTokenAddress,
     } = useStakeInformation()
 
-    const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken', true)
-    const stakedToken = useContractInstance(ERC20__factory, stakedTokenAddress, true)
+    const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken', {
+      useSigner: true,
+    })
+    const stakedToken = useContractInstance(ERC20__factory, stakedTokenAddress, { useSigner: true })
 
     const { approvedAmount, refetchAllowance } = useGetERC20Allowance(
       stakedTokenAddress,
@@ -137,8 +139,8 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
     )
 
     return (
-      <StepsCard {...restProps}>
-        <StepAuxiliaryAction
+      <FormCard {...restProps}>
+        <TitleWithAction
           button={{
             text: 'Use max',
             onClick: () => setValue(userAmountAvailableToStake.toString()),
@@ -182,7 +184,7 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
             )}
           </ButtonWrapper>
         </StepForm>
-      </StepsCard>
+      </FormCard>
     )
   },
   ({ ...restProps }) => <SkeletonLoading style={{ height: '311px' }} {...restProps} />,

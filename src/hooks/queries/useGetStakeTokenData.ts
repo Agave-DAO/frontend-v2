@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 
-import { WeiPerEther, Zero } from '@ethersproject/constants'
-
+import { WEI_PER_ETHER, ZERO_BN } from '@/src/constants/bigNumber'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { AaveDistributionManager__factory, StakedToken__factory } from '@/types/generated/typechain'
@@ -43,10 +42,10 @@ export const useGetStakeTokenData = () => {
     if (!stakedTokenAssetInfo || !stakedTokenData) {
       return {
         data: {
-          emissionPerSecond: Zero,
-          totalStaked: Zero,
-          cooldownSeconds: Zero,
-          unstakeWindow: Zero,
+          emissionPerSecond: ZERO_BN,
+          totalStaked: ZERO_BN,
+          cooldownSeconds: ZERO_BN,
+          unstakeWindow: ZERO_BN,
           stakedTokenAddress: '',
         },
         refetch: refetchStakedTokenData,
@@ -54,7 +53,7 @@ export const useGetStakeTokenData = () => {
     }
     const totalStaked = stakedTokenData[0]
     const emissionPerSecond = totalStaked.gt(0)
-      ? stakedTokenAssetInfo[0].emissionPerSecond.mul(WeiPerEther).div(totalStaked) // emissionPerSecond in wei per second
+      ? stakedTokenAssetInfo[0].emissionPerSecond.mul(WEI_PER_ETHER).div(totalStaked) // emissionPerSecond in wei per second
       : stakedTokenAssetInfo[0].emissionPerSecond
     const stakedTokenAddress = stakedTokenData[1]
     const cooldownSeconds = stakedTokenData[2]

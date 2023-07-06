@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { HealthFactor } from '@/src/components/common/HealthFactor'
-import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/common/StepsCard'
+import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/card/FormCard'
+import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'

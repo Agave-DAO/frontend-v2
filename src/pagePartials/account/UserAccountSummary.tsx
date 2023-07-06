@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { HealthFactor } from '@/src/components/common/HealthFactor'
+import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
     background-color: ${({ theme: { colors } }) => colors.darkGreen20};
     border-radius: 24px;
     min-width: 0;
-    padding: 40px 24px;
+    padding: 40px var(--padding-xl);
   }
 `
 
@@ -31,7 +31,7 @@ const Info = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  padding: 0 26px;
+  padding: 0 var(--padding-xl);
   row-gap: 16px;
   width: 100%;
 `
@@ -64,7 +64,7 @@ const HFWrapper = styled.div`
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
-  padding: 16px;
+  padding: var(--padding-md);
   row-gap: 8px;
   width: 100%;
 `
@@ -87,7 +87,7 @@ const EmptyContent = styled.div`
   font-size: 1.4rem;
   line-height: 1.5;
   margin: auto;
-  padding: 0 30px;
+  padding: 0 var(--padding-xxl);
   text-align: center;
 `
 

@@ -63,7 +63,7 @@ const ListItem: React.FC<SkeletonProps> = ({ children, ...restProps }) => (
 const Head = styled(SkeletonLoading)`
   border-radius: 16px 16px 0 0;
   height: 106px;
-  padding: 24px 16px;
+  padding: var(--padding-xl) var(--padding-md);
 `
 
 Head.defaultProps = {

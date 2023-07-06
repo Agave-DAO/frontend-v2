@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
-import { InnerCard } from '@/src/components/common/InnerCard'
-import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
+import { InnerCard } from '@/src/components/card/InnerCard'
 import { EmphasizedRowValue, Row, RowKey, RowValue, Rows } from '@/src/components/common/Rows'
+import { MoreActionsDropdown } from '@/src/components/dropdown/MoreActionsDropdown'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Text as ECText, Title as ECTitle } from '@/src/components/helpers/EmptyContent'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
@@ -13,7 +13,7 @@ import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { useUserDepositsInformationByToken } from '@/src/hooks/presentation/useUserDepositsInformationByToken'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const UserDepositsImp: React.FC<{
@@ -77,7 +77,7 @@ export const UserDepositDetails = withGenericSuspense(
       tokenAddress,
       userAddress,
     })
-    const { openDepositWithdrawModal } = useModalsContext()
+    const { openDepositWithdrawModal } = useTokenActionsModalsContext()
 
     const items = [
       {

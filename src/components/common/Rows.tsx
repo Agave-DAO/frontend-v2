@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import { HTMLAttributes, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { CollapseToggle } from '@/src/components/assets/CollapseToggle'
@@ -26,11 +26,11 @@ export const Row = styled.div<{ variant?: RowVariant }>`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 8px 16px;
+  padding: var(--padding-sm) var(--padding-md);
   transition: all 0.15s linear;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    padding: 16px;
+    padding: var(--padding-md);
   }
 `
 
@@ -131,7 +131,7 @@ export const CollapsableRowsHandler: React.FC<CollapsableRowsHandlerProps> = ({
   variant,
   ...restProps
 }) => {
-  const [isCollapsed, setIsCollapsed] = React.useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(true)
   const onToggle = () => {
     setIsCollapsed(!isCollapsed)
   }

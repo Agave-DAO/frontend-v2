@@ -1,13 +1,12 @@
 import styled from 'styled-components'
 
-import { Zero } from '@ethersproject/constants'
-
 import { Ok } from '@/src/components/assets/Ok'
 import { Row, RowKey, RowValue, Rows } from '@/src/components/common/Rows'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Percentage } from '@/src/components/helpers/Percentage'
 import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useGetReserveLimits } from '@/src/hooks/queries/useGetReserveLimits'
 import {
@@ -21,14 +20,14 @@ const Title = styled(InnerTitle)`
   margin-bottom: 32px;
 `
 
-export function MarketInformation({ tokenAddress }: { tokenAddress: string }) {
+export const MarketInformation = ({ tokenAddress }: { tokenAddress: string }) => {
   const { getMarket } = useMarketsData()
   const { assetData, priceData } = getMarket(tokenAddress)
   const {
     data: { borrowLimit, depositLimit },
   } = useGetReserveLimits(tokenAddress)
 
-  const usedAsCollateral = assetData.usageAsCollateralEnabled ? assetData.ltv.gt(Zero) : false
+  const usedAsCollateral = assetData.usageAsCollateralEnabled ? assetData.ltv.gt(ZERO_BN) : false
 
   return (
     <>

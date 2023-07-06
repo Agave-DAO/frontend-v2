@@ -4,7 +4,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 import { formatAmount } from '@/src/utils/common'
 
 export const useBorrowStepFinal = ({
@@ -23,7 +23,7 @@ export const useBorrowStepFinal = ({
     'after',
   )
 
-  const { closeModal } = useModalsContext()
+  const { closeModal } = useTokenActionsModalsContext()
 
   const final = () => {
     router.push('/my-account')

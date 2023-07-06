@@ -3,11 +3,7 @@ import styled from 'styled-components'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { getIconBackgroundColor } from '@/src/components/token/TokenIcon'
-
 const Wrapper = styled.div`
-  --padding-medium: 16px;
-  --padding-xl: 24px;
   --border-radius: 16px;
 
   background-color: rgba(1, 157, 139, 0.1);
@@ -23,21 +19,7 @@ export const Head = styled.div`
   border-top-right-radius: var(--border-radius);
   column-gap: 16px;
   display: flex;
-  padding: var(--padding-xl) var(--padding-medium);
-`
-
-export const Icon = styled.div<{ symbol?: string }>`
-  --token-icon-size: 58px;
-
-  align-items: center;
-  background-color: ${({ symbol }) => getIconBackgroundColor(symbol)};
-  border-radius: 16px;
-  display: flex;
-  flex-shrink: 0;
-  height: var(--token-icon-size);
-  justify-content: center;
-  transition: background-color 0.25s linear;
-  width: var(--token-icon-size);
+  padding: var(--padding-xl) var(--padding-md);
 `
 
 export const HeadContents = styled.div`
@@ -49,7 +31,10 @@ export const HeadContents = styled.div`
 `
 
 export const Body = styled.div`
-  padding: var(--padding-medium);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: var(--padding-md);
 `
 
 export interface TitleValueType {

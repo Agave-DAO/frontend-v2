@@ -1,12 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Icon } from '@/src/components/asset/Asset'
+import { Icon } from '@/src/components/asset/Icon'
 import { ChevronDown } from '@/src/components/assets/ChevronDown'
-import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/common/Dropdown'
-import { TokenIcon } from '@/src/components/token/TokenIcon'
+import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/dropdown/Dropdown'
 import { TokenWithType } from '@/src/config/agaveTokens'
-import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useTokensLists } from '@/src/hooks/useTokensLists'
 import { Token } from '@/types/token'
 
@@ -14,13 +12,6 @@ const Wrapper = styled.div`
   align-items: center;
   column-gap: 15px;
   display: flex;
-`
-
-const NoToken = styled.span`
-  color: #000;
-  font-size: 1.6rem;
-  font-weight: 700;
-  line-height: 1.2;
 `
 
 const Dropdown = styled(BaseDropdown)`
@@ -54,17 +45,12 @@ export const TokenDropdown: React.FC<{
   activeTokenSymbol?: string
   onChange?: (token: Token | null) => void
 }> = ({ activeTokenSymbol = '', onChange, ...restProps }) => {
-  const { onSelectToken, tokensList } = useTokensLists(['reserve'], onChange)
+  const { onSelectToken, tokensList } = useTokensLists({
+    includeFrozen: false,
+    types: ['reserve'],
+    onChange,
+  })
   const [currentToken, setCurrentToken] = useState<string>(activeTokenSymbol)
-
-  // Filter out frozen markets
-  const enabledMarketsAddresses = useMarketsData()
-    .agaveMarketsData?.filter((market) => market.assetData.isFrozen === false)
-    ?.map((market) => market.tokenAddress)
-
-  const enabledTokensList = tokensList.filter((token) =>
-    enabledMarketsAddresses?.includes(token.address),
-  )
 
   const onSelect = useCallback(
     (token: TokenWithType) => {
@@ -79,10 +65,8 @@ export const TokenDropdown: React.FC<{
   }, [activeTokenSymbol])
 
   return (
-    <Wrapper>
-      <Icon symbol={currentToken}>
-        {currentToken ? <TokenIcon dimensions={40} symbol={currentToken} /> : <NoToken>?</NoToken>}
-      </Icon>
+    <Wrapper {...restProps}>
+      {currentToken && <Icon dimensions={40} symbol={currentToken} />}
       <Dropdown
         dropdownButton={
           <Button>
@@ -90,7 +74,7 @@ export const TokenDropdown: React.FC<{
             <ChevronDown />
           </Button>
         }
-        items={enabledTokensList.map((item, index) => (
+        items={tokensList.map((item, index) => (
           <DropdownItem
             key={index}
             onClick={() => {
@@ -100,10 +84,7 @@ export const TokenDropdown: React.FC<{
             {item.symbol}
           </DropdownItem>
         ))}
-        {...restProps}
       />
     </Wrapper>
   )
 }
-
-export default TokenDropdown

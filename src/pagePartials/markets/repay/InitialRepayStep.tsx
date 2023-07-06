@@ -1,18 +1,18 @@
-import { Dispatch, SetStateAction, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { HealthFactor } from '@/src/components/common/HealthFactor'
 import {
+  ActionButton,
   Button,
   ButtonWrapper,
   Row,
   RowKey,
   RowValue,
-  StepActionButton,
-} from '@/src/components/common/StepsCard'
-import { TabToggle } from '@/src/components/common/TabToggle'
+} from '@/src/components/card/FormCard'
+import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
+import { TabToggle } from '@/src/components/tabs/TabToggle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { TokenWithType } from '@/src/config/agaveTokens'
@@ -22,7 +22,7 @@ import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useRepayStepInitial } from '@/src/pagePartials/markets/repay/hooks/useRepayStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useMinHealthConfigurationModalContext } from '@/src/providers/minHealthConfigurationModalProvider'
 import { NumberType } from '@/src/utils/format'
 import { Token } from '@/types/token'
 
@@ -98,7 +98,7 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
     tokenInputStatus,
     tokenInputStatusText,
   } = useRepayStepInitial({ amount, interestRateMode, tokenAddress })
-  const { openMinHealthConfigurationModal } = useModalsContext()
+  const { openMinHealthConfigurationModal } = useMinHealthConfigurationModalContext()
   const market = useMarketsData().getMarket(tokenAddress)
   const agaveTokens = useAgaveTokens()
 
@@ -172,9 +172,9 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
         <Button disabled={disableSubmit} onClick={nextStep}>
           Repay
         </Button>
-        <StepActionButton onClick={openMinHealthConfigurationModal}>
+        <ActionButton onClick={openMinHealthConfigurationModal}>
           Min health factor configuration
-        </StepActionButton>
+        </ActionButton>
       </ButtonWrapper>
     </Stepper>
   )

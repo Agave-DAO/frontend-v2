@@ -6,7 +6,7 @@ import {
   Dropdown as BaseDropdown,
   DropdownPosition,
   ItemProps,
-} from '@/src/components/common/Dropdown'
+} from '@/src/components/dropdown/Dropdown'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { truncateStringInTheMiddle } from '@/src/utils/strings'
 
@@ -50,7 +50,7 @@ const Item = styled.div<ItemProps>`
   justify-content: space-between;
   line-height: 1.2;
   overflow: hidden;
-  padding: 8px 12px;
+  padding: var(--padding-sm) var(--padding-sm-md);
   text-decoration: none;
   text-overflow: ellipsis;
   white-space: nowrap;

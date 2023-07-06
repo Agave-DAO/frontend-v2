@@ -2,8 +2,8 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import TxButton from '@/src/components/buttons/txButton'
-import { InnerCard } from '@/src/components/common/InnerCard'
-import { Button } from '@/src/components/common/StepsCard'
+import { Button } from '@/src/components/card/FormCard'
+import { InnerCard } from '@/src/components/card/InnerCard'
 import { Amount } from '@/src/components/helpers/Amount'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
@@ -24,7 +24,7 @@ const StakeActionCard = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  padding: 24px 16px 16px;
+  padding: var(--padding-xl) var(--padding-md) var(--padding-md);
 `
 
 const CoolingDown = styled(StakeActionCard)``
@@ -76,7 +76,9 @@ export const UserStakedCard: React.FC = withGenericSuspense(
       isCooldownActive && !isInUnstakeWindow && !!userActivateCooldownReady
     const showUnstakeWindowCooldown = isInUnstakeWindow && !!userActivateCooldownTo
 
-    const { cooldown, redeem } = useContractInstance(StakedToken__factory, 'StakedToken', true)
+    const { cooldown, redeem } = useContractInstance(StakedToken__factory, 'StakedToken', {
+      useSigner: true,
+    })
 
     const ActivateCooldownButton: React.FC = ({ ...restProps }) => {
       const submitDisabled = isActivateCooldownLoading || userAmountStaked.isZero()

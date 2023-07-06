@@ -32,4 +32,5 @@ Overlay.defaultProps = {
   'aria-describedby': 'modalDescription',
   'aria-labelledby': 'modalTitle',
   className: 'modal',
+  tabIndex: -1,
 }

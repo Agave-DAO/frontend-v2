@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 import { ActionButton } from '@/src/components/buttons/ActionButton'
-import { HealthFactor } from '@/src/components/common/HealthFactor'
-import { InnerCard } from '@/src/components/common/InnerCard'
+import { InnerCard } from '@/src/components/card/InnerCard'
 import { EmphasizedRowValue, Row, RowKey, RowValue, Rows } from '@/src/components/common/Rows'
+import { HealthFactor } from '@/src/components/healthFactor/HealthFactor'
 import { Amount } from '@/src/components/helpers/Amount'
 import { Text as ECText, Title as ECTitle } from '@/src/components/helpers/EmptyContent'
 import { Percentage } from '@/src/components/helpers/Percentage'
@@ -17,7 +17,7 @@ import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
 import { HealthFactor as HealthFactorTooltip } from '@/src/pagePartials/common/tooltips'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useTokenActionsModalsContext } from '@/src/providers/tokenActionsModalProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 const UserBorrowsImp = ({
@@ -108,7 +108,7 @@ export const UserBorrowDetails = withGenericSuspense(
       tokenAddress,
       userAddress,
     })
-    const { openBorrowRepayModal } = useModalsContext()
+    const { openBorrowRepayModal } = useTokenActionsModalsContext()
 
     return (
       <Wrapper {...restProps}>

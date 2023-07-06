@@ -24,7 +24,8 @@
       ]
     },
     "incremental": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "downlevelIteration": true
   },
   "include": [
     "src/pages/**/*",
@@ -35,6 +36,7 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "strategyTemplates"
   ]
 }

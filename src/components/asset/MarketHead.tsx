@@ -1,11 +1,10 @@
-import Link from 'next/link'
 import styled from 'styled-components'
 
-import { Head, HeadContents, Icon } from '@/src/components/asset/Asset'
+import { Head, HeadContents } from '@/src/components/asset/Asset'
 import { AssetTitle } from '@/src/components/asset/AssetTitle'
 import { AssetValue, Props as AssetValueProps } from '@/src/components/asset/AssetValue'
+import { Icon } from '@/src/components/asset/Icon'
 import { AGoTo as BaseAGoTo } from '@/src/components/buttons/ButtonGoTo'
-import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 const AGoTo = styled(BaseAGoTo)`
@@ -28,16 +27,12 @@ export const MarketHead: React.FC<Props> = ({
 
   return (
     <Head {...restProps}>
-      <Icon symbol={symbol}>
-        <TokenIcon dimensions={36} symbol={symbol} />
-      </Icon>
+      <Icon dimensions={36} symbol={symbol} />
       <HeadContents>
         <AssetTitle>Market Size</AssetTitle>
         <AssetValue tokenValue={tokenValue} usdValue={usdValue} />
       </HeadContents>
-      <Link href={href} legacyBehavior passHref shallow>
-        <AGoTo />
-      </Link>
+      <AGoTo href={href} />
     </Head>
   )
 }

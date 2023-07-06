@@ -1,13 +1,11 @@
 import { useCallback } from 'react'
 
-import { contracts } from '@/src/contracts/contracts'
 import { useGetVariableDebtBorrowAllowance } from '@/src/hooks/queries/useGetVariableDebtBorrowAllowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { VariableDebtToken__factory } from '@/types/generated/typechain'
+import { VariableDebtToken__factory, WETHGateway__factory } from '@/types/generated/typechain'
 
 export const useBorrowStepDelegate = ({
   amount,
@@ -16,9 +14,12 @@ export const useBorrowStepDelegate = ({
   amount: string
   tokenAddress: string
 }) => {
-  const { appChainId } = useWeb3ConnectedApp()
   const agaveTokens = useAgaveTokens()
-  const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
+  const wrappedNativeGatewayAddress = useContractInstance(
+    WETHGateway__factory,
+    'WETHGateway',
+  ).address
+
   const variableDebtTokenAddress = agaveTokens.getProtocolTokenInfo(
     agaveTokens.wrapperToken.address,
     'variableDebt',
@@ -30,7 +31,9 @@ export const useBorrowStepDelegate = ({
     asset: variableDebtTokenAddress,
   }
 
-  const variableDebtToken = useContractInstance(VariableDebtToken__factory, params.asset, true)
+  const variableDebtToken = useContractInstance(VariableDebtToken__factory, params.asset, {
+    useSigner: true,
+  })
   const sendTx = useTransaction()
 
   const { refetchAllowance } = useGetVariableDebtBorrowAllowance(params.asset, params.spender)

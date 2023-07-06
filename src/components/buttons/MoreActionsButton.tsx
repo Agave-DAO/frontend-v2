@@ -10,13 +10,13 @@ import {
 } from '@/src/components/buttons/Button'
 
 const CommonCSS = css`
-  --padding: 12px;
+  --padding: var(--padding-sm-md);
 
   padding-left: var(--padding);
   padding-right: var(--padding);
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
-    --padding: 16px;
+    --padding: var(--padding-md);
   }
 `
 

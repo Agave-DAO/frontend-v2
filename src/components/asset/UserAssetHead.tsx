@@ -4,15 +4,15 @@ import styled from 'styled-components'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { AsCollateral } from '@/src/components/asset/AsCollateral'
-import { Head, HeadContents, Icon } from '@/src/components/asset/Asset'
+import { Head, HeadContents } from '@/src/components/asset/Asset'
 import { AssetBadge } from '@/src/components/asset/AssetBadge'
 import { AssetTitle } from '@/src/components/asset/AssetTitle'
 import { AssetValue, Props as AssetValueProps } from '@/src/components/asset/AssetValue'
 import { HeadInnerCollapsable } from '@/src/components/asset/HeadInnerCollapsable'
+import { Icon } from '@/src/components/asset/Icon'
 import { ButtonToggleInfo } from '@/src/components/buttons/ButtonToggleInfo'
-import { RewardPair } from '@/src/components/common/RewardPair'
 import { Percentage } from '@/src/components/helpers/Percentage'
-import { TokenIcon } from '@/src/components/token/TokenIcon'
+import { RewardPair } from '@/src/components/token/RewardPair'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 const Wrapper = styled(Head)`
@@ -124,9 +124,7 @@ export const UserAssetHead: React.FC<Props> = ({
 
   return (
     <Wrapper {...restProps}>
-      <Icon symbol={symbol}>
-        <TokenIcon dimensions={36} symbol={symbol} />
-      </Icon>
+      <Icon dimensions={36} symbol={symbol} />
       <HeadContents>
         <AssetTitle>Balance</AssetTitle>
         <AssetValue tokenValue={tokenValue} usdValue={usdValue} />

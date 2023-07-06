@@ -4,6 +4,7 @@
 import { darken } from 'polished'
 
 const error = '#F4387C'
+const errorLight = `#FF8947`
 const errorDark = darken(0.1, error)
 const success = '#33dd33'
 
@@ -11,6 +12,7 @@ const primary = '#019D8B'
 const primary10 = `${primary}1A`
 const primary30 = `${primary}4D`
 const primaryLight = '#40B390'
+const primaryUltraLight = '#69C993'
 const primaryDarkened = darken(0.05, primary)
 
 const mainLight = '#92DE95'
@@ -50,12 +52,17 @@ const white50 = 'rgba(255, 255, 255, 0.5)'
 const white60 = 'rgba(255, 255, 255, 0.6)'
 const white80 = 'rgba(255, 255, 255, 0.9)'
 
+const almostWhite = '#F0F8F7'
+
 const textColor = '#fff'
 const textColor50 = white50
 const textColor60 = white60
 
+const lightGrayUltra = '#E1EBEA'
 const lightestGray = '#F0F4F4'
 const lighterGray = '#D1DDDC'
+const lighterGray50 = `${lighterGray}80`
+const lightGray = '#B3C7C4'
 
 const gray = '#97B1AB'
 
@@ -71,7 +78,9 @@ const darkBackground0 = `rgba(${darkBackground}, 0)`
 const darkBackground02 = `rgba(${darkBackground}, 0.2)`
 const darkBackground04 = `rgba(${darkBackground}, 0.4)`
 const darkBackground06 = `rgba(${darkBackground}, 0.6)`
+
 const accent = '#9BEFD7'
+const accentDark = '#68C7C1'
 
 const gradientLight = `linear-gradient(84.32deg, ${tertiary} 0%, ${primaryLight} 99.25%)`
 const mainBodyGradient = `radial-gradient(64.22% 34.97% at 0% 0%, ${tertiary30} 0%, ${tertiary0} 100%), linear-gradient(188.87deg, ${primary} 4.99%, ${secondary} 62.79%)`
@@ -112,6 +121,14 @@ export const dark = {
   buttonDark: {
     backgroundColor: darkGreen,
     backgroundColorHover: darkGreenDarkened,
+    borderColor: 'transparent',
+    borderColorHover: 'transparent',
+    color: textColor,
+    colorHover: textColor,
+  },
+  buttonDarker: {
+    backgroundColor: mainDark4,
+    backgroundColorHover: mainDark3,
     borderColor: 'transparent',
     borderColorHover: 'transparent',
     color: textColor,
@@ -176,6 +193,8 @@ export const dark = {
   },
   colors: {
     accent: accent,
+    accentDark: accentDark,
+    almostWhite: almostWhite,
     black05: black05,
     black20: black20,
     black40: black40,
@@ -198,9 +217,13 @@ export const dark = {
     darkestGray: darkestGray,
     darkishGray: darkishGray,
     error: error,
+    errorLight: errorLight,
     gray: gray,
     greenGradientLight: greenGradientLight,
     greenGradientMedium: greenGradientMedium,
+    lightGray: lightGray,
+    lightGrayUltra: lightGrayUltra,
+    lighterGray50: lighterGray50,
     lighterGray: lighterGray,
     lightestGray: lightestGray,
     mainDark1: mainDark1,
@@ -216,6 +239,7 @@ export const dark = {
     primary: primary,
     primaryDarkened: primaryDarkened,
     primaryLight: primaryLight,
+    primaryUltraLight: primaryUltraLight,
     secondary20: secondary20,
     secondary30: secondary30,
     secondary50: secondary50,
@@ -261,6 +285,21 @@ export const dark = {
       color: textColor50,
     },
   },
+  textFieldLight: {
+    backgroundColor: lighterGray,
+    borderColor: 'transparent',
+    color: secondary,
+    errorColor: error,
+    successColor: success,
+    active: {
+      backgroundColor: lighterGray,
+      borderColor: 'transparent',
+      color: secondary,
+    },
+    placeholder: {
+      color: secondary50,
+    },
+  },
   header: {
     backgroundColor: 'transparent',
     color: textColor,
@@ -293,9 +332,10 @@ export const dark = {
     sidebarBackgroundColor: secondary,
   },
   toast: {
-    backgroundColor: componentBackgroundColor,
-    borderColor: borderColor,
-    boxShadow: '0 0 10px rgba(255, 255, 255, 0.25)',
+    backgroundColor: secondary,
+    borderColor: secondary,
+    boxShadow:
+      '0 27px 80px rgba(0, 0, 0, 0.07), 0 10.4px 25.4815px rgba(0, 0, 0, 0.0425185), 0px 2.2px 6.51852px rgba(0, 0, 0, 0.0274815)',
   },
   tooltip: {
     backgroundColor: secondary,

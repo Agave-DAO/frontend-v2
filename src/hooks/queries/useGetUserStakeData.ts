@@ -1,8 +1,5 @@
-import { isAddress } from '@ethersproject/address'
-import { Zero } from '@ethersproject/constants'
-import useSWR from 'swr'
-
-import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
+import { ZERO_BN } from '@/src/constants/bigNumber'
+import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
@@ -25,7 +22,7 @@ export const useGetUserAmountInStake = () => {
     `StakedToken-balanceOf-${address}`,
   )
 
-  return { data: userStakedAmount?.[0] ?? Zero, refetch }
+  return { data: userStakedAmount?.[0] ?? ZERO_BN, refetch }
 }
 /**
  *
@@ -33,21 +30,14 @@ export const useGetUserAmountInStake = () => {
  */
 
 export const useGetUserAmountAvailableToStake = () => {
-  const { address, readOnlyAppProvider } = useWeb3ConnectedApp()
-  const stakeData = useGetStakeTokenData().data
+  const { address } = useWeb3ConnectedApp()
+  const agveTokenInstance = useContractInstance(ERC20__factory, 'AGVE')
 
-  const { data, mutate } = useSWR(
-    isAddress(stakeData.stakedTokenAddress)
-      ? `available-to-stake-${stakeData.stakedTokenAddress}-${address}`
-      : null,
-    async () => {
-      const erc20 = ERC20__factory.connect(stakeData.stakedTokenAddress, readOnlyAppProvider)
-      const balance = await erc20.balanceOf(address)
-      return balance
-    },
-  )
+  const calls = [agveTokenInstance.balanceOf] as const
 
-  return { data: data ?? Zero, refetch: mutate }
+  const [{ data }, refetch] = useContractCall(calls, [[address]], `balanceOf-AGVE-${address}`)
+
+  return { data: data?.[0] ?? ZERO_BN, refetch }
 }
 /**
  * @returns amount of AGAVE staked tokens that the user can claim.
@@ -65,7 +55,7 @@ export const useGetUserAmountAvailableToClaim = () => {
     `StakedToken-getClaimableRewards-${address}`,
   )
 
-  return { data: userAmountClaimable?.[0] ?? Zero, refetch }
+  return { data: userAmountClaimable?.[0] ?? ZERO_BN, refetch }
 }
 /**
  * `useGetUserStakeCooldown` returns the user's stake cooldown
@@ -84,9 +74,9 @@ export const useGetUserStakeCooldown = () => {
     [[address]],
     `StakedToken-stakersCooldowns-${address}`,
     {
-      refreshInterval: 10_000,
+      refreshInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
     },
   )
 
-  return { data: userStakeCooldown?.[0] ?? Zero, refetch }
+  return { data: userStakeCooldown?.[0] ?? ZERO_BN, refetch }
 }

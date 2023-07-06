@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  padding: var(--padding-xl);
 `
 
 const Title = styled.h1`

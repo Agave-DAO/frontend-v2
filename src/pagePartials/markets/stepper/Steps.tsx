@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
 import { Done } from '@/src/components/assets/Done'
-import { ButtonType } from '@/src/components/common/StepAuxiliaryAction'
-import { ExternalLink } from '@/src/components/common/StepsCard'
+import { ExternalLink } from '@/src/components/card/FormCard'
+import { ButtonType } from '@/src/components/common/TitleWithAction'
 import { Step } from '@/src/pagePartials/markets/stepper/Step'
 import { StepAction } from '@/src/pagePartials/markets/stepper/StepAction'
 import { Stepper } from '@/src/pagePartials/markets/stepper/Stepper'
@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   column-gap: 8px;
   display: flex;
   margin: 4px 0;
-  padding: 8px;
+  padding: var(--padding-sm);
 `
 
 interface StepsProps {

@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react'
 import styled from 'styled-components'
 
-import { ButtonType, StepAuxiliaryAction } from '@/src/components/common/StepAuxiliaryAction'
-import { Rows as BaseRows, StepsCard } from '@/src/components/common/StepsCard'
+import { Rows as BaseRows, FormCard } from '@/src/components/card/FormCard'
+import { ButtonType, TitleWithAction } from '@/src/components/common/TitleWithAction'
 
 const TogglesWrapper = styled.div`
   align-items: center;
@@ -16,7 +16,7 @@ const TogglesWrapper = styled.div`
   margin-left: calc(var(--padding-horizontal) * -1);
   margin-right: calc(var(--padding-horizontal) * -1);
   margin-top: calc(var(--padding-top) * -1);
-  padding: 16px var(--padding-horizontal);
+  padding: var(--padding-md) var(--padding-horizontal);
   row-gap: 4px;
 `
 
@@ -46,10 +46,10 @@ export const Stepper: React.FC<Props> = ({
   toggles,
   ...restProps
 }) => (
-  <StepsCard {...restProps}>
+  <FormCard {...restProps}>
     {toggles && <TogglesWrapper>{toggles}</TogglesWrapper>}
-    <StepAuxiliaryAction button={titleButton} title={title} />
+    <TitleWithAction button={titleButton} title={title} />
     <Rows>{info}</Rows>
     <StepForm>{children}</StepForm>
-  </StepsCard>
+  </FormCard>
 )

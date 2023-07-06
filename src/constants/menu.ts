@@ -8,4 +8,8 @@ export const sections = [
     href: '/stake',
     section: 'Stake',
   },
+  {
+    href: '/strategies',
+    section: 'Strategies',
+  },
 ] as { href: string; section: string; hash?: string }[]

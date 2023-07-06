@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { contracts } from '@/src/contracts/contracts'
 import { useGetVariableDebtBorrowAllowance } from '@/src/hooks/queries/useGetVariableDebtBorrowAllowance'
+import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
+import { WETHGateway__factory } from '@/types/generated/typechain'
 
 export const useBorrowStepInitialIndex = ({
   amount,
@@ -14,9 +14,11 @@ export const useBorrowStepInitialIndex = ({
   amount: string
   tokenAddress: string
 }) => {
-  const { appChainId } = useWeb3ConnectedApp()
   const agaveTokens = useAgaveTokens()
-  const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
+  const wrappedNativeGatewayAddress = useContractInstance(
+    WETHGateway__factory,
+    'WETHGateway',
+  ).address
   const variableDebtTokenAddress = agaveTokens.getProtocolTokenInfo(
     agaveTokens.wrapperToken.address,
     'variableDebt',

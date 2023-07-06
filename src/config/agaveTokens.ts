@@ -1,7 +1,8 @@
 import nativeToken from '@/public/nativeToken.json'
-import protocolTokens from '@/public/protocolTokens.json'
-import reserveTokens from '@/public/reserveTokens.json'
+import reserveTokensBoosted from '@/public/reserveTokensBoosted.json'
+import reserveTokensMain from '@/public/reserveTokensMain.json'
 import stakeToken from '@/public/stakeToken.json'
+import { MarketVersions } from '@/src/contracts/contracts'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 import { memoize } from '@/src/utils/memoize'
 import { Token } from '@/types/token'
@@ -12,11 +13,11 @@ export type AgaveProtocolTokens = {
     ag: string
     variableDebt: string
     stableDebt: string
-    strategy: string
-    oracle: string
-    symbol: string // added to ease traceability
+    wag: string
   }
 }
+
+export type AgaveProtocolTokenStrictType = 'ag' | 'variableDebt' | 'stableDebt' | 'wag'
 
 export type AgaveProtocolTokenType =
   | 'ag'
@@ -25,6 +26,7 @@ export type AgaveProtocolTokenType =
   | 'reserve'
   | 'native'
   | 'stake'
+  | 'wag'
 
 export type TokenWithType = Token & { type: AgaveProtocolTokenType }
 
@@ -36,8 +38,6 @@ export interface IDAgaveTokens {
   nativeToken: Token
   wrapperToken: Token
   reserveTokens: Token[]
-  protocolTokens: AgaveProtocolTokens
-  stakeToken: Token
   allTokens: TokenWithType[]
   allIncentivesTokens: TokenWithType[]
   getRelatedTokensByAddress: (tokenAddress: string) => TokenInfo[]
@@ -48,25 +48,40 @@ export interface IDAgaveTokens {
   getProtocolTokenInfo: (reserveAddress: string, type: AgaveProtocolTokenType) => Token
 }
 
-class AgaveTokens implements IDAgaveTokens {
-  private _nativeToken: Token = nativeToken.tokens[0]
-  private _stakeToken: Token = stakeToken.tokens[0]
-  private _reserveTokens: Token[] = reserveTokens.tokens
-  private _protocolTokens: AgaveProtocolTokens = protocolTokens.protocolTokens
-  private _protocolName = 'Agave'
-  private _validLookupFields: (keyof ValidLookupFields)[] = ['address', 'symbol', 'name']
+const getReserveTokensByMarketVersion = (marketVersion: MarketVersions) => {
+  switch (marketVersion) {
+    case MarketVersions.boosted:
+      return reserveTokensBoosted.tokens
+    default:
+      return reserveTokensMain.tokens
+  }
+}
 
-  constructor() {
+class AgaveTokens implements IDAgaveTokens {
+  private _reserveTokens: Token[]
+  private _protocolName = 'Agave'
+  private _chainId = 100 // gnosis chain as default
+  private _validLookupFields: (keyof ValidLookupFields)[] = ['address', 'symbol', 'name']
+  private readonly _marketVersion: MarketVersions
+
+  constructor(marketVersion: MarketVersions) {
+    this._marketVersion = marketVersion
+    this._reserveTokens = getReserveTokensByMarketVersion(marketVersion)
+
     // runtime check to prevent consuming invalid token info
     this.allTokens.every(this.isValidTokenInfo)
   }
 
-  get nativeToken() {
-    return this._nativeToken
+  get marketVersion(): MarketVersions {
+    return this._marketVersion
   }
 
-  get stakeToken() {
-    return this._stakeToken
+  set chainId(chainId: number) {
+    this._chainId = chainId
+  }
+
+  get chainId() {
+    return this._chainId
   }
 
   @memoize()
@@ -82,31 +97,34 @@ class AgaveTokens implements IDAgaveTokens {
     return nativeWrapper
   }
 
+  get nativeToken() {
+    return nativeToken.tokens.filter(({ chainId }) => chainId === this._chainId)[0]
+  }
+
+  get stakeToken() {
+    return stakeToken.tokens.filter(({ chainId }) => chainId === this._chainId)[0]
+  }
+
   get reserveTokens() {
-    return this._reserveTokens
+    return this._reserveTokens.filter(({ chainId }) => chainId === this._chainId)
   }
 
-  get protocolTokens() {
-    return this._protocolTokens
-  }
-
-  @memoize()
   get allTokens(): TokenWithType[] {
     return [
-      {
-        ...this.stakeToken,
-        type: 'stake',
-      },
-      {
-        ...this.nativeToken,
-        type: 'native',
-      },
       ...this.reserveTokens.map(
         (tokenInfo): TokenWithType => ({
           ...tokenInfo,
           type: 'reserve',
         }),
       ),
+      {
+        ...this.nativeToken,
+        type: 'native',
+      },
+      {
+        ...this.stakeToken,
+        type: 'stake',
+      },
       ...Object.values(this.reserveTokens).flatMap(({ address }): TokenWithType[] => {
         return [
           { ...this.getProtocolTokenInfo(address, 'ag'), type: 'ag' },
@@ -118,6 +136,7 @@ class AgaveTokens implements IDAgaveTokens {
             ...this.getProtocolTokenInfo(address, 'stableDebt'),
             type: 'stableDebt',
           },
+          { ...this.getProtocolTokenInfo(address, 'wag'), type: 'wag' },
         ]
       }),
     ]
@@ -134,9 +153,7 @@ class AgaveTokens implements IDAgaveTokens {
 
     if (tokenInfo.type === 'reserve') {
       // discard `oracle`, `strategy`, and `symbol` from protocol tokens
-      const { oracle, strategy, symbol, ...protocolTokens } = this.getProtocolTokensByReserve(
-        tokenInfo.address,
-      )
+      const protocolTokens = this.getProtocolTokensByReserve(tokenInfo.address)
 
       return [
         {
@@ -197,7 +214,9 @@ class AgaveTokens implements IDAgaveTokens {
     }
 
     if (!foundToken) {
-      throw Error(`Unsupported token: ${field} ${value}`)
+      throw Error(
+        `Unsupported token: ${field} ${value} for selected market version ${this._marketVersion}`,
+      )
     }
 
     return foundToken
@@ -206,48 +225,45 @@ class AgaveTokens implements IDAgaveTokens {
   @memoize()
   private getReserveTokenByAddress(tokenAddress: string): Token {
     // lookup reserve token by reserve address
-    const tokenInfo = this._reserveTokens.find((token) =>
-      isSameAddress(token.address, tokenAddress),
-    )
-
-    // if not found, lookup reserve token by protocol token address
-    if (!tokenInfo) {
-      const foundToken = Object.entries(this._protocolTokens).find(
-        ([, { ag, stableDebt, variableDebt }]) => {
-          return (
-            isSameAddress(ag, tokenAddress) ||
-            isSameAddress(stableDebt, tokenAddress) ||
-            isSameAddress(variableDebt, tokenAddress)
-          )
-        },
-      )
-
-      if (!foundToken) {
-        throw Error(`Unsupported token: ${tokenAddress}`)
+    for (let i = 0; i < this.reserveTokens.length; i++) {
+      const token = this.reserveTokens[i]
+      if (isSameAddress(token.address, tokenAddress)) {
+        return token
       }
 
-      const [reserveAddress] = foundToken
+      if (!token.extensions.protocolTokens) {
+        continue
+      }
 
-      return this.getReserveTokenByAddress(reserveAddress)
+      // if not found, lookup reserve token by protocol token address
+      for (const tokenType in token.extensions.protocolTokens) {
+        if (
+          isSameAddress(
+            token.extensions.protocolTokens[tokenType as AgaveProtocolTokenStrictType],
+            tokenAddress,
+          )
+        ) {
+          return token
+        }
+      }
     }
 
-    return tokenInfo
+    throw Error(`Unsupported token: ${tokenAddress}`)
   }
 
+  @memoize()
   private getProtocolTokensByReserve(
     reserveAddress: string,
   ): AgaveProtocolTokens['reserveAddress'] {
-    const foundToken = Object.entries(this._protocolTokens).find(([address]) =>
+    const foundToken = this.reserveTokens.find(({ address }) =>
       isSameAddress(address, reserveAddress),
     )
 
-    if (!foundToken) {
+    if (!foundToken || !foundToken.extensions.protocolTokens) {
       throw Error(`Unsupported reserveAddress token: ${reserveAddress}`)
     }
 
-    const [, protocolTokens] = foundToken
-
-    return protocolTokens
+    return foundToken.extensions.protocolTokens
   }
 
   @memoize()
@@ -258,6 +274,10 @@ class AgaveTokens implements IDAgaveTokens {
       case 'ag':
         return {
           ...tokenInfo,
+          extensions: {
+            ...tokenInfo.extensions,
+            protocolTokens: undefined, // remove protocol tokens from extensions
+          },
           address: protocolTokens.ag,
           name: `${this._protocolName} interest bearing ${tokenInfo.symbol}`,
           symbol: `ag${tokenInfo.symbol}`,
@@ -265,6 +285,10 @@ class AgaveTokens implements IDAgaveTokens {
       case 'variableDebt':
         return {
           ...tokenInfo,
+          extensions: {
+            ...tokenInfo.extensions,
+            protocolTokens: undefined, // remove protocol tokens from extensions
+          },
           address: protocolTokens.variableDebt,
           name: `${this._protocolName} variable debt bearing ${tokenInfo.symbol}`,
           symbol: `variableDebt${tokenInfo.symbol}`,
@@ -272,10 +296,26 @@ class AgaveTokens implements IDAgaveTokens {
       case 'stableDebt':
         return {
           ...tokenInfo,
+          extensions: {
+            ...tokenInfo.extensions,
+            protocolTokens: undefined, // remove protocol tokens from extensions
+          },
           address: protocolTokens.stableDebt,
           name: `${this._protocolName} stable debt bearing ${tokenInfo.symbol}`,
           symbol: `stableDebt${tokenInfo.symbol}`,
         }
+      case 'wag': {
+        return {
+          ...tokenInfo,
+          extensions: {
+            ...tokenInfo.extensions,
+            protocolTokens: undefined, // remove protocol tokens from extensions
+          },
+          address: protocolTokens.wag,
+          name: `Wrapped ${this._protocolName} interest bearing ${tokenInfo.symbol}`,
+          symbol: `wag${tokenInfo.symbol}`,
+        }
+      }
       default:
         throw new Error(`Unsupported token type: ${tokenType}`)
     }
@@ -317,4 +357,7 @@ class AgaveTokens implements IDAgaveTokens {
   }
 }
 
-export const agaveTokens = new AgaveTokens()
+export default AgaveTokens
+
+export const agaveTokensMain = new AgaveTokens(MarketVersions.main)
+export const agaveTokensBoosted = new AgaveTokens(MarketVersions.boosted)
