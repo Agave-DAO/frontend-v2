@@ -178,6 +178,7 @@ const RangeValue = styled.span`
   font-weight: 400;
   line-height: 1.2;
   text-align: right;
+  text-wrap: nowrap;
 `
 
 const RangeSlider = ({
@@ -196,7 +197,7 @@ const RangeSlider = ({
     onChange(value)
   }
 
-  return <Range max={max} min={min} onChange={handleChange} step={0.1} value={value} />
+  return <Range max={max} min={min} onChange={handleChange} step={0.05} value={value} />
 }
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
@@ -266,7 +267,7 @@ export const MinHealthConfigurationModal: React.FC<Props> = ({
             </TextWrapper>
             <RangeWrapper>
               <RangeSlider
-                max={10}
+                max={5}
                 min={1}
                 onChange={(v) => {
                   if (Number(v) === 1) {
@@ -276,7 +277,7 @@ export const MinHealthConfigurationModal: React.FC<Props> = ({
                 }}
                 value={localMSHF}
               />
-              <RangeValue>{localMSHF < 1.1 ? 1 : localMSHF}</RangeValue>
+              <RangeValue>{localMSHF < 1.05 ? 1 : localMSHF}</RangeValue>
             </RangeWrapper>
           </Contents>
         </Inner>
