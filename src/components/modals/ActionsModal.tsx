@@ -51,9 +51,11 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 interface ActionsModalProps extends Props {
   onTokenSelect: (token: Token | null) => void
   symbol: string
+  activeTab?: string
 }
 
 export const ActionsModal: React.FC<ActionsModalProps> = ({
+  activeTab,
   children,
   closeOnBackgroundClick = false,
   onClose,
@@ -116,7 +118,11 @@ export const ActionsModal: React.FC<ActionsModalProps> = ({
             >
               <Contents id="modalDescription">
                 <ActionsWrapper>
-                  <TokenDropdown activeTokenSymbol={symbol} onChange={onTokenSelect} />
+                  <TokenDropdown
+                    activeTab={activeTab}
+                    activeTokenSymbol={symbol}
+                    onChange={onTokenSelect}
+                  />
                   <ButtonMini onClick={closeModalAndGo} variant="dark">
                     More Info
                   </ButtonMini>
@@ -142,13 +148,24 @@ export const DepositWithdrawModal: React.FC<DepositWithdrawModalProps> = ({
   ...restProps
 }) => {
   const [currentToken, setCurrentToken] = useState<Token | null>(token)
+  const [tab, setTab] = useState<DepositWithdrawTabs>(activeTab)
   const onTokenSelect = (token: Token | null) => {
     setCurrentToken(token)
   }
 
   return (
-    <ActionsModal onTokenSelect={onTokenSelect} symbol={currentToken?.symbol || ''} {...restProps}>
-      <DepositWithdraw activeTab={activeTab} onTokenSelect={onTokenSelect} token={currentToken} />
+    <ActionsModal
+      activeTab={tab}
+      onTokenSelect={onTokenSelect}
+      symbol={currentToken?.symbol || ''}
+      {...restProps}
+    >
+      <DepositWithdraw
+        activeTab={tab}
+        onTokenSelect={onTokenSelect}
+        setTab={setTab}
+        token={currentToken}
+      />
     </ActionsModal>
   )
 }
@@ -167,6 +184,7 @@ export const BorrowRepayModal: React.FC<BorrowRepayModalProps> = ({
 }) => {
   const [currentToken, setCurrentToken] = useState<Token | null>(token)
   const [interestRateMode, setInterestRateMode] = useState<InterestRateMode>(() => mode)
+  const [tab, setTab] = useState<BorrowRepayTabs>(activeTab)
   const onTokenSelect = (token: Token | null) => {
     setCurrentToken(token)
   }
@@ -176,12 +194,18 @@ export const BorrowRepayModal: React.FC<BorrowRepayModalProps> = ({
   }
 
   return (
-    <ActionsModal onTokenSelect={onTokenSelect} symbol={currentToken?.symbol || ''} {...restProps}>
+    <ActionsModal
+      activeTab={tab}
+      onTokenSelect={onTokenSelect}
+      symbol={currentToken?.symbol || ''}
+      {...restProps}
+    >
       <BorrowRepay
-        activeTab={activeTab}
+        activeTab={tab}
         interestRateMode={interestRateMode}
         onInterestRateSelect={onInterestRateSelect}
         onTokenSelect={onTokenSelect}
+        setTab={setTab}
         token={currentToken}
       />
     </ActionsModal>
