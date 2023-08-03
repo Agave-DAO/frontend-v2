@@ -9,6 +9,7 @@ import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNonBorrowableTokens } from '@/src/hooks/presentation/useNonBorrowableTokens'
 import { useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
+import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
 import { useTokensLists } from '@/src/hooks/useTokensLists'
 import { Token } from '@/types/token'
 
@@ -67,6 +68,7 @@ export const TokenDropdown: React.FC<{
 
   const nonBorrowableTokens = useNonBorrowableTokens().addresses
   const borrowedAssetsAddresses = useUserBorrows().map((borrow) => borrow.assetAddress)
+  const depositedAssetsAddresses = useUserDeposits().map((deposit) => deposit.assetAddress)
 
   switch (activeTab) {
     case 'borrow':
@@ -77,6 +79,11 @@ export const TokenDropdown: React.FC<{
     case 'repay':
       enabledMarketsAddresses = (enabledMarketsAddresses || []).concat(
         borrowedAssetsAddresses.filter((address) => !enabledMarketsAddresses?.includes(address)),
+      )
+      break
+    case 'withdraw':
+      enabledMarketsAddresses = (enabledMarketsAddresses || []).concat(
+        depositedAssetsAddresses.filter((address) => !enabledMarketsAddresses?.includes(address)),
       )
       break
   }
