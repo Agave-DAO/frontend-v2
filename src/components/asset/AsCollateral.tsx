@@ -12,9 +12,6 @@ export const AsCollateral: React.FC<{
   const [loading, setLoading] = useState(false)
   const setReserveAsCollateral = useSetReserveAsCollateral()
 
-  // Checking if the asset is WXDAI. If it is, then it's always collateral and the user can't change it.
-  const isAlwaysCollateral = useAgaveTokens().getTokenByAddress(assetAddress).symbol === 'WXDAI'
-
   const toggleSwitchHandler = async () => {
     setChecked(!checked)
     setLoading(true)
@@ -30,11 +27,5 @@ export const AsCollateral: React.FC<{
     }
   }
 
-  return (
-    <ToggleSwitch
-      checked={isAlwaysCollateral ? true : checked}
-      disabled={isAlwaysCollateral || loading}
-      onChange={toggleSwitchHandler}
-    />
-  )
+  return <ToggleSwitch checked={checked} disabled={loading} onChange={toggleSwitchHandler} />
 }
