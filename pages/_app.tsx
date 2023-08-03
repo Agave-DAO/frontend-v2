@@ -20,6 +20,7 @@ import AgaveTokensProvider from '@/src/providers/agaveTokensProvider'
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
 import ModalsProvider from '@/src/providers/modalsProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
+import UserActionsProvider from '@/src/providers/userActionsProvider'
 
 import 'sanitize.css'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -100,14 +101,16 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
               <TransactionNotificationProvider>
                 <CookiesWarningProvider>
                   <AgaveTokensProvider>
-                    <ModalsProvider>
-                      <Header />
-                      <Scroll>
-                        <MobileScrollTo id="main" />
-                        <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
-                        <Footer />
-                      </Scroll>
-                    </ModalsProvider>
+                    <UserActionsProvider>
+                      <ModalsProvider>
+                        <Header />
+                        <Scroll>
+                          <MobileScrollTo id="main" />
+                          <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
+                          <Footer />
+                        </Scroll>
+                      </ModalsProvider>
+                    </UserActionsProvider>
                   </AgaveTokensProvider>
                 </CookiesWarningProvider>
               </TransactionNotificationProvider>
