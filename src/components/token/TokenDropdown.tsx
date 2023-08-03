@@ -77,14 +77,10 @@ export const TokenDropdown: React.FC<{
       )
       break
     case 'repay':
-      enabledMarketsAddresses = (enabledMarketsAddresses || []).concat(
-        borrowedAssetsAddresses.filter((address) => !enabledMarketsAddresses?.includes(address)),
-      )
+      enabledMarketsAddresses = borrowedAssetsAddresses
       break
     case 'withdraw':
-      enabledMarketsAddresses = (enabledMarketsAddresses || []).concat(
-        depositedAssetsAddresses.filter((address) => !enabledMarketsAddresses?.includes(address)),
-      )
+      enabledMarketsAddresses = depositedAssetsAddresses
       break
   }
 
