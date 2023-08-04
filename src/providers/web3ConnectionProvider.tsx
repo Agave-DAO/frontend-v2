@@ -52,12 +52,28 @@ const wcV1InitOptions = {
 }
 
 const wcV2InitOptions: WalletConnectOptions = {
-  version: 2,
+  /**
+   * Project ID associated with [WalletConnect account](https://cloud.walletconnect.com)
+   */
   projectId: '006ebb71415ac00246c619155f5d56f7',
+  /**
+   * Defaults to `appMetadata.explore` that is supplied to the web3-onboard init
+   * Strongly recommended to provide atleast one URL as it is required by some wallets (i.e. MetaMask)
+   * To connect with walletconnect
+   */
+  dappUrl: 'https://agave.finance',
+  /**
+   * Defaults to version: 2
+   */
+  version: 2,
+  /**
+   * List of Required Chain(s) ID for wallets to support in number format (integer or hex)
+   * Defaults to [1] - Ethereum
+   */
   requiredChains: [100],
 }
 
-const walletConnect = walletConnectModule(wcV1InitOptions || wcV2InitOptions)
+const walletConnect = walletConnectModule(wcV2InitOptions || wcV1InitOptions)
 
 const chainsForOnboard = Object.values(chainsConfig).map(
   ({ chainIdHex, name, rpcUrl, token }: ChainConfig) => ({
