@@ -72,4 +72,17 @@ export const GlobalStyles = createGlobalStyle<{ theme: any }>`
 
   ${onBoardCSS}
   ${tooltipCSS}
+
+  // Scrollbar
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+ ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #122C34;
+  }
+  ::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background: white;
+  }
 `

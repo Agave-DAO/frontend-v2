@@ -7,6 +7,9 @@ import { Dropdown as BaseDropdown, DropdownItem } from '@/src/components/common/
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { useNonBorrowableTokens } from '@/src/hooks/presentation/useNonBorrowableTokens'
+import { useUserBorrows } from '@/src/hooks/presentation/useUserBorrows'
+import { useUserDeposits } from '@/src/hooks/presentation/useUserDeposits'
 import { useTokensLists } from '@/src/hooks/useTokensLists'
 import { Token } from '@/types/token'
 
@@ -52,15 +55,34 @@ const ButtonText = styled.span``
 
 export const TokenDropdown: React.FC<{
   activeTokenSymbol?: string
+  activeTab?: string
   onChange?: (token: Token | null) => void
-}> = ({ activeTokenSymbol = '', onChange, ...restProps }) => {
+}> = ({ activeTab = '', activeTokenSymbol = '', onChange, ...restProps }) => {
   const { onSelectToken, tokensList } = useTokensLists(['reserve'], onChange)
   const [currentToken, setCurrentToken] = useState<string>(activeTokenSymbol)
 
   // Filter out frozen markets
-  const enabledMarketsAddresses = useMarketsData()
+  let enabledMarketsAddresses = useMarketsData()
     .agaveMarketsData?.filter((market) => market.assetData.isFrozen === false)
     ?.map((market) => market.tokenAddress)
+
+  const nonBorrowableTokens = useNonBorrowableTokens().addresses
+  const borrowedAssetsAddresses = useUserBorrows().map((borrow) => borrow.assetAddress)
+  const depositedAssetsAddresses = useUserDeposits().map((deposit) => deposit.assetAddress)
+
+  switch (activeTab) {
+    case 'borrow':
+      enabledMarketsAddresses = enabledMarketsAddresses?.filter(
+        (address) => !nonBorrowableTokens.includes(address),
+      )
+      break
+    case 'repay':
+      enabledMarketsAddresses = borrowedAssetsAddresses
+      break
+    case 'withdraw':
+      enabledMarketsAddresses = depositedAssetsAddresses
+      break
+  }
 
   const enabledTokensList = tokensList.filter((token) =>
     enabledMarketsAddresses?.includes(token.address),

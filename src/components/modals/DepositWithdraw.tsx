@@ -17,23 +17,23 @@ const Tabs = styled(BaseTabs)`
 interface Props {
   activeTab?: DepositWithdrawTabs
   onTokenSelect: (token: Token) => void
+  setTab: (tab: DepositWithdrawTabs) => void
   token: Token | null
 }
 
 export const DepositWithdraw: React.FC<Props> = withGenericSuspense(
-  ({ activeTab, onTokenSelect, token }) => {
-    const [tab, setTab] = useState<DepositWithdrawTabs>(activeTab || 'deposit')
-    const depositActive = tab === 'deposit'
-    const withdrawActive = tab === 'withdraw'
+  ({ activeTab, onTokenSelect, setTab, token }) => {
+    const depositActive = activeTab === 'deposit'
+    const withdrawActive = activeTab === 'withdraw'
 
     return token ? (
       <>
         <DepositInfo token={token} />
         <Tabs>
-          <Tab isActive={tab === 'deposit'} onClick={() => setTab('deposit')}>
+          <Tab isActive={depositActive} onClick={() => setTab('deposit')}>
             Deposit
           </Tab>
-          <Tab isActive={tab === 'withdraw'} onClick={() => setTab('withdraw')}>
+          <Tab isActive={withdrawActive} onClick={() => setTab('withdraw')}>
             Withdraw
           </Tab>
         </Tabs>

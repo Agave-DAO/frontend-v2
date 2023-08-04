@@ -45,20 +45,35 @@ const frame = frameModule()
 const gnosis = gnosisModule()
 
 const wcV1InitOptions = {
+  version: 1,
   bridge: 'https://safe-walletconnect.safe.global',
-  qrcodeModalOptions: {
-    mobileLinks: ['metamask', 'minerva', 'trust'],
-  },
   connectFirstChainId: true,
+  qrcodeModalOptions: { mobileLinks: ['minerva', 'trust'] },
 }
 
 const wcV2InitOptions: WalletConnectOptions = {
-  version: 2,
+  /**
+   * Project ID associated with [WalletConnect account](https://cloud.walletconnect.com)
+   */
   projectId: '006ebb71415ac00246c619155f5d56f7',
+  /**
+   * Defaults to `appMetadata.explore` that is supplied to the web3-onboard init
+   * Strongly recommended to provide atleast one URL as it is required by some wallets (i.e. MetaMask)
+   * To connect with walletconnect
+   */
+  dappUrl: 'https://agave.finance',
+  /**
+   * Defaults to version: 2
+   */
+  version: 2,
+  /**
+   * List of Required Chain(s) ID for wallets to support in number format (integer or hex)
+   * Defaults to [1] - Ethereum
+   */
   requiredChains: [100],
 }
 
-const walletConnect = walletConnectModule(wcV1InitOptions || wcV2InitOptions)
+const walletConnect = walletConnectModule(wcV2InitOptions || wcV1InitOptions)
 
 const chainsForOnboard = Object.values(chainsConfig).map(
   ({ chainIdHex, name, rpcUrl, token }: ChainConfig) => ({
@@ -77,16 +92,21 @@ export function initOnboard() {
   onBoardApi = init({
     wallets: [injected, frame, gnosis, walletConnect],
     chains: chainsForOnboard,
+    connect: {
+      removeWhereIsMyWalletWarning: true,
+    },
     notify: {
       enabled: false,
     },
     appMetadata: {
       name: 'Agave',
-      icon: 'https://agave.finance/favicon/favicon.ico',
-      logo: 'https://agave.finance/favicon/favicon.svg',
+      icon: 'https://agave.finance/favicon/favicon.svg',
       description:
         'Earn interest on deposits and borrow assets thanks to Agave, a decentralized, non-custodial money market and lending protocol on Gnosis Chain',
-      recommendedInjectedWallets: [{ name: 'Frame', url: 'https://frame.sh' }],
+      recommendedInjectedWallets: [
+        { name: 'Frame', url: 'https://frame.sh' },
+        { name: 'Rabby', url: 'https://rabby.io/' },
+      ],
     },
     // Account center put an interactive menu in the UI to manage your account.
     accountCenter: {
@@ -96,9 +116,6 @@ export function initOnboard() {
       mobile: {
         enabled: false,
       },
-    },
-    connect: {
-      //hideWhereIsMyWallet:true
     },
     // i18n: {} change all texts in the onboard modal
   })
