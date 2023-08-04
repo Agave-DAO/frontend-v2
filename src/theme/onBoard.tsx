@@ -305,6 +305,10 @@ export const ModalCSS = `
     display: none
   }
 
+  .icon{
+    width:100%;
+  }
+
   .notice-container > .container .link{
     font-size: var(--font-size-md);
     line-height: 1.8;

@@ -45,11 +45,10 @@ const frame = frameModule()
 const gnosis = gnosisModule()
 
 const wcV1InitOptions = {
+  version: 1,
   bridge: 'https://safe-walletconnect.safe.global',
-  qrcodeModalOptions: {
-    mobileLinks: ['metamask', 'minerva', 'trust'],
-  },
   connectFirstChainId: true,
+  qrcodeModalOptions: { mobileLinks: ['minerva', 'trust'] },
 }
 
 const wcV2InitOptions: WalletConnectOptions = {
@@ -58,7 +57,7 @@ const wcV2InitOptions: WalletConnectOptions = {
   requiredChains: [100],
 }
 
-const walletConnect = walletConnectModule(wcV2InitOptions || wcV1InitOptions)
+const walletConnect = walletConnectModule(wcV1InitOptions || wcV2InitOptions)
 
 const chainsForOnboard = Object.values(chainsConfig).map(
   ({ chainIdHex, name, rpcUrl, token }: ChainConfig) => ({
@@ -85,11 +84,13 @@ export function initOnboard() {
     },
     appMetadata: {
       name: 'Agave',
-      icon: 'https://agave.finance/favicon/favicon.ico',
-      logo: 'https://agave.finance/favicon/favicon.svg',
+      icon: 'https://agave.finance/favicon/favicon.svg',
       description:
         'Earn interest on deposits and borrow assets thanks to Agave, a decentralized, non-custodial money market and lending protocol on Gnosis Chain',
-      recommendedInjectedWallets: [{ name: 'Frame', url: 'https://frame.sh' }],
+      recommendedInjectedWallets: [
+        { name: 'Frame', url: 'https://frame.sh' },
+        { name: 'Rabby', url: 'https://rabby.io/' },
+      ],
     },
     // Account center put an interactive menu in the UI to manage your account.
     accountCenter: {
