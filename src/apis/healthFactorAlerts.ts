@@ -14,7 +14,7 @@ export const getUserHealthFactorAlerts = async (
   })
   if (!response.ok) {
     const errorText = await response.text()
-    console.error(`HTTP error! status: ${response.status}, body: ${errorText}`)
+    console.error(`API ERROR ${response.status}: ${errorText}`)
     throw new Error('Failed to fetch user health factor alerts')
   }
   const data = await response.json()

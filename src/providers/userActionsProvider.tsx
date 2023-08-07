@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useEffect, useState } from 'react'
+import { ReactNode, createContext, useContext, useState } from 'react'
 
 import { UserHealthFactorAlerts } from '@/types/user'
 
@@ -12,7 +12,6 @@ interface UserActionProviderProps {
 export const UserActionsProvider: React.FC<UserActionProviderProps> = ({ children }) => {
   const [viewHFAlertsSignature, setViewHFAlertsSignature] = useState<string | null>(null)
   const [viewHFAlertsUser, setViewHFAlertsUser] = useState<string | null>(null)
-  const [viewHFAlertsAccessGranted, setViewHFAlertsAccessGranted] = useState(false)
   const [alertsData, setAlertsData] = useState<UserHealthFactorAlerts | null>(null)
 
   return (
@@ -20,10 +19,8 @@ export const UserActionsProvider: React.FC<UserActionProviderProps> = ({ childre
       value={{
         alertsData,
         setAlertsData,
-        setViewHFAlertsAccessGranted,
         setViewHFAlertsSignature,
         setViewHFAlertsUser,
-        viewHFAlertsAccessGranted,
         viewHFAlertsSignature,
         viewHFAlertsUser,
       }}

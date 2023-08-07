@@ -203,7 +203,6 @@ const HFAlertsDetails: React.FC = () => {
   const {
     alertsData,
     setAlertsData,
-    setViewHFAlertsAccessGranted,
     setViewHFAlertsSignature,
     setViewHFAlertsUser,
     viewHFAlertsSignature,
@@ -265,7 +264,6 @@ const HFAlertsDetails: React.FC = () => {
         email,
         isEnabled,
       )
-      console.log(data)
       formChanged()
       feedback('Success', 'Alerts have been updated successfully', 'success')
       setAlertsData(data)
@@ -296,10 +294,8 @@ const HFAlertsDetails: React.FC = () => {
       )
       setAlertsData(data)
       setIsViewLoading(false)
-      setViewHFAlertsAccessGranted(true)
     } catch (err) {
       setCriticalError("An error occurred. Alerts can't be displayed.")
-      setViewHFAlertsAccessGranted(false)
     } finally {
       setIsViewLoading(false)
     }
@@ -309,7 +305,6 @@ const HFAlertsDetails: React.FC = () => {
     viewHFAlertsSignature,
     viewSignatureMessage,
     setAlertsData,
-    setViewHFAlertsAccessGranted,
     setIsViewLoading,
   ])
 
@@ -357,11 +352,20 @@ const HFAlertsDetails: React.FC = () => {
   }
 
   useEffect(() => {
-    setViewHFAlertsSignature(null)
-    feedback()
-    setAlertsData(null)
-    setViewHFAlertsUser(null)
-  }, [address, setViewHFAlertsSignature, feedback, setAlertsData, setViewHFAlertsUser])
+    if (address !== viewHFAlertsUser) {
+      setViewHFAlertsSignature(null)
+      feedback()
+      setAlertsData(null)
+      setViewHFAlertsUser(null)
+    }
+  }, [
+    address,
+    setViewHFAlertsSignature,
+    feedback,
+    setAlertsData,
+    setViewHFAlertsUser,
+    viewHFAlertsUser,
+  ])
 
   useEffect(() => {
     if (alertsData) {
@@ -502,7 +506,7 @@ export const HFAlerts: React.FC = withGenericSuspense(
     const { address } = useWeb3ConnectedApp()
     const [displayHFAlerts, setDisplayHFAlerts] = useState(false)
     const { userBorrows } = useUserAccountDetails(address)
-    const minBorrowsForHFAlerts = BigNumber.from(0) // TODO: 100
+    const minBorrowsForHFAlerts = BigNumber.from(100)
     useEffect(() => {
       setDisplayHFAlerts(fromWei(userBorrows, 18).gte(minBorrowsForHFAlerts))
     }, [userBorrows, minBorrowsForHFAlerts])
