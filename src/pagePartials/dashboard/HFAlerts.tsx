@@ -506,7 +506,7 @@ export const HFAlerts: React.FC = withGenericSuspense(
     const { address } = useWeb3ConnectedApp()
     const [displayHFAlerts, setDisplayHFAlerts] = useState(false)
     const { userBorrows } = useUserAccountDetails(address)
-    const minBorrowsForHFAlerts = BigNumber.from(100)
+    const minBorrowsForHFAlerts = BigNumber.from(0) // TODO: Set to 100 after testing
     useEffect(() => {
       setDisplayHFAlerts(fromWei(userBorrows, 18).gte(minBorrowsForHFAlerts))
     }, [userBorrows, minBorrowsForHFAlerts])
