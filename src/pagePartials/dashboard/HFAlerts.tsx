@@ -195,7 +195,7 @@ const RangeSlider = ({
     onChange(value)
   }
 
-  return <Range max={max} min={min} onChange={handleChange} step={0.1} value={value} />
+  return <Range max={max} min={min} onChange={handleChange} step={0.05} value={value} />
 }
 
 const HFAlertsDetails: React.FC = () => {
@@ -225,8 +225,8 @@ const HFAlertsDetails: React.FC = () => {
   const [feedbackText, setFeedbackText] = useState('')
   const [feedbackType, setFeedbackType] = useState<FeedbackTypes>('')
 
-  const [threshold, setThreshold] = useState(0)
-  const [isEnabled, setIsEnabled] = useState(false)
+  const [threshold, setThreshold] = useState(1)
+  const [isEnabled, setIsEnabled] = useState(true)
   const [email, setEmail] = useState('')
 
   const [isEmailValid, setIsEmailValid] = useState(true)
@@ -464,14 +464,14 @@ const HFAlertsDetails: React.FC = () => {
         <RangeWrapper>
           <RangeSlider
             max={10}
-            min={0}
+            min={1}
             onChange={(value: string) => {
               setThreshold(parseFloat(value))
               formChanged()
             }}
-            value={threshold ?? 0}
+            value={threshold >= 1 ? threshold : 1.5}
           />
-          <RangeValue>{threshold}</RangeValue>
+          <RangeValue>{threshold >= 1 ? threshold : 1.5}</RangeValue>
         </RangeWrapper>
       </Tile>
 
