@@ -145,6 +145,20 @@ export const LiquidityPenalty = (
   </Wrapper>
 )
 
+export const HealthFactorAlerts = (
+  <Wrapper>
+    <Text>
+      The <b>health factor alerts</b> option allows you to receive occasional email notifications
+      regarding your health factor.
+    </Text>
+    <Text>
+      You can select the desired threshold, and once the health factor goes below that level, an
+      email alert will be sent to you.
+    </Text>
+    <Text>This is an hypernative.io service so this data is shared with them</Text>
+  </Wrapper>
+)
+
 export const CurrentLTV: React.FC<{
   currentLTV: React.ReactNode
   maxLTV: React.ReactNode
