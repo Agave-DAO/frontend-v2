@@ -50,12 +50,19 @@ interface WithdrawStepperProps {
   amount: string
   cancel: () => void
   tokenAddress: string
+  unlimitedApproval: boolean
 }
 
-export const WithdrawStepper = ({ amount, cancel, tokenAddress }: WithdrawStepperProps) => {
+export const WithdrawStepper = ({
+  amount,
+  cancel,
+  tokenAddress,
+  unlimitedApproval,
+}: WithdrawStepperProps) => {
   const withdrawSteps = useWithdrawSteps({
     tokenAddress,
     amount,
+    unlimitedApproval,
   })
 
   const params = {

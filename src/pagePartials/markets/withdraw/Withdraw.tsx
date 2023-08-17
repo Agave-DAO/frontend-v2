@@ -13,6 +13,7 @@ export const Withdraw = ({
 }) => {
   const [amount, setAmount] = useState('0')
   const [step, setStep] = useState<'initial' | 'tx'>('initial')
+  const [unlimitedApproval, setUnlimitedApproval] = useState(false)
 
   useEffect(() => {
     setStep('initial')
@@ -27,7 +28,9 @@ export const Withdraw = ({
           nextStep={() => setStep('tx')}
           onTokenSelect={onTokenSelect}
           setAmount={setAmount}
+          setUnlimitedApproval={setUnlimitedApproval}
           tokenAddress={tokenAddress}
+          unlimitedApproval={unlimitedApproval}
         />
       )}
       {step === 'tx' && (
@@ -35,6 +38,7 @@ export const Withdraw = ({
           amount={amount}
           cancel={() => setStep('initial')}
           tokenAddress={tokenAddress}
+          unlimitedApproval={unlimitedApproval}
         />
       )}
     </>
