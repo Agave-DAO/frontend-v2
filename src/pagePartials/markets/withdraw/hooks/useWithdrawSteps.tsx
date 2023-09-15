@@ -7,17 +7,11 @@ import { useWithdrawStepWithdraw } from '@/src/pagePartials/markets/withdraw/hoo
 export const useWithdrawSteps = ({
   amount,
   tokenAddress,
-  unlimitedApproval,
 }: {
   amount: string
   tokenAddress: string
-  unlimitedApproval: boolean
 }) => {
-  const approveAmount = unlimitedApproval
-    ? '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
-    : amount
-
-  const approveStep = useWithdrawStepApprove({ amount: approveAmount, tokenAddress })
+  const approveStep = useWithdrawStepApprove({ amount, tokenAddress })
   const withdrawStep = useWithdrawStepWithdraw({ amount, tokenAddress })
   const finalStep = useWithdrawStepFinal({ amount, tokenAddress })
   const initialStepIndex = useWithdrawStepInitialIndex({

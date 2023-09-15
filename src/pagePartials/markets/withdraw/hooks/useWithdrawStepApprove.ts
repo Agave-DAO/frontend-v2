@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
@@ -6,6 +6,7 @@ import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
+import { useUserActionsContext } from '@/src/providers/userActionsProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { ERC20__factory } from '@/types/generated/typechain'
 
@@ -16,6 +17,13 @@ export const useWithdrawStepApprove = ({
   amount: string
   tokenAddress: string
 }) => {
+  const { unlimitedApproval } = useUserActionsContext()
+  const unlimitedApprovalRef = useRef(unlimitedApproval)
+
+  useEffect(() => {
+    unlimitedApprovalRef.current = unlimitedApproval
+  }, [unlimitedApproval])
+
   const agaveTokens = useAgaveTokens()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const agTokenInfo = agaveTokens.getProtocolTokenInfo(agaveTokens.wrapperToken.address, 'ag')
@@ -26,7 +34,6 @@ export const useWithdrawStepApprove = ({
   const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]
 
   const params = {
-    amount,
     spender: isNativeToken ? wrappedNativeGatewayAddress : agaveLendingAddress,
     asset: isNativeToken ? agTokenInfo.address : tokenAddress,
   }
@@ -45,16 +52,20 @@ export const useWithdrawStepApprove = ({
   )
 
   const approve = useCallback<() => Promise<string>>(async () => {
-    const tx = await sendTx(() => erc20.approve(params.spender, params.amount))
+    const approvalAmount = unlimitedApprovalRef.current
+      ? '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'
+      : amount
+
+    const tx = await sendTx(() => erc20.approve(params.spender, approvalAmount))
     const receipt = await tx.wait()
 
     isNativeToken ? await refetchAGTokenAllowance() : await refetchTokenAllowance()
 
     return receipt.transactionHash
   }, [
+    amount,
     erc20,
     isNativeToken,
-    params.amount,
     params.spender,
     refetchAGTokenAllowance,
     refetchTokenAllowance,

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -12,7 +12,6 @@ import {
   StepActionButton,
 } from '@/src/components/common/StepsCard'
 import { TabToggle } from '@/src/components/common/TabToggle'
-import { ToggleSwitch } from '@/src/components/form/ToggleSwitch'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
@@ -75,8 +74,6 @@ interface InitialWithdrawStepProps {
   onTokenSelect: (token: Token) => void
   setAmount: Dispatch<SetStateAction<string>>
   tokenAddress: string
-  unlimitedApproval: boolean
-  setUnlimitedApproval: (value: boolean) => void
 }
 
 export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
@@ -84,9 +81,7 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
   nextStep,
   onTokenSelect,
   setAmount,
-  setUnlimitedApproval,
   tokenAddress,
-  unlimitedApproval,
 }) => {
   const {
     disableSubmit,
@@ -101,40 +96,9 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
   const market = useMarketsData().getMarket(tokenAddress)
   const agaveTokens = useAgaveTokens()
   const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
-  const [isTabToggled, setIsTabToggled] = useState(isNativeRelated)
 
   const onToggleWrap = (isToggled: boolean) => {
     onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
-    if (!isNativeRelated || isToggled) {
-      setUnlimitedApproval(false)
-    }
-    setIsTabToggled(isToggled)
-  }
-
-  useEffect(() => {
-    if (!isNativeRelated) {
-      setUnlimitedApproval(false)
-    }
-  }, [tokenAddress, isNativeRelated, setUnlimitedApproval])
-
-  const renderUnlimitedApprovalToggle = () => {
-    if (isNativeRelated && !isTabToggled) {
-      return (
-        <Row>
-          <RowKey>Unlimited approval</RowKey>
-          <RowValue>
-            <ToggleSwitch
-              appearance="mini"
-              checked={unlimitedApproval}
-              onChange={() => {
-                setUnlimitedApproval(!unlimitedApproval)
-              }}
-            />
-          </RowValue>
-        </Row>
-      )
-    }
-    return null
   }
 
   const stepperProps = {
@@ -164,7 +128,6 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
 
   return (
     <Stepper {...stepperProps}>
-      {renderUnlimitedApprovalToggle()}
       <TokenInput
         decimals={tokenInfo.decimals}
         maxValue={maxToWithdraw.toString()}
