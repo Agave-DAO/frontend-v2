@@ -73,11 +73,11 @@ export function useBorrowStepInitial({
   )
 
   const finalBorrow = maxSafeAmountToBorrow.gt(maximumBorrow)
-    ? maxSafeAmountToBorrow
-    : maximumBorrow
+    ? maximumBorrow
+    : maxSafeAmountToBorrow
 
   useEffect(() => {
-    if (BigNumber.from(amount).gt(maximumBorrow.mul(100001).div(100000))) {
+    if (BigNumber.from(amount).gt(maximumBorrow)) {
       setTokenInputStatus(TextfieldStatus.error)
       setTokenInputStatusText('Input exceeds Market borrow limit')
     } else if (BigNumber.from(amount).gt(maxSafeAmountToBorrow)) {

@@ -53,6 +53,9 @@ export function useDepositStepInitial({
     if (BigNumber.from(amount).gt(maximumDeposit.mul(100001).div(100000))) {
       setTokenInputStatus(TextfieldStatus.error)
       setTokenInputStatusText('Input exceeds Market deposit limit')
+    } else if (BigNumber.from(amount).gt(maxSafeAmount)) {
+      setTokenInputStatus(TextfieldStatus.error)
+      setTokenInputStatusText('Input above user Balance')
     } else {
       setTokenInputStatus(undefined)
       setTokenInputStatusText(undefined)
