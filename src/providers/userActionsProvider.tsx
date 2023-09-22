@@ -10,6 +10,7 @@ interface UserActionProviderProps {
 }
 
 export const UserActionsProvider: React.FC<UserActionProviderProps> = ({ children }) => {
+  const [unlimitedApproval, setUnlimitedApproval] = useState(false)
   const [viewHFAlertsSignature, setViewHFAlertsSignature] = useState<string | null>(null)
   const [viewHFAlertsUser, setViewHFAlertsUser] = useState<string | null>(null)
   const [alertsData, setAlertsData] = useState<UserHealthFactorAlerts | null>(null)
@@ -17,6 +18,8 @@ export const UserActionsProvider: React.FC<UserActionProviderProps> = ({ childre
   return (
     <UserActionsContext.Provider
       value={{
+        setUnlimitedApproval,
+        unlimitedApproval,
         alertsData,
         setAlertsData,
         setViewHFAlertsSignature,

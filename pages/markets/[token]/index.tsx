@@ -232,7 +232,6 @@ export async function getStaticPaths() {
       { params: { token: address } },
     ]
   })
-  paths.push({ params: { token: 'XDAI' } })
 
   return { paths, fallback: true }
 }
