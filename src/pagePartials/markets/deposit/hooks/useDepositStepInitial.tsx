@@ -5,7 +5,7 @@ import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { MINIMUM_NATIVE_RESERVE, MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
-import { useMaximumDeposit } from '@/src/hooks/presentation/useMaximumDeposit'
+import { useMaximumDeposit } from '@/src/hooks/presentation/useMaximumCaps'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
 import { usePersistedState } from '@/src/hooks/usePersistedState'
@@ -53,9 +53,6 @@ export function useDepositStepInitial({
     if (BigNumber.from(amount).gt(maximumDeposit.mul(100001).div(100000))) {
       setTokenInputStatus(TextfieldStatus.error)
       setTokenInputStatusText('Input exceeds Market deposit limit')
-    } else if (BigNumber.from(amount).gt(maxSafeAmount)) {
-      setTokenInputStatus(TextfieldStatus.error)
-      setTokenInputStatusText('Input above user Balance')
     } else {
       setTokenInputStatus(undefined)
       setTokenInputStatusText(undefined)

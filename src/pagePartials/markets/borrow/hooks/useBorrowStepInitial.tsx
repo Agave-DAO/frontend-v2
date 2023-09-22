@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
@@ -6,6 +6,7 @@ import { Zero } from '@ethersproject/constants'
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { useMaximumBorrow } from '@/src/hooks/presentation/useMaximumCaps'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import useGetAssetsPriceInDAI from '@/src/hooks/queries/useGetAssetsPriceInDAI'
 import useGetUserAccountData from '@/src/hooks/queries/useGetUserAccountData'
@@ -67,12 +68,33 @@ export function useBorrowStepInitial({
   const disableSubmit =
     tokenInputStatus === TextfieldStatus.error || !amount || BigNumber.from(amount).eq(Zero)
 
+  const { maximumBorrow } = useMaximumBorrow(
+    isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress,
+  )
+
+  const finalBorrow = maxSafeAmountToBorrow.gt(maximumBorrow)
+    ? maxSafeAmountToBorrow
+    : maximumBorrow
+
+  useEffect(() => {
+    if (BigNumber.from(amount).gt(maximumBorrow.mul(100001).div(100000))) {
+      setTokenInputStatus(TextfieldStatus.error)
+      setTokenInputStatusText('Input exceeds Market borrow limit')
+    } else if (BigNumber.from(amount).gt(maxSafeAmountToBorrow)) {
+      setTokenInputStatus(TextfieldStatus.error)
+      setTokenInputStatusText('Input above user Borrow Capacity')
+    } else {
+      setTokenInputStatus(undefined)
+      setTokenInputStatusText(undefined)
+    }
+  }, [setTokenInputStatus, setTokenInputStatusText, amount, maximumBorrow, maxSafeAmountToBorrow])
+
   return {
     borrowStableAPR,
     borrowVariableAPR,
     disableSubmit,
     isStableBorrowRateEnabled: tokenInfo.extensions.isNative ? false : stableBorrowRateEnabled,
-    maxToBorrow: maxSafeAmountToBorrow,
+    maxToBorrow: finalBorrow,
     setTokenInputStatus,
     setTokenInputStatusText,
     tokenInfo,
