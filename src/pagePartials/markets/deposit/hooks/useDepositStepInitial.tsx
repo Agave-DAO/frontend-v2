@@ -5,7 +5,7 @@ import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
 import { MINIMUM_NATIVE_RESERVE, MIN_SAFE_HEALTH_FACTOR } from '@/src/constants/common'
-import { useMaximumDeposit } from '@/src/hooks/presentation/useMaximumDeposit'
+import { useMaximumDeposit } from '@/src/hooks/presentation/useMaximumCaps'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { useAccountBalance } from '@/src/hooks/useAccountBalance'
 import { usePersistedState } from '@/src/hooks/usePersistedState'
