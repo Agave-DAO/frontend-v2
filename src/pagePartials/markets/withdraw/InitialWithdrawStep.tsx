@@ -95,12 +95,11 @@ export const InitialWithdrawStep: React.FC<InitialWithdrawStepProps> = ({
   const { openMinHealthConfigurationModal } = useModalsContext()
   const market = useMarketsData().getMarket(tokenAddress)
   const agaveTokens = useAgaveTokens()
+  const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
 
   const onToggleWrap = (isToggled: boolean) => {
     onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
   }
-
-  const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
 
   const stepperProps = {
     info: (

@@ -47,15 +47,18 @@ export const useMarketsData = () => {
 
       try {
         const marketData = getMarket(tokenAddress)
-        const { availableLiquidity, totalVariableDebt } = marketData.reserveData
+        const { availableLiquidity, totalStableDebt, totalVariableDebt } = marketData.reserveData
         const { decimals } = agaveTokens.getTokenByAddress(tokenAddress)
 
         return {
           usd: fromWei(
-            totalVariableDebt.add(availableLiquidity).mul(marketData.priceData),
+            totalVariableDebt
+              .add(totalStableDebt)
+              .add(availableLiquidity)
+              .mul(marketData.priceData),
             decimals,
           ),
-          wei: totalVariableDebt.add(availableLiquidity),
+          wei: totalVariableDebt.add(totalStableDebt).add(availableLiquidity),
         }
       } catch (e) {
         console.error(e)

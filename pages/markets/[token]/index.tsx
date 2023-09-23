@@ -238,6 +238,16 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: { params: { token: string; action: string } }) {
   const { token } = params
+
+  if (token === 'XDAI') {
+    return {
+      redirect: {
+        destination: '/markets/WXDAI',
+        permanent: false,
+      },
+    }
+  }
+
   // TODO - we need to add the tokens for both market versions here
   const tokenExists = agaveTokens.reserveTokens.find(
     (t) => t.symbol === token || t.address === token,

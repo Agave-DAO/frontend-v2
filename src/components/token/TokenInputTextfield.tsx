@@ -55,7 +55,7 @@ export const TokenInputTextfield: React.FC<Props> = ({
   useEffect(() => {
     if (valueGreaterThanMaxValue) {
       setStatus(TextfieldStatus.error)
-      setStatusText('Insufficient balance')
+      setStatusText('Input above user Balance')
     } else {
       clearStatuses()
     }
