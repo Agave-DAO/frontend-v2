@@ -4,6 +4,8 @@ import AaveProtocolDataProvider from '@/src/contracts/abis/AaveProtocolDataProvi
 import AgaveLendingPool from '@/src/contracts/abis/AgaveLending.json'
 import BaseIncentivesController from '@/src/contracts/abis/BaseIncentivesController.json'
 import ERC20 from '@/src/contracts/abis/ERC20.json'
+import SavingsXDai from '@/src/contracts/abis/SavingsXDai.json'
+import SavingsXDaiAdapter from '@/src/contracts/abis/SavingsXDaiAdapter.json'
 import StakedToken from '@/src/contracts/abis/StakedToken.json'
 import WETHGateway from '@/src/contracts/abis/WETHGateway.json'
 
@@ -61,6 +63,18 @@ export const contracts = {
       [Chains.gnosis]: '0x610525b415c1BFAeAB1a3fc3d85D87b92f048221',
     },
     abi: StakedToken,
+  },
+  SavingsXDaiAdapter: {
+    address: {
+      [Chains.gnosis]: '0xD499b51fcFc66bd31248ef4b28d656d67E591A94',
+    },
+    abi: SavingsXDaiAdapter,
+  },
+  SavingsXDai: {
+    address: {
+      [Chains.gnosis]: '0xaf204776c7245bF4147c2612BF6e5972Ee483701',
+    },
+    abi: SavingsXDai,
   },
 } as const
 
