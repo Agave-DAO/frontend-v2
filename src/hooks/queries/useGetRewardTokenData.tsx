@@ -19,7 +19,6 @@ import { toWei } from '@/src/utils/common'
 export const useGetRewardTokenData = () => {
   const { appChainId } = useWeb3Connection()
   const gqlBalancer = getSubgraphSdkByNetwork(appChainId, SubgraphName.BalancerV2)
-
   const { data: rewardTokenData } = gqlBalancer.useBalancerV2Pool(undefined, {
     loadingTimeout: 5000,
     suspense: false,

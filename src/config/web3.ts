@@ -6,6 +6,7 @@ import { ObjectValues, ProviderChains, RPCProviders, RPCProvidersENV } from '@/t
 export const Chains = {
   // goerli: 5,
   gnosis: 100,
+  chiado: 10200,
 } as const
 
 export const providerChains: ProviderChains = {
@@ -13,11 +14,13 @@ export const providerChains: ProviderChains = {
     //[Chains.mainnet]: 'mainnet',
     // [Chains.goerli]: 'goerli',
     [Chains.gnosis]: '',
+    [Chains.chiado]: '',
   },
   [RPCProviders.alchemy]: {
     //[Chains.mainnet]: 'eth-mainnet',
     // [Chains.goerli]: 'eth-goerli',
     [Chains.gnosis]: '',
+    [Chains.chiado]: '',
   },
 }
 
@@ -67,6 +70,16 @@ export const chainsConfig: Record<ChainsValues, ChainConfig> = {
     chainIdHex: '0x64',
     rpcUrl: ['https://rpc.ankr.com/gnosis', 'https://xdai-rpc.gateway.pokt.network'],
     blockExplorerUrls: ['https://gnosisscan.io/'],
+    token: 'xDAI',
+  },
+  [Chains.chiado]: {
+    id: Chains.chiado,
+    name: 'ChiadoChain',
+    shortName: 'Chiado',
+    chainId: Chains.chiado,
+    chainIdHex: '0x27D8',
+    rpcUrl: ['https://rpc.chiadochain.net', 'https://rpc.chiado.gnosis.gateway.fm'],
+    blockExplorerUrls: ['https://gnosis-chiado.blockscout.com/'],
     token: 'xDAI',
   },
 }
