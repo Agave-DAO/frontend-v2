@@ -68,12 +68,21 @@ export const chainsConfig: Record<ChainsValues, ChainConfig> = {
     rpcUrl: ['https://rpc.ankr.com/gnosis', 'https://xdai-rpc.gateway.pokt.network'],
     blockExplorerUrls: ['https://gnosisscan.io/'],
     token: 'xDAI',
+    ensAddress: '0x4f132A7e39B1D717B39C789eB9EC1e790092042B',
   },
 }
 
 export function getNetworkConfig(chainId: ChainsValues): ChainConfig {
   const networkConfig = chainsConfig[chainId]
   return nullthrows(networkConfig, `No config for chain id: ${chainId}`)
+}
+
+export function getGnsNetworkConfig() {
+  return {
+    name: chainsConfig[Chains.gnosis].name,
+    chainId: chainsConfig[Chains.gnosis].chainId,
+    ensAddress: chainsConfig[Chains.gnosis].ensAddress,
+  }
 }
 
 /**
