@@ -10,6 +10,7 @@ export type ChainConfig = {
   rpcUrl: string[]
   blockExplorerUrls: string[]
   token: string
+  ensAddress?: string
 }
 
 export type ChainsValues = ObjectValues<typeof Chains>
