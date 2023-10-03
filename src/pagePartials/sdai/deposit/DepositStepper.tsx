@@ -6,10 +6,10 @@ import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/commo
 import { ToggleSwitch } from '@/src/components/form/ToggleSwitch'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
+import { useGetTokenInfo } from '@/src/hooks/queries/useGetSavingsData'
 import { Steps } from '@/src/pagePartials/markets/stepper'
 import { useDepositStepInitial } from '@/src/pagePartials/sdai/deposit/hooks/useDepositStepInitial'
 import { useDepositSteps } from '@/src/pagePartials/sdai/deposit/hooks/useDepositSteps'
-import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useUserActionsContext } from '@/src/providers/userActionsProvider'
 
 interface DepositStepperInfoProps {
@@ -23,7 +23,7 @@ const DepositStepperInfo = ({
   tokenAddress,
   unlimitedApprovalToggle,
 }: DepositStepperInfoProps) => {
-  const tokenInfo = useAgaveTokens().getTokenByAddress(tokenAddress)
+  const tokenInfo = useGetTokenInfo(tokenAddress)
 
   return (
     <>
@@ -51,7 +51,7 @@ interface DepositStepperProps {
 }
 
 export const DepositStepper = ({ amount, cancel, tokenAddress }: DepositStepperProps) => {
-  const depositSteps = useDepositSteps({ tokenAddress, amount })
+  const depositSteps = useDepositSteps({ tokenAddress, cancel, amount })
 
   const { tokenInfo } = useDepositStepInitial({ amount, tokenAddress })
 
@@ -65,8 +65,10 @@ export const DepositStepper = ({ amount, cancel, tokenAddress }: DepositStepperP
     }
   }, [tokenAddress, setUnlimitedApproval, showUnlimitedOption])
 
+  const { title } = depositSteps.currentStep
+
   const renderUnlimitedApprovalToggle = () => {
-    if (showUnlimitedOption) {
+    if (showUnlimitedOption && title === 'Approve') {
       return (
         <Row variant="dark">
           <RowKey>Unlimited approval</RowKey>

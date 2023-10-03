@@ -1,21 +1,19 @@
-import { useRouter } from 'next/router'
-
 import { BigNumber } from '@ethersproject/bignumber'
 
+import { useGetTokenInfo } from '@/src/hooks/queries/useGetSavingsData'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
-import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
-import { useModalsContext } from '@/src/providers/modalsProvider'
 import { formatAmount } from '@/src/utils/common'
 
 export const useDepositStepFinal = ({
   amount,
+  cancel,
   tokenAddress,
 }: {
   amount: string
+  cancel: () => void
   tokenAddress: string
 }) => {
-  const router = useRouter()
-  const tokenInfo = useAgaveTokens().getTokenByAddress(tokenAddress)
+  const tokenInfo = useGetTokenInfo(tokenAddress)
   const formattedAmount = formatAmount(
     BigNumber.from(amount),
     tokenInfo.decimals,
@@ -23,11 +21,8 @@ export const useDepositStepFinal = ({
     'after',
   )
 
-  const { closeModal } = useModalsContext()
-
   const final = () => {
-    router.push('/my-account')
-    closeModal()
+    cancel()
   }
 
   return useStepStates({
@@ -37,6 +32,6 @@ export const useDepositStepFinal = ({
     async mainAction() {
       await final()
     },
-    actionText: 'Go to My Account',
+    actionText: 'Finish',
   } as StepWithActions)
 }

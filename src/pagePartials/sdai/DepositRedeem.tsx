@@ -6,7 +6,6 @@ import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
 import { Deposit } from '@/src/pagePartials/sdai/deposit/Deposit'
 import { Redeem } from '@/src/pagePartials/sdai/redeem/Redeem'
 import { DepositRedeemTabs } from '@/types/modal'
-import { Token } from '@/types/token'
 
 const Tabs = styled(BaseTabs)`
   margin: 32px auto;
@@ -14,13 +13,11 @@ const Tabs = styled(BaseTabs)`
 
 interface Props {
   activeTab?: DepositRedeemTabs
-  onTokenSelect: (token: Token) => void
   setTab: (tab: DepositRedeemTabs) => void
-  token: Token | null
 }
 
 export const DepositRedeem: React.FC<Props> = withGenericSuspense(
-  ({ activeTab, onTokenSelect, setTab, token }) => {
+  ({ activeTab, setTab }) => {
     const depositActive = activeTab === 'deposit'
     const redeemActive = activeTab === 'redeem'
 
@@ -34,12 +31,8 @@ export const DepositRedeem: React.FC<Props> = withGenericSuspense(
             Redeem
           </Tab>
         </Tabs>
-        {depositActive && token && (
-          <Deposit onTokenSelect={onTokenSelect} tokenAddress={token.address} />
-        )}
-        {redeemActive && token && (
-          <Redeem onTokenSelect={onTokenSelect} tokenAddress={token.address} />
-        )}
+        {depositActive && <Deposit />}
+        {redeemActive && <Redeem />}
       </>
     )
   },

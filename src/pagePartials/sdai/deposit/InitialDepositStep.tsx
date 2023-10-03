@@ -14,20 +14,22 @@ import { TabToggle } from '@/src/components/common/TabToggle'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
-import { TokenWithType } from '@/src/config/agaveTokens'
-import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
-import { useDepositStepInitial } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
-import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
+import { Token } from '@/src/pagePartials/sdai/deposit/Deposit'
+import { useDepositStepInitial } from '@/src/pagePartials/sdai/deposit/hooks/useDepositStepInitial'
 import { NumberType } from '@/src/utils/format'
-import { Token } from '@/types/token'
 
 interface InitialDepositStepInfoProps {
   balance: BigNumber
-  tokenInfo: TokenWithType
+  decimals: number
+  symbol: string
 }
 
-const InitialDepositStepInfo: React.FC<InitialDepositStepInfoProps> = ({ balance, tokenInfo }) => {
+const InitialDepositStepInfo: React.FC<InitialDepositStepInfoProps> = ({
+  balance,
+  decimals,
+  symbol,
+}) => {
   return (
     <>
       <Text>
@@ -38,13 +40,8 @@ const InitialDepositStepInfo: React.FC<InitialDepositStepInfoProps> = ({ balance
       <Row>
         <RowKey>Available to deposit</RowKey>
         <RowValue>
-          <TokenIcon dimensions={18} symbol={tokenInfo.symbol} />
-          <Amount
-            decimals={tokenInfo.decimals}
-            numberType={NumberType.TokenTx}
-            symbol=""
-            value={balance}
-          />
+          <TokenIcon dimensions={18} symbol={symbol} />
+          <Amount decimals={decimals} numberType={NumberType.TokenTx} symbol="" value={balance} />
         </RowValue>
       </Row>
     </>
@@ -76,25 +73,27 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
     tokenInputStatusText,
   } = useDepositStepInitial({ amount, tokenAddress })
 
-  const agaveTokens = useAgaveTokens()
-  const market = useMarketsData().getMarket(tokenAddress)
-
   const onToggleWrap = (isToggled: boolean) => {
-    onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
+    const symbol = isToggled ? 'WXDAI' : 'XDAI'
+    onTokenSelect(symbol)
   }
 
-  const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
-
   const wizardProps = {
-    info: <InitialDepositStepInfo balance={balance} tokenInfo={tokenInfo} />,
+    info: (
+      <InitialDepositStepInfo
+        balance={balance}
+        decimals={tokenInfo.decimals}
+        symbol={tokenInfo.symbol}
+      />
+    ),
     title: 'Amount to deposit',
     titleButton: {
       onClick: () => setAmount(balance.toString()),
       text: 'Use max',
     },
-    toggles: isNativeRelated ? (
+    toggles: (
       <TabToggle
-        isToggled={tokenInfo.extensions.isNativeWrapper}
+        isToggled={true}
         onChange={onToggleWrap}
         toggleOptions={{
           toggledButton: 'WXDAI',
@@ -103,7 +102,7 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
           untoggledText: 'Unwrapped token',
         }}
       />
-    ) : null,
+    ),
   }
 
   return (
@@ -117,7 +116,6 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
         status={tokenInputStatus}
         statusText={tokenInputStatusText}
         symbol={tokenInfo.symbol}
-        usdPrice={market.priceData}
         value={amount}
       />
       <ButtonWrapper>
