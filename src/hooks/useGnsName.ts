@@ -23,7 +23,6 @@ export const useGnsName = () => {
         setDomain(domain)
       } catch (error) {
         setDomain(null)
-        console.log('GNS reverse lookup error: ', error)
       }
     }
     getDomain()
