@@ -31,6 +31,7 @@ const Title = styled(BaseTitle)`
 
 const BigContainer = styled(OuterContainer)`
   padding-bottom: 100px;
+  padding-top: 0;
 
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     margin-bottom: 48px;
@@ -50,9 +51,9 @@ const Sdai: NextPage = () => {
         incurs no additional costs and no slippafe as it is deposited or withdrawn from the DSR
         contract.
       </Paragraph>
+      <InfoTable />
       <MandatoryConnection>
         <BigContainer>
-          <InfoTable />
           <DepositRedeem activeTab={tab} setTab={setTab} />
         </BigContainer>
       </MandatoryConnection>

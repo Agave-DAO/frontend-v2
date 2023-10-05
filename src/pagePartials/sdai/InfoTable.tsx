@@ -6,6 +6,7 @@ import { useGetSavingsData } from '@/src/hooks/queries/useGetSavingsData'
 
 const Wrapper = styled.div`
   width: 100%;
+  margin-bottom: 20px;
 `
 
 export const InfoTable: React.FC = () => {

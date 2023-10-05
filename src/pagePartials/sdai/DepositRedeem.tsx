@@ -47,28 +47,11 @@ export const DepositRedeem: React.FC<Props> = withGenericSuspense(
   },
   () => (
     <>
-      <SkeletonLoading style={{ height: '48px', margin: '0 0 44px' }} />
-      <SkeletonLoading
-        style={{
-          borderRadius: '16px',
-          padding: '16px',
-        }}
-      >
-        <div style={{ display: 'grid', rowGap: '6px' }}>
-          {Array.from({ length: 6 }).map((item, index) => (
-            <SkeletonLoading
-              animate={false}
-              key={`list_${index}`}
-              style={{ height: '53px', borderRadius: '6px' }}
-            />
-          ))}
-        </div>
-      </SkeletonLoading>
       <Tabs style={{ height: '89px', maxWidth: 'none', width: '244px' }} />
       <SkeletonLoading
         style={{
           borderRadius: '16px',
-          height: '200px',
+          height: '400px',
         }}
       />
     </>
