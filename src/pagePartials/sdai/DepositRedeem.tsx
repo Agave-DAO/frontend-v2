@@ -11,6 +11,15 @@ const Tabs = styled(BaseTabs)`
   margin: 32px auto;
 `
 
+export const addresses = {
+  // TODO (Lia)
+  WXDAI: '0x18c8a7ec7897177E4529065a7E7B0878358B3BfF',
+  XDAI: '0x18c8a7ec7897177E4529065a7E7B0878358B3BfF',
+  SDAI: '0x20e5eB701E8d711D419D444814308f8c2243461F',
+}
+
+export type Token = 'XDAI' | 'WXDAI'
+
 interface Props {
   activeTab?: DepositRedeemTabs
   setTab: (tab: DepositRedeemTabs) => void

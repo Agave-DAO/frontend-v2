@@ -16,16 +16,16 @@ import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { TokenInput } from '@/src/components/token/TokenInput'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { Token } from '@/src/pagePartials/sdai/DepositRedeem'
-import { useDepositStepInitial } from '@/src/pagePartials/sdai/deposit/hooks/useDepositStepInitial'
+import { useRedeemStepInitial } from '@/src/pagePartials/sdai/redeem/hooks/useRedeemStepInitial'
 import { NumberType } from '@/src/utils/format'
 
-interface InitialDepositStepInfoProps {
+interface InitialRedeemStepInfoProps {
   balance: BigNumber
   decimals: number
   symbol: string
 }
 
-const InitialDepositStepInfo: React.FC<InitialDepositStepInfoProps> = ({
+const InitialRedeemStepInfo: React.FC<InitialRedeemStepInfoProps> = ({
   balance,
   decimals,
   symbol,
@@ -38,7 +38,7 @@ const InitialDepositStepInfo: React.FC<InitialDepositStepInfoProps> = ({
         from other chains? Consider using <a href="https://jumper.exchange/">jumper</a>
       </Text>
       <Row>
-        <RowKey>Available to deposit</RowKey>
+        <RowKey>Available to redeem</RowKey>
         <RowValue>
           <TokenIcon dimensions={18} symbol={symbol} />
           <Amount decimals={decimals} numberType={NumberType.TokenTx} symbol="" value={balance} />
@@ -48,7 +48,7 @@ const InitialDepositStepInfo: React.FC<InitialDepositStepInfoProps> = ({
   )
 }
 
-interface InitialDepositStepProps {
+interface InitialRedeemStepProps {
   amount: string
   nextStep: () => void
   onTokenSelect: (token: Token) => void
@@ -56,7 +56,7 @@ interface InitialDepositStepProps {
   tokenAddress: string
 }
 
-export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
+export const InitialRedeemStep: React.FC<InitialRedeemStepProps> = ({
   amount,
   nextStep,
   onTokenSelect,
@@ -71,7 +71,7 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
     tokenInfo,
     tokenInputStatus,
     tokenInputStatusText,
-  } = useDepositStepInitial({ amount, tokenAddress })
+  } = useRedeemStepInitial({ amount, tokenAddress })
 
   const onToggleWrap = (isToggled: boolean) => {
     const symbol = isToggled ? 'WXDAI' : 'XDAI'
@@ -80,13 +80,13 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
 
   const wizardProps = {
     info: (
-      <InitialDepositStepInfo
+      <InitialRedeemStepInfo
         balance={balance}
         decimals={tokenInfo.decimals}
         symbol={tokenInfo.symbol}
       />
     ),
-    title: 'Amount to deposit',
+    title: 'Amount to redeem',
     titleButton: {
       onClick: () => setAmount(balance.toString()),
       text: 'Use max',
@@ -120,7 +120,7 @@ export const InitialDepositStep: React.FC<InitialDepositStepProps> = ({
       />
       <ButtonWrapper>
         <Button disabled={disableSubmit} onClick={nextStep}>
-          Deposit
+          Redeem
         </Button>
       </ButtonWrapper>
     </Stepper>

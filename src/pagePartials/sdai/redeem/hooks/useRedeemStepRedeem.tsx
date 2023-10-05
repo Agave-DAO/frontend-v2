@@ -1,52 +1,60 @@
 import { useCallback } from 'react'
 
-import { useGetTokenInfo } from '@/src/hooks/queries/useGetSavingsData'
 import { useGetBalance } from '@/src/hooks/queries/useGetSavingsUserData'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { Token, addresses } from '@/src/pagePartials/sdai/DepositRedeem'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { SavingsXDaiAdapter__factory, SavingsXDai__factory } from '@/types/generated/typechain'
 
-export const useDepositStepDeposit = ({
+export const useRedeemStepRedeem = ({
   amount,
+  selectedToken,
   tokenAddress,
 }: {
   amount: string
+  selectedToken: Token
   tokenAddress: string
 }) => {
-  const tokenInfo = useGetTokenInfo(tokenAddress)
   const { address: userAddress } = useWeb3ConnectedApp()
   const adapter = useContractInstance(SavingsXDaiAdapter__factory, 'SavingsXDaiAdapter', true)
-  const sdai = useContractInstance(SavingsXDai__factory, 'SavingsXDai', true)
   const sendTx = useTransaction()
 
   const { refetch: refetchSourceBalance } = useGetBalance(userAddress, tokenAddress)
-  const { refetch: refetchTargetBalance } = useGetBalance(userAddress, sdai.address)
+  const { refetch: refetchTargetBalance } = useGetBalance(userAddress, addresses[selectedToken])
 
-  const deposit = useCallback(async () => {
+  const redeem = useCallback(async () => {
     const tx = await sendTx(() => {
-      if (tokenInfo.symbol == 'XDAI') {
-        return adapter.depositXDAI(userAddress, { value: amount })
+      if (selectedToken == 'XDAI') {
+        return adapter.redeemXDAI(amount, userAddress)
       }
-      return adapter.deposit(amount, userAddress)
+      return adapter.redeem(amount, userAddress)
     })
     const receipt = await tx.wait()
-    refetchSourceBalance()
     refetchTargetBalance()
+    refetchSourceBalance()
     return receipt.transactionHash
-  }, [tokenInfo, refetchSourceBalance, refetchTargetBalance, sendTx, userAddress, amount, adapter])
+  }, [
+    refetchSourceBalance,
+    refetchTargetBalance,
+    sendTx,
+    userAddress,
+    amount,
+    adapter,
+    selectedToken,
+  ])
 
   return useStepStates({
-    title: 'Deposit',
-    description: 'Submit to deposit',
+    title: 'Redeem',
+    description: 'Submit to redeem',
     status: 'idle',
-    actionText: 'Deposit',
+    actionText: 'Redeem',
     async mainAction() {
       this.loading()
 
       try {
-        const txHash = await deposit()
+        const txHash = await redeem()
         this.nextStep(txHash)
       } catch (e) {
         this.failed()

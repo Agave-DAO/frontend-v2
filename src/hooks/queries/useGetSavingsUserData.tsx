@@ -6,7 +6,7 @@ import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { ERC20__factory } from '@/types/generated/typechain'
 
-// TODO: switch to src/hooks/useAccountBalance when on mainnet
+// TODO (Lia): switch to src/hooks/useAccountBalance when on mainnet
 export const useGetBalance = (accountAddress: string, tokenAddress: string) => {
   const erc20 = useContractInstance(ERC20__factory, tokenAddress)
   const calls = [erc20.balanceOf] as const

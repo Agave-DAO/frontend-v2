@@ -7,7 +7,7 @@ import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepp
 import { useUserActionsContext } from '@/src/providers/userActionsProvider'
 import { ERC20__factory, SavingsXDaiAdapter__factory } from '@/types/generated/typechain'
 
-export const useDepositStepApprove = ({
+export const useRedeemStepApprove = ({
   amount,
   tokenAddress,
 }: {

@@ -14,7 +14,7 @@ export const useGetTokenInfo = (tokenAddress: string) => {
   const erc20 = useContractInstance(ERC20__factory, tokenAddress)
   const calls = [erc20.name, erc20.symbol, erc20.decimals] as const
 
-  const [{ data: tokenData }, refetchTokenData] = useContractCall(calls, [[], [], []], `TokenData`)
+  const [{ data: tokenData }, refetchTokenData] = useContractCall(calls, [[], [], []], tokenAddress)
 
   return useMemo(() => {
     if (!tokenData) {
