@@ -67,10 +67,8 @@ const Sdai: NextPage = () => {
         <Title>sDAI</Title>
       </TitleWrapper>
       <Paragraph>
-        sDAI is similar to DAI but with the added benefit of earning interest. You can use it just
-        like DAI - own, transfer, and use it in the DeFi ecosystem. Swapping between sDAI and DAI
-        incurs no additional costs and no slippafe as it is deposited or withdrawn from the DSR
-        contract.
+        All the DAI bridged to Gnosis Chain is earning interest at MakerDAO. This interest is
+        redirected to the sDAI holder. You can use sDAI in Defi like you would normally use xDAI.
       </Paragraph>
       <InfoTable />
       <MandatoryConnection>
