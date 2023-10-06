@@ -23,7 +23,7 @@ export const useDepositStepInitialIndex = ({
   const { approvedAmount: allowance } = useGetERC20Allowance(wxdai, SavingsXDaiAdapterAddress)
   return useMemo(() => {
     if (tokenInfo.symbol === 'XDAI') {
-      return 1
+      return 0
     }
 
     const isAllowanceEnough = !allowance.isZero() && allowance.gte(BigNumber.from(amount))

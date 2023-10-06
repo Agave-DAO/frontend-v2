@@ -24,28 +24,18 @@ export const useDepositStepDeposit = ({
   const sendTx = useTransaction()
 
   const { mutate: refetchUserReservesData } = useGetUserReservesData()
-  const { refetch: refetchTargetBalance } = useGetBalance(userAddress, sdai.address)
 
   const deposit = useCallback(async () => {
     const tx = await sendTx(() => {
-      if (tokenInfo.symbol === 'XDAI') {
+      if (tokenInfo.symbol == 'XDAI') {
         return adapter.depositXDAI(userAddress, { value: amount })
       }
       return adapter.deposit(amount, userAddress)
     })
     const receipt = await tx.wait()
     refetchUserReservesData()
-    refetchTargetBalance()
     return receipt.transactionHash
-  }, [
-    tokenInfo,
-    refetchUserReservesData,
-    refetchTargetBalance,
-    sendTx,
-    userAddress,
-    amount,
-    adapter,
-  ])
+  }, [tokenInfo, refetchUserReservesData, sendTx, userAddress, amount, adapter])
 
   return useStepStates({
     title: 'Deposit',
