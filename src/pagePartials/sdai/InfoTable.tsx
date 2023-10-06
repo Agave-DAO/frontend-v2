@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { InnerCardDark } from '@/src/components/common/InnerCard'
 import { Row, RowKey, RowValueBig, Rows } from '@/src/components/common/Rows'
 import { useGetSavingsData } from '@/src/hooks/queries/useGetSavingsData'
+import { formatAmount, formatPercentage } from '@/src/utils/common'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -17,16 +18,16 @@ export const InfoTable: React.FC = () => {
       <InnerCardDark>
         <Rows>
           <Row variant="light">
-            <RowKey>Shares</RowKey>
-            <RowValueBig>{totalSupply} sDAI</RowValueBig>
+            <RowKey>Total Supply</RowKey>
+            <RowValueBig>{formatAmount(totalSupply, 18, '')} sDAI</RowValueBig>
           </Row>
           <Row variant="light">
-            <RowKey>Reserves</RowKey>
-            <RowValueBig>{totalAssets} WXDAI</RowValueBig>
+            <RowKey>Total Reserves</RowKey>
+            <RowValueBig>{formatAmount(totalAssets, 18, '$')} WXDAI</RowValueBig>
           </Row>
           <Row variant="light">
             <RowKey>Vault APY</RowKey>
-            <RowValueBig>{vaultAPY} %</RowValueBig>
+            <RowValueBig>{formatPercentage(vaultAPY, 16)}</RowValueBig>
           </Row>
         </Rows>
       </InnerCardDark>

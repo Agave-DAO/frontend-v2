@@ -200,7 +200,7 @@ const fetchAgaveMarketsData = async ({
 // If the array of token is too big, we can split the tokens array into smaller chunks (such as pagination)
 export const useGetMarketsData = () => {
   const { appChainId, batchProvider, batchProviderFallback } = useWeb3Connection()
-  const chainId = appChainId === 10200 ? 100 : appChainId
+  const chainId = appChainId === 100 ? 100 : 100
   const agaveTokens = useAgaveTokens()
   const [toastDisplayed, setToastDisplayed] = useState(false)
 

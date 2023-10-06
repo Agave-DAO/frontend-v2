@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef } from 'react'
 
+import { contracts } from '@/src/contracts/contracts'
 import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
 import { useUserActionsContext } from '@/src/providers/userActionsProvider'
 import { ERC20__factory, SavingsXDaiAdapter__factory } from '@/types/generated/typechain'
-
 export const useDepositStepApprove = ({
   amount,
   tokenAddress,
@@ -24,7 +24,7 @@ export const useDepositStepApprove = ({
   const adapter = useContractInstance(SavingsXDaiAdapter__factory, 'SavingsXDaiAdapter')
   const erc20 = useContractInstance(ERC20__factory, tokenAddress, true)
   const sendTx = useTransaction()
-  const { refetchAllowance } = useGetERC20Allowance(tokenAddress, adapter.address)
+  const { refetchAllowance } = useGetERC20Allowance(contracts.WxDAI.address[100], adapter.address)
 
   const approve = useCallback(async () => {
     const approvalAmount = unlimitedApprovalRef.current
@@ -38,6 +38,7 @@ export const useDepositStepApprove = ({
 
   return useStepStates({
     title: 'Approve',
+    description: 'Approving Adapter',
     status: 'active',
     actionText: 'Approve',
     async mainAction() {

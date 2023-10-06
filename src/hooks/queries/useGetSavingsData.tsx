@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { ethers } from 'ethers'
+import { BigNumber } from 'ethers'
 
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
@@ -70,22 +70,18 @@ export const useGetSavingsData = () => {
   return useMemo(() => {
     if (!savingsAdapterData || !savingsData) {
       return {
-        vaultAPY: '-',
-        totalAssets: '-',
-        totalSupply: '-',
+        vaultAPY: BigNumber.from(0),
+        totalAssets: BigNumber.from(0),
+        totalSupply: BigNumber.from(0),
         refetch: () => {
           refetchSavingsAdapterData()
           refetchSavingsData()
         },
       }
     }
-    const vaultAPY = (+ethers.utils.formatUnits(savingsAdapterData.toString(), 16)).toFixed(3)
-    const totalAssets = ethers.utils.commify(
-      (+ethers.utils.formatUnits(savingsData[0]?.toString() || '0')).toFixed(2),
-    )
-    const totalSupply = ethers.utils.commify(
-      (+ethers.utils.formatUnits(savingsData[1]?.toString() || '0')).toFixed(2),
-    )
+    const vaultAPY = savingsAdapterData[0] || BigNumber.from(0)
+    const totalAssets = savingsData[0] || BigNumber.from(0)
+    const totalSupply = savingsData[1] || BigNumber.from(0)
 
     return {
       vaultAPY,

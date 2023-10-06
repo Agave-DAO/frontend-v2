@@ -6,10 +6,10 @@ import { Row, RowKey, RowValue, RowValueBig, Text } from '@/src/components/commo
 import { ToggleSwitch } from '@/src/components/form/ToggleSwitch'
 import { Amount } from '@/src/components/helpers/Amount'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
-import { useGetTokenInfo } from '@/src/hooks/queries/useGetSavingsData'
 import { Steps } from '@/src/pagePartials/markets/stepper'
 import { Token } from '@/src/pagePartials/sdai/DepositRedeem'
 import { useRedeemSteps } from '@/src/pagePartials/sdai/redeem/hooks/useRedeemSteps'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useUserActionsContext } from '@/src/providers/userActionsProvider'
 
 interface RedeemStepperInfoProps {
@@ -23,7 +23,8 @@ const RedeemStepperInfo = ({
   tokenAddress,
   unlimitedApprovalToggle,
 }: RedeemStepperInfoProps) => {
-  const tokenInfo = useGetTokenInfo(tokenAddress)
+  const agaveTokens = useAgaveTokens()
+  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
 
   return (
     <>

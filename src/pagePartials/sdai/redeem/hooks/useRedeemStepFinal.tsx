@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { useGetTokenInfo } from '@/src/hooks/queries/useGetSavingsData'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { formatAmount } from '@/src/utils/common'
 
 export const useRedeemStepFinal = ({
@@ -13,7 +13,8 @@ export const useRedeemStepFinal = ({
   cancel: () => void
   tokenAddress: string
 }) => {
-  const tokenInfo = useGetTokenInfo(tokenAddress)
+  const agaveTokens = useAgaveTokens()
+  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const formattedAmount = formatAmount(
     BigNumber.from(amount),
     tokenInfo.decimals,

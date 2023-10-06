@@ -72,10 +72,10 @@ export const TokenIcon: React.FC<Props> = ({ dimensions = 18, symbol, ...restPro
         <Image
           alt={symbol}
           className="tokenIcon"
-          height={dimensions - 8}
+          height={dimensions - 6}
           onError={() => setError(true)}
           src={tokenImage}
-          width={dimensions - 8}
+          width={dimensions - 6}
         />
       ) : (
         <Placeholder>{symbol[0]}</Placeholder>

@@ -31,7 +31,7 @@ const fetchUserReserveData = async (
 export const useGetUserReservesData = () => {
   const { address, appChainId, batchProvider } = useWeb3Connection()
   const agaveTokens = useAgaveTokens()
-  const chainId = appChainId === 10200 ? 100 : appChainId
+  const chainId = appChainId === 100 ? 100 : 100
 
   return useSWR(address ? [`user-reserves-data`, address] : null, async () => {
     if (!address) {

@@ -4,8 +4,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
 
 import { TextfieldStatus } from '@/src/components/form/Textfield'
-import { useGetTokenInfo } from '@/src/hooks/queries/useGetSavingsData'
-import { useGetBalance } from '@/src/hooks/queries/useGetSavingsUserData'
+import { useAccountBalance } from '@/src/hooks/useAccountBalance'
+import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 
 export function useRedeemStepInitial({
@@ -15,9 +15,10 @@ export function useRedeemStepInitial({
   amount: string
   tokenAddress: string
 }) {
+  const agaveTokens = useAgaveTokens()
+  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const { address: accountAddress } = useWeb3ConnectedApp()
-  const tokenInfo = useGetTokenInfo(tokenAddress)
-  const { balance } = useGetBalance(accountAddress, tokenAddress)
+  const { balance } = useAccountBalance({ accountAddress, tokenAddress })
 
   const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
   const [tokenInputStatusText, setTokenInputStatusText] = useState<string | undefined>()

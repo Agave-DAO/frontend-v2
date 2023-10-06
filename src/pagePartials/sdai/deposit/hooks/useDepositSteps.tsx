@@ -1,4 +1,4 @@
-import { useGetTokenInfo } from '@/src/hooks/queries/useGetSavingsData'
+import { useDepositStepInitial } from './useDepositStepInitial'
 import { useMetaSteps } from '@/src/pagePartials/markets/stepper'
 import { useDepositStepApprove } from '@/src/pagePartials/sdai/deposit/hooks/useDepositStepApprove'
 import { useDepositStepDeposit } from '@/src/pagePartials/sdai/deposit/hooks/useDepositStepDeposit'
@@ -22,8 +22,8 @@ export const useDepositSteps = ({
     tokenAddress,
   })
 
-  const tokenInfo = useGetTokenInfo(tokenAddress)
-  const isNativeToken = tokenInfo.isNative
+  const { tokenInfo } = useDepositStepInitial({ amount, tokenAddress })
+  const isNativeToken = tokenInfo.symbol === 'XDAI'
 
   return useMetaSteps({
     initialStepIndex,
