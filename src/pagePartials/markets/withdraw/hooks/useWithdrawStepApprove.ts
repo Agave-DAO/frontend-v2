@@ -42,13 +42,8 @@ export const useWithdrawStepApprove = ({
   const sendTx = useTransaction()
 
   const { refetchAllowance: refetchTokenAllowance } = useGetERC20Allowance(
-    tokenAddress,
+    params.asset,
     agaveLendingAddress,
-  )
-
-  const { refetchAllowance: refetchAGTokenAllowance } = useGetERC20Allowance(
-    agTokenInfo.address,
-    wrappedNativeGatewayAddress,
   )
 
   const approve = useCallback<() => Promise<string>>(async () => {
@@ -59,18 +54,10 @@ export const useWithdrawStepApprove = ({
     const tx = await sendTx(() => erc20.approve(params.spender, approvalAmount))
     const receipt = await tx.wait()
 
-    isNativeToken ? await refetchAGTokenAllowance() : await refetchTokenAllowance()
+    await refetchTokenAllowance()
 
     return receipt.transactionHash
-  }, [
-    amount,
-    erc20,
-    isNativeToken,
-    params.spender,
-    refetchAGTokenAllowance,
-    refetchTokenAllowance,
-    sendTx,
-  ])
+  }, [amount, erc20, params.spender, refetchTokenAllowance, sendTx])
 
   return useStepStates({
     title: 'Approve',

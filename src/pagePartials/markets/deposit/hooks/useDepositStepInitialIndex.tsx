@@ -17,18 +17,19 @@ export const useDepositStepInitialIndex = ({
   const { appChainId } = useWeb3ConnectedApp()
   const agaveTokens = useAgaveTokens()
   const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
+  const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
+  const isNativeToken = tokenInfo.extensions.isNative
+  const asset = isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress
 
-  const { approvedAmount: allowance } = useGetERC20Allowance(tokenAddress, agaveLendingAddress)
+  const { approvedAmount: allowance } = useGetERC20Allowance(asset, agaveLendingAddress)
 
   return useMemo(() => {
-    const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-
-    if (tokenInfo.extensions.isNative) {
+    if (isNativeToken) {
       return 1
     }
 
     const isAllowanceEnough = !allowance.isZero() && allowance.gte(BigNumber.from(amount))
 
     return isAllowanceEnough ? 1 : 0
-  }, [agaveTokens, allowance, amount, tokenAddress])
+  }, [isNativeToken, allowance, amount])
 }

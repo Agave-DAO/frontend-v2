@@ -45,7 +45,6 @@ export const DepositRedeem: React.FC<Props> = withGenericSuspense(
     const { address } = useWeb3ConnectedApp()
     const { balance } = useAccountBalance({ accountAddress: address, tokenAddress: addresses.SDAI })
     const { maxWithdrawAmount } = useGetERC4626MaxWithdraw(addresses.SDAI)
-
     const Wrapper = styled.div`
       width: 100%;
       margin: 3rem 0px;

@@ -52,6 +52,7 @@ interface DepositStepperProps {
 
 export const DepositStepper = ({ amount, cancel, tokenAddress }: DepositStepperProps) => {
   const depositSteps = useDepositSteps({ amount, cancel, tokenAddress })
+
   const { tokenInfo } = useDepositStepInitial({ amount, tokenAddress })
   const { setUnlimitedApproval, unlimitedApproval } = useUserActionsContext()
   const showUnlimitedOption = tokenInfo.symbol === 'WXDAI'

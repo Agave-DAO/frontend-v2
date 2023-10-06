@@ -16,14 +16,11 @@ export const useDepositStepInitialIndex = ({
 }) => {
   const { appChainId } = useWeb3ConnectedApp()
   const SavingsXDaiAdapterAddress = contracts['SavingsXDaiAdapter'].address[appChainId]
+  const wxdai = contracts.WxDAI.address[appChainId]
   const agaveTokens = useAgaveTokens()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
 
-  const { approvedAmount: allowance } = useGetERC20Allowance(
-    contracts.WxDAI.address[100],
-    SavingsXDaiAdapterAddress,
-  )
-
+  const { approvedAmount: allowance } = useGetERC20Allowance(wxdai, SavingsXDaiAdapterAddress)
   return useMemo(() => {
     if (tokenInfo.symbol === 'XDAI') {
       return 1
