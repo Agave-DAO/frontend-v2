@@ -1,13 +1,12 @@
 import { useCallback } from 'react'
 
-import { useGetBalance } from '@/src/hooks/queries/useGetSavingsUserData'
 import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesData'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { SavingsXDaiAdapter__factory, SavingsXDai__factory } from '@/types/generated/typechain'
+import { SavingsXDaiAdapter__factory } from '@/types/generated/typechain'
 
 export const useDepositStepDeposit = ({
   amount,
@@ -20,7 +19,6 @@ export const useDepositStepDeposit = ({
   const agaveTokens = useAgaveTokens()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const adapter = useContractInstance(SavingsXDaiAdapter__factory, 'SavingsXDaiAdapter', true)
-  const sdai = useContractInstance(SavingsXDai__factory, 'SavingsXDai', true)
   const sendTx = useTransaction()
 
   const { mutate: refetchUserReservesData } = useGetUserReservesData()

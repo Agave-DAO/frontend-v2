@@ -146,9 +146,7 @@ class AgaveTokens implements IDAgaveTokens {
 
     if (tokenInfo.type === 'reserve') {
       // discard `oracle`, `strategy`, and `symbol` from protocol tokens
-      const { oracle, strategy, symbol, ...protocolTokens } = this.getProtocolTokensByReserve(
-        tokenInfo.address,
-      )
+      const { ...protocolTokens } = this.getProtocolTokensByReserve(tokenInfo.address)
 
       return [
         {
