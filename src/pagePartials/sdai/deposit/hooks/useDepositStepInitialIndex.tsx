@@ -15,21 +15,19 @@ export const useDepositStepInitialIndex = ({
   tokenAddress: string
 }) => {
   const { appChainId } = useWeb3ConnectedApp()
+  const SavingsXDaiAdapterAddress = contracts['SavingsXDaiAdapter'].address[appChainId]
+  const wxdai = contracts.WxDAI.address[appChainId]
   const agaveTokens = useAgaveTokens()
-  const agaveLendingAddress = contracts['AgaveLendingPool'].address[appChainId]
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
-  const isNativeToken = tokenInfo.extensions.isNative
-  const asset = isNativeToken ? agaveTokens.wrapperToken.address : tokenAddress
 
-  const { approvedAmount: allowance } = useGetERC20Allowance(asset, agaveLendingAddress)
-
+  const { approvedAmount: allowance } = useGetERC20Allowance(wxdai, SavingsXDaiAdapterAddress)
   return useMemo(() => {
-    if (isNativeToken) {
-      return 1
+    if (tokenInfo.symbol === 'XDAI') {
+      return 0
     }
 
     const isAllowanceEnough = !allowance.isZero() && allowance.gte(BigNumber.from(amount))
 
     return isAllowanceEnough ? 1 : 0
-  }, [isNativeToken, allowance, amount])
+  }, [allowance, amount, tokenInfo])
 }

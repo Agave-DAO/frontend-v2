@@ -4,7 +4,7 @@ import { AgaveLending__factory } from '@/types/generated/typechain'
 /**
  * 
  * 
- * @returns {
+ * @returns 
     totalCollateralETH: BigNumber; // as wei
     totalDebtETH: BigNumber; // as wei
     availableBorrowsETH: BigNumber; // as wei

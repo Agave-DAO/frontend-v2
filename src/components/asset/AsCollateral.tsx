@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 import { ToggleSwitch } from '@/src/components/form/ToggleSwitch'
 import { useSetReserveAsCollateral } from '@/src/hooks/mutations/useSetReserveAsCollateral'
-import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 
 export const AsCollateral: React.FC<{
   isActive: boolean

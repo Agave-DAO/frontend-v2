@@ -31,6 +31,5 @@ export function useContractCall<
     },
     options,
   )
-
   return [error ? { data: null, error } : { data, error: null }, refetch]
 }

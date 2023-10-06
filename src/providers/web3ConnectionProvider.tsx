@@ -71,6 +71,7 @@ const wcV2InitOptions: WalletConnectOptions = {
    * Defaults to [1] - Ethereum
    */
   requiredChains: [100],
+  optionalChains: [10200],
 }
 
 const walletConnect = walletConnectModule(wcV2InitOptions || wcV1InitOptions)
