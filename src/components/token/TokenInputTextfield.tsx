@@ -65,7 +65,7 @@ export const TokenInputTextfield: React.FC<Props> = ({
     <BigNumberInput
       decimals={decimals}
       onChange={(value) => {
-        setValue(value)
+        setValue(value ? value : '0')
       }}
       renderInput={(props) => (
         <Textfield
