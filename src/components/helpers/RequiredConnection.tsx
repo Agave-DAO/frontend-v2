@@ -1,4 +1,4 @@
-import React, { DOMAttributes, HTMLAttributes, ReactElement } from 'react'
+import React, { DOMAttributes, HTMLAttributes } from 'react'
 import styled from 'styled-components'
 
 import { ButtonPrimary } from '@/src/components/buttons/Button'
