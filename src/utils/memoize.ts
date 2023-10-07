@@ -4,7 +4,7 @@ import memoizee from 'memoizee'
  * Memoize a function or getter
  */
 export const memoize = () => {
-  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+  return (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) => {
     if ('value' in descriptor) {
       const func = descriptor.value
       descriptor.value = memoizee(func)

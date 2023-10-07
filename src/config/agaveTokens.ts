@@ -149,7 +149,6 @@ class AgaveTokens implements IDAgaveTokens {
       const { oracle, strategy, symbol, ...protocolTokens } = this.getProtocolTokensByReserve(
         tokenInfo.address,
       )
-
       return [
         {
           address: tokenInfo.address,
