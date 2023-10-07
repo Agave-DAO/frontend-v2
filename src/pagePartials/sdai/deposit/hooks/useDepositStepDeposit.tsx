@@ -20,6 +20,7 @@ export const useDepositStepDeposit = ({
   const agaveTokens = useAgaveTokens()
   const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
   const adapter = useContractInstance(SavingsXDaiAdapter__factory, 'SavingsXDaiAdapter', true)
+
   const sendTx = useTransaction()
 
   const { mutate: refetchUserReservesData } = useGetUserReservesData()
