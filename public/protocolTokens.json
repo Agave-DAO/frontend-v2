@@ -79,6 +79,14 @@
       "stableDebt": "0xec7f91f26e7fd42e90ffa53ca0b0b02095a6b450",
       "strategy": "0x152fe5a19e4A4740699Bfd519BE89c9F7540927F",
       "oracle": "0xae27e63307963850c4d30BFba78FC1116d7b48C3"
+    },
+    "0xaf204776c7245bF4147c2612BF6e5972Ee483701": {
+      "symbol": "sDAI",
+      "ag": "0xe1cf0d5a56c993c3c2a0442dd645386aeff1fc9a",
+      "variableDebt": "0xad15fec0026e28dfb10588fa35a383b07014e0c6",
+      "stableDebt": "0x6927a7cda946910126008af78eba50db6415284f",
+      "strategy": "0xF7f88000be29D179015fB2C5eE466743f6386EDC",
+      "oracle": "0x2CD3494BB70A30f042FCfcCAB4D192F6B7449042"
     }
   }
 }
