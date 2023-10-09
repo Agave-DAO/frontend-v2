@@ -106,12 +106,12 @@ class AgaveTokens implements IDAgaveTokens {
         type: 'stake',
       },
       {
-        ...this.savingsToken,
-        type: 'savings',
-      },
-      {
         ...this.nativeToken,
         type: 'native',
+      },
+      {
+        ...this.savingsToken,
+        type: 'savings',
       },
       ...this.reserveTokens.map(
         (tokenInfo): TokenWithType => ({
@@ -143,7 +143,6 @@ class AgaveTokens implements IDAgaveTokens {
   @memoize()
   getRelatedTokensByAddress(tokenAddress: string): TokenInfo[] {
     const tokenInfo = this.getTokenByAddress(tokenAddress)
-
     if (tokenInfo.type === 'reserve') {
       // discard `oracle`, `strategy`, and `symbol` from protocol tokens
       const { oracle, strategy, symbol, ...protocolTokens } = this.getProtocolTokensByReserve(
@@ -165,7 +164,6 @@ class AgaveTokens implements IDAgaveTokens {
       ]
     } else {
       const reserveToken = this.getReserveTokenByAddress(tokenAddress)
-
       if (!reserveToken) {
         throw Error(`Unsupported token: ${tokenAddress}`)
       }
