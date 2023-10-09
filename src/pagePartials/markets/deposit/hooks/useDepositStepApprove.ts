@@ -24,14 +24,11 @@ export const useDepositStepApprove = ({
   const { refetchAllowance } = useGetERC20Allowance(asset, agaveLending.address)
 
   const approve = useCallback(async () => {
-    if (!isNativeToken) {
-      const tx = await sendTx(() => erc20.approve(agaveLending.address, amount))
-      const receipt = await tx.wait()
-      await refetchAllowance()
-      return receipt.transactionHash
-    }
-    return ''
-  }, [sendTx, refetchAllowance, isNativeToken, erc20, agaveLending.address, amount])
+    const tx = await sendTx(() => erc20.approve(agaveLending.address, amount))
+    const receipt = await tx.wait()
+    await refetchAllowance()
+    return receipt.transactionHash
+  }, [sendTx, refetchAllowance, erc20, agaveLending.address, amount])
 
   return useStepStates({
     title: 'Approve',
@@ -40,7 +37,6 @@ export const useDepositStepApprove = ({
     actionText: 'Approve',
     async mainAction() {
       this.loading()
-
       try {
         const txHash = await approve()
         this.nextStep(txHash)
