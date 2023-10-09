@@ -109,15 +109,15 @@ class AgaveTokens implements IDAgaveTokens {
         ...this.nativeToken,
         type: 'native',
       },
+      {
+        ...this.savingsToken,
+        type: 'savings',
+      },
       ...this.reserveTokens.map(
         (tokenInfo): TokenWithType => ({
           ...tokenInfo,
           type: 'reserve',
         }),
-        {
-          ...this.savingsToken,
-          type: 'savings',
-        },
       ),
       ...Object.values(this.reserveTokens).flatMap(({ address }): TokenWithType[] => {
         return [
