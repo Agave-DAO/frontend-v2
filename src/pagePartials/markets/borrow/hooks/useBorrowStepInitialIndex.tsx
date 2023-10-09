@@ -29,10 +29,6 @@ export const useBorrowStepInitialIndex = ({
   return useMemo(() => {
     const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
 
-    if (!tokenInfo.extensions.isNative) {
-      return 1
-    }
-
     const isAllowanceEnough =
       !borrowAllowance.isZero() && borrowAllowance.gte(BigNumber.from(amount))
 
