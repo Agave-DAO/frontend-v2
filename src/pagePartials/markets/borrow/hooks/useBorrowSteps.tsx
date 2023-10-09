@@ -3,6 +3,7 @@ import { useBorrowStepBorrow } from '@/src/pagePartials/markets/borrow/hooks/use
 import { useBorrowStepDelegate } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepDelegate'
 import { useBorrowStepFinal } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepFinal'
 import { useBorrowStepInitialIndex } from '@/src/pagePartials/markets/borrow/hooks/useBorrowStepInitialIndex'
+import { useDepositStepInitial } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepInitial'
 import { useMetaSteps } from '@/src/pagePartials/markets/stepper'
 
 export const useBorrowSteps = ({
@@ -22,8 +23,13 @@ export const useBorrowSteps = ({
     tokenAddress,
   })
 
+  const { tokenInfo } = useDepositStepInitial({ amount, tokenAddress })
+  const isNativeToken = tokenInfo.symbol === 'XDAI'
+
   return useMetaSteps({
     initialStepIndex,
-    stepsWithDispatchers: [approveStep, borrowStep, finalStep],
+    stepsWithDispatchers: !isNativeToken
+      ? [borrowStep, finalStep]
+      : [approveStep, borrowStep, finalStep],
   })
 }

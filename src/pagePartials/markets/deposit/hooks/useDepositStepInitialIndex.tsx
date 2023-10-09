@@ -24,12 +24,8 @@ export const useDepositStepInitialIndex = ({
   const { approvedAmount: allowance } = useGetERC20Allowance(asset, agaveLendingAddress)
 
   return useMemo(() => {
-    if (isNativeToken) {
-      return 1
-    }
-
     const isAllowanceEnough = !allowance.isZero() && allowance.gte(BigNumber.from(amount))
 
     return isAllowanceEnough ? 1 : 0
-  }, [isNativeToken, allowance, amount])
+  }, [allowance, amount])
 }
