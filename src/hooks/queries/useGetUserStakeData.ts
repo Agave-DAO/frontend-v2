@@ -84,7 +84,7 @@ export const useGetUserStakeCooldown = () => {
     [[address]],
     `StakedToken-stakersCooldowns-${address}`,
     {
-      refreshInterval: 10_000,
+      refreshInterval: 60_000,
     },
   )
 
