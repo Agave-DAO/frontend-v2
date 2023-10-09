@@ -1,7 +1,6 @@
 import { useDepositStepApprove } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepApprove'
 import { useDepositStepDeposit } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepDeposit'
 import { useDepositStepFinal } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepFinal'
-import { useDepositStepInitial } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepInitial'
 import { useDepositStepInitialIndex } from '@/src/pagePartials/markets/deposit/hooks/useDepositStepInitialIndex'
 import { useMetaSteps } from '@/src/pagePartials/markets/stepper'
 
@@ -20,13 +19,8 @@ export const useDepositSteps = ({
     tokenAddress,
   })
 
-  const { tokenInfo } = useDepositStepInitial({ amount, tokenAddress })
-  const isNativeToken = tokenInfo.symbol === 'XDAI'
-
   return useMetaSteps({
     initialStepIndex,
-    stepsWithDispatchers: isNativeToken
-      ? [depositStep, finalStep]
-      : [approveStep, depositStep, finalStep],
+    stepsWithDispatchers: [approveStep, depositStep, finalStep],
   })
 }
