@@ -109,7 +109,7 @@ export const UserDepositDetails = withGenericSuspense(
                 onClick={() =>
                   openDepositWithdrawModal({
                     tokenAddress,
-                    action: 'deposit',
+                    activeTab: 'deposit',
                   })
                 }
               >
