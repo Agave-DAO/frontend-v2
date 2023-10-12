@@ -28,59 +28,61 @@ export const UserDeposits: React.FC = withGenericSuspense(
       />
     ) : (
       <AssetsList {...restProps}>
-        {userDeposits.map(
-          ({
-            asCollateral,
-            assetAddress,
-            depositRate,
-            depositedAmount,
-            depositedAmountInDAI,
-            incentiveRate,
-          }) => {
-            const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
-            const items = [
-              {
-                text: 'Withdraw',
-                onClick: () =>
-                  openDepositWithdrawModal({ tokenAddress: assetAddress, activeTab: 'withdraw' }),
-              },
-            ]
+        {userDeposits
+          .map(
+            ({
+              asCollateral,
+              assetAddress,
+              depositRate,
+              depositedAmount,
+              depositedAmountInDAI,
+              incentiveRate,
+            }) => {
+              const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
+              const items = [
+                {
+                  text: 'Withdraw',
+                  onClick: () =>
+                    openDepositWithdrawModal({ tokenAddress: assetAddress, activeTab: 'withdraw' }),
+                },
+              ]
 
-            return (
-              <UserAsset
-                baseRate={depositRate}
-                incentivesRate={incentiveRate}
-                key={`${assetAddress}-deposit`}
-                tokenAddress={assetAddress}
-                tokenValue={
-                  <Amount
-                    decimals={decimals}
-                    symbol={symbol}
-                    symbolPosition="after"
-                    value={depositedAmount}
-                  />
-                }
-                totalAP={depositRate.add(incentiveRate)}
-                usdValue={<Amount value={depositedAmountInDAI} />}
-                useAsCollateral={asCollateral}
-              >
-                <ActionsWrapper>
-                  <MoreActionsDropdown items={items} size="lg" />
-                  <ActionButton
-                    onClick={() =>
-                      openDepositWithdrawModal({
-                        tokenAddress: assetAddress,
-                        activeTab: 'deposit',
-                      })
-                    }
-                  >
-                    Deposit
-                  </ActionButton>
-                </ActionsWrapper>
-              </UserAsset>
-            )
-          },
-        )}
+              return (
+                <UserAsset
+                  baseRate={depositRate}
+                  incentivesRate={incentiveRate}
+                  key={`${assetAddress}-deposit`}
+                  tokenAddress={assetAddress}
+                  tokenValue={
+                    <Amount
+                      decimals={decimals}
+                      symbol={symbol}
+                      symbolPosition="after"
+                      value={depositedAmount}
+                    />
+                  }
+                  totalAP={depositRate.add(incentiveRate)}
+                  usdValue={<Amount value={depositedAmountInDAI} />}
+                  useAsCollateral={asCollateral}
+                >
+                  <ActionsWrapper>
+                    <MoreActionsDropdown items={items} size="lg" />
+                    <ActionButton
+                      onClick={() =>
+                        openDepositWithdrawModal({
+                          tokenAddress: assetAddress,
+                          activeTab: 'deposit',
+                        })
+                      }
+                    >
+                      Deposit
+                    </ActionButton>
+                  </ActionsWrapper>
+                </UserAsset>
+              )
+            },
+          )
+          .reverse()}
       </AssetsList>
     )
   },
