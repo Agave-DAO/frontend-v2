@@ -26,6 +26,7 @@ export const useDepositStepDeposit = ({
   const sendTx = useTransaction()
 
   const { mutate: refetchUserReservesData } = useGetUserReservesData()
+
   const { refetch: refetchTargetBalance } = useGetBalance(userAddress, addresses.SDAI)
   const { refetchMaxWithdraw } = useGetERC4626MaxWithdraw(addresses.SDAI)
 
@@ -38,6 +39,7 @@ export const useDepositStepDeposit = ({
     })
     const receipt = await tx.wait()
     refetchMaxWithdraw()
+
     refetchTargetBalance()
     refetchUserReservesData()
     return receipt.transactionHash
