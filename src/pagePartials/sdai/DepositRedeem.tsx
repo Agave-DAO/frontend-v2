@@ -85,6 +85,13 @@ export const DepositRedeem: React.FC<Props> = withGenericSuspense(
   },
   () => (
     <>
+      <SkeletonLoading
+        style={{
+          borderRadius: '16px',
+          height: '135px',
+          margin: '35px 0',
+        }}
+      />
       <Tabs style={{ height: '89px', maxWidth: 'none', width: '244px' }} />
       <SkeletonLoading
         style={{
