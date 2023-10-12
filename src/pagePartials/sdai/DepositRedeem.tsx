@@ -7,7 +7,7 @@ import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { Tabs as BaseTabs, Tab } from '@/src/components/tabs/Tabs'
 import { contracts } from '@/src/contracts/contracts'
 import { useGetERC4626MaxWithdraw } from '@/src/hooks/queries/useGetERC4626MaxWithdraw'
-import { useAccountBalance } from '@/src/hooks/useAccountBalance'
+import { useGetBalance } from '@/src/hooks/queries/useGetSavingsUserData'
 import { Deposit } from '@/src/pagePartials/sdai/deposit/Deposit'
 import { Redeem } from '@/src/pagePartials/sdai/redeem/Redeem'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
@@ -43,7 +43,7 @@ interface Props {
 export const DepositRedeem: React.FC<Props> = withGenericSuspense(
   ({ activeTab, setTab }) => {
     const { address } = useWeb3ConnectedApp()
-    const { balance } = useAccountBalance({ accountAddress: address, tokenAddress: addresses.SDAI })
+    const { balance } = useGetBalance(address, addresses.SDAI)
     const { maxWithdrawAmount } = useGetERC4626MaxWithdraw(addresses.SDAI)
     const Wrapper = styled.div`
       width: 100%;
