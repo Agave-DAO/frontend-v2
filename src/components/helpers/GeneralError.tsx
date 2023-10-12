@@ -10,19 +10,50 @@ const Button = styled(ButtonPrimary)`
   margin: 0 auto;
 `
 
-export const GeneralError = ({ error, resetErrorBoundary }: FallbackProps) => {
+interface ErrorMappings {
+  [key: string]: {
+    title: string
+    text: string
+  }
+}
+
+function error_message_parser(error_message: string): {
+  title: string
+  text: string
+} {
+  const error_mappings: ErrorMappings = {
+    'code=NETWORK_ERROR': {
+      title: 'Network Error',
+      text: 'There was a problem communicating with the server.',
+    },
+  }
+
+  for (const pattern in error_mappings) {
+    if (error_message.includes(pattern)) {
+      return error_mappings[pattern]
+    }
+  }
+
+  return {
+    title: 'Something went wrong',
+    text: error_message,
+  }
+}
+
+export const GeneralError: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) => {
+  const { text, title } = error_message_parser(error.message)
   return (
     <GenericError
       icon={<Alert />}
       text={
         <>
-          {error.message}
+          {text}
           <br />
           <br />
           <Button onClick={resetErrorBoundary}>Try again</Button>
         </>
       }
-      title="Something went wrong"
+      title={title}
     />
   )
 }
