@@ -54,16 +54,18 @@ export const Faq: React.FC<{
 }> = ({ data, title = 'Frequently Asked Questions', ...restProps }) => (
   <Wrapper {...restProps}>
     <Title>{title}</Title>
-    <Text>
-      Read the{' '}
-      <a
-        href="https://agavedev.notion.site/agavedev/Agave-Docs-a0cb462422b941d89a6dc646cdb1bdf8"
-        rel="noreferrer"
-        target="_blank"
-      >
-        full documentation
-      </a>
-    </Text>
+    {!title.includes('sDAI') ? (
+      <Text>
+        Read the{' '}
+        <a
+          href="https://agavedev.notion.site/agavedev/Agave-Docs-a0cb462422b941d89a6dc646cdb1bdf8"
+          rel="noreferrer"
+          target="_blank"
+        >
+          full documentation
+        </a>
+      </Text>
+    ) : null}
     <Items>
       {data.map((item, index) => (
         <Item data={item} key={index} />

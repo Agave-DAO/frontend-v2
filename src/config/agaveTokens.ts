@@ -102,16 +102,8 @@ class AgaveTokens implements IDAgaveTokens {
   get allTokens(): TokenWithType[] {
     return [
       {
-        ...this.stakeToken,
-        type: 'stake',
-      },
-      {
         ...this.nativeToken,
         type: 'native',
-      },
-      {
-        ...this.savingsToken,
-        type: 'savings',
       },
       ...this.reserveTokens.map(
         (tokenInfo): TokenWithType => ({
@@ -119,6 +111,14 @@ class AgaveTokens implements IDAgaveTokens {
           type: 'reserve',
         }),
       ),
+      {
+        ...this.savingsToken,
+        type: 'savings',
+      },
+      {
+        ...this.stakeToken,
+        type: 'stake',
+      },
       ...Object.values(this.reserveTokens).flatMap(({ address }): TokenWithType[] => {
         return [
           { ...this.getProtocolTokenInfo(address, 'ag'), type: 'ag' },

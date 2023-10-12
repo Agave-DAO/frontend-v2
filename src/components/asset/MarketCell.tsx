@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 
 import { TitleValueType } from '@/src/components/asset/Asset'
 import { Percentage } from '@/src/components/helpers/Percentage'
+import { ZERO_BN } from '@/src/constants/bigNumber'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -116,7 +117,7 @@ export const MarketCell: React.FC<Props> = ({
   <Wrapper {...restProps}>
     <MarketCellTitle>{title}</MarketCellTitle>
     <MarketCellValue>
-      <Percentage decimals={25} value={value} />
+      {value.eq(ZERO_BN) ? '-' : <Percentage decimals={25} value={value} />}
       {extraInfo}
     </MarketCellValue>
   </Wrapper>

@@ -36,8 +36,8 @@ export const UserBorrows: React.FC = withGenericSuspense(
       />
     ) : (
       <AssetsList {...restProps}>
-        {userBorrows.map(
-          ({ assetAddress, borrowMode, borrowRate, borrowedAmount, borrowedAmountInDAI }) => {
+        {userBorrows
+          .map(({ assetAddress, borrowMode, borrowRate, borrowedAmount, borrowedAmountInDAI }) => {
             const { decimals, symbol } = agaveTokens.getTokenByAddress(assetAddress)
 
             const isActive = enabledMarketsAddresses?.includes(assetAddress)
@@ -89,8 +89,8 @@ export const UserBorrows: React.FC = withGenericSuspense(
                 </ActionsWrapper>
               </UserAsset>
             )
-          },
-        )}
+          })
+          .reverse()}
       </AssetsList>
     )
   },

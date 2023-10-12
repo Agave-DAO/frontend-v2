@@ -1,13 +1,15 @@
 import { useCallback } from 'react'
 
+import { useGetERC4626MaxWithdraw } from '@/src/hooks/queries/useGetERC4626MaxWithdraw'
 import { useGetBalance } from '@/src/hooks/queries/useGetSavingsUserData'
 import { useGetUserReservesData } from '@/src/hooks/queries/useGetUserReservesData'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import useTransaction from '@/src/hooks/useTransaction'
 import { StepWithActions, useStepStates } from '@/src/pagePartials/markets/stepper'
+import { addresses } from '@/src/pagePartials/sdai/DepositRedeem'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { SavingsXDaiAdapter__factory, SavingsXDai__factory } from '@/types/generated/typechain'
+import { SavingsXDaiAdapter__factory } from '@/types/generated/typechain'
 
 export const useDepositStepDeposit = ({
   amount,
@@ -24,6 +26,9 @@ export const useDepositStepDeposit = ({
   const sendTx = useTransaction()
 
   const { mutate: refetchUserReservesData } = useGetUserReservesData()
+  const { refetch: refetchSourceBalance } = useGetBalance(userAddress, tokenAddress)
+  const { refetch: refetchTargetBalance } = useGetBalance(userAddress, addresses.SDAI)
+  const { refetchMaxWithdraw } = useGetERC4626MaxWithdraw(addresses.SDAI)
 
   const deposit = useCallback(async () => {
     const tx = await sendTx(() => {
@@ -33,9 +38,22 @@ export const useDepositStepDeposit = ({
       return adapter.deposit(amount, userAddress)
     })
     const receipt = await tx.wait()
+    refetchMaxWithdraw()
+    refetchSourceBalance()
+    refetchTargetBalance()
     refetchUserReservesData()
     return receipt.transactionHash
-  }, [tokenInfo, refetchUserReservesData, sendTx, userAddress, amount, adapter])
+  }, [
+    adapter,
+    amount,
+    refetchMaxWithdraw,
+    refetchSourceBalance,
+    refetchTargetBalance,
+    refetchUserReservesData,
+    sendTx,
+    tokenInfo,
+    userAddress,
+  ])
 
   return useStepStates({
     title: 'Deposit',

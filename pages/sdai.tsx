@@ -3,12 +3,14 @@ import Image from 'next/image'
 import { useState } from 'react'
 import styled from 'styled-components'
 
+import { Faq } from '@/src/components/faq/Faq'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
 import { BaseParagraph as Paragraph } from '@/src/components/text/BaseParagraph'
 import { BaseTitle } from '@/src/components/text/BaseTitle'
 import { DepositRedeem } from '@/src/pagePartials/sdai/DepositRedeem'
 import { InfoTable } from '@/src/pagePartials/sdai/InfoTable'
+import { sdaiFAQ } from '@/src/pagePartials/sdai/sdaiFAQ'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { DepositRedeemTabs } from '@/types/modal'
 
@@ -76,6 +78,7 @@ const Sdai: NextPage = () => {
           <DepositRedeem activeTab={tab} setTab={setTab} />
         </BigContainer>
       </MandatoryConnection>
+      <Faq data={sdaiFAQ} title="sDAI Frequently Asked Questions" />
     </>
   )
 }

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { InnerCardDark } from '@/src/components/common/InnerCard'
 import { Row, RowKey, RowValueBig, Rows } from '@/src/components/common/Rows'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
+import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { useGetSavingsData } from '@/src/hooks/queries/useGetSavingsData'
 import { formatAmount, formatPercentage } from '@/src/utils/common'
 
@@ -36,5 +37,13 @@ export const InfoTable: React.FC = withGenericSuspense(
       </Wrapper>
     )
   },
-  () => <></>,
+  () => (
+    <SkeletonLoading
+      style={{
+        borderRadius: '16px',
+        height: '205px',
+        marginBottom: '20px',
+      }}
+    />
+  ),
 )
