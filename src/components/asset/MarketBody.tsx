@@ -27,13 +27,11 @@ export interface Props {
   borrowBaseRate: TitleValueType
   borrowIncentivesRate: TitleValueType
   borrowVariableAPR: TitleValueType
-  borrowStableAPR: TitleValueType
 }
 
 export const MarketBody: React.FC<Props> = ({
   borrowBaseRate,
   borrowIncentivesRate,
-  borrowStableAPR,
   borrowVariableAPR,
   depositAPY,
   depositBaseRate,
@@ -49,7 +47,7 @@ export const MarketBody: React.FC<Props> = ({
           <MarketRow>
             <MarketCell data={depositAPY} />
             <MarketCell data={borrowVariableAPR} />
-            <MarketCell data={borrowStableAPR} />
+            <MarketCellPlaceholder />
           </MarketRow>
           <MarketRowsCollapsable isOpen={isOpen}>
             <MarketRow>

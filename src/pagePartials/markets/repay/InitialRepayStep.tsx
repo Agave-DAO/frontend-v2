@@ -19,10 +19,12 @@ import { TokenWithType } from '@/src/config/agaveTokens'
 import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
 import { useNewHealthFactorCalculator } from '@/src/hooks/presentation/useNewHealthFactor'
 import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
+import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
 import { useRepayStepInitial } from '@/src/pagePartials/markets/repay/hooks/useRepayStepInitial'
 import { Stepper } from '@/src/pagePartials/markets/stepper'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useModalsContext } from '@/src/providers/modalsProvider'
+import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { NumberType } from '@/src/utils/format'
 import { Token } from '@/types/token'
 
@@ -114,18 +116,16 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
 
   const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
 
-  const stepperProps = {
-    info: (
-      <InitialRepayStepInfo
-        amount={amount}
-        maxToRepay={maxToRepay}
-        tokenAddress={tokenAddress}
-        tokenInfo={tokenInfo}
-      />
-    ),
-    title: 'Amount to repay',
-    titleButton: { onClick: () => setAmount(maxToRepay.toString()), text: 'Use max' },
-    toggles: (
+  const { address: userAddress } = useWeb3ConnectedApp()
+  const { stableDebtAmount } = useUserBorrowsInformationByToken({ tokenAddress, userAddress })
+
+  const showBorrowTypes =
+    isStableBorrowRateEnabled ||
+    (BigNumber.isBigNumber(stableDebtAmount) && !stableDebtAmount.isZero())
+
+  let togglesContent
+  if (isNativeRelated || showBorrowTypes) {
+    togglesContent = (
       <>
         {isNativeRelated && (
           <TabToggle
@@ -139,19 +139,34 @@ export const InitialRepayStep: React.FC<InitialRepayStepProps> = ({
             }}
           />
         )}
-        <TabToggle
-          disabled={!isStableBorrowRateEnabled}
-          isToggled={interestRateMode === InterestRateMode.stable}
-          onChange={onToggleInterestRateMode}
-          toggleOptions={{
-            toggledButton: 'Stable',
-            toggledText: <></>,
-            untoggledButton: 'Variable',
-            untoggledText: <></>,
-          }}
-        />
+        {showBorrowTypes && (
+          <TabToggle
+            isToggled={interestRateMode === InterestRateMode.stable}
+            onChange={onToggleInterestRateMode}
+            toggleOptions={{
+              toggledButton: 'Stable',
+              toggledText: <></>,
+              untoggledButton: 'Variable',
+              untoggledText: <></>,
+            }}
+          />
+        )}
       </>
+    )
+  }
+
+  const stepperProps = {
+    info: (
+      <InitialRepayStepInfo
+        amount={amount}
+        maxToRepay={maxToRepay}
+        tokenAddress={tokenAddress}
+        tokenInfo={tokenInfo}
+      />
     ),
+    title: 'Amount to repay',
+    titleButton: { onClick: () => setAmount(maxToRepay.toString()), text: 'Use max' },
+    toggles: togglesContent,
   }
 
   return (

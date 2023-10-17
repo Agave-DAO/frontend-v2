@@ -22,6 +22,8 @@ export const ReserveRates: React.FC<{ tokenAddress: string }> = ({
   ...restProps
 }) => {
   const marketData = useMarketsData()
+  const isStableBorrowRateEnabled =
+    marketData.getMarket(tokenAddress).assetData.stableBorrowRateEnabled
 
   return (
     <Wrapper {...restProps}>
@@ -56,12 +58,14 @@ export const ReserveRates: React.FC<{ tokenAddress: string }> = ({
             </CollapsableRowValue>
           </CollapsableRow>
         </CollapsableRowsHandler>
-        <Row>
-          <RowKey>Stable Borrowing APR</RowKey>
-          <RowValue>
-            <Percentage decimals={25} value={marketData.getBorrowRate(tokenAddress).stable} />
-          </RowValue>
-        </Row>
+        {isStableBorrowRateEnabled && (
+          <Row variant="light">
+            <RowKey>Stable Borrowing APR</RowKey>
+            <RowValue>
+              <Percentage decimals={25} value={marketData.getBorrowRate(tokenAddress).stable} />
+            </RowValue>
+          </Row>
+        )}
         <CollapsableRowsHandler
           toggle={
             <>

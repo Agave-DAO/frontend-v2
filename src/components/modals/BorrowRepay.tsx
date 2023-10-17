@@ -43,7 +43,7 @@ export const BorrowRepay: React.FC<Props> = withGenericSuspense(
         </Tabs>
         {borrowActive && (
           <Borrow
-            interestRateMode={interestRateMode}
+            interestRateMode={InterestRateMode.variable}
             onInterestRateSelect={onInterestRateSelect}
             onTokenSelect={onTokenSelect}
             tokenAddress={token.address}

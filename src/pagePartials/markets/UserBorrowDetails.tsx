@@ -14,6 +14,8 @@ import { InnerTitle } from '@/src/components/text/InnerTitle'
 import { TokenIcon } from '@/src/components/token/TokenIcon'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { ZERO_BN } from '@/src/constants/bigNumber'
+import { useMarketsData } from '@/src/hooks/presentation/useMarketsData'
+import { InterestRateMode } from '@/src/hooks/presentation/useUserBorrows'
 import { useUserBorrowsInformationByToken } from '@/src/hooks/presentation/useUserBorrowsInformationByToken'
 import { HealthFactor as HealthFactorTooltip } from '@/src/pagePartials/common/tooltips'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
@@ -35,18 +37,23 @@ const UserBorrowsImp = ({
     })
   const agaveTokens = useAgaveTokens()
   const { decimals, symbol } = agaveTokens.getTokenByAddress(tokenAddress)
+  const marketsData = useMarketsData()
+  const isStableBorrowRateEnabled =
+    marketsData.getMarket(tokenAddress).assetData.stableBorrowRateEnabled
 
   return userHasBorrows ? (
     <Rows {...restProps}>
-      <Row>
-        <RowKey>Stable borrowed</RowKey>
-        <RowValue>
-          <TokenIcon dimensions={18} symbol={symbol} />
-          <EmphasizedRowValue>
-            <Amount decimals={decimals} symbol="" value={stableDebtAmount || ZERO_BN} />
-          </EmphasizedRowValue>
-        </RowValue>
-      </Row>
+      {isStableBorrowRateEnabled && (
+        <Row>
+          <RowKey>Stable borrowed</RowKey>
+          <RowValue>
+            <TokenIcon dimensions={18} symbol={symbol} />
+            <EmphasizedRowValue>
+              <Amount decimals={decimals} symbol="" value={stableDebtAmount || ZERO_BN} />
+            </EmphasizedRowValue>
+          </RowValue>
+        </Row>
+      )}
       <Row variant="dark">
         <RowKey>Variable borrowed</RowKey>
         <RowValue>
@@ -129,13 +136,25 @@ export const UserBorrowDetails = withGenericSuspense(
           <ActionsWrapper>
             <ActionButton
               disabled={!userHasBorrows}
-              onClick={() => openBorrowRepayModal({ activeTab: 'repay', tokenAddress })}
+              onClick={() =>
+                openBorrowRepayModal({
+                  activeTab: 'repay',
+                  tokenAddress,
+                  mode: InterestRateMode.variable,
+                })
+              }
               variant="dark"
             >
               Repay
             </ActionButton>
             <ActionButton
-              onClick={() => openBorrowRepayModal({ activeTab: 'borrow', tokenAddress })}
+              onClick={() =>
+                openBorrowRepayModal({
+                  activeTab: 'borrow',
+                  tokenAddress,
+                  mode: InterestRateMode.variable,
+                })
+              }
             >
               Borrow
             </ActionButton>
