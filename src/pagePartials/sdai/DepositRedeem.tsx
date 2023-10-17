@@ -26,7 +26,6 @@ interface TokenAddresses {
 }
 
 export const addresses: TokenAddresses = {
-  // TODO (Lia)
   WXDAI: contracts.WxDAI.address[100],
   XDAI: contracts.xDAI.address[100],
   SDAI: contracts.SavingsXDai.address[100],
