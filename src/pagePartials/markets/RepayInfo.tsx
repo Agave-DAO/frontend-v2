@@ -52,6 +52,15 @@ export const RepayInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) =
               <Amount decimals={token.decimals} symbol="" value={balance} />
             </RowValueBig>
           </Row>
+          <Row>
+            <RowKey>
+              Health Factor <Tooltip content={HealthFactorTooltip} />
+            </RowKey>
+            <RowValueBig>
+              <HealthFactor badgeVariant="light" size="sm" value={healthFactor} variant="dark" />
+            </RowValueBig>
+          </Row>
+          <CollateralInfo variant="dark" />
           {borrows.map(({ assetAddress, borrowMode, borrowedAmount }) => (
             <Row key={`${assetAddress}_${borrowMode}`}>
               <RowKey>
@@ -68,15 +77,6 @@ export const RepayInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) =
               </RowValueBig>
             </Row>
           ))}
-          <Row variant="dark">
-            <RowKey>
-              Health Factor <Tooltip content={HealthFactorTooltip} />
-            </RowKey>
-            <RowValueBig>
-              <HealthFactor badgeVariant="light" size="sm" value={healthFactor} variant="dark" />
-            </RowValueBig>
-          </Row>
-          <CollateralInfo />
         </Rows>
       </InnerCardDark>
     </Wrapper>

@@ -117,18 +117,9 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
 
   const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper
 
-  const stepperProps = {
-    info: (
-      <InitialBorrowStepInfo
-        amount={amount}
-        maxToBorrow={maxToBorrow}
-        tokenAddress={tokenAddress}
-        tokenInfo={tokenInfo}
-      />
-    ),
-    title: 'Amount to borrow',
-    titleButton: { onClick: () => setAmount(maxToBorrow.toString()), text: 'Use max' },
-    toggles: (
+  let togglesContent
+  if (isNativeRelated || isStableBorrowRateEnabled) {
+    togglesContent = (
       <>
         {isNativeRelated && (
           <TabToggle
@@ -142,33 +133,48 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
             }}
           />
         )}
-        <TabToggle
-          disabled={!isStableBorrowRateEnabled}
-          isToggled={interestRateMode === InterestRateMode.stable}
-          onChange={onToggleInterestRateMode}
-          toggleOptions={{
-            toggledButton: 'Stable',
-            toggledText: (
-              <>
-                Stable APR{' '}
-                <b>
-                  <Percentage decimals={25} value={borrowStableAPR} />
-                </b>
-              </>
-            ),
-            untoggledButton: 'Variable',
-            untoggledText: (
-              <>
-                Variable APR{' '}
-                <b>
-                  <Percentage decimals={25} value={borrowVariableAPR} />
-                </b>
-              </>
-            ),
-          }}
-        />
+        {isStableBorrowRateEnabled && (
+          <TabToggle
+            isToggled={interestRateMode === InterestRateMode.stable}
+            onChange={onToggleInterestRateMode}
+            toggleOptions={{
+              toggledButton: 'Stable',
+              toggledText: (
+                <>
+                  Stable APR{' '}
+                  <b>
+                    <Percentage decimals={25} value={borrowStableAPR} />
+                  </b>
+                </>
+              ),
+              untoggledButton: 'Variable',
+              untoggledText: (
+                <>
+                  Variable APR{' '}
+                  <b>
+                    <Percentage decimals={25} value={borrowVariableAPR} />
+                  </b>
+                </>
+              ),
+            }}
+          />
+        )}
       </>
+    )
+  }
+
+  const stepperProps = {
+    info: (
+      <InitialBorrowStepInfo
+        amount={amount}
+        maxToBorrow={maxToBorrow}
+        tokenAddress={tokenAddress}
+        tokenInfo={tokenInfo}
+      />
     ),
+    title: 'Amount to borrow',
+    titleButton: { onClick: () => setAmount(maxToBorrow.toString()), text: 'Use max' },
+    toggles: togglesContent,
   }
 
   return (
