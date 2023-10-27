@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import dynamic from 'next/dynamic'
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode, useState } from 'react'
 import styled from 'styled-components'
 
 import { GoogleAnalytics } from 'nextjs-google-analytics'
@@ -82,6 +82,7 @@ type AppPropsWithLayout = AppProps & {
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   // Black magic explained here https://nextjs.org/docs/basic-features/layouts
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>)
+  const [providerIsReady, setProviderReady] = useState(false)
 
   return (
     <>
@@ -95,7 +96,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           dedupingInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
         }}
       >
-        <Web3ConnectionProvider>
+        <Web3ConnectionProvider onProviderReady={setProviderReady}>
           <ThemeProvider>
             <SafeSuspense>
               <TransactionNotificationProvider>
@@ -106,7 +107,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
                         <Header />
                         <Scroll>
                           <MobileScrollTo id="main" />
-                          <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
+                          {providerIsReady && (
+                            <Container as="main">
+                              {getLayout(<Component {...pageProps} />)}
+                            </Container>
+                          )}
                           <Footer />
                         </Scroll>
                       </ModalsProvider>

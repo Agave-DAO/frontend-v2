@@ -33,15 +33,18 @@ export const useGetUserAmountInStake = () => {
  */
 
 export const useGetUserAmountAvailableToStake = () => {
-  const { address, readOnlyAppProvider } = useWeb3ConnectedApp()
+  const { address, rpcProvider } = useWeb3ConnectedApp()
   const stakeData = useGetStakeTokenData().data
 
   const { data, mutate } = useSWR(
-    isAddress(stakeData.stakedTokenAddress)
+    isAddress(stakeData.stakedTokenAddress) && rpcProvider
       ? `available-to-stake-${stakeData.stakedTokenAddress}-${address}`
       : null,
     async () => {
-      const erc20 = ERC20__factory.connect(stakeData.stakedTokenAddress, readOnlyAppProvider)
+      if (!rpcProvider) {
+        return Zero
+      }
+      const erc20 = ERC20__factory.connect(stakeData.stakedTokenAddress, rpcProvider)
       const balance = await erc20.balanceOf(address)
       return balance
     },

@@ -141,13 +141,12 @@ export type Web3Context = {
   isWalletConnected: boolean
   isWalletNetworkSupported: boolean
   pushNetwork: (options: SetChainOptions) => Promise<boolean>
-  readOnlyAppProvider: JsonRpcProvider
+  rpcBatchProvider: JsonRpcBatchProvider | null
+  rpcProvider: JsonRpcProvider | null
   setAppChainId: Dispatch<SetStateAction<ChainsValues>>
   wallet: WalletState | null
   walletChainId: number | null
   web3Provider: Web3Provider | null
-  batchProvider: JsonRpcBatchProvider
-  batchProviderFallback: JsonRpcBatchProvider
 }
 
 export type Web3Connected = RequiredNonNull<Web3Context>
@@ -156,6 +155,7 @@ const Web3ContextConnection = createContext<Web3Context | undefined>(undefined)
 
 type Props = {
   children: ReactNode
+  onProviderReady: (isReady: boolean) => void
 }
 
 // Initialize onboarding
@@ -176,7 +176,7 @@ const setCSSStyles = () => {
   }
 }
 
-export default function Web3ConnectionProvider({ children }: Props) {
+export default function Web3ConnectionProvider({ children, onProviderReady }: Props) {
   const [{ connecting: connectingWallet, wallet }, connect, disconnect] = useConnectWallet()
   const [{ chains, connectedChain, settingChain }, setChain] = useSetChain()
   const connectedWallets = useWallets()
@@ -186,6 +186,9 @@ export default function Web3ConnectionProvider({ children }: Props) {
 
   const web3Provider = wallet?.provider != null ? new Web3Provider(wallet.provider) : null
 
+  const [rpcProvider, setRpcProvider] = useState<JsonRpcProvider | null>(null)
+  const [rpcBatchProvider, setRpcBatchProvider] = useState<JsonRpcBatchProvider | null>(null)
+
   const walletChainId = hexToNumber(connectedChain?.id)
 
   const isWalletConnected = web3Provider != null && address != null
@@ -194,19 +197,51 @@ export default function Web3ConnectionProvider({ children }: Props) {
 
   const isWalletNetworkSupported = chains.some(({ id }) => id === connectedChain?.id)
 
-  const readOnlyAppProvider = useMemo(
-    () => new JsonRpcProvider(getNetworkConfig(appChainId)?.rpcUrl[0], appChainId),
-    [appChainId],
-  )
+  const rpcBatchProviders = useMemo(() => {
+    return getNetworkConfig(appChainId).rpcUrl.map(
+      (url) => new JsonRpcBatchProvider(url, appChainId),
+    )
+  }, [appChainId])
 
-  const batchProvider = useMemo(
-    () => new JsonRpcBatchProvider(getNetworkConfig(appChainId)?.rpcUrl[0], appChainId),
-    [appChainId],
-  )
-  const batchProviderFallback = useMemo(
-    () => new JsonRpcBatchProvider(getNetworkConfig(appChainId)?.rpcUrl[1], appChainId),
-    [appChainId],
-  )
+  const rpcProviders = useMemo(() => {
+    return getNetworkConfig(appChainId).rpcUrl.map((url) => new JsonRpcProvider(url, appChainId))
+  }, [appChainId])
+
+  useEffect(() => {
+    if (rpcProvider) return
+    const checkRpcProviders = async () => {
+      for (const provider of rpcProviders) {
+        try {
+          await provider.getNetwork()
+          setRpcProvider(provider)
+          break
+        } catch (error) {
+          console.warn(`Provider ${provider.connection.url} failed`)
+        }
+      }
+    }
+    checkRpcProviders()
+  })
+
+  useEffect(() => {
+    if (rpcBatchProvider) return
+    const checkRpcBatchProviders = async () => {
+      for (const provider of rpcBatchProviders) {
+        try {
+          await provider.getNetwork()
+          setRpcBatchProvider(provider)
+          break
+        } catch (error) {
+          console.warn(`Provider ${provider.connection.url} failed`)
+        }
+      }
+    }
+    checkRpcBatchProviders()
+  })
+
+  useEffect(() => {
+    onProviderReady(rpcProvider !== null && rpcBatchProvider !== null)
+  }, [onProviderReady, rpcBatchProvider, rpcProvider])
 
   useEffect(() => {
     if (isWalletNetworkSupported && walletChainId) {
@@ -285,13 +320,12 @@ export default function Web3ConnectionProvider({ children }: Props) {
     isWalletConnected,
     isWalletNetworkSupported,
     pushNetwork: setChain,
-    readOnlyAppProvider,
+    rpcBatchProvider,
+    rpcProvider,
     setAppChainId,
     wallet,
     walletChainId,
     web3Provider,
-    batchProvider,
-    batchProviderFallback,
   }
 
   return <Web3ContextConnection.Provider value={value}>{children}</Web3ContextConnection.Provider>

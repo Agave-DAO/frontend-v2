@@ -16,9 +16,13 @@ export const useContractInstance = <F extends AppFactories, RT extends ReturnTyp
   contractKey: ContractsKeys | string,
   useSigner = false,
 ) => {
-  const { appChainId, readOnlyAppProvider, web3Provider } = useWeb3Connection()
+  const { appChainId, rpcProvider, web3Provider } = useWeb3Connection()
 
-  const signer = useSigner ? web3Provider?.getSigner() || readOnlyAppProvider : readOnlyAppProvider
+  if (!rpcProvider) {
+    throw new Error('Failed to connect to RPC provider')
+  }
+
+  const signer = useSigner ? web3Provider?.getSigner() || rpcProvider : rpcProvider
 
   let address: string
   if (isKnownContract(contractKey)) {
