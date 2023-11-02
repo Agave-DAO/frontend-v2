@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
+import { useRpc } from '@/src/providers/rpcProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { ERC20__factory, StakedToken__factory } from '@/types/generated/typechain'
 
@@ -33,7 +34,8 @@ export const useGetUserAmountInStake = () => {
  */
 
 export const useGetUserAmountAvailableToStake = () => {
-  const { address, rpcProvider } = useWeb3ConnectedApp()
+  const { address } = useWeb3ConnectedApp()
+  const { rpcProvider } = useRpc()
   const stakeData = useGetStakeTokenData().data
 
   const { data, mutate } = useSWR(

@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 
 import { notify } from '@/src/components/toast/Toast'
 import { usePersistedState } from '@/src/hooks/usePersistedState'
+import { useRpc } from '@/src/providers/rpcProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { ChainsValues } from '@/types/chains'
 import { ToastStates } from '@/types/toast'
@@ -35,7 +36,8 @@ const TransactionContext = createContext<TransactionContextValue | undefined>(un
 const TRANSACTIONS_STORE = 'pending-transactions'
 
 export const TransactionNotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const { address, appChainId, getExplorerUrl, rpcProvider } = useWeb3Connection()
+  const { address, appChainId, getExplorerUrl } = useWeb3Connection()
+  const { rpcProvider } = useRpc()
   const [isRan, setIsRan] = useState(false)
 
   const initialState: TransactionStorageItem[] = []

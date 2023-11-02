@@ -10,7 +10,7 @@ import {
 } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { JsonRpcBatchProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import { Web3Provider } from '@ethersproject/providers'
 import { OnboardAPI, WalletState } from '@web3-onboard/core'
 import frameModule from '@web3-onboard/frame'
 import gnosisModule from '@web3-onboard/gnosis'
@@ -19,7 +19,7 @@ import { init, useConnectWallet, useSetChain, useWallets } from '@web3-onboard/r
 import walletConnectModule, { WalletConnectOptions } from '@web3-onboard/walletconnect'
 import nullthrows from 'nullthrows'
 
-import { Chains, INITIAL_APP_CHAIN_ID, chainsConfig, getNetworkConfig } from '@/src/config/web3'
+import { Chains, INITIAL_APP_CHAIN_ID, chainsConfig } from '@/src/config/web3'
 import { NATIVE_DECIMALS } from '@/src/constants/common'
 import {
   recoverLocalStorageKey,
@@ -141,8 +141,6 @@ export type Web3Context = {
   isWalletConnected: boolean
   isWalletNetworkSupported: boolean
   pushNetwork: (options: SetChainOptions) => Promise<boolean>
-  rpcBatchProvider: JsonRpcBatchProvider | null
-  rpcProvider: JsonRpcProvider | null
   setAppChainId: Dispatch<SetStateAction<ChainsValues>>
   wallet: WalletState | null
   walletChainId: number | null
@@ -155,7 +153,6 @@ const Web3ContextConnection = createContext<Web3Context | undefined>(undefined)
 
 type Props = {
   children: ReactNode
-  onProviderReady: (isReady: boolean) => void
 }
 
 // Initialize onboarding
@@ -176,7 +173,7 @@ const setCSSStyles = () => {
   }
 }
 
-export default function Web3ConnectionProvider({ children, onProviderReady }: Props) {
+export default function Web3ConnectionProvider({ children }: Props) {
   const [{ connecting: connectingWallet, wallet }, connect, disconnect] = useConnectWallet()
   const [{ chains, connectedChain, settingChain }, setChain] = useSetChain()
   const connectedWallets = useWallets()
@@ -186,9 +183,6 @@ export default function Web3ConnectionProvider({ children, onProviderReady }: Pr
 
   const web3Provider = wallet?.provider != null ? new Web3Provider(wallet.provider) : null
 
-  const [rpcProvider, setRpcProvider] = useState<JsonRpcProvider | null>(null)
-  const [rpcBatchProvider, setRpcBatchProvider] = useState<JsonRpcBatchProvider | null>(null)
-
   const walletChainId = hexToNumber(connectedChain?.id)
 
   const isWalletConnected = web3Provider != null && address != null
@@ -196,52 +190,6 @@ export default function Web3ConnectionProvider({ children, onProviderReady }: Pr
   const isAppConnected = isWalletConnected && walletChainId === appChainId
 
   const isWalletNetworkSupported = chains.some(({ id }) => id === connectedChain?.id)
-
-  const rpcBatchProviders = useMemo(() => {
-    return getNetworkConfig(appChainId).rpcUrl.map(
-      (url) => new JsonRpcBatchProvider(url, appChainId),
-    )
-  }, [appChainId])
-
-  const rpcProviders = useMemo(() => {
-    return getNetworkConfig(appChainId).rpcUrl.map((url) => new JsonRpcProvider(url, appChainId))
-  }, [appChainId])
-
-  useEffect(() => {
-    if (rpcProvider) return
-    const checkRpcProviders = async () => {
-      for (const provider of rpcProviders) {
-        try {
-          await provider.getNetwork()
-          setRpcProvider(provider)
-          break
-        } catch (error) {
-          console.warn(`Provider ${provider.connection.url} failed`)
-        }
-      }
-    }
-    checkRpcProviders()
-  })
-
-  useEffect(() => {
-    if (rpcBatchProvider) return
-    const checkRpcBatchProviders = async () => {
-      for (const provider of rpcBatchProviders) {
-        try {
-          await provider.getNetwork()
-          setRpcBatchProvider(provider)
-          break
-        } catch (error) {
-          console.warn(`Provider ${provider.connection.url} failed`)
-        }
-      }
-    }
-    checkRpcBatchProviders()
-  })
-
-  useEffect(() => {
-    onProviderReady(rpcProvider !== null && rpcBatchProvider !== null)
-  }, [onProviderReady, rpcBatchProvider, rpcProvider])
 
   useEffect(() => {
     if (isWalletNetworkSupported && walletChainId) {
@@ -320,8 +268,6 @@ export default function Web3ConnectionProvider({ children, onProviderReady }: Pr
     isWalletConnected,
     isWalletNetworkSupported,
     pushNetwork: setChain,
-    rpcBatchProvider,
-    rpcProvider,
     setAppChainId,
     wallet,
     walletChainId,
