@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { useState } from 'react'
 import styled from 'styled-components'
 
+import { AddToWallet } from '@/src/components/assets/AddToWallet'
+import { ViewOnExplorer } from '@/src/components/assets/ViewOnExplorer'
 import { Faq } from '@/src/components/faq/Faq'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { OuterContainer } from '@/src/components/layout/OuterContainer'
@@ -49,6 +51,14 @@ const BigContainer = styled(OuterContainer)`
   }
 `
 
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+`
+
 const Sdai: NextPage = () => {
   const [tab, setTab] = useState<DepositRedeemTabs>('deposit')
   const [error, setError] = useState(false)
@@ -68,16 +78,25 @@ const Sdai: NextPage = () => {
         ) : null}
         <Title>sDAI</Title>
       </TitleWrapper>
+
       <Paragraph>
         All the DAI bridged to Gnosis Chain is earning interest at MakerDAO. This interest is
         redirected to the sDAI holder. You can use sDAI in Defi like you would normally use xDAI.
       </Paragraph>
+
+      <ButtonsContainer>
+        <ViewOnExplorer symbol="sDAI" text="View on explorer" />
+        <AddToWallet symbol="sDAI" text="Add to wallet" />
+      </ButtonsContainer>
+
       <InfoTable />
+
       <MandatoryConnection>
         <BigContainer>
           <DepositRedeem activeTab={tab} setTab={setTab} />
         </BigContainer>
       </MandatoryConnection>
+
       <Faq data={sdaiFAQ} title="sDAI Frequently Asked Questions" />
     </>
   )
