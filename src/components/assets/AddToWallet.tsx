@@ -99,6 +99,7 @@ export const AddToWallet: React.FC<AddToWalletProps> = ({ className, symbol, tex
                 address: token.address,
                 symbol: shortSymbol,
                 decimals: token.decimals,
+                image: token.logoURI,
               },
             },
           })
