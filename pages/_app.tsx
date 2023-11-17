@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import dynamic from 'next/dynamic'
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode, useState } from 'react'
 import styled from 'styled-components'
 
 import { GoogleAnalytics } from 'nextjs-google-analytics'
@@ -19,9 +19,9 @@ import { TransactionNotificationProvider } from '@/src/providers/TransactionNoti
 import AgaveTokensProvider from '@/src/providers/agaveTokensProvider'
 import CookiesWarningProvider from '@/src/providers/cookiesWarningProvider'
 import ModalsProvider from '@/src/providers/modalsProvider'
+import RpcProvider from '@/src/providers/rpcProvider'
 import ThemeProvider from '@/src/providers/themeProvider'
 import UserActionsProvider from '@/src/providers/userActionsProvider'
-
 import 'sanitize.css'
 import 'react-tooltip/dist/react-tooltip.css'
 
@@ -82,6 +82,7 @@ type AppPropsWithLayout = AppProps & {
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   // Black magic explained here https://nextjs.org/docs/basic-features/layouts
   const getLayout = Component.getLayout ?? ((page) => <>{page}</>)
+  const [providerIsReady, setProviderReady] = useState(false)
 
   return (
     <>
@@ -95,30 +96,36 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           dedupingInterval: TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL,
         }}
       >
-        <Web3ConnectionProvider>
-          <ThemeProvider>
-            <SafeSuspense>
-              <TransactionNotificationProvider>
-                <CookiesWarningProvider>
-                  <AgaveTokensProvider>
-                    <UserActionsProvider>
-                      <ModalsProvider>
-                        <Header />
-                        <Scroll>
-                          <MobileScrollTo id="main" />
-                          <Container as="main">{getLayout(<Component {...pageProps} />)}</Container>
-                          <Footer />
-                        </Scroll>
-                      </ModalsProvider>
-                    </UserActionsProvider>
-                  </AgaveTokensProvider>
-                </CookiesWarningProvider>
-              </TransactionNotificationProvider>
-            </SafeSuspense>
-            <Toast />
-            <TooltipConfig />
-          </ThemeProvider>
-        </Web3ConnectionProvider>
+        <RpcProvider onProviderReady={setProviderReady}>
+          <Web3ConnectionProvider>
+            <ThemeProvider>
+              <SafeSuspense>
+                <TransactionNotificationProvider>
+                  <CookiesWarningProvider>
+                    <AgaveTokensProvider>
+                      <UserActionsProvider>
+                        <ModalsProvider>
+                          <Header />
+                          <Scroll>
+                            <MobileScrollTo id="main" />
+                            {providerIsReady && (
+                              <Container as="main">
+                                {getLayout(<Component {...pageProps} />)}
+                              </Container>
+                            )}
+                            <Footer />
+                          </Scroll>
+                        </ModalsProvider>
+                      </UserActionsProvider>
+                    </AgaveTokensProvider>
+                  </CookiesWarningProvider>
+                </TransactionNotificationProvider>
+              </SafeSuspense>
+              <Toast />
+              <TooltipConfig />
+            </ThemeProvider>
+          </Web3ConnectionProvider>
+        </RpcProvider>
       </SWRConfig>
     </>
   )

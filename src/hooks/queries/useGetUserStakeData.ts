@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { useGetStakeTokenData } from '@/src/hooks/queries/useGetStakeTokenData'
 import { useContractCall } from '@/src/hooks/useContractCall'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
+import { useRpc } from '@/src/providers/rpcProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { ERC20__factory, StakedToken__factory } from '@/types/generated/typechain'
 
@@ -33,15 +34,19 @@ export const useGetUserAmountInStake = () => {
  */
 
 export const useGetUserAmountAvailableToStake = () => {
-  const { address, readOnlyAppProvider } = useWeb3ConnectedApp()
+  const { address } = useWeb3ConnectedApp()
+  const { rpcProvider } = useRpc()
   const stakeData = useGetStakeTokenData().data
 
   const { data, mutate } = useSWR(
-    isAddress(stakeData.stakedTokenAddress)
+    isAddress(stakeData.stakedTokenAddress) && rpcProvider
       ? `available-to-stake-${stakeData.stakedTokenAddress}-${address}`
       : null,
     async () => {
-      const erc20 = ERC20__factory.connect(stakeData.stakedTokenAddress, readOnlyAppProvider)
+      if (!rpcProvider) {
+        return Zero
+      }
+      const erc20 = ERC20__factory.connect(stakeData.stakedTokenAddress, rpcProvider)
       const balance = await erc20.balanceOf(address)
       return balance
     },
