@@ -18,6 +18,11 @@ const Tabs = styled(BaseTabs)`
   margin: 32px auto;
 `
 
+const Wrapper = styled.div`
+  width: 100%;
+  margin: 3rem 0px;
+`
+
 interface TokenAddresses {
   WXDAI: string
   XDAI: string
@@ -44,11 +49,6 @@ export const DepositRedeem: React.FC<Props> = withGenericSuspense(
     const { address } = useWeb3ConnectedApp()
     const { balance } = useGetBalance(address, addresses.SDAI)
     const { maxWithdrawAmount } = useGetERC4626MaxWithdraw(addresses.SDAI)
-    const Wrapper = styled.div`
-      width: 100%;
-      margin: 3rem 0px;
-    `
-
     const depositActive = activeTab === 'deposit'
     const redeemActive = activeTab === 'redeem'
     return (
