@@ -1,6 +1,8 @@
 import { NextPage } from 'next'
 import styled from 'styled-components'
 
+import { AddToWallet } from '@/src/components/assets/AddToWallet'
+import { ViewOnExplorer } from '@/src/components/assets/ViewOnExplorer'
 import { ActionButton } from '@/src/components/buttons/ActionButton'
 import { Faq } from '@/src/components/faq/Faq'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
@@ -46,6 +48,14 @@ const BigContainer = styled(OuterContainer)`
   }
 `
 
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+`
+
 const StakeForm = styled(UserStakeActionCard)`
   margin-bottom: 40px;
 `
@@ -86,7 +96,12 @@ const Stake: NextPage = () => {
         Staking Agave helps to secure the protocol's governance by incentivizing participants with
         protocol rewards.
       </Paragraph>
+
       <MandatoryConnection>
+        <ButtonsContainer>
+          <ViewOnExplorer hover symbol="AGVE" text="View on explorer" />
+          <AddToWallet hover symbol="AGVE" text="Add to wallet" />
+        </ButtonsContainer>
         <Funds />
         <StakeForm />
         <BigContainer>
