@@ -37,7 +37,7 @@ const TitleWrapper = styled(BaseTitle)`
   }
 `
 
-const Title = styled(BaseTitle)`
+const Title = styled.div`
   margin: 0px 2rem;
 `
 
