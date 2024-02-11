@@ -202,6 +202,7 @@ export const MarketList: React.FC = withGenericSuspense(
                   title: 'Incentives rate',
                   value: getIncentiveRate(tokenAddress, 'ag'),
                 },
+                symbol: symbol,
               }
 
               return (

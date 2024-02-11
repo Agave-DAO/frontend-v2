@@ -1,4 +1,4 @@
-import { HTMLAttributes, useEffect, useState } from 'react'
+import { HTMLAttributes, useLayoutEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { ButtonMini } from '@/src/components/buttons/ButtonMini'
@@ -6,25 +6,35 @@ import { Tooltip } from '@/src/components/tooltip/Tooltip'
 import { useTokenInfo } from '@/src/hooks/useTokenInfo'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 
-const Container = styled.div`
+const Container = styled.div<StyleProps>`
   position: relative;
   display: flex;
-  background-color: #0d202620;
+  height: ${({ small }) => (small ? '23px' : '30px')};
+  background-color: ${({ minimal }) => (minimal ? 'transparent' : '#0d20264a')};
   border-radius: 15px;
+
+  &:hover {
+    background-color: ${({ hover }) => (hover ? '#0d202650' : '')};
+  }
 `
 
-const SVGButton = styled(ButtonMini)`
+const Wrapper = styled(Container)<StyleProps>`
+  background-color: transparent;
+`
+
+const SVGButton = styled(ButtonMini)<StyleProps>`
   align-items: center;
   justify-content: center;
-  height: 30px;
-  width: 30px;
+  height: ${({ small }) => (small ? '23px' : '30px')};
+  width: ${({ small }) => (small ? '23px' : '30px')};
   padding: 0;
   position: relative;
   border-radius: 15px;
-  background-color: ${({ theme: { buttonMini } }) => buttonMini.dark.backgroundColor};
+  background-color: ${({ hover, minimal, theme }) =>
+    minimal ? 'transparent' : hover ? '#0b464f' : theme.buttonMini.dark.backgroundColor};
 `
-const TextButton = styled.button`
-  height: 30px;
+const TextButton = styled.button<StyleProps>`
+  height: ${({ small }) => (small ? '23px' : '30px')};
   padding: 0 10px;
   border: none;
   display: flex;
@@ -35,20 +45,32 @@ const TextButton = styled.button`
   cursor: pointer;
   background-color: transparent;
   color: #ffffff;
+  margin: ${({ minimal }) => (minimal ? '1px 0 0 0' : '0px')};
 `
 
-interface AddToWalletProps extends HTMLAttributes<SVGElement> {
+interface AddToWalletProps extends HTMLAttributes<SVGElement>, StyleProps {
   symbol: string
   text?: string
 }
 
-export const WalletIcon: React.FC<React.SVGProps<SVGSVGElement>> = () => {
+interface StyleProps {
+  hover?: boolean
+  minimal?: boolean
+  small?: boolean
+  tooltip?: boolean
+}
+
+function useStyleProps({ hover, minimal, small, tooltip }: StyleProps) {
+  return { hover, minimal, small, tooltip }
+}
+
+export const WalletIcon: React.FC<StyleProps> = ({ small }) => {
   return (
     <svg
       fill="#ffffff"
-      height="14"
+      height={small ? '10' : '14'}
       viewBox="0 0 458.531 458.531"
-      width="16"
+      width={small ? '10' : '16'}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
@@ -68,12 +90,13 @@ export const WalletIcon: React.FC<React.SVGProps<SVGSVGElement>> = () => {
   )
 }
 
-export const AddToWallet: React.FC<AddToWalletProps> = ({ className, symbol, text }) => {
+export const AddToWallet: React.FC<AddToWalletProps> = ({ className, symbol, text, ...props }) => {
+  const styleProps = useStyleProps(props)
   const token = useTokenInfo(symbol)
   const { wallet } = useWeb3Connection()
   const [isAvailable, setIsAvailable] = useState(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsAvailable(
       wallet &&
         window.ethereum &&
@@ -114,16 +137,28 @@ export const AddToWallet: React.FC<AddToWalletProps> = ({ className, symbol, tex
 
   if (!isAvailable) return null
 
+  function renderContainer() {
+    return (
+      <Container {...styleProps}>
+        <SVGButton className={className} onClick={addToWallet} {...styleProps}>
+          <WalletIcon {...styleProps} />
+        </SVGButton>
+        {text ? (
+          <TextButton onClick={addToWallet} {...styleProps}>
+            {text}
+          </TextButton>
+        ) : null}
+      </Container>
+    )
+  }
+
   return (
-    <Container>
-      <Tooltip content={`Add ${shortSymbol} to wallet`}>
-        <Container>
-          <SVGButton className={className} onClick={addToWallet}>
-            <WalletIcon />
-          </SVGButton>
-          {text ? <TextButton onClick={addToWallet}>{text}</TextButton> : ''}
-        </Container>
-      </Tooltip>
-    </Container>
+    <Wrapper {...styleProps}>
+      {styleProps.tooltip ? (
+        <Tooltip content={`Add ${shortSymbol} to wallet`}>{renderContainer()}</Tooltip>
+      ) : (
+        renderContainer()
+      )}
+    </Wrapper>
   )
 }

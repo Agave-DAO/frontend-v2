@@ -85,8 +85,8 @@ const Sdai: NextPage = () => {
       </Paragraph>
 
       <ButtonsContainer>
-        <ViewOnExplorer symbol="sDAI" text="View on explorer" />
-        <AddToWallet symbol="sDAI" text="Add to wallet" />
+        <ViewOnExplorer hover symbol="sDAI" text="View on explorer" />
+        <AddToWallet hover symbol="sDAI" text="Add to wallet" />
       </ButtonsContainer>
 
       <InfoTable />
