@@ -69,13 +69,12 @@ export const chainsConfig: Record<ChainsValues, ChainConfig> = {
     chainId: Chains.gnosis,
     chainIdHex: '0x64',
     rpcUrl: [
-      `https://rpc.eu-central-2.gateway.fm/v4/gnosis/non-archival/mainnet?apiKey=${process.env.NEXT_PUBLIC_GATEWAY_TOKEN}`,
-      'https://xdai-rpc.gateway.pokt.network',
-      'https://rpc.gnosischain.com',
+      `https://1rpc.io/561gFQqmLSMoe3vgJ/gnosis`,
+      'https://gnosis-pokt.nodies.app',
+      'https://gnosis.publicnode.com',
     ],
     blockExplorerUrls: ['https://gnosisscan.io/'],
     token: 'xDAI',
-    ensAddress: '0x4f132A7e39B1D717B39C789eB9EC1e790092042B',
   },
   /* [Chains.chiado]: {
     id: Chains.chiado,
