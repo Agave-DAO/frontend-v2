@@ -9,10 +9,19 @@ import {
   MarketRows,
   MarketRowsCollapsable,
 } from '@/src/components/asset/MarketCell'
+import { AddToWallet } from '@/src/components/assets/AddToWallet'
+import { ViewOnExplorer } from '@/src/components/assets/ViewOnExplorer'
 import { ButtonToggleInfo } from '@/src/components/buttons/ButtonToggleInfo'
 import { RewardPair } from '@/src/components/common/RewardPair'
 
 const MarketCellPlaceholder = styled(MarketCellWrapper)``
+
+const MarketCellActions = styled(MarketCellWrapper)`
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  row-gap: 5px;
+`
 
 const MarketBodyActionWrapper = styled.div`
   column-gap: 15px;
@@ -27,13 +36,11 @@ export interface Props {
   borrowBaseRate: TitleValueType
   borrowIncentivesRate: TitleValueType
   borrowVariableAPR: TitleValueType
-  borrowStableAPR: TitleValueType
 }
 
 export const MarketBody: React.FC<Props> = ({
   borrowBaseRate,
   borrowIncentivesRate,
-  borrowStableAPR,
   borrowVariableAPR,
   depositAPY,
   depositBaseRate,
@@ -41,7 +48,7 @@ export const MarketBody: React.FC<Props> = ({
   ...restProps
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-
+  const symbol = (restProps as { symbol: string }).symbol
   return (
     <Body {...restProps}>
       <MarketBodyActionWrapper>
@@ -49,7 +56,10 @@ export const MarketBody: React.FC<Props> = ({
           <MarketRow>
             <MarketCell data={depositAPY} />
             <MarketCell data={borrowVariableAPR} />
-            <MarketCell data={borrowStableAPR} />
+            <MarketCellActions>
+              <ViewOnExplorer hover small symbol={symbol} tooltip />
+              <AddToWallet hover small symbol={symbol} tooltip />
+            </MarketCellActions>
           </MarketRow>
           <MarketRowsCollapsable isOpen={isOpen}>
             <MarketRow>

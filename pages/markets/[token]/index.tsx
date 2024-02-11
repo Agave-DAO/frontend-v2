@@ -2,6 +2,8 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import { AddToWallet } from '@/src/components/assets/AddToWallet'
+import { ViewOnExplorer } from '@/src/components/assets/ViewOnExplorer'
 import { ButtonDark, ButtonPrimary } from '@/src/components/buttons/Button'
 import { MoreActionsDropdown } from '@/src/components/common/MoreActionsDropdown'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
@@ -53,6 +55,14 @@ const Buttons = styled.div`
   @media (min-width: ${({ theme: { breakPoints } }) => breakPoints.tabletPortraitStart}) {
     column-gap: 10px;
   }
+`
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
 `
 
 const UserConnectedActions: React.FC<{
@@ -144,6 +154,10 @@ const MarketDetails: React.FC = withGenericSuspense(
             )}
           </Buttons>
         </ActionsWrapper>
+        <ButtonsContainer>
+          <ViewOnExplorer hover symbol={tokenSymbol} text="View on explorer" />
+          <AddToWallet hover symbol={tokenSymbol} text="Add to wallet" />
+        </ButtonsContainer>
         <OuterContainer>
           <Status tokenAddress={tokenAddress} />
           <Rates tokenAddress={tokenAddress} />

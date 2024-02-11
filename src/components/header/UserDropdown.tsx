@@ -7,6 +7,7 @@ import {
   DropdownPosition,
   ItemProps,
 } from '@/src/components/common/Dropdown'
+import { useGnsName } from '@/src/hooks/useGnsName'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { truncateStringInTheMiddle } from '@/src/utils/strings'
 
@@ -79,10 +80,12 @@ const Item = styled.div<ItemProps>`
 export const UserDropdown: React.FC = ({ ...restProps }) => {
   const { address, disconnectWallet } = useWeb3Connection()
 
+  const gnsName = useGnsName()
+
   return (
     <Wrapper
       dropdownButton={
-        <Button>{address ? truncateStringInTheMiddle(address, 5, 3) : 'Error'}</Button>
+        <Button>{address ? gnsName ?? truncateStringInTheMiddle(address, 5, 3) : 'Error'}</Button>
       }
       dropdownPosition={DropdownPosition.right}
       items={[
