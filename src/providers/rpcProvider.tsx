@@ -55,7 +55,7 @@ export default function RpcProvider({ children, onProviderReady }: Props) {
       })
 
       const timeout = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Timeout')), 4000)
+        setTimeout(() => reject(new Error('Timeout')), 5000)
       })
 
       try {
@@ -68,7 +68,7 @@ export default function RpcProvider({ children, onProviderReady }: Props) {
     }
 
     checkProvider()
-    const intervalId = setInterval(checkProvider, 5000)
+    const intervalId = setInterval(checkProvider, 15000)
 
     return () => {
       clearInterval(intervalId)
