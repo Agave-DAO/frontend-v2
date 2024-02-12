@@ -36,12 +36,13 @@ export const BorrowInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) 
   const [{ data: userData }] = useGetUserAccountData(address)
   const { totalBorrowed, totalBorrowedInDAI } = useUserBorrowsByToken(token?.address)
   const { liquidity } = useMarketDetails(token.address)
-  const { getBorrowRate, getIncentiveRate } = useMarketsData()
+  const { getBorrowRate, getIncentiveRate, getMarket } = useMarketsData()
   const variableAPR = getBorrowRate(token.address).variable
   const stableAPR = getBorrowRate(token.address).stable
   const incentiveAPR = getIncentiveRate(token.address, 'variableDebt')
   const healthFactor = userData?.[0].healthFactor || ZERO_BN
   const utilizationRate = useMarketDetails(token.address)?.utilizationRate || 0
+  const isStableBorrowRateEnabled = getMarket(token?.address).assetData.stableBorrowRateEnabled
 
   return (
     <Wrapper {...restProps}>
@@ -74,6 +75,15 @@ export const BorrowInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) 
             <RowKey>Utilization rate</RowKey>
             <RowValueBig>{utilizationRate}%</RowValueBig>
           </Row>
+          <Row variant="dark">
+            <RowKey>
+              Health Factor <Tooltip content={HealthFactorTooltip} />
+            </RowKey>
+            <RowValueBig>
+              <HealthFactor badgeVariant="light" size="sm" value={healthFactor} variant="dark" />
+            </RowValueBig>
+          </Row>
+          <CollateralInfo />
           <CollapsableRowsHandler
             toggle={
               <>
@@ -99,21 +109,14 @@ export const BorrowInfo: React.FC<{ token: Token }> = ({ token, ...restProps }) 
               </CollapsableRowValue>
             </CollapsableRow>
           </CollapsableRowsHandler>
-          <Row>
-            <RowKey>Stable APR</RowKey>
-            <RowValueBig>
-              <Percentage decimals={25} value={stableAPR} />
-            </RowValueBig>
-          </Row>
-          <Row variant="dark">
-            <RowKey>
-              Health Factor <Tooltip content={HealthFactorTooltip} />
-            </RowKey>
-            <RowValueBig>
-              <HealthFactor badgeVariant="light" size="sm" value={healthFactor} variant="dark" />
-            </RowValueBig>
-          </Row>
-          <CollateralInfo />
+          {isStableBorrowRateEnabled && (
+            <Row>
+              <RowKey>Stable APR</RowKey>
+              <RowValueBig>
+                <Percentage decimals={25} value={stableAPR} />
+              </RowValueBig>
+            </Row>
+          )}
         </Rows>
       </InnerCardDark>
     </Wrapper>

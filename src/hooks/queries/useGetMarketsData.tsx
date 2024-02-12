@@ -9,6 +9,7 @@ import { IDAgaveTokens } from '@/src/config/agaveTokens'
 import { TOKEN_DATA_RETRIEVAL_REFRESH_INTERVAL } from '@/src/constants/common'
 import { contracts } from '@/src/contracts/contracts'
 import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
+import { useRpc } from '@/src/providers/rpcProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { isSameAddress } from '@/src/utils/isSameAddress'
 import { ChainsValues } from '@/types/chains'
@@ -199,34 +200,27 @@ const fetchAgaveMarketsData = async ({
 // TODO warning with the number of batch calls.
 // If the array of token is too big, we can split the tokens array into smaller chunks (such as pagination)
 export const useGetMarketsData = () => {
-  const { appChainId, batchProvider, batchProviderFallback } = useWeb3Connection()
+  const { appChainId } = useWeb3Connection()
+  const { rpcBatchProvider } = useRpc()
   const chainId = appChainId === 100 ? 100 : 100
   const agaveTokens = useAgaveTokens()
   const [toastDisplayed, setToastDisplayed] = useState(false)
 
   // Simple cacheKey to get the cache data in other uses.
   const { data, isLoading } = useSWR(
-    ['agave-tokens-data', agaveTokens.reserveTokens],
+    rpcBatchProvider ? ['agave-tokens-data', agaveTokens.reserveTokens] : null,
     async () => {
+      if (!rpcBatchProvider) {
+        return []
+      }
       const result = await fetchAgaveMarketsData({
         agaveTokens,
-        provider: batchProvider,
+        provider: rpcBatchProvider,
         chainId: chainId,
       })
       if (result.length) {
         return result
       }
-
-      const fallbackResult = await fetchAgaveMarketsData({
-        agaveTokens,
-        provider: batchProviderFallback,
-        chainId: chainId,
-      })
-
-      if (fallbackResult.length) {
-        return fallbackResult
-      }
-
       return []
     },
     {

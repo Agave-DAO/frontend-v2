@@ -3,6 +3,7 @@ import { JsonRpcSigner } from '@ethersproject/providers'
 import nullthrows from 'nullthrows'
 
 import { ContractsKeys, contracts, isKnownContract } from '@/src/contracts/contracts'
+import { useRpc } from '@/src/providers/rpcProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import * as typechainImports from '@/types/generated/typechain'
 import { ObjectValues } from '@/types/utils'
@@ -16,9 +17,10 @@ export const useContractInstance = <F extends AppFactories, RT extends ReturnTyp
   contractKey: ContractsKeys | string,
   useSigner = false,
 ) => {
-  const { appChainId, readOnlyAppProvider, web3Provider } = useWeb3Connection()
+  const { rpcProvider } = useRpc()
+  const { appChainId, web3Provider } = useWeb3Connection()
 
-  const signer = useSigner ? web3Provider?.getSigner() || readOnlyAppProvider : readOnlyAppProvider
+  const signer = useSigner ? web3Provider?.getSigner() || rpcProvider : rpcProvider
 
   let address: string
   if (isKnownContract(contractKey)) {

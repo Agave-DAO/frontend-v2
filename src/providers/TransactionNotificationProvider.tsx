@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 
 import { notify } from '@/src/components/toast/Toast'
 import { usePersistedState } from '@/src/hooks/usePersistedState'
+import { useRpc } from '@/src/providers/rpcProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
 import { ChainsValues } from '@/types/chains'
 import { ToastStates } from '@/types/toast'
@@ -35,7 +36,8 @@ const TransactionContext = createContext<TransactionContextValue | undefined>(un
 const TRANSACTIONS_STORE = 'pending-transactions'
 
 export const TransactionNotificationProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const { address, appChainId, getExplorerUrl, readOnlyAppProvider } = useWeb3Connection()
+  const { address, appChainId, getExplorerUrl } = useWeb3Connection()
+  const { rpcProvider } = useRpc()
   const [isRan, setIsRan] = useState(false)
 
   const initialState: TransactionStorageItem[] = []
@@ -109,10 +111,13 @@ export const TransactionNotificationProvider: React.FC<PropsWithChildren> = ({ c
     if (!address || !appChainId || isRan) return
     setIsRan(true)
     const recoverTxStatus = async () => {
+      if (!rpcProvider) {
+        return null
+      }
       // recover txHashes from storage
       const txsStatus: Promise<TransactionResponse>[] = (transactionStore || [])
         .filter((tx) => address === tx.address && appChainId === tx.chainId && tx.txHash)
-        .map((tx) => readOnlyAppProvider?.getTransaction(tx.txHash))
+        .map((tx) => rpcProvider?.getTransaction(tx.txHash))
 
       // check txHashes status
       const hashes = (await Promise.all(txsStatus)).map((status) => {
@@ -135,7 +140,7 @@ export const TransactionNotificationProvider: React.FC<PropsWithChildren> = ({ c
 
       // wait for txs to be executed
       const promises = pendingHashes.map(async (txHash) => {
-        const res = await readOnlyAppProvider.waitForTransaction(txHash as string, 1)
+        const res = await rpcProvider.waitForTransaction(txHash as string, 1)
         notifyTxMined(txHash as string, res.status === 1)
       })
 
@@ -148,8 +153,8 @@ export const TransactionNotificationProvider: React.FC<PropsWithChildren> = ({ c
     appChainId,
     isRan,
     notifyTxMined,
-    readOnlyAppProvider,
     removeTxFromStorage,
+    rpcProvider,
     transactionStore,
   ])
 
