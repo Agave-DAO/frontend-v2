@@ -68,11 +68,6 @@ export default function RpcProvider({ children, onProviderReady }: Props) {
     }
 
     checkProvider()
-    const intervalId = setInterval(checkProvider, 15000)
-
-    return () => {
-      clearInterval(intervalId)
-    }
   }, [currentRpcIndex, rpcUrls])
 
   useEffect(() => {
