@@ -16,10 +16,12 @@ interface DepositStepperInfoProps {
   amount: string
   tokenAddress: string
   unlimitedApprovalToggle: () => React.ReactNode
+  previewDeposit: BigNumber
 }
 
 const DepositStepperInfo = ({
   amount,
+  previewDeposit,
   tokenAddress,
   unlimitedApprovalToggle,
 }: DepositStepperInfoProps) => {
@@ -39,6 +41,13 @@ const DepositStepperInfo = ({
           <Amount decimals={tokenInfo.decimals} symbol="" value={BigNumber.from(amount)} />
         </RowValueBig>
       </Row>
+      <Row variant="dark">
+        <RowKey>sDAI to receive</RowKey>
+        <RowValueBig>
+          <TokenIcon dimensions={18} symbol={'sDAI'} />
+          <Amount decimals={18} symbol="" value={previewDeposit} />
+        </RowValueBig>
+      </Row>
       {unlimitedApprovalToggle()}
     </>
   )
@@ -53,7 +62,7 @@ interface DepositStepperProps {
 export const DepositStepper = ({ amount, cancel, tokenAddress }: DepositStepperProps) => {
   const depositSteps = useDepositSteps({ amount, cancel, tokenAddress })
 
-  const { tokenInfo } = useDepositStepInitial({ amount, tokenAddress })
+  const { previewDeposit, tokenInfo } = useDepositStepInitial({ amount, tokenAddress })
   const { setUnlimitedApproval, unlimitedApproval } = useUserActionsContext()
   const showUnlimitedOption = tokenInfo.symbol === 'WXDAI'
 
@@ -89,6 +98,7 @@ export const DepositStepper = ({ amount, cancel, tokenAddress }: DepositStepperP
     info: (
       <DepositStepperInfo
         amount={amount}
+        previewDeposit={previewDeposit}
         tokenAddress={tokenAddress}
         unlimitedApprovalToggle={renderUnlimitedApprovalToggle}
       />
