@@ -76,7 +76,7 @@ const Sdai: NextPage = () => {
             width={40}
           />
         ) : null}
-        <Title>sDAI</Title>
+        <Title>sexyDAI</Title>
       </TitleWrapper>
 
       <Paragraph>

@@ -96,13 +96,11 @@ const Button = styled(ButtonConnect)`
 
 const MainTitle: React.FC = ({ ...restProps }) => (
   <Title {...restProps}>
-    Earn interest <br></br>Borrow assets
+    Lending Market <br></br>has been closed
   </Title>
 )
 
-const MainText: React.FC = ({ ...restProps }) => (
-  <Text {...restProps}>DeFi lending protocol on Gnosis Chain</Text>
-)
+const MainText: React.FC = ({ ...restProps }) => <Text {...restProps}>Borrowing is inactive.</Text>
 
 const MainTitleSmall = styled(MainTitle)`
   font-size: 4.2rem;

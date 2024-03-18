@@ -2,6 +2,7 @@ import { Chains } from '@/src/config/web3'
 import AaveOracle from '@/src/contracts/abis/AaveOracle.json'
 import AaveProtocolDataProvider from '@/src/contracts/abis/AaveProtocolDataProvider.json'
 import AgaveLendingPool from '@/src/contracts/abis/AgaveLending.json'
+import AgaveTreasuryRedeemer from '@/src/contracts/abis/AgaveTreasuryRedeemer.json'
 import BaseIncentivesController from '@/src/contracts/abis/BaseIncentivesController.json'
 import ERC20 from '@/src/contracts/abis/ERC20.json'
 import SavingsXDai from '@/src/contracts/abis/SavingsXDai.json'
@@ -79,6 +80,13 @@ export const contracts = {
       //      [Chains.chiado]: '0x610525b415c1BFAeAB1a3fc3d85D87b92f048221',
     },
     abi: StakedToken,
+  },
+  AgaveTreasuryRedeemer: {
+    address: {
+      [Chains.gnosis]: '0x33805E4Ef17Cf0F391d25EAd14fA9D2B74BbC457',
+      //      [Chains.chiado]: '0x610525b415c1BFAeAB1a3fc3d85D87b92f048221',
+    },
+    abi: AgaveTreasuryRedeemer,
   },
   SavingsXDaiAdapter: {
     address: {
