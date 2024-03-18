@@ -51,9 +51,9 @@ export const useStakeInformation = () => {
   const yieldPerYear = yieldPerSecond.mul(YEAR_IN_SECONDS)
 
   /* Calculating the staking APY */
-  const stakingAPY = amountStaked.gt(0)
+  const stakingAPY = BigNumber.from(0) /*amountStaked.gt(0)
     ? yieldPerYear.mul(WeiPerEther).div(amountStaked).mul(100)
-    : emissionPerSecond.mul(YEAR_IN_SECONDS).mul(100)
+    : emissionPerSecond.mul(YEAR_IN_SECONDS).mul(100)*/
 
   const currentTimeStamp = BigNumber.from((Date.now() / 1000) | 0)
 

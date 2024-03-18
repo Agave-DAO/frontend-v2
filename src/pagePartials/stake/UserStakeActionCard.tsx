@@ -26,7 +26,11 @@ import { useGetERC20Allowance } from '@/src/hooks/queries/useGetERC20Allowance'
 import { useContractInstance } from '@/src/hooks/useContractInstance'
 import { StepForm } from '@/src/pagePartials/markets/stepper/Stepper'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
-import { ERC20__factory, StakedToken__factory } from '@/types/generated/typechain'
+import {
+  AgaveTreasuryRedeemer__factory,
+  ERC20__factory,
+  StakedToken__factory,
+} from '@/types/generated/typechain'
 
 const Rows = styled(BaseRows)`
   margin-bottom: 16px;
@@ -44,11 +48,16 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
     } = useStakeInformation()
 
     const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken', true)
+    const treasuryRedeemer = useContractInstance(
+      AgaveTreasuryRedeemer__factory,
+      'AgaveTreasuryRedeemer',
+      true,
+    )
     const stakedToken = useContractInstance(ERC20__factory, stakedTokenAddress, true)
 
     const { approvedAmount, refetchAllowance } = useGetERC20Allowance(
       stakedTokenAddress,
-      stakingContract.address,
+      treasuryRedeemer.address,
     )
 
     const [tokenInputStatus, setTokenInputStatus] = useState<TextfieldStatus>()
@@ -98,7 +107,7 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
           onSend={() => setIsApproveLoading(true)}
           tx={() => {
             setIsApproveLoading(true)
-            return stakedToken.approve(stakingContract.address, resetRequired ? ZERO_BN : value)
+            return stakedToken.approve(treasuryRedeemer.address, resetRequired ? ZERO_BN : value)
           }}
           {...restProps}
         >
@@ -121,18 +130,12 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
           onSend={() => setIsStakeLoading(true)}
           tx={() => {
             setIsStakeLoading(true)
-            return stakingContract.stake(address, value)
+            return treasuryRedeemer.redeem(value)
           }}
           {...restProps}
         >
-          Stake
+          Redeem
         </TxButton>
-        {isCooldownActive && (
-          <>
-            You have an active cooldown. The time period will be affected by the new amount you
-            stake.
-          </>
-        )}
       </>
     )
 
@@ -144,11 +147,11 @@ export const UserStakeActionCard: React.FC = withGenericSuspense(
             onClick: () => setValue(userAmountAvailableToStake.toString()),
             variant: 'regular',
           }}
-          title={'Amount to stake'}
+          title={'Amount to redeem'}
         />
         <Rows>
           <Row>
-            <RowKey>Available to stake</RowKey>
+            <RowKey>Available to redeem</RowKey>
             <RowValueBig>
               <TokenIcon dimensions={18} symbol="AGVE" />
               <Amount decimals={18} symbol="" value={userAmountAvailableToStake} />

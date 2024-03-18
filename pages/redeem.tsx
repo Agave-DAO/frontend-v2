@@ -80,11 +80,11 @@ const Button = styled(ActionButton)`
   cursor: pointer;
 `
 
-const Stake: NextPage = () => {
+const Redeem: NextPage = () => {
   return (
     <>
       <Title>
-        Staking
+        AGVE
         <Button
           onClick={() => window.open('https://swap.cow.fi/#/100/swap/XDAI/AGVE', '_blank')}
           variant="ultraLight"
@@ -92,10 +92,7 @@ const Stake: NextPage = () => {
           Buy <b>AGVE</b>
         </Button>
       </Title>
-      <Paragraph>
-        Staking Agave helps to secure the protocol's governance by incentivizing participants with
-        protocol rewards.
-      </Paragraph>
+      <Paragraph>You can redeem you AGVE for Agave DAO Treasury holdings</Paragraph>
 
       <MandatoryConnection>
         <ButtonsContainer>
@@ -115,4 +112,4 @@ const Stake: NextPage = () => {
   )
 }
 
-export default Stake
+export default Redeem
