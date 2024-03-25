@@ -53,7 +53,7 @@ export const useGetRewardTokenData = () => {
     GNO).
      */
     if (!useExternalPrices) {
-      liquiditySize = FixedNumber.from(pool.totalLiquidity, 29).toUnsafeFloat()
+      liquiditySize = 0
     } else {
       if (!pool?.tokens || !agvePrice || !gnoPrice) return
       const agvePriceAsNumber = FixedNumber.fromValue(agvePrice, 18).toUnsafeFloat()

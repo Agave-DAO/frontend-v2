@@ -46,7 +46,7 @@ export const useStakeInformation = () => {
   const { data: userStakeCooldown, refetch: refetchUserStakeCooldown } = useGetUserStakeCooldown()
   const agvePriceInUSD = useGetStakingAgvePrice()
 
-  const yieldPerSecond = emissionPerSecond.mul(amountStaked).div(WeiPerEther)
+  const yieldPerSecond = ZERO_BN // emissionPerSecond.mul(amountStaked).div(WeiPerEther)
   const yieldPerMonth = yieldPerSecond.mul(MONTH_IN_SECONDS)
   const yieldPerYear = yieldPerSecond.mul(YEAR_IN_SECONDS)
 
