@@ -14,13 +14,6 @@ export const StakeInformationCard: React.FC = withGenericSuspense(({ ...restProp
 
   return (
     <Rows {...restProps}>
-      <Row>
-        <RowKey>Agave per month</RowKey>
-        <RowValueBig>
-          <Amount decimals={18} symbol="" value={yieldPerMonth} />
-          &nbsp; (<Amount value={fromWei((agvePrice || ZERO_BN).mul(yieldPerMonth))} />)
-        </RowValueBig>
-      </Row>
       <Row variant="dark">
         <RowKey>
           Cooldown period <Tooltip content={CooldownPeriod} />
@@ -32,12 +25,6 @@ export const StakeInformationCard: React.FC = withGenericSuspense(({ ...restProp
           Unstake Window <Tooltip content={UnstakeWindow} />
         </RowKey>
         <RowValueBig>{secondsToString(unstakeWindow.toNumber())}</RowValueBig>
-      </Row>
-      <Row variant="dark">
-        <RowKey>Staking APY</RowKey>
-        <RowValueBig>
-          <Percentage decimals={18} value={stakingAPY} />
-        </RowValueBig>
       </Row>
     </Rows>
   )
