@@ -68,7 +68,7 @@ export const chainsConfig: Record<ChainsValues, ChainConfig> = {
     shortName: 'Gnosis',
     chainId: Chains.gnosis,
     chainIdHex: '0x64',
-    rpcUrl: [`https://1rpc.io/561gFQqmLSMoe3vgJ/gnosis`, 'https://gnosis-pokt.nodies.app'],
+    rpcUrl: [`https://rpc.ankr.com/gnosis`, 'https://gnosis-pokt.nodies.app'],
     blockExplorerUrls: ['https://gnosisscan.io/'],
     token: 'xDAI',
   },
@@ -78,7 +78,7 @@ export const chainsConfig: Record<ChainsValues, ChainConfig> = {
     shortName: 'Chiado',
     chainId: Chains.chiado,
     chainIdHex: '0x27D8',
-    rpcUrl: ['https://rpc.chiadochain.net', 'https://rpc.chiado.gnosis.gateway.fm'],
+    rpcUrl: ['https://rpc.chiadochain.net', 'https://gnosis.api.onfinality.io/public'],
     blockExplorerUrls: ['https://gnosis-chiado.blockscout.com/'],
     token: 'xDAI',
   },*/
