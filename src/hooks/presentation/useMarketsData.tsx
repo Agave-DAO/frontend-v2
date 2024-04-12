@@ -18,7 +18,7 @@ export const useMarketsData = () => {
 
   const agaveMarketsData = useGetMarketsData()
 
-  const rewardTokenData = useGetRewardTokenData()
+  const rewardTokenData = undefined
 
   /* Get the market data for a given token address. */
   const getMarket = useCallback(
@@ -136,7 +136,7 @@ export const useMarketsData = () => {
       const tokenInfo = agaveTokens.getTokenByAddress(tokenAddress)
       tokenAddress = tokenInfo.extensions.isNative ? agaveTokens.wrapperToken.address : tokenAddress
 
-      if (!rewardTokenData?.priceShares) {
+      if (!rewardTokenData) {
         return ZERO_BN
       }
 
@@ -165,7 +165,7 @@ export const useMarketsData = () => {
         return calculateIncentiveRate({
           emissionPerSeconds,
           tokenSupply,
-          priceShares: rewardTokenData.priceShares,
+          priceShares: rewardTokenData,
           decimals: tokenInfo.decimals,
           tokenPrice,
         })

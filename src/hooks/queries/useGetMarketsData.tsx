@@ -145,7 +145,11 @@ const fetchAgaveMarketsData = async ({
   const assetDataPromises: ReturnType<typeof fetchAssetConfigurationData>[] = []
   const incentiveDataPromises: ReturnType<typeof fetchAssetIncentiveData>[] = []
 
-  const reserveTokens = agaveTokens.reserveTokens
+  function notFOX(token: any) {
+    return token.address !== '0x21a42669643f45bc0e086b8fc2ed70c23d67509d'
+  }
+
+  const reserveTokens = agaveTokens.reserveTokens.filter(notFOX)
   const reserveTokensAddresses = reserveTokens.map((token) => token.address)
 
   reserveTokens.forEach(async (token) => {
