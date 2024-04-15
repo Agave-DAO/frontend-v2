@@ -68,7 +68,11 @@ export const chainsConfig: Record<ChainsValues, ChainConfig> = {
     shortName: 'Gnosis',
     chainId: Chains.gnosis,
     chainIdHex: '0x64',
-    rpcUrl: [`https://rpc.ankr.com/gnosis`, 'https://gnosis-pokt.nodies.app'],
+    rpcUrl: [
+      `https://rpc.eu-central-2.gateway.fm/v4/gnosis/non-archival/mainnet?apiKey=${process.env.NEXT_PUBLIC_GATEWAY_TOKEN}`,
+      `https://1rpc.io/561gFQqmLSMoe3vgJ/gnosis`,
+      `https://rpc.ankr.com/gnosis`,
+    ],
     blockExplorerUrls: ['https://gnosisscan.io/'],
     token: 'xDAI',
   },
