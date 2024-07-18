@@ -35,10 +35,7 @@ const InitialRedeemStepInfo: React.FC<InitialRedeemStepInfoProps> = ({
       <Text>
         Need to bridge assets to Gnosis
         <br />
-        from other chains? Consider using{' '}
-        <a href="https://jumper.exchange/?fromChain=1&fromToken=0x6b175474e89094c44da98b954eedeac495271d0f&toChain=100&toToken=0x0000000000000000000000000000000000000000">
-          jumper
-        </a>
+        from other chains? Consider using <a href="https://www.bungee.exchange/">bungee</a>
       </Text>
       <Row>
         <RowKey>Available to redeem</RowKey>
