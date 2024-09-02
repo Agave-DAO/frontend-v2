@@ -69,7 +69,6 @@ export const chainsConfig: Record<ChainsValues, ChainConfig> = {
     chainId: Chains.gnosis,
     chainIdHex: '0x64',
     rpcUrl: [
-      `https://gnosis-pokt.nodies.app`,
       `https://rpc.ankr.com/gnosis`,
       `https://rpc.gnosis.gateway.fm`,
     ],
