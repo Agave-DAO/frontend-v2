@@ -5,7 +5,7 @@ import { Row, RowKey, RowValueBig, Rows } from '@/src/components/common/Rows'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { SkeletonLoading } from '@/src/components/loading/SkeletonLoading'
 import { useGetSavingsData } from '@/src/hooks/queries/useGetSavingsData'
-import { formatAmount, formatPercentage } from '@/src/utils/common'
+import { convertAPRtoAPY, formatAmount, formatPercentage } from '@/src/utils/common'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -15,6 +15,10 @@ const Wrapper = styled.div`
 export const InfoTable: React.FC = withGenericSuspense(
   () => {
     const { totalAssets, totalSupply, vaultAPY } = useGetSavingsData()
+
+    const fixed_vaultAPY = convertAPRtoAPY(vaultAPY)
+
+    console.log(fixed_vaultAPY, toString(), 's')
 
     return (
       <Wrapper>
@@ -30,7 +34,7 @@ export const InfoTable: React.FC = withGenericSuspense(
             </Row>
             <Row variant="light">
               <RowKey>Vault APY</RowKey>
-              <RowValueBig>{formatPercentage(vaultAPY, 16)}</RowValueBig>
+              <RowValueBig>{formatPercentage(fixed_vaultAPY, 16)}</RowValueBig>
             </Row>
           </Rows>
         </InnerCardDark>

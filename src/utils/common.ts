@@ -67,6 +67,22 @@ export function toWei(value: string | BigNumber, decimals = 18) {
   return parseUnits(value.toString(), decimals)
 }
 
+export function convertAPRtoAPY(vaultAPR: BigNumber) {
+  const DECIMALS = 1e18
+  const DAILY_RATE = vaultAPR.div(365) // Approximate daily rate as BigNumber
+
+  // Calculate (1 + daily rate) in 16 decimals
+  const ONE_PLUS_DAILY_RATE = parseFloat(DAILY_RATE.toString()) + DECIMALS
+
+  const dailyRate = ONE_PLUS_DAILY_RATE / DECIMALS
+
+  // Calculate APY using the compounding formula: (1 + dailyRate)^365 - 1
+  const floatAPY = dailyRate ** 365 - 1
+
+  const vaultAPY = BigNumber.from((floatAPY * DECIMALS).toString())
+  return vaultAPY
+}
+
 /**
  * It takes a number of seconds and returns a string that says how many seconds, minutes, hours, or
  * days that is
