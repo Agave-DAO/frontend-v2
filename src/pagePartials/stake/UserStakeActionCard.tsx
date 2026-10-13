@@ -38,16 +38,15 @@ const Rows = styled(BaseRows)`
 
 export const UserStakeActionCard: React.FC = withGenericSuspense(
   ({ ...restProps }) => {
-    const { address } = useWeb3ConnectedApp()
+    useWeb3ConnectedApp()
     const {
       agvePrice,
       amountAvailableToStake: userAmountAvailableToStake,
-      isCooldownActive,
       refetchAllStakeData,
       stakedTokenAddress,
     } = useStakeInformation()
 
-    const stakingContract = useContractInstance(StakedToken__factory, 'StakedToken', true)
+    useContractInstance(StakedToken__factory, 'StakedToken', true)
     const treasuryRedeemer = useContractInstance(
       AgaveTreasuryRedeemer__factory,
       'AgaveTreasuryRedeemer',

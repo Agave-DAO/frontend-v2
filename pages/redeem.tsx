@@ -86,7 +86,9 @@ const Redeem: NextPage = () => {
       <Title>
         AGVE
         <Button
-          onClick={() => window.open('https://swap.cow.fi/#/100/swap/XDAI/AGVE', '_blank')}
+          onClick={() =>
+            window.open('https://swap.cow.fi/#/100/swap/XDAI/AGVE', '_blank', 'noopener,noreferrer')
+          }
           variant="ultraLight"
         >
           Buy <b>AGVE</b>

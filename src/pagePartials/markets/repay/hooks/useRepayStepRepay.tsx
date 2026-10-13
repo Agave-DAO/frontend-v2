@@ -68,7 +68,7 @@ export const useRepayStepRepay = ({
       try {
         const txHash = await repay()
         this.nextStep(txHash)
-      } catch (e) {
+      } catch {
         this.failed()
       }
     },

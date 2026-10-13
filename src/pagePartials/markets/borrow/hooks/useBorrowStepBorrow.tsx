@@ -70,7 +70,7 @@ export const useBorrowStepBorrow = ({
       try {
         const txHash = await borrow()
         this.nextStep(txHash)
-      } catch (e) {
+      } catch {
         this.failed()
       }
     },

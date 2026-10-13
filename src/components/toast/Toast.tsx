@@ -1,4 +1,5 @@
-import { Toast, Toaster, toast } from 'react-hot-toast'
+import { Toaster, toast } from 'react-hot-toast'
+import type { Toast } from 'react-hot-toast'
 
 import { Failed as FailedIcon } from '@/src/components/assets/Failed'
 import { Success as SuccessIcon } from '@/src/components/assets/Success'

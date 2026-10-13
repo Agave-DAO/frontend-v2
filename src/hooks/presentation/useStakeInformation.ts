@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { WeiPerEther } from '@ethersproject/constants'
 
 import { useGetStakingAgvePrice } from '../queries/useGetStakingAgvePrice'
 import { ZERO_BN } from '@/src/constants/bigNumber'
@@ -14,7 +13,6 @@ import {
 } from '@/src/hooks/queries/useGetUserStakeData'
 
 const MONTH_IN_SECONDS = 60 * 60 * 24 * 31
-const YEAR_IN_SECONDS = 60 * 60 * 24 * 365
 
 /**
  * This hook is used to get all the information needed to display the stake page
@@ -35,7 +33,7 @@ const YEAR_IN_SECONDS = 60 * 60 * 24 * 365
  */
 export const useStakeInformation = () => {
   const {
-    data: { cooldownSeconds, emissionPerSecond, stakedTokenAddress, totalStaked, unstakeWindow },
+    data: { cooldownSeconds, stakedTokenAddress, totalStaked, unstakeWindow },
     refetch: refetchStakeData,
   } = useGetStakeTokenData()
   const { data: amountStaked, refetch: refetchUserAmountStaked } = useGetUserAmountInStake()
@@ -48,7 +46,6 @@ export const useStakeInformation = () => {
 
   const yieldPerSecond = ZERO_BN // emissionPerSecond.mul(amountStaked).div(WeiPerEther)
   const yieldPerMonth = yieldPerSecond.mul(MONTH_IN_SECONDS)
-  const yieldPerYear = yieldPerSecond.mul(YEAR_IN_SECONDS)
 
   /* Calculating the staking APY */
   const stakingAPY = BigNumber.from(0) /*amountStaked.gt(0)

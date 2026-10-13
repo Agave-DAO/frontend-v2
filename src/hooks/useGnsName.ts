@@ -21,7 +21,7 @@ export const useGnsName = () => {
       try {
         const domain = await gnsProvider.lookupAddress(address)
         setDomain(domain)
-      } catch (error) {
+      } catch {
         setDomain(null)
       }
     }

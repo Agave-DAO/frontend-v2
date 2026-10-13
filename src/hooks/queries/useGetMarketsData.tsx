@@ -53,7 +53,7 @@ const fetchTokensPrices = async (
       priceData: prices[index],
       tokenAddress,
     }))
-  } catch (error) {
+  } catch {
     return
   }
 }
@@ -71,7 +71,7 @@ const fetchReserveData = async (
       ).getReserveData(tokenAddress),
       tokenAddress,
     }
-  } catch (error) {
+  } catch {
     return
   }
 }
@@ -91,7 +91,7 @@ const fetchAssetConfigurationData = async (
       assetData,
       tokenAddress,
     }
-  } catch (error) {
+  } catch {
     return
   }
 }
@@ -124,7 +124,7 @@ const fetchAssetIncentiveData = async (
       },
       tokenAddress,
     }
-  } catch (error) {
+  } catch {
     return
   }
 }
@@ -145,7 +145,7 @@ const fetchAgaveMarketsData = async ({
   const assetDataPromises: ReturnType<typeof fetchAssetConfigurationData>[] = []
   const incentiveDataPromises: ReturnType<typeof fetchAssetIncentiveData>[] = []
 
-  function notFOX(token: any) {
+  function notFOX(token: { address: string }) {
     return token.address !== '0x21a42669643f45bc0e086b8fc2ed70c23d67509d'
   }
 

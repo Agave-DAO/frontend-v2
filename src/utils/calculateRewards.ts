@@ -15,10 +15,9 @@ interface CalculateRewards {
  * @returns {Object} { agveValue, gnoValue, totalValue }
  */
 export const calculateRewards = ({ agvePrice, gnoPrice, rewardsBalance }: CalculateRewards) => {
-  const agveRewards = rewardsBalance.div(2) // 50%
-  const gnoRewards = rewardsBalance.div(2) // 50%
-  const agveValue = agveRewards.mul(agvePrice)
-  const gnoValue = gnoRewards.mul(gnoPrice)
+  // Multiply before splitting so an odd reward unit retains its price precision.
+  const agveValue = rewardsBalance.mul(agvePrice).div(2)
+  const gnoValue = rewardsBalance.mul(gnoPrice).div(2)
   const totalValue = agveValue.add(gnoValue)
 
   return {

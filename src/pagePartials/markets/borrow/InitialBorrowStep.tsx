@@ -111,8 +111,10 @@ export const InitialBorrowStep: React.FC<InitialBorrowStepProps> = ({
 
   const onToggleWrap = (isToggled: boolean) => {
     onTokenSelect(isToggled ? agaveTokens.wrapperToken : agaveTokens.nativeToken)
-    !isToggled && // means we are using the native token
-      onToggleInterestRateMode(false) // so we need to set the interest rate mode to variable
+    if (!isToggled) {
+      // Native-token payments require variable interest.
+      onToggleInterestRateMode(false)
+    }
   }
 
   const isNativeRelated = tokenInfo.extensions.isNative || tokenInfo.extensions.isNativeWrapper

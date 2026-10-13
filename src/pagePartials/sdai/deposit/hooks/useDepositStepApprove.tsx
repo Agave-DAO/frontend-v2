@@ -46,7 +46,7 @@ export const useDepositStepApprove = ({
       try {
         const txHash = await approve()
         this.nextStep(txHash)
-      } catch (e) {
+      } catch {
         this.failed()
       }
     },

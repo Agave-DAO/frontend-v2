@@ -14,22 +14,21 @@ export function useContractCall<
   key: string | null,
   options?: SWRConfiguration,
 ): MySWRResponse<TupleReturnType<MyContract, Writeable<Calls>>> {
+  type Data = TupleReturnType<MyContract, Writeable<Calls>>
   const { appChainId } = useWeb3Connection()
   const {
-    data = [],
+    data,
     error,
     mutate: refetch,
-  } = useSWR(
+  } = useSWR<Data, Error>(
     key ? [getCacheKey([...params, key, appChainId || 0])] : null,
-    async () => {
-      try {
-        // eslint-disable-next-line prefer-spread
-        return Promise.all(calls.map((c, i) => c.apply(null, params[i])))
-      } catch (e) {
-        console.log({ error: e })
-      }
-    },
+    async (): Promise<Data> =>
+      // eslint-disable-next-line prefer-spread
+      Promise.all(calls.map((c, i) => c.apply(null, params[i]))) as Promise<Data>,
     options,
   )
-  return [error ? { data: null, error } : { data, error: null }, refetch]
+  return [
+    error ? { data: null, error } : { data: (data ?? []) as Awaited<Data>, error: null },
+    refetch,
+  ]
 }

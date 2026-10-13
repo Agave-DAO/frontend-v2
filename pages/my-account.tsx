@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { HomeTabs } from '@/src/components/common/HomeTabs'
 import { RequiredConnection } from '@/src/components/helpers/RequiredConnection'
 import { Account } from '@/src/pagePartials/account/Account'
-import { HFAlerts } from '@/src/pagePartials/dashboard/HFAlerts'
 import { MyRewards } from '@/src/pagePartials/dashboard/MyRewards'
 import { UserBorrows } from '@/src/pagePartials/dashboard/UserBorrows'
 import { UserDeposits } from '@/src/pagePartials/dashboard/UserDeposits'
@@ -60,7 +59,6 @@ const MyAccount: NextPage = () => {
               <Title>My borrows</Title>
               <UserBorrows />
             </AccountSection>
-            <HFAlerts />
           </AccountDetails>
         </HomeTabs>
       </>

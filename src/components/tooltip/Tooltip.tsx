@@ -28,15 +28,18 @@ const TooltipIcon = styled(TooltipIconSVG)`
   outline: none;
 `
 
-interface Props extends HTMLAttributes<HTMLSpanElement> {
+interface Props extends Omit<HTMLAttributes<HTMLSpanElement>, 'content'> {
   content: React.ReactElement | string
 }
 
 export const Tooltip = ({ children, content, ...restProps }: Props) => {
-  const tooltipContent = typeof content === 'string' ? content : renderToStaticMarkup(content)
-
   return (
-    <Wrapper data-tooltip-html={tooltipContent} data-tooltip-id="mainTooltip" {...restProps}>
+    <Wrapper
+      data-tooltip-content={typeof content === 'string' ? content : undefined}
+      data-tooltip-html={typeof content === 'string' ? undefined : renderToStaticMarkup(content)}
+      data-tooltip-id="mainTooltip"
+      {...restProps}
+    >
       {children ? children : <TooltipIcon />}
     </Wrapper>
   )

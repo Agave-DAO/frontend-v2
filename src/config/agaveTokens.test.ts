@@ -1,4 +1,7 @@
 import { AgaveProtocolTokens, agaveTokens } from './agaveTokens'
+import nativeToken from '@/public/nativeToken.json'
+import savingsToken from '@/public/savingsToken.json'
+import stakeToken from '@/public/stakeToken.json'
 import { TokenListResponse } from '@/types/token'
 
 jest.mock('@/public/reserveTokens.json', (): Pick<TokenListResponse, 'tokens'> => {
@@ -56,10 +59,22 @@ jest.mock('@/public/protocolTokens.json', (): { protocolTokens: AgaveProtocolTok
 })
 
 describe('AgaveTokens', () => {
-  it('returns all protocol tokens', () => {
+  it('returns native, reserve, savings, stake, and related protocol tokens', () => {
     const allTokens = agaveTokens.allTokens
 
-    expect(allTokens.length).toEqual(8)
+    expect(allTokens.map(({ address, type }) => ({ address, type }))).toEqual([
+      { address: nativeToken.tokens[0].address, type: 'native' },
+      { address: '0x0000000000000000000000000000000000000010', type: 'reserve' },
+      { address: '0x0000000000000000000000000000000000000020', type: 'reserve' },
+      { address: savingsToken.tokens[0].address, type: 'savings' },
+      { address: stakeToken.tokens[0].address, type: 'stake' },
+      { address: '0x0000000000000000000000000000000000000011', type: 'ag' },
+      { address: '0x0000000000000000000000000000000000000012', type: 'variableDebt' },
+      { address: '0x0000000000000000000000000000000000000013', type: 'stableDebt' },
+      { address: '0x0000000000000000000000000000000000000021', type: 'ag' },
+      { address: '0x0000000000000000000000000000000000000022', type: 'variableDebt' },
+      { address: '0x0000000000000000000000000000000000000023', type: 'stableDebt' },
+    ])
   })
 
   it('returns all incentives tokens', () => {
