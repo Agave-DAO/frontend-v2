@@ -296,7 +296,7 @@ export const ModalCSS = `
   }
 
   .notice-container > .container > *{
-    font-size: var(--font-size-md);
+    font-size: 14px;
     color: var(--onboard-text-color);
   }
 
@@ -310,9 +310,10 @@ export const ModalCSS = `
   }
 
   .notice-container > .container .link{
-    font-size: var(--font-size-md);
+    font-size: 14px;
     line-height: 1.8;
-    color: var(--primary-700)
+    color: var(--onboard-text-color);
+    text-decoration: underline
   }
 
 

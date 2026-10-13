@@ -73,7 +73,7 @@ export function initOnboard() {
     },
     appMetadata: {
       name: 'Agave',
-      icon: 'https://agave.finance/favicon/favicon.svg',
+      icon: new URL('/favicon/favicon.svg', window.location.origin).href,
       description:
         'Earn interest on deposits and borrow assets thanks to Agave, a decentralized, non-custodial money market and lending protocol on Gnosis Chain',
       recommendedInjectedWallets: [
