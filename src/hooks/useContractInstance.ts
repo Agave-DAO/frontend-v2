@@ -5,6 +5,7 @@ import nullthrows from 'nullthrows'
 import { ContractsKeys, contracts, isKnownContract } from '@/src/contracts/contracts'
 import { useRpc } from '@/src/providers/rpcProvider'
 import { useWeb3Connection } from '@/src/providers/web3ConnectionProvider'
+import { getTransactionSigner } from '@/src/utils/transactionSigner'
 import * as typechainImports from '@/types/generated/typechain'
 import { ObjectValues } from '@/types/utils'
 
@@ -18,9 +19,12 @@ export const useContractInstance = <F extends AppFactories, RT extends ReturnTyp
   useSigner = false,
 ) => {
   const { rpcProvider } = useRpc()
-  const { appChainId, web3Provider } = useWeb3Connection()
+  const { address: account, appChainId, web3Provider } = useWeb3Connection()
 
-  const signer = useSigner ? web3Provider?.getSigner() || rpcProvider : rpcProvider
+  const signer =
+    useSigner && web3Provider && account
+      ? getTransactionSigner(web3Provider, account, appChainId)
+      : rpcProvider
 
   let address: string
   if (isKnownContract(contractKey)) {

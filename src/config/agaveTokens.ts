@@ -144,17 +144,14 @@ class AgaveTokens implements IDAgaveTokens {
   getRelatedTokensByAddress(tokenAddress: string): TokenInfo[] {
     const tokenInfo = this.getTokenByAddress(tokenAddress)
     if (tokenInfo.type === 'reserve') {
-      // discard `oracle`, `strategy`, and `symbol` from protocol tokens
-      const { oracle, strategy, symbol, ...protocolTokens } = this.getProtocolTokensByReserve(
-        tokenInfo.address,
-      )
+      const { ag, stableDebt, variableDebt } = this.getProtocolTokensByReserve(tokenInfo.address)
       return [
         {
           address: tokenInfo.address,
           symbol: tokenInfo.symbol,
           type: tokenInfo.type,
         },
-        ...Object.values(protocolTokens)
+        ...[ag, variableDebt, stableDebt]
           .map(this.getTokenByAddress.bind(this))
           .map(({ address, symbol, type }) => ({
             address,

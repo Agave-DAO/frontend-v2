@@ -12,11 +12,9 @@ import {
 import { BigNumber } from '@ethersproject/bignumber'
 import { Web3Provider } from '@ethersproject/providers'
 import { OnboardAPI, WalletState } from '@web3-onboard/core'
-import frameModule from '@web3-onboard/frame'
 import gnosisModule from '@web3-onboard/gnosis'
 import injectedModule from '@web3-onboard/injected-wallets'
 import { init, useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react'
-import walletConnectModule, { WalletConnectOptions } from '@web3-onboard/walletconnect'
 import nullthrows from 'nullthrows'
 
 import { Chains, INITIAL_APP_CHAIN_ID, chainsConfig } from '@/src/config/web3'
@@ -40,41 +38,15 @@ nullthrows(
   'No default chain ID is defined or is not supported',
 )
 
-const injected = injectedModule()
-const frame = frameModule()
+const injected = injectedModule({
+  filter: { Frame: false },
+  sort: (wallets) => {
+    const priority = (label: string) =>
+      /rabby/i.test(label) ? 0 : /ambire/i.test(label) ? 1 : /metamask/i.test(label) ? 2 : 3
+    return [...wallets].sort((a, b) => priority(a.label) - priority(b.label))
+  },
+})
 const gnosis = gnosisModule()
-
-const wcV1InitOptions = {
-  version: 1,
-  bridge: 'https://safe-walletconnect.safe.global',
-  connectFirstChainId: true,
-  qrcodeModalOptions: { mobileLinks: ['minerva', 'trust'] },
-}
-
-const wcV2InitOptions: WalletConnectOptions = {
-  /**
-   * Project ID associated with [WalletConnect account](https://cloud.walletconnect.com)
-   */
-  projectId: '006ebb71415ac00246c619155f5d56f7',
-  /**
-   * Defaults to `appMetadata.explore` that is supplied to the web3-onboard init
-   * Strongly recommended to provide atleast one URL as it is required by some wallets (i.e. MetaMask)
-   * To connect with walletconnect
-   */
-  dappUrl: 'https://agave.finance',
-  /**
-   * Defaults to version: 2
-   */
-  version: 2,
-  /**
-   * List of Required Chain(s) ID for wallets to support in number format (integer or hex)
-   * Defaults to [1] - Ethereum
-   */
-  requiredChains: [100],
-  optionalChains: [10200],
-}
-
-const walletConnect = walletConnectModule(wcV2InitOptions || wcV1InitOptions)
 
 const chainsForOnboard = Object.values(chainsConfig).map(
   ({ chainIdHex, name, rpcUrl, token }: ChainConfig) => ({
@@ -91,7 +63,7 @@ export function initOnboard() {
   if (typeof window === 'undefined' || window?.onboard || onBoardApi) return
 
   onBoardApi = init({
-    wallets: [injected, frame, gnosis, walletConnect],
+    wallets: [injected, gnosis],
     chains: chainsForOnboard,
     connect: {
       removeWhereIsMyWalletWarning: true,
@@ -101,12 +73,13 @@ export function initOnboard() {
     },
     appMetadata: {
       name: 'Agave',
-      icon: 'https://agave.finance/favicon/favicon.svg',
+      icon: new URL('/favicon/favicon.svg', window.location.origin).href,
       description:
         'Earn interest on deposits and borrow assets thanks to Agave, a decentralized, non-custodial money market and lending protocol on Gnosis Chain',
       recommendedInjectedWallets: [
-        { name: 'Frame', url: 'https://frame.sh' },
         { name: 'Rabby', url: 'https://rabby.io/' },
+        { name: 'Ambire', url: 'https://www.ambire.com/' },
+        { name: 'MetaMask', url: 'https://metamask.io/' },
       ],
     },
     // Account center put an interactive menu in the UI to manage your account.

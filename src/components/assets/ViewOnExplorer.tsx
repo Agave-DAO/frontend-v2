@@ -107,7 +107,7 @@ export const ViewOnExplorer: React.FC<ViewOnExplorerProps> = ({
   const viewOnExplorer = () => {
     if (token) {
       const url = chainsConfig['100'].blockExplorerUrls[0] + 'address/' + token.address
-      window.open(url, '_blank')
+      window.open(url, '_blank', 'noopener,noreferrer')
     }
   }
 

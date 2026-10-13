@@ -234,33 +234,17 @@ export async function getStaticPaths() {
   const markets = agaveTokens.reserveTokens
 
   // Generate the paths for each market (symbol & address)
-  const paths = markets.flatMap(({ address, symbol }) => {
-    return [
-      { params: { token: symbol } },
-      { params: { token: symbol } },
-      { params: { token: symbol } },
-      { params: { token: symbol } },
-      { params: { token: address } },
-      { params: { token: address } },
-      { params: { token: address } },
-      { params: { token: address } },
-    ]
-  })
+  const paths = markets.flatMap(({ address, symbol }) => [
+    { params: { token: symbol } },
+    { params: { token: address } },
+  ])
 
-  return { paths, fallback: true }
+  return { paths: [...paths, { params: { token: 'XDAI' } }], fallback: false }
 }
 
 export async function getStaticProps({ params }: { params: { token: string; action: string } }) {
-  const { token } = params
-
-  if (token === 'XDAI') {
-    return {
-      redirect: {
-        destination: '/markets/WXDAI',
-        permanent: false,
-      },
-    }
-  }
+  // Static gateways cannot run the former XDAI redirect.
+  const token = params.token === 'XDAI' ? 'WXDAI' : params.token
 
   // TODO - we need to add the tokens for both market versions here
   const tokenExists = agaveTokens.reserveTokens.find(
@@ -272,7 +256,7 @@ export async function getStaticProps({ params }: { params: { token: string; acti
   }
 
   // Pass the market parameter to the component
-  return { props: { token: params.token } }
+  return { props: { token } }
 }
 
 export default MarketDetails

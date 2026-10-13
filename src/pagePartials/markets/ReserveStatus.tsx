@@ -184,7 +184,7 @@ const Chart: React.FC<{
   useEffect(() => {
     const handleResize = () => {
       if (node) {
-        const { current } = node as any
+        const { current } = node
 
         if (current) {
           const { clientWidth } = current

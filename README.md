@@ -1,3 +1,15 @@
+# Agave frontend v2
+
+Use Node.js 24 and Yarn 1.22.22. Run `yarn install --frozen-lockfile`, then `yarn typecheck`, `yarn test`, and `yarn build`. The build writes the static website to `out/`. `yarn dev` starts local development.
+
+Deploy `out/` to Vercel using the committed configuration. IPFS hosting requires a CID subdomain gateway (for example `https://<CID>.ipfs.dweb.link/`) because application routes and assets use root-relative URLs. Keep the CID recursively pinned on an online IPFS node.
+
+Wallet discovery supports Rabby, Ambire, MetaMask, and other browser wallets through Web3 Onboard. Safe integration is retained. Frame, WalletConnect, and the retired email health-factor alerts have been removed. Transaction writes recheck the connected account and Gnosis chain before signing.
+
+The historical starter documentation below is retained for reference; its GraphQL and deployment examples no longer describe the current app.
+
+---
+
 # BootNode - Frontend Starter Kit
 
 [Bootnode](https://bootnode.dev) is a web3 development company, with broad experience in the development of web3 products for many of the main players in the industry, such as [these](https://www.bootnode.dev/#projects) and [these](https://www.bootnode.dev/#team).

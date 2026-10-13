@@ -60,7 +60,7 @@ export const useDepositStepDeposit = ({
       try {
         const txHash = await deposit()
         this.nextStep(txHash)
-      } catch (e) {
+      } catch {
         this.failed()
       }
     },

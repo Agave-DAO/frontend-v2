@@ -18,18 +18,13 @@ describe('formatAmount', () => {
 
     const retValueWithSymbolBefore = formatAmount(mockValue, mockDecimals, mockSymbol, 'before')
     const retValueWithSymbolAfter = formatAmount(mockValue, mockDecimals, mockSymbol, 'after')
-    const retValueWithDefaultSymbolAndDefaultPosition = formatAmount(
-      mockValue,
-      mockDecimals,
-      mockSymbol,
-      'before',
-    )
-    const retValueWithoutSymbol = formatAmount(mockValue, mockDecimals, mockSymbol, 'before')
+    const retValueWithDefaultSymbolAndDefaultPosition = formatAmount(mockValue, mockDecimals)
+    const retValueWithoutSymbol = formatAmount(mockValue, mockDecimals, '')
 
-    expect(retValueWithSymbolBefore).toBe('ETH 22.53')
+    expect(retValueWithSymbolBefore).toBe('ETH22.53')
     expect(retValueWithSymbolAfter).toBe('22.53 ETH')
-    expect(retValueWithDefaultSymbolAndDefaultPosition).toBe('ETH 22.53')
-    expect(retValueWithoutSymbol).toBe('ETH 22.53')
+    expect(retValueWithDefaultSymbolAndDefaultPosition).toBe('$22.53')
+    expect(retValueWithoutSymbol).toBe('22.53')
   })
 })
 

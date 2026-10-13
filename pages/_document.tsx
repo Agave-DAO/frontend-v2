@@ -39,7 +39,7 @@ export default class MyDocument extends Document {
           <meta content="#333" name="msapplication-TileColor" />
           <meta content="#333" name="theme-color"></meta>
           <link href="https://fonts.googleapis.com" rel="preconnect" />
-          <link crossOrigin="crossorigin" href="https://fonts.gstatic.com" rel="preconnect" />
+          <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
           <link
             href="https://fonts.googleapis.com/css2?family=Droid+Sans:wght@400;500;700&display=swap"
             rel="stylesheet"

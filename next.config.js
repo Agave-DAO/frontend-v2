@@ -5,9 +5,10 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 /** @type {import("next").NextConfig} */
 module.exports = withBundleAnalyzer({
   reactStrictMode: true,
-  swcMinify: false,
+  output: "export",
+  experimental: { cpus: 1 },
   images: {
-    // needed to be able to run `next export`
+    // Static hosting does not run the Next.js image server.
     unoptimized: true
   },
   trailingSlash: true,

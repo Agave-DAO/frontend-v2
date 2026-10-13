@@ -1,16 +1,12 @@
 import { Row, RowKey, RowValueBig, Rows } from '@/src/components/common/Rows'
-import { Amount } from '@/src/components/helpers/Amount'
-import { Percentage } from '@/src/components/helpers/Percentage'
 import { withGenericSuspense } from '@/src/components/helpers/SafeSuspense'
 import { Tooltip } from '@/src/components/tooltip/Tooltip'
-import { ZERO_BN } from '@/src/constants/bigNumber'
 import { useStakeInformation } from '@/src/hooks/presentation/useStakeInformation'
 import { CooldownPeriod, UnstakeWindow } from '@/src/pagePartials/common/tooltips'
-import { fromWei, secondsToString } from '@/src/utils/common'
+import { secondsToString } from '@/src/utils/common'
 
 export const StakeInformationCard: React.FC = withGenericSuspense(({ ...restProps }) => {
-  const { agvePrice, cooldownSeconds, stakingAPY, unstakeWindow, yieldPerMonth } =
-    useStakeInformation()
+  const { cooldownSeconds, unstakeWindow } = useStakeInformation()
 
   return (
     <Rows {...restProps}>

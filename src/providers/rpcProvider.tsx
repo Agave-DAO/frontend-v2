@@ -3,7 +3,12 @@ import { ReactNode, createContext, useContext, useEffect, useState } from 'react
 import { JsonRpcBatchProvider, JsonRpcProvider } from '@ethersproject/providers'
 import nullthrows from 'nullthrows'
 
-import { Chains, INITIAL_APP_CHAIN_ID, getNetworkConfig } from '@/src/config/web3'
+import {
+  Chains,
+  INITIAL_APP_CHAIN_ID,
+  getGnsNetworkConfig,
+  getNetworkConfig,
+} from '@/src/config/web3'
 
 nullthrows(
   Object.values(Chains).includes(INITIAL_APP_CHAIN_ID) ? INITIAL_APP_CHAIN_ID : null,
@@ -31,8 +36,8 @@ export default function RpcProvider({ children, onProviderReady }: Props) {
   const [rpcUrl, setRpcUrl] = useState<string>(rpcUrls[currentRpcIndex])
 
   const createProviders = (url: string) => {
-    setRpcProvider(new JsonRpcProvider(url))
-    setRpcBatchProvider(new JsonRpcBatchProvider(url))
+    setRpcProvider(new JsonRpcProvider(url, getGnsNetworkConfig()))
+    setRpcBatchProvider(new JsonRpcBatchProvider(url, getGnsNetworkConfig()))
     console.log('New provider: ', url)
   }
 
@@ -43,7 +48,7 @@ export default function RpcProvider({ children, onProviderReady }: Props) {
   useEffect(() => {
     const checkProvider = async () => {
       const providerCheck = new Promise((resolve, reject) => {
-        const provider = new JsonRpcProvider(rpcUrls[currentRpcIndex])
+        const provider = new JsonRpcProvider(rpcUrls[currentRpcIndex], getGnsNetworkConfig())
         provider
           .getNetwork()
           .then((network) => {
@@ -61,7 +66,7 @@ export default function RpcProvider({ children, onProviderReady }: Props) {
       try {
         await Promise.race([providerCheck, timeout])
         console.log('Provider check: OK')
-      } catch (error) {
+      } catch {
         console.warn(`Provider ${rpcUrls[currentRpcIndex]} failed. Switching to next provider...`)
         setCurrentRpcIndex((prevIndex) => (prevIndex + 1) % rpcUrls.length)
       }

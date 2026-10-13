@@ -60,7 +60,7 @@ export const useWithdrawStepWithdraw = ({
       try {
         const txHash = await withdraw()
         this.nextStep(txHash)
-      } catch (e) {
+      } catch {
         this.failed()
       }
     },

@@ -3,7 +3,6 @@ import { ErrorCode } from '@ethersproject/logger'
 const errorMessages: Record<ErrorCode | 'default', string> = {
   [ErrorCode.CALL_EXCEPTION]: 'Call exception',
   [ErrorCode.INSUFFICIENT_FUNDS]: 'Insufficient funds',
-  [ErrorCode.UNPREDICTABLE_GAS_LIMIT]: 'Insufficient gas limit',
   [ErrorCode.NONCE_EXPIRED]: 'Nonce expired',
   [ErrorCode.REPLACEMENT_UNDERPRICED]: 'Replacement underpriced',
   [ErrorCode.UNPREDICTABLE_GAS_LIMIT]: 'Unpredictable gas limit',
@@ -12,7 +11,6 @@ const errorMessages: Record<ErrorCode | 'default', string> = {
   [ErrorCode.TIMEOUT]: 'Timeout',
   [ErrorCode.UNKNOWN_ERROR]: 'Unknown error',
   [ErrorCode.NOT_IMPLEMENTED]: 'Not implemented',
-  [ErrorCode.INSUFFICIENT_FUNDS]: 'Insufficient funds',
   [ErrorCode.TRANSACTION_REPLACED]: 'Transaction replaced',
   [ErrorCode.ACTION_REJECTED]: 'User denied transaction signature',
   [ErrorCode.BUFFER_OVERRUN]: 'Buffer overrun',

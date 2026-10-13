@@ -53,7 +53,7 @@ export function useUserBorrowsInformationByToken({
   try {
     maxBorrow =
       userAccountData.availableBorrowsETH.mul(1000).div(market.priceData).toNumber() / 1000
-  } catch (e) {
+  } catch {
     maxBorrow = 0
   }
 

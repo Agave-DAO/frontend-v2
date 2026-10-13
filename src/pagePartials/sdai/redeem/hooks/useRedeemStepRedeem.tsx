@@ -62,7 +62,7 @@ export const useRedeemStepRedeem = ({
       try {
         const txHash = await redeem(selectedToken)
         this.nextStep(txHash)
-      } catch (e) {
+      } catch {
         this.failed()
       }
     },

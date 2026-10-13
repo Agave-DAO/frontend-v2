@@ -9,13 +9,7 @@ import { useAgaveTokens } from '@/src/providers/agaveTokensProvider'
 import { useWeb3ConnectedApp } from '@/src/providers/web3ConnectionProvider'
 import { VariableDebtToken__factory } from '@/types/generated/typechain'
 
-export const useBorrowStepDelegate = ({
-  amount,
-  tokenAddress,
-}: {
-  amount: string
-  tokenAddress: string
-}) => {
+export const useBorrowStepDelegate = ({ amount }: { amount: string; tokenAddress: string }) => {
   const { appChainId } = useWeb3ConnectedApp()
   const agaveTokens = useAgaveTokens()
   const wrappedNativeGatewayAddress = contracts['WETHGateway'].address[appChainId]

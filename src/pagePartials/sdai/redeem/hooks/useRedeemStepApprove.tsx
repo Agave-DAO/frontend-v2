@@ -50,7 +50,7 @@ export const useRedeemStepApprove = ({
       try {
         const txHash = await approve()
         this.nextStep(txHash)
-      } catch (e) {
+      } catch {
         this.failed()
       }
     },

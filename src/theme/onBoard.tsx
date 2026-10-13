@@ -291,16 +291,16 @@ export const ModalCSS = `
     transition: background-color 250ms ease-in-out;
   }
 
-  .notice-container > .container {
+  .scroll-container > .outer-container > .container {
     border: 0
   }
 
-  .notice-container > .container > *{
-    font-size: var(--font-size-md);
+  .scroll-container > .outer-container > .container > *{
+    font-size: 14px;
     color: var(--onboard-text-color);
   }
 
-  .notice-container > .container .icon{
+  .scroll-container > .outer-container > .container .icon{
     width: 20px;
     display: none
   }
@@ -309,10 +309,11 @@ export const ModalCSS = `
     width:100%;
   }
 
-  .notice-container > .container .link{
-    font-size: var(--font-size-md);
+  .scroll-container > .outer-container > .container .link{
+    font-size: 14px;
     line-height: 1.8;
-    color: var(--primary-700)
+    color: var(--onboard-text-color);
+    text-decoration: underline
   }
 
 
